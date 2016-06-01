@@ -11,12 +11,15 @@ gulp.task('es6', () => {
 });
 
 gulp.task( 'sass', () => {
-	gulp.src( 'src/scss/main.scss' )
+	gulp.src( 'src/scss/style.scss' )
 		.pipe( sass().on( 'error', sass.logError ) )
 		.pipe( gulp.dest( 'src/public/stylesheets/' ) );
 });
 
-gulp.task('default', ['es6'], () => {
-    gulp.watch('src/app.js', ['es6']);
+gulp.task( 'watch', () => {
     gulp.watch( 'src/scss/**/*.scss', ['sass'] );
+});
+
+gulp.task( 'default', ['es6'], () => {
+    gulp.watch( 'src/app.js', ['es6'] );
 });

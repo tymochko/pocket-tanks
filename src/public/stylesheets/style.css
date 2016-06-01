@@ -1,8 +1,7 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
+  font-size: 24px;
+  background: #d3d4da; }
 
-a {
-  color: #00B7FF;
-}
+form {
+  margin: 0;
+  border: 1px solid blue; }
