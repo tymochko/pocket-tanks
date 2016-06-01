@@ -38,3 +38,7 @@ jspm_packages
 
 # JetBrains WebStorm IDE files
 .idea
+
+dist
+
+public

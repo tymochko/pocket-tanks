@@ -1,0 +1,8 @@
+$brand-color: #d3d4da;
+
+body {
+	margin: 0;
+	font-size: 12px;
+	background: $brand-color;
+	@include border-radius(10px);
+}
