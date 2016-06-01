@@ -1,15 +1,19 @@
 'use strict';
 
 var express = require('express');
+var router = express.Router();
+var mongoose = require('mongoose');
+
 var app = express();
 var config = require('./config');
 
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', function (req, res) {
-  res.send('Hello world');
-});
+// connect to users database
+mongoose.connect('localhost:27017/users');
+
+mongoose.model('users', { name: String });
 
 app.listen(config.port, function () {
-  console.log('Server listening on: http://localhost:%s', config.port);
+    console.log('Server listening on: http://localhost:%s', config.port);
 });
