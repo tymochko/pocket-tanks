@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-// require mongoose dep - MongoDB Object modeling
+// require mongoose - MongoDB Object modeling
 const mongoose = require('mongoose');
 
 var routes = require('./routes/index');
@@ -17,7 +17,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // connect to user database
-mongoose.connect('localhost:27017/users');
+const db = 'mongodb://localhost/users';
+mongoose.connect(db);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -60,6 +61,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;
