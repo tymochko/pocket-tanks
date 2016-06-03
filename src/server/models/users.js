@@ -8,4 +8,4 @@ let userSchema = new Schema({
     isOnline: {type: Boolean}
 });
 
-module.exports = mongoose.model('usersCollection', userSchema);
+module.exports = mongoose.model('User', userSchema);
