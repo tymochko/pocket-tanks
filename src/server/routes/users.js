@@ -6,15 +6,18 @@ const usersCollection = require('../models/users');
 
 /* GET users listing. */
 router.get('/', (req, res) => {
-    console.log('Getting all the users');
     usersCollection.find((err, users) => {
-        if (err) {
-          res.send(err);
-        }
-
-        console.log(users);
         res.send(users);
     });
 });
+
+/* TODO
+
+1) registration/login check request
+2) dashboard online users request
+3) user profile page info request
+4) user profile page change info request
+
+*/
 
 module.exports = router;
