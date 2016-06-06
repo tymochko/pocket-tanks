@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var game = require('./routes/game');
 
 var app = express();
 
@@ -25,10 +26,11 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, '..', '..', 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/game', game);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
