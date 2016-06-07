@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var bodyParser = require('body-parser');
 
 // const mongoose = require('mongoose');
 const usersCollection = require('../models/users');
@@ -28,7 +29,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.put('/update/:id', (req, res) => {
+router.get('/:id', (req, res) => {
     var id = req.params.id;
     usersCollection.findOne({_id: id}, (err, foundUser) => {
         if (err) {
@@ -48,7 +49,54 @@ router.put('/update/:id', (req, res) => {
             }
         }
 
-        console.log(foundUser);
+        res.send(foundUser);
+    });
+});
+
+router.post('/add', (req, res) => {
+    var newUser = new User();
+
+    newUser.userName = req.body.userName;
+    newUser.userEmail = req.body.userEmail;
+    newUser.userPassword = req.body.userPassword;
+
+    console.log(newUser);
+
+    newUser.save((err, savedObject) => {
+        if (err) {
+            console.log(err);
+            res.status(500).send();
+        } else {
+            console.log(savedObject);
+            res.send(savedObject);
+        }
+    });
+});
+
+// curl -H "Content-Type: application/json" -X POST -d '{"userName":"Tom", "userEmail":"tom@example.com", "userPassword":"qweqwe"}' http://localhost:3000/users/add
+
+router.put('/update', (req, res) => {
+    var id = req.body;
+    console.log(id);
+    usersCollection.findOne({_id: id}, (err, foundUser) => {
+        if (err) {
+            console.log(err);
+            res.status(500).send();
+        } else {
+            if (!foundUser) {
+                res.status(404).send();
+            } else {
+                if (req.body.name) {
+                    foundUser.name = req.body.name;
+                }
+
+                if (req.body.password) {
+                    foundUser.password = req.body.password;
+                }
+            }
+        }
+
+        res.send(foundUser);
     });
 });
 
