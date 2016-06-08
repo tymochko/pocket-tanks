@@ -1,0 +1,30 @@
+.content {
+    width: 80%;
+    padding: 0 15px;
+    margin: 40px auto;
+    max-width: 1024px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.status span{
+    padding-left: 20px;
+    position: relative;
+    &:before{
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 10px;
+        content: "";
+        height: 10px;
+        margin: auto;
+        background: #d3d4da;
+        position: absolute;
+        @include border-radius(50%);
+    }
+    &.true{
+        &:before{
+            background: #6ed46e;
+        }
+    }
+}
