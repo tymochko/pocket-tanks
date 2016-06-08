@@ -11,6 +11,8 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
             controller: 'DashboardCtrl'
         })
 
+        /*Login Form Route*/
+
         .otherwise({
             redirectTo: '/404.html'
         });
