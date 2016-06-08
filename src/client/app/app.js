@@ -12,6 +12,10 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
         })
 
         /*Login Form Route*/
+        .when('/login', {
+            templateUrl: 'src/client/views/login.html',
+            controller: 'LoginSubmitController'
+        })
 
         .otherwise({
             redirectTo: '/404.html'

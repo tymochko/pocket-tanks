@@ -1,0 +1,39 @@
+<div class="container">
+        <div class="row login-form-container ">
+            <div class="col-md-6 col-md-offset-3">
+                <h2 class="login-form-header">Login Form</h2>
+                <form name="login_form" method="post" class="form-horizontal" ng-app="app" ng-controller="LoginSubmitController" ng-submit="register()">
+                    <p class="logged-success" ng-show="message">{{message}}</p>
+                    <div class="form-group">
+                        <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+                        <div class="col-sm-10">
+                            <input name="email" type="email" class="form-control" id="inputEmail" placeholder="Email" ng-model="user.email" ng-required="true">
+                            <p class="error-message" ng-show="login_form.email.$invalid && login_form.email.$touched">Введіть email</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword" class="col-sm-2 control-label">Password</label>
+                        <div class="col-sm-10">
+                            <input name="password" type="password" class="form-control" id="inputPassword" placeholder="Password" ng-model="user.password" ng-required="true" ng-minLength="6">
+                            <p class="error-message" ng-show="login_form.password.$invalid && login_form.password.$touched">Введіть пароль не меншне 6 символів</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"> Remember me
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-primary">Sign in</button>
+                        </div>
+                    </div>
+                </form>
+            </div>  <!-- end tab-pane active -->
+        </div>
+    </div>  <!-- end inner_container -->
+    </div>  <!-- end container -->
