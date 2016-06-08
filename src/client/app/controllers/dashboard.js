@@ -4,7 +4,7 @@ app.controller('DashboardCtrl', ['$scope', '$route', '$routeParams', '$http', fu
     // var cat = $routeParams['cat'],
     //  id = $routeParams['id'];
 
-    $http.get('/dashboard').then(function(response){
+    $http.get('/users').then(function(response){
         $scope.users = response.data;
     //  $scope.album = response.data.photos;
     //  $scope.name = response.data.album.name;

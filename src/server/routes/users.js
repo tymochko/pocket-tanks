@@ -2,16 +2,7 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 
-// const mongoose = require('mongoose');
 const usersCollection = require('../models/users');
-
-/* GET users listing. */
-// router.get('/', (req, res) => {
-//     usersCollection.find((err, users) => {
-//         console.log(users);
-//         res.send(users);
-//     });
-// });
 
 /* TODO
 
@@ -73,7 +64,6 @@ router.post('/add', (req, res) => {
     });
 });
 
-// curl -H "Content-Type: application/json" -X POST -d '{"userName":"Tom", "userEmail":"tom@example.com", "userPassword":"qweqwe"}' http://localhost:3000/users/add
 
 router.put('/update', (req, res) => {
     var id = req.body;
