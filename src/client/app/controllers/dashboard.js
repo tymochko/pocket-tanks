@@ -10,8 +10,8 @@ app.controller('DashboardCtrl', ['$scope', '$route', '$routeParams', '$http', fu
     //  $scope.name = response.data.album.name;
     });
 
-    $scope.sendInvite = function($id){
-        console.log($id);
+    $scope.sendInvite = function(id){
+        console.log(id);
     }
 
     // angular.forEach($scope.categories, function(catItem, key) {
