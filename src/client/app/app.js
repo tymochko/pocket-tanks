@@ -1,9 +1,10 @@
-var app = angular.module("tanks", ['ngRoute']);
+var app = angular.module("tanks", ['ngRoute','ngAnimate', 'ui.bootstrap']);
 
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.
         when('/', {
-            templateUrl: 'src/client/views/home.html'
+            templateUrl: 'src/client/views/home.html',
+            controller: 'SliderCtrl'
         })
         .when('/dashboard', {
             templateUrl: 'src/client/views/dashboard.html',

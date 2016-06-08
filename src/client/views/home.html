@@ -1,1 +1,9 @@
-<a href="/dashboard">Dashboard click here!</a>
+<div class="wrapper">
+  <div style="width: 80%; margin: auto;" >
+    <uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides" ng-mouseenter="play()">
+      <uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
+        <img ng-src="{{slide.image}}" style="margin: 6vh auto; width: 100%; max-height: 80vh; border: 5px solid rgb(34,34,34) ;">
+      </uib-slide>
+    </uib-carousel>
+  </div>
+</div>

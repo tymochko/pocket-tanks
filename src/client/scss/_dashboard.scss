@@ -28,3 +28,24 @@
         }
     }
 }
+
+/////////
+  .navbar-brand {
+  padding: 0px;
+      img {
+        height: 100%;
+        padding: 0px;
+        width: auto;
+      }
+  }
+
+  div.content {
+  height: 100vh;
+  background: yellow;
+  }
+
+  div.wrapper {
+      background: linear-gradient(to right, rgba(120, 2, 6, 1) 0%, rgba(120, 2, 6, 0.5) 49%, rgba(120, 2, 6, 0.8) 100%);
+      min-height: 92vh;
+  }
+
