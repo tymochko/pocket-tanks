@@ -2,17 +2,9 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 
-// const mongoose = require('mongoose');
 const usersCollection = require('../models/users');
 
 /* GET users listing. */
-// router.get('/', (req, res) => {
-//     usersCollection.find((err, users) => {
-//         console.log(users);
-//         res.send(users);
-//     });
-// });
-
 /* TODO
 
 1) registration/login check request
@@ -21,16 +13,18 @@ const usersCollection = require('../models/users');
 4) user profile page change userName request
 5) user profile page change userPassword request
 6) password requirements
+7) log in log out - change online status
 
 */
 
+// get all users in database, for instance in dashboard
 router.get('/', (req, res) => {
     usersCollection.find((err, users) => {
-        console.log(users);
         res.send(users);
     });
 });
 
+// get user's info by id, for instance in profile page
 router.get('/:id', (req, res) => {
     var id = req.params.id;
     usersCollection.findOne({_id: id}, (err, foundUser) => {
@@ -55,48 +49,51 @@ router.get('/:id', (req, res) => {
     });
 });
 
+// add newUser
 router.post('/add', (req, res) => {
     var newUser = new usersCollection();
 
     newUser.userName = req.body.userName;
     newUser.userEmail = req.body.userEmail;
     newUser.userPassword = req.body.userPassword;
+    newUser.isEnabled = true;
 
     newUser.save((err, savedObject) => {
         if (err) {
             console.log(err);
             res.status(500).send();
         } else {
-            console.log(savedObject);
             res.send(savedObject);
         }
     });
 });
 
-// router.put('/update/:id', (req, res) => {
-//     usersCollection.findOneAndUpdate({
-//         _id: req.params.id
-//     },{
-//         $set: {
-//             userName: req.body.userName,
-//             userPassword: req.body.userPassword
-//         }
-//     }, {upset: true}, (err, updatedUser) => {
-//         if (err) {
-//             console.log('error occured');
-//         } else {
-//             console.log(updatedUser);
-//             res.status(204);
-//         }
-//     });
-// });
-
+// edit userName
 router.put('/update/:id', (req, res) => {
     usersCollection.findOneAndUpdate({
         _id: req.params.id
     },{
         $set: {
-            userName: req.body.userName,
+            userName: req.body.userName
+        }
+    }, {upset: true}, (err, updatedUser) => {
+        if (err) {
+            console.log('error occured ' + err);
+            res.status(500).send();
+        } else {
+            updatedUser.name = req.body.name;
+
+            res.status(204);
+        }
+    });
+});
+
+// edit userPassword
+router.put('/update/:id', (req, res) => {
+    usersCollection.findOneAndUpdate({
+        _id: req.params.id
+    },{
+        $set: {
             userPassword: req.body.userPassword
         }
     }, {upset: true}, (err, updatedUser) => {
@@ -104,13 +101,27 @@ router.put('/update/:id', (req, res) => {
             console.log('error occured ' + err);
             res.status(500).send();
         } else {
-            if (req.body.name) {
-                updatedUser.name = req.body.name;
-            }
+            updatedUser.password = req.body.password;
 
-            if (req.body.password) {
-                updatedUser.password = req.body.password;
-            }
+            res.status(204);
+        }
+    });
+});
+
+// delete user
+router.put('/delete/:id', (req, res) => {
+    usersCollection.findOneAndUpdate({
+        _id: req.params.id
+    },{
+        $set: {
+            isEnabled: false
+        }
+    }, {upset: true}, (err, updatedUser) => {
+        if (err) {
+            console.log('error occured ' + err);
+            res.status(500).send();
+        } else {
+            updatedUser.isEnabled = false;
 
             res.status(204);
         }
