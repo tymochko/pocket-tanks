@@ -14,8 +14,15 @@ var game = require('./routes/game');
 var app = express();
 
 // view engine setup
+//app.set('views', path.join(__dirname, 'views'));
+//app.set('view engine', 'html');
+
+var cons = require('consolidate');
+
+// view engine setup
+app.engine('html', cons.swig)
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'html');
 
 // connect to user database
 mongoose.connect('localhost:27017/users');
@@ -65,5 +72,52 @@ app.use(function(err, req, res, next) {
   });
 });
 
-
+var mongo = require('mongodb').MongoClient,
+    client = require('socket.io').listen(8080).sockets;
+ 
+    mongo.connect('mongodb://127.0.0.1/chat', function(err,db){
+        if(err) throw err;
+ 
+          client.on('connection',function(socket){
+ 
+            var col = db.collection('messages'),
+                sendStatus = function(s){
+                  socket.emit('status',s);
+                };
+ 
+                col.find().sort({$natural: -1 }).limit(5).toArray(function(err,res){
+                    if(err) throw err;
+                    socket.emit('output',res);
+                });
+                col.find().sort({$natural: 1 });
+ 
+            //wait for input
+            socket.on('input', function(data){
+                var name = data.name;
+                var message = data.message;
+                var time=data.time;
+ 
+                whitespace = /^\s*$/;
+ 
+                if(whitespace.test(name) || whitespace.test(message))
+                {
+                    sendStatus('Name and Message Required');
+                }
+                else
+                {
+                    col.insert({name: name,message:message,time:time}, function(){
+ 
+                        //emit latest messages to all clients
+                        client.emit('output',[data]);
+ 
+                        sendStatus({
+                            message:"Message sent",
+                            clear:true
+                        });
+                    });
+                }
+ 
+            });
+         });
+    });
 module.exports = app;
