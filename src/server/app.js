@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 // require mongoose - MongoDB Object modeling
 const mongoose = require('mongoose');
+var user = require('./models/users');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -24,12 +25,15 @@ mongoose.connect(db);
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.resolve('public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/src/client', express.static(path.resolve('src/client')));
+app.use('/node_modules', express.static(path.resolve('node_modules')));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
