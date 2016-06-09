@@ -4,8 +4,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-// require mongoose dep - MongoDB Object modeling
+// require mongoose - MongoDB Object modeling
 const mongoose = require('mongoose');
+var user = require('./models/users');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -25,21 +26,32 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 
 // connect to user database
-mongoose.connect('localhost:27017/users');
+const db = 'mongodb://localhost/users';
+mongoose.connect(db);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use('/public', express.static(path.join(__dirname, '..', '..', 'public')));
+//<<<<<<< HEAD
+//app.use('/public', express.static(path.join(__dirname, '..', '..', 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
 app.use('/game', game);
 
 // started to work on chat
+//=======
+app.use('/public', express.static(path.resolve('public')));
+
+//app.use('/', routes);
+//app.use('/users', users);
+app.use('/src/client', express.static(path.resolve('src/client')));
+app.use('/node_modules', express.static(path.resolve('node_modules')));
+
+//>>>>>>> prepullrequest
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -72,6 +84,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
+// <<<<<<< HEAD
 var mongo = require('mongodb').MongoClient,
     client = require('socket.io').listen(8080).sockets;
  
@@ -120,4 +133,6 @@ var mongo = require('mongodb').MongoClient,
             });
          });
     });
+// =======
+// >>>>>>> prepullrequest
 module.exports = app;

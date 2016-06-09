@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html ng-app="tanks" >
+
+<head lang="en">
+    <meta charset="utf-8" />
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <title></title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link href="public/stylesheets/style.css" rel="stylesheet">
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="node_modules/angular-animate/angular-animate.min.js"></script>
+    <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+    <base href="/">
+</head>
+
+<body>
+	<div class="container-fullwidth">
+        <nav class="navbar navbar-inverse navbar-static-top" role="navigation" style="margin: 0 0;  border-bottom: 1px solid rgb(192, 192, 192);">
+		  <div class="container-fluid">
+		    <div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>                        
+				</button>
+		      <a class="navbar-brand active" href="/" style="padding: 0;">
+                <img src="public/images/logo.jpeg">      
+              </a>
+		    </div>
+            <div class="collapse navbar-collapse" id="navbar">
+
+            	<a href="/game" class="btn btn-danger navbar-center show-after-log">Start game</a>
+            	<ul class="nav navbar-nav show-after-log">
+			        <li><a href="/dashboard">Dashboard</a></li>
+			        <li><a href="/scores">Scores</a></li>
+			        <li><a href="/about">About</a></li>
+		      	</ul>
+				<ul class="nav navbar-nav navbar-right hide-after-log">
+				<li><a href="/signup"><span class="glyphicon glyphicon-plus"></span> Sign Up</a></li>
+				<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right show-after-log">
+				<li><a href="#/profile"><span class="glyphicon glyphicon-user"></span> Profile </a></li>
+				<li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+				</ul>
+		    </div>
+		  </div>
+		</nav>
+	</div>
+
+    <div class="wrapper">
+        <header class="header">
+        </header>
+        <!-- .header-->
+        <main class="content">
+            <div ng-view></div>
+        </main>
+        <!-- .content -->
+    </div>
+    <!-- .wrapper -->
+    <footer style="padding: 5px 5px; background: rgb(34, 34, 34); color: white;">
+            <p style="margin: 5px">&copy; Tanks Game 2016. &middot; <a href="#">Privacy</a> &middot; </p>
+    </footer>
+    <!-- .footer -->
+
+    <!-- Angular & Bootstrap -->
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Modules -->
+    <script src="src/client/app/app.js"></script>
+    <script src="node_modules/angular-route/angular-route.min.js"></script>
+    <script src="node_modules/angular-resource/angular-resource.min.js"></script>
+
+    <!-- Controllers -->
+    <script src="src/client/app/controllers/dashboard.js"></script>
+    <script src="src/client/app/controllers/slider.js"></script>
+    <script src="src/client/app/controllers/login.js"></script>
+</body>
+
+</html>
