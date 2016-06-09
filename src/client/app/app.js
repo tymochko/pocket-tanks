@@ -15,6 +15,12 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
             controller: 'SliderCtrl'
         })
 
+        /*Login Form Route*/
+        .when('/login', {
+            templateUrl: 'src/client/views/login.html',
+            controller: 'LoginSubmitController'
+        })
+
         .otherwise({
             redirectTo: '/404.html'
         });
@@ -22,6 +28,8 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
     $locationProvider.html5Mode(true);
 }]);
 
+
+//////////////////////// for navbar (needs new file)
 function notLogged() {
     $('.show-after-log').addClass('hidden');
     $('.hide-after-log').removeClass('hidden');
