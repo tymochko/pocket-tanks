@@ -43,7 +43,7 @@ app.controller('manageProfileController', ($scope, $uibModal, profileService) =>
 
         let modalInstance = $uibModal.open({
             animation: $scope.animationsEnabled,
-            templateUrl: './views/views/myModalContent.html',
+            templateUrl: './app/views/myModalContent.html',
             controller: 'ModalInstanceCtrl',
             size: size
 
@@ -63,17 +63,18 @@ app.controller('manageProfileController', ($scope, $uibModal, profileService) =>
 app.service('profileService', function ($http) {
     this.update = function (userInfo) {
         //todo all changes to config
-        $http.post('http://localhost:3000/update', userInfo)
+        $http.post('http://localhost:8080/update', userInfo)
             .then(function (res) {
+
             });
     };
 
     this.getProfileById = function (id) {//todo all changes to config
-        return $http.get("http://localhost:8080/:" + id);
+        return $http.get("http://localhost:8080/" + id);
     };
     this.deleteAccount = () => {
         //todo add delete router
-        return  $http.delete('http://localhost:3000/update', userInfo);
+        return  $http.delete('http://localhost:8080/update', userInfo);
 
 
     }
@@ -88,6 +89,45 @@ app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
         $uibModalInstance.dismiss('cancel');
     };
 });
+app.controller('LoginSubmitController', ['$scope', function($scope) {
+
+    $scope.register = function() {
+        $scope.message = 'You logged successfully';
+    }
+
+}]);
+var directiveId = 'ngMatch';
+app.directive(directiveId, ['$parse', function ($parse) {
+
+    var directive = {
+        link: link,
+        restrict: 'A',
+        require: '?ngModel'
+    };
+    return directive;
+
+    function link(scope, elem, attrs, ctrl) {
+// if ngModel is not defined, we don't need to do anything
+        if (!ctrl) return;
+        if (!attrs[directiveId]) return;
+
+        var firstPassword = $parse(attrs[directiveId]);
+
+        var validator = function (value) {
+            var temp = firstPassword(scope),
+                v = value === temp;
+            ctrl.$setValidity('match', v);
+            return value;
+        }
+
+        ctrl.$parsers.unshift(validator);
+        ctrl.$formatters.push(validator);
+        attrs.$observe(directiveId, function () {
+            validator(ctrl.$viewValue);
+        });
+
+    }
+}]);
 
 
 
