@@ -18,3 +18,5 @@ app.controller('SliderCtrl', ['$scope', function($scope) {
 		$scope.addSlide("0" + (i+1));
 	}
 }]);
+
+	

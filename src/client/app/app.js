@@ -10,6 +10,10 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
             templateUrl: 'src/client/views/dashboard.html',
             controller: 'DashboardCtrl'
         })
+        .when('/login', {
+            templateUrl: 'src/client/views/login.html',
+            controller: 'SliderCtrl'
+        })
 
         .otherwise({
             redirectTo: '/404.html'
@@ -17,3 +21,13 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
 
     $locationProvider.html5Mode(true);
 }]);
+
+function notLogged() {
+    $('.show-after-log').addClass('hidden');
+    $('.hide-after-log').removeClass('hidden');
+}
+
+function logIn() {
+    $('.hide-after-log').addClass('hidden');
+    $('.show-after-log').removeClass('hidden');
+}
