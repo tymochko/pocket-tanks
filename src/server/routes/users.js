@@ -77,6 +77,7 @@ router.post('/add', (req, res) => {
     var newUser = new usersCollection();
 
     newUser.userName = req.body.userName;
+    newUser.userAge = req.body.userAge;
     newUser.userEmail = req.body.userEmail;
     newUser.userPassword = req.body.userPassword;
     newUser.userAge = req.body.userAge;
