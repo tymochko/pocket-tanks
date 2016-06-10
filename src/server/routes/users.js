@@ -50,13 +50,36 @@ router.get('/:id', (req, res) => {
     });
 });
 
+// log in user
+router.post('/login', (req, res) => {
+    var loginUser = req.body;
+    console.log(loginUser);
+    loginName = loginUser.userName;
+    loginPassword = loginUser.userPassword;
+
+    usersCollection.findOne({userName: loginName}, (err, foundUser) => {
+        if (err) {
+            console.log(err);
+            res.status(500).send();
+        }
+
+        if (!foundUser) {
+            res.status(404).send('Username or password does not match');
+        }
+        console.log(foundUser);
+        res.send(foundUser);
+    });
+});
+
 // add newUser
 router.post('/add', (req, res) => {
+    console.log(req.body);
     var newUser = new usersCollection();
 
     newUser.userName = req.body.userName;
     newUser.userEmail = req.body.userEmail;
     newUser.userPassword = req.body.userPassword;
+    newUser.userAge = req.body.userAge;
     newUser.isEnabled = true;
 
     newUser.save((err, savedObject) => {
