@@ -8,13 +8,8 @@ const usersCollection = require('../models/users');
 
 /* TODO
 
-1) registration/login check request
-2) dashboard online users request
-3) user profile page info request
-4) user profile page change userName request
-5) user profile page change userPassword request
 6) password requirements
-7) log in log out - change online status
+7) log out - change online status
 
 */
 
@@ -53,27 +48,28 @@ router.get('/:id', (req, res) => {
 // log in user
 router.post('/login', (req, res) => {
     var loginUser = req.body;
-    console.log(loginUser);
     loginName = loginUser.userName;
     loginPassword = loginUser.userPassword;
 
-    usersCollection.findOne({userName: loginName}, (err, foundUser) => {
+    usersCollection.findOne({userName: loginName, userPassword: loginPassword}, (err, foundUser) => {
         if (err) {
             console.log(err);
-            res.status(500).send();
+            return res.status(500).send();
         }
 
         if (!foundUser) {
-            res.status(404).send('Username or password does not match');
+            return res.status(404).send('Username or password does not match');
         }
-        console.log(foundUser);
+
+        foundUser.isOnline = true;
+        console.log('Logged in user is ' + foundUser);
         res.send(foundUser);
     });
 });
+// curl --data "userName=andrew&userPassword=qweqwe" http://localhost:3000/users/login
 
 // add newUser
 router.post('/add', (req, res) => {
-    console.log(req.body);
     var newUser = new usersCollection();
 
     newUser.userName = req.body.userName;
