@@ -45,9 +45,12 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/add', (req, res) => {
-    var newUser = new User();
+    console.log(req.body);
+
+    var newUser = new usersCollection();
 
     newUser.userName = req.body.userName;
+    newUser.userAge = req.body.userAge;
     newUser.userEmail = req.body.userEmail;
     newUser.userPassword = req.body.userPassword;
 
