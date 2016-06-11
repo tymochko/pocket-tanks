@@ -77,10 +77,11 @@
 
     .chat-message:before {
         border: 10px solid transparent;
-        border-bottom-color: rgba(0, 0, 0, 0.5);
+        border-bottom-color: rgba(50, 50, 50, 1);
         bottom: 0;
         left: -7px;
-        z-index: -2;
+        border-right-color: transparent;
+        /*z-index: -2;*/
     }
 
     .chat-message:after {
