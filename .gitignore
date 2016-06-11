@@ -40,9 +40,8 @@ jspm_packages
 .idea
 
 dist
-<<<<<<< HEAD
 
-/public
-=======
-public/stylesheets
->>>>>>> prepullrequest
+/public/images
+
+/public/stylesheets
+

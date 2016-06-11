@@ -1,0 +1,15 @@
+canvas {
+  border: 1px solid grey;
+  display: block;
+  margin: auto; }
+
+body {
+  background-color: black; }
+
+.menu {
+  border: 1px solid grey;
+  display: block;
+  margin: auto;
+  width: 800px;
+  height: 400px;
+  background-color: #BA2924; }
