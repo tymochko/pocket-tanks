@@ -1,30 +1,32 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-<!--<meta charset="UTF-8">-->
-<title>Volcano tanks</title>
-<link rel="stylesheet" href="/public/stylesheets/game.css">
-<link rel="stylesheet" href="/public/stylesheets/main.css">
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-
+	<title>Volcano tanks</title>
+	<link rel="stylesheet" href="/public/stylesheets/game.css">
+	<link rel="stylesheet" href="/public/stylesheets/main.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 </head>
 <body>
-<canvas id="myCanvas" width="800" height="500">
-I'm hidden
-</canvas>
-<div class="menu" ng-app="">
-  <div class="chat">
-        <input type="text" class="chat-name" placeholder="Enter your name" />
-        <div class="chat-messages"></div>
-        <textarea placeholder="Type your message"></textarea>
-        <div class="chat-status">Status: <span>Idle</span></div>
-    </div>
-</div>
-<script src="/public/scripts/smileys.js"></script>
-<script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script>
-<script src="/public/scripts/chat.js"></script>
-<script type="text/javascript" src="/public/scripts/lightning.js"></script>
+	<canvas id="myCanvas" width="800" height="500">
+		I'm hidden
+	</canvas>
 
-<script type="text/javascript" src="/public/scripts/game.js"></script>
+	<div class="menu" ng-app="">
+		<div class="chat">
+			<input type="text" class="chat-name" placeholder="Enter your name" />
+			<div class="chat-messages"></div>
+			<textarea placeholder="Type your message"></textarea>
+			<div class="chat-status">Status: <span>Idle</span></div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="/public/scripts/lightning.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+	<script type="text/javascript" src="/public/scripts/MyConfig.json"></script>
+	<script src="/public/scripts/smileys.js"></script>
+	<script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script>
+	<script src="/public/scripts/chat.js"></script>
+	<script type="text/javascript" src="/public/scripts/game.js"></script>
+
 </body>
 </html>

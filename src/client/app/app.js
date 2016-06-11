@@ -17,10 +17,6 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
             controller: 'LoginSubmitController'
         })
 
-        .when('/game', {
-            templateUrl: 'src/client/views/game.html'
-            //controller: 'LoginSubmitController'
-        })
 
         .otherwise({
             redirectTo: '/404.html'

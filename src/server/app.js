@@ -85,10 +85,15 @@ app.use(function(err, req, res, next) {
 });
 
 // <<<<<<< HEAD
-var mongo = require('mongodb').MongoClient,
-    client = require('socket.io').listen(8080).sockets;
- 
-    mongo.connect('mongodb://127.0.0.1/chat', function(err,db){
+
+var fs=require('fs');
+var config = JSON.parse(fs.readFileSync('src/server/MyConfig.json', encoding="ascii"));
+var host=config.host;
+var port=config.port;
+var mongo = require('mongodb').MongoClient;
+var client = require('socket.io').listen(port).sockets;
+
+    mongo.connect('mongodb://'+host+'/chat', function(err,db){
         if(err) throw err;
  
           client.on('connection',function(socket){
@@ -98,13 +103,12 @@ var mongo = require('mongodb').MongoClient,
                   socket.emit('status',s);
                 };
  
-                col.find().sort({$natural: -1 }).limit(5).toArray(function(err,res){
+                (col.find().sort({$natural: -1 }).limit(5)).toArray(function(err,res){
                     if(err) throw err;
                     socket.emit('output',res);
                 });
-                col.find().sort({$natural: 1 });
+                
  
-            //wait for input
             socket.on('input', function(data){
                 var name = data.name;
                 var message = data.message;
@@ -120,7 +124,6 @@ var mongo = require('mongodb').MongoClient,
                 {
                     col.insert({name: name,message:message,time:time}, function(){
  
-                        //emit latest messages to all clients
                         client.emit('output',[data]);
  
                         sendStatus({
@@ -133,6 +136,5 @@ var mongo = require('mongodb').MongoClient,
             });
          });
     });
-// =======
-// >>>>>>> prepullrequest
+
 module.exports = app;
