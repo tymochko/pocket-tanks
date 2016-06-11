@@ -9,12 +9,12 @@
     <meta name="description" content="" />
     <link href="public/stylesheets/style.css" rel="stylesheet">
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="node_modules/angular/angular.min.js"></script>
     <script src="node_modules/angular-animate/angular-animate.min.js"></script>
     <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
-    <script src="node_modules/jquery/dist/jquery.js"></script>
-
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
     <base href="/">
 </head>
@@ -36,13 +36,14 @@
             <div class="collapse navbar-collapse" id="navbar">
 
             	<a href="/" class="btn btn-danger navbar-center show-after-log">Start game</a>
+                <button type="input" class="btn btn-default" ng-click="open()">Open me!</button>
             	<ul class="nav navbar-nav show-after-log">
 			        <li><a href="/dashboard">Dashboard</a></li>
 			        <li><a href="/scores">Scores</a></li>
 			        <li><a href="/about">About</a></li>
 		      	</ul>
 				<ul class="nav navbar-nav navbar-right hide-after-log">
-				<li><a href="/signup"><span class="glyphicon glyphicon-plus"></span> Sign Up</a></li>
+				<li><a href='/register' ng-click="open"><span class="glyphicon glyphicon-plus"></span> Sign Up</a></li>
 				<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right show-after-log">
@@ -70,7 +71,7 @@
     <!-- .footer -->
 
     <!-- Angular & Bootstrap -->
-    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    
 
     <!-- Modules -->
     <script src="src/client/app/app.js"></script>

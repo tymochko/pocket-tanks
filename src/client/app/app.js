@@ -10,10 +10,6 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
             templateUrl: 'src/client/views/dashboard.html',
             controller: 'DashboardCtrl'
         })
-        .when('/login', {
-            templateUrl: 'src/client/views/login.html',
-            controller: 'SliderCtrl'
-        })
 
         /*Login Form Route*/
         .when('/login', {

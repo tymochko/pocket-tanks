@@ -2,7 +2,6 @@ app.controller('LoginSubmitController', ['$scope', '$window', function($scope, $
 
 	$scope.register = function() {
 		$scope.message = 'You logged successfully';
-		$window.location.href = '/';
-		logIn();
+		//$window.location.href = '/';
 	}
 }]);
