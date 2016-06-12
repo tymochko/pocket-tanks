@@ -40,4 +40,8 @@ jspm_packages
 .idea
 
 dist
-public/stylesheets
+
+/public/images
+
+/public/stylesheets
+
