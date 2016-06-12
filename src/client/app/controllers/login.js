@@ -1,4 +1,4 @@
-app.controller('LoginSubmitController', ['$scope', 'sendLog', function($scope, sendLog) {
+app.controller('LoginSubmitController', ['$scope', 'sendLog', '$http', '$location', function($scope, sendLog, $http, $location) {
 
 	$scope.user = {
 		name : "",
@@ -13,7 +13,23 @@ app.controller('LoginSubmitController', ['$scope', 'sendLog', function($scope, s
 			userPassword : user.password
 		};
 		sendLog.add(userInfo);
+		$http.post('/users/login', userInfo)
+		  .then(function(response) {
+		  		console.log(userInfo.name);
+		  		$location.path('/');
+		      	logIn();
+		      	$scope.loggedAs = userInfo.name;
+		  }, function(response) {
+		      console.log('failed');
+		  });
 	};
+
+	// $http.post('/login')
+	//   .then(function(response) {
+	//       console.log('success');
+	//   }, function(response) {
+	//       console.log('failed');
+	//   });
 
 }]);
 

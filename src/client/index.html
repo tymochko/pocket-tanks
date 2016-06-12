@@ -19,9 +19,9 @@
     <base href="/">
 </head>
 
-<body>
+<body ng-controller="mainCtrl">
 	<div class="container-fullwidth">
-        <nav class="navbar navbar-inverse navbar-static-top" role="navigation" style="margin: 0 0;  border-bottom: 1px solid rgb(192, 192, 192);">
+        <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
 		  <div class="container-fluid">
 		    <div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
@@ -29,25 +29,25 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>                        
 				</button>
-		      <a class="navbar-brand active" href="/" style="padding: 0;">
+		      <a class="navbar-brand active" href="/">
                 <img src="public/images/logo.jpeg">      
               </a>
 		    </div>
             <div class="collapse navbar-collapse" id="navbar">
 
-            	<a href="/" class="btn btn-danger navbar-center show-after-log">Start game</a>
+            	<a href="/game" class="btn btn-danger navbar-center show-after-log">Start game</a>
             	<ul class="nav navbar-nav show-after-log">
 			        <li><a href="/dashboard">Dashboard</a></li>
 			        <li><a href="/scores">Scores</a></li>
 			        <li><a href="/about">About</a></li>
 		      	</ul>
 				<ul class="nav navbar-nav navbar-right hide-after-log">
-				<li><a href="/signup"><span class="glyphicon glyphicon-plus"></span> Sign Up</a></li>
-				<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+				<li><a href="/" ng-click="open('signUp')"><span class="glyphicon glyphicon-plus"></span> Sign Up</a></li>
+				<li><a href="/" ng-click="open()"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right show-after-log">
 				<li><a href="/profile"><span class="glyphicon glyphicon-user"></span> Profile </a></li>
-				<li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+				<li><a href="/" onclick="logOut()"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
 				</ul>
 		    </div>
 		  </div>
@@ -64,8 +64,8 @@
         <!-- .content -->
     </div>
     <!-- .wrapper -->
-    <footer style="padding: 5px 5px; background: rgb(34, 34, 34); color: white;">
-            <p style="margin: 5px">&copy; Tanks Game 2016. &middot; <a href="#">Privacy</a> &middot; </p>
+    <footer>
+            <p>&copy; Tanks Game 2016.</p>
     </footer>
     <!-- .footer -->
 
@@ -79,10 +79,12 @@
 
     <!-- Controllers -->
     <script src="src/client/app/controllers/dashboard.js"></script>
-    <script src="src/client/app/controllers/slider.js"></script>
-    <script src="src/client/app/controllers/login.js"></script>
-    <script src="src/client/app/controllers/signup.js"></script>
+    <!-- <script src="src/client/app/controllers/slider.js"></script> -->
+    <!-- <script src="src/client/app/controllers/login.js"></script> -->
+    <!-- <script src="src/client/app/controllers/signup.js"></script> -->
     <script src="src/client/app/controllers/manageProfileController.js"></script>
+    <script src="src/client/app/controllers/main.js"></script>
+    <script src="src/client/app/controllers/game.js"></script>
 
 </body>
 
