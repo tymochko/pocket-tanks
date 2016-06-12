@@ -1,0 +1,29 @@
+.form {
+  background: rgb(34,34,34);
+  padding: 40px;
+  width: 500px;
+  margin: 40px auto 40px auto;
+  border-radius: 7px;
+}
+
+.signup-success{
+  text-align:center;
+  color: #509D12;
+}
+
+.regHeading {
+  text-align:center;
+  color: rgb(157,157,157);
+  margin:0 0 30px;
+}
+
+.form-group label{
+  font-family: 'Titillium Web', sans-serif;
+  font-weight:200;
+  height: 25px;
+  color: rgb(157,157,157);
+}
+
+.signup-form {
+  background-color: rgba(120,2,6, 0.82);
+}
