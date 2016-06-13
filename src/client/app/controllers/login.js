@@ -1,51 +1,175 @@
-app.controller('LoginSubmitController', ['$scope', 'sendLog', '$http', '$location', function($scope, sendLog, $http, $location) {
+app.controller('mainCtrl', ['$scope', '$uibModal', '$log', 'Auth', '$location',
+    function($scope, $uibModal, $log, $location, Auth) {
 
-	$scope.user = {
-		name : "",
-		password: ""
-	};
+        //<------------slider-------------> 
+        $scope.myInterval = 2000;
+        $scope.noWrapSlides = false;
+        $scope.active = 0;
+        $scope.noPause = true;
+        var slides = $scope.slides = [];
+        var currIndex = 0;
+
+        $scope.addSlide = function(imageNum) {
+            slides.push({
+                image: 'public/images/home/' + imageNum + '.jpg',
+                id: currIndex++
+            });
+        };
+
+        for (var i = 0; i < 9; i++) {
+            $scope.addSlide("0" + (i + 1));
+        }
+        //<-------------------------------->
+        $scope.items = [];
+
+        $scope.animationsEnabled = true;
+
+        $scope.open = function(param) {
+            if (param === 'signUp') {
+                var modalInstance = $uibModal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'src/client/views/signup.html',
+                    controller: 'SignupCtrl',
+                    resolve: {
+                        items: function() {
+                            return $scope.items;
+                        }
+                    }
+                });
+                modalInstance.result.then(function(selectedItem) {
+                    $scope.selected = selectedItem;
+                }, function() {
+                    $log.info('Modal dismissed at: ' + new Date());
+                });
+            } else {
+                var modalInstance = $uibModal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'src/client/views/login.html',
+                    controller: 'LoginCtrl',
+                    resolve: {
+                        items: function() {
+                            return $scope.items;
+                        }
+                    }
+                });
+                modalInstance.result.then(function(selectedItem) {
+                    $scope.selected = selectedItem;
+                }, function() {
+                    $log.info('Modal dismissed at: ' + new Date());
+                });
+            }
+        }
+
+        $scope.logOut = function() {
+            $location.path('http://foo.bar')
+        }
+    }
+]);
+
+app.controller('LoginCtrl', ['$scope', '$http', '$uibModalInstance', 'items', 'Auth',
+    function($scope, $http, $uibModalInstance, items, Auth) {
+
+        $scope.items = items;
+        $scope.selected = {
+            item: $scope.items[0]
+        };
+
+        $scope.login = function(user) {
+            
+            console.log($scope.user);
+            let userInfo = {
+                userName: user.name,
+                userPassword: user.password
+            };    
+
+            $http.post('/users/login', userInfo)
+                .then(function(response) {
+                           	$('.hide-after-log').addClass('hidden');
+    						$('.show-after-log').removeClass('hidden');
+                        Auth.setUser(user);
+                        $uibModalInstance.close($scope.selected.item);
+                    },
+                    function(response) {
+                        console.log('failed');
+                    }
+                );
+        };
+    }
+]);
 
 
-	$scope.register = function(user){
-		console.log($scope.user);
-		let userInfo = {
-			userName : user.name,
-			userPassword : user.password
-		};
-		sendLog.add(userInfo);
-		$http.post('/users/login', userInfo)
-		  .then(function(response) {
-		  		console.log(userInfo.name);
-		  		$location.path('/');
-		      	logIn();
-		      	$scope.loggedAs = userInfo.name;
-		  }, function(response) {
-		      console.log('failed');
-		  });
-	};
+app.controller('SignupCtrl', ['$scope', 'sendReg', function($scope, sendReg) {
 
-	// $http.post('/login')
-	//   .then(function(response) {
-	//       console.log('success');
-	//   }, function(response) {
-	//       console.log('failed');
-	//   });
+    $scope.user = {
+        name: "",
+        age: "",
+        email: "",
+        password: ""
+    };
 
+
+    $scope.register = function(user) {
+        console.log($scope.user);
+        let userInfo = {
+            userName: user.name,
+            userAge: user.age,
+            userEmail: user.email,
+            userPassword: user.password
+        };
+        sendReg.add(userInfo);
+    };
 }]);
 
-app.service('sendLog',['$http', function($http){
-	this.add = function(userInfo){
-		return $http.post('http://localhost:3000/users/login', userInfo).then(function(res){
 
-		});
-	};
+app.service('sendReg', ['$http', function($http) {
+    this.add = function(userInfo) {
+        return $http.post('http://localhost:3000/users/add', userInfo).then(function(res) {
+
+        });
+    };
 }]);
 
 
-/*app.controller('LoginSubmitController', ['$scope', '$window', function($scope, $window) {
+app
+    .run(['$rootScope', '$location', 'Auth', function($rootScope, $location, Auth) {
+        $rootScope.$on('$routeChangeStart', function(event) {
 
-	$scope.register = function() {
-		$scope.message = 'You logged successfully';
-		//$window.location.href = '/';
-	}
-}]);*/
+            if (!Auth.isLoggedIn()) {
+                console.log('DENY');
+                //event.preventDefault();
+                $('.show-after-log').addClass('hidden');
+                $('.hide-after-log').removeClass('hidden');
+            } else {
+                console.log('ALLOW');
+            }
+        });
+    }])
+
+.factory('Auth', function() {
+    var user;
+
+    return {
+        setUser: function(aUser) {
+            user = aUser;
+        },
+        isLoggedIn: function() {
+            return (user) ? user : false;
+        }
+    }
+});
+
+/////////////////////// for navbar (needs new file)
+// function notLogged() {
+//     $('.show-after-log').addClass('hidden');
+//     $('.hide-after-log').removeClass('hidden');
+// }
+
+// function logIn() {
+//     $('.hide-after-log').addClass('hidden');
+//     $('.show-after-log').removeClass('hidden');
+// }
+
+// function checkLog(){
+// 	if(Auth.isLoggedIn) logIn();
+// 	else notLogged();
+// }
