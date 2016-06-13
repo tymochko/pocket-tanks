@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 
-const usersCollection = require('../models/users');
+var usersCollection = require('../models/users');
 
 /* GET users listing. */
 
@@ -52,6 +52,7 @@ router.get('/:id', (req, res) => {
 
 // add newUser
 router.post('/add', (req, res) => {
+    
     var newUser = new usersCollection();
 
     newUser.userName = req.body.userName;
@@ -59,15 +60,21 @@ router.post('/add', (req, res) => {
     newUser.userEmail = req.body.userEmail;
     newUser.userPassword = req.body.userPassword;
     newUser.isEnabled = true;
-
-    newUser.save((err, savedObject) => {
+    usersCollection.createUser(newUser ,function(err, user) {
+          if (err) {
+            console.log(err);
+            res.status(500).send();
+        };
+    });
+  
+    /*newUser.save((err, savedObject) => {
         if (err) {
             console.log(err);
             res.status(500).send();
         } else {
             res.send(savedObject);
         }
-    });
+    });*/
 });
 
 // edit userName

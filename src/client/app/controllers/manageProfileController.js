@@ -11,7 +11,7 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
 
     let init = function () {
         //todo delete hardcode
-        profileService.getProfileById("users/5759ad653aa10a78153f4611").then(function (resp) {
+        profileService.getProfileById("users/575af41962ba55dc0fe2dd33").then(function (resp) {
             $scope.user = resp.data;
         });
     };
@@ -25,7 +25,7 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
                 userName: user.userName,
                 userEmail: user.userEmail,
                 userPassword: user.newPassword,
-                _id:'5759ad653aa10a78153f4611'
+                _id:'575af41962ba55dc0fe2dd33'
             };
             profileService.add(userInfo);
 
@@ -78,7 +78,7 @@ app.service('profileService', ['$http',function ($http) {
 
     }
     this.add = function (userInfo) {
-        return $http.put('http://localhost:3000/users/update/5759b00e1997228014585a03', userInfo);
+        return $http.put('http://localhost:3000/users/update/575af41962ba55dc0fe2dd33', userInfo);
     }
 }]);
 app.controller('ModalInstanceCtrl', ['$scope',function ($scope, $uibModalInstance) {
