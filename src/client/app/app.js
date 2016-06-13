@@ -12,6 +12,11 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
             controller: 'DashboardCtrl'
         })
 
+        .when('/signup', {
+            templateUrl: 'src/client/views/signup.html',
+            controller: 'SignupCtrl'
+        })
+
         /*Login Form Route*/
         .when('/profile', {
             templateUrl: 'src/client/views/manageProfile.html',

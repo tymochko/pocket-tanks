@@ -26,10 +26,11 @@ app.controller('SignupCtrl', ['$scope', 'sendReg', function($scope, sendReg) {
 
 }]);
 
-app.service('sendReg',['$http', function($http){
+app.service('sendReg',['$http', '$location', function($http, $location){
 	this.add = function(userInfo){
 		return $http.post('http://localhost:3000/users/add', userInfo).then(function(res){
-
+			$location.path('/');
+			alert('You are successfully registered! You can now log in');
 		});
 	};
 }]);
