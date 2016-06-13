@@ -36,23 +36,16 @@ router.get('/:id', (req, res) => {
         if (err) {
             console.log(err);
             return res.status(500).send();
-        } else {
-            if (!foundUser) {
-                return res.status(404).send();
-            } else {
-                if (req.body.name) {
-                    foundUser.name = req.body.name;
-                }
+        }
 
-                if (req.body.password) {
-                    foundUser.password = req.body.password;
-                }
-            }
+        if (!foundUser) {
+            return res.status(404).send();
         }
 
         res.send(foundUser);
     });
 });
+// curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:3000/users/:id
 
 // log in user
 router.post('/login', (req, res) => {
