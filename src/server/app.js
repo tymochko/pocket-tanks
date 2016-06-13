@@ -10,12 +10,20 @@ var user = require('./models/users');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var game = require('./routes/game');
 
 var app = express();
 
 // view engine setup
+//app.set('views', path.join(__dirname, 'views'));
+//app.set('view engine', 'html');
+
+var cons = require('consolidate');
+
+// view engine setup
+app.engine('html', cons.swig)
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'html');
 
 // connect to user database
 const db = 'mongodb://localhost/users';
@@ -27,13 +35,23 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use('/public', express.static(path.resolve('public')));
+//<<<<<<< HEAD
+//app.use('/public', express.static(path.join(__dirname, '..', '..', 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/game', game);
+
+// started to work on chat
+//=======
+app.use('/public', express.static(path.resolve('public')));
+
+//app.use('/', routes);
+//app.use('/users', users);
 app.use('/src/client', express.static(path.resolve('src/client')));
 app.use('/node_modules', express.static(path.resolve('node_modules')));
 
+//>>>>>>> prepullrequest
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -65,5 +83,58 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
+// <<<<<<< HEAD
+
+var fs=require('fs');
+var config = JSON.parse(fs.readFileSync('src/server/MyConfig.json', encoding="ascii"));
+var host=config.host;
+var port=config.port;
+var mongo = require('mongodb').MongoClient;
+var client = require('socket.io').listen(port).sockets;
+
+    mongo.connect('mongodb://'+host+'/chat', function(err,db){
+        if(err) throw err;
+ 
+          client.on('connection',function(socket){
+ 
+            var col = db.collection('messages'),
+                sendStatus = function(s){
+                  socket.emit('status',s);
+                };
+ 
+                (col.find().sort({$natural: -1 }).limit(5)).toArray(function(err,res){
+                    if(err) throw err;
+                    socket.emit('output',res);
+                });
+                
+ 
+            socket.on('input', function(data){
+                var name = data.name;
+                var message = data.message;
+                var time=data.time;
+ 
+                whitespace = /^\s*$/;
+ 
+                if(whitespace.test(name) || whitespace.test(message))
+                {
+                    sendStatus('Name and Message Required');
+                }
+                else
+                {
+                    col.insert({name: name,message:message,time:time}, function(){
+ 
+                        client.emit('output',[data]);
+ 
+                        sendStatus({
+                            message:"Message sent",
+                            clear:true
+                        });
+                    });
+                }
+ 
+            });
+         });
+    });
 
 module.exports = app;

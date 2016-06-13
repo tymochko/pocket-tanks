@@ -7,6 +7,7 @@ var userSchema = new Schema({
     userName: {type: String, required: true, unique: true},
     userEmail: {type: String, required: true, unique: true},
     userPassword: {type: String, required: true},
+    userAge: {type: Number, required: true},
     isOnline: {type: Boolean},
     isEnabled: {type: Boolean}
 });
@@ -23,3 +24,10 @@ module.exports.createUser = function (newUser,callback) {
          });
     });
 };
+module.exports.comparePassword = function (candPassword, hash, callback) {
+    bcrypt.compare(candPassword, hash, function (err, res) {
+        if (err) throw err;
+        callback(null, res);
+    });
+
+}

@@ -5,15 +5,20 @@ const browserify = require('gulp-browserify'),
     concat = require('gulp-concat');
 
 gulp.task('es6', () => {
-    return gulp.src('src/server/app.js')
+    gulp.src('src/server/app.js')
         .pipe(babel({
             presets: ['es2015']
         }))
         .pipe(gulp.dest('dist'));
+    gulp.src('src/client/models/*.js')
+        .pipe(babel({
+            presets: ['es2015']
+        }))
+        .pipe(gulp.dest('public/scripts'));
 });
 
 gulp.task( 'sass', () => {
-	gulp.src( 'src/client/scss/style.scss' )
+	gulp.src( 'src/client/scss/*.scss' )
 		.pipe( sass().on( 'error', sass.logError ) )
 		.pipe( gulp.dest( 'public/stylesheets/' ) );
 });
@@ -22,6 +27,9 @@ gulp.task( 'watch', () => {
     gulp.watch( 'src/client/scss/**/*.scss', ['sass'] );
 });
 
+// <<<<<<< HEAD
+gulp.task('default', ['es6', 'sass'], () => {
+// =======
 gulp.task('browserify', function() {
     // Single point of entry (make sure not to src ALL your files, browserify will figure it out for you)
     gulp.src(['src/client/app/app.js'])
@@ -35,6 +43,7 @@ gulp.task('browserify', function() {
         .pipe(gulp.dest('public/js'));
 });
 
-gulp.task('default', ['es6'], () => {
+// gulp.task('default', ['es6'], () => {
+// >>>>>>> prepullrequest
     gulp.watch('src/app.js', ['es6'])
 });

@@ -7,4 +7,5 @@ router.get('/', function(req, res, next) {
     res.sendfile(path.resolve('src/client/index.html'));
 });
 
+
 module.exports = router;

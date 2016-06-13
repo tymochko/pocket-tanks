@@ -8,19 +8,23 @@ var usersCollection = require('../models/users');
 
 /* TODO
 
-1) registration/login check request
-2) dashboard online users request
-3) user profile page info request
-4) user profile page change userName request
-5) user profile page change userPassword request
 6) password requirements
-7) log in log out - change online status
+7) log out - change online status
 
 */
 
 // get all users in database, for instance in dashboard
 router.get('/', (req, res) => {
     usersCollection.find((err, users) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send();
+        }
+
+        if (!users) {
+            return res.status(404).send('Database is empty');
+        }
+
         res.send(users);
     });
 });
@@ -31,21 +35,59 @@ router.get('/:id', (req, res) => {
     usersCollection.findOne({_id: id}, (err, foundUser) => {
         if (err) {
             console.log(err);
-            res.status(500).send();
-        } else {
-            if (!foundUser) {
-                res.status(404).send();
-            } else {
-                if (req.body.name) {
-                    foundUser.name = req.body.name;
-                }
-
-                if (req.body.password) {
-                    foundUser.password = req.body.password;
-                }
-            }
+            return res.status(500).send();
         }
 
+        if (!foundUser) {
+            return res.status(404).send();
+        }
+
+        res.send(foundUser);
+    });
+});
+// curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:3000/users/:id
+
+// log in user
+router.post('/login', (req, res) => {
+    var loginUser = req.body;
+    loginName = loginUser.userName;
+    loginPassword = loginUser.userPassword;
+
+    usersCollection.findOne({userName: loginName}, (err, foundUser) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send();
+        }
+
+        if (!foundUser) {
+            return res.status(404).send('Username or password does not match');
+        }
+            usersCollection.comparePassword(loginPassword, foundUser.userPassword, function (err, ress) {
+            if (err) throw err;
+             if (ress) {
+                foundUser.isOnline = true;
+        console.log('Logged in user is ' + foundUser);
+        res.send(foundUser);
+            }
+          })
+});
+});
+// curl --data "userName=andrew&userPassword=qweqwe" http://localhost:3000/users/login
+
+// log out user
+router.get('/logout/:id', (req, res) => {
+    var id = req.params.id;
+    usersCollection.findOne({_id: id}, (err, foundUser) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send();
+        }
+
+        if (!foundUser) {
+            return res.status(404).send();
+        }
+
+        foundUser.idOnline = false;
         res.send(foundUser);
     });
 });
@@ -59,6 +101,7 @@ router.post('/add', (req, res) => {
     newUser.userAge = req.body.userAge;
     newUser.userEmail = req.body.userEmail;
     newUser.userPassword = req.body.userPassword;
+    newUser.userAge = req.body.userAge;
     newUser.isEnabled = true;
     usersCollection.createUser(newUser ,function(err, user) {
           if (err) {
@@ -70,7 +113,7 @@ router.post('/add', (req, res) => {
     /*newUser.save((err, savedObject) => {
         if (err) {
             console.log(err);
-            res.status(500).send();
+            return res.status(500).send();
         } else {
             res.send(savedObject);
         }
@@ -88,7 +131,7 @@ router.put('/update/:id', (req, res) => {
     }, {upset: true}, (err, updatedUser) => {
         if (err) {
             console.log('error occured ' + err);
-            res.status(500).send();
+            return res.status(500).send();
         } else {
             updatedUser.name = req.body.name;
 
@@ -108,7 +151,7 @@ router.put('/update/:id', (req, res) => {
     }, {upset: true}, (err, updatedUser) => {
         if (err) {
             console.log('error occured ' + err);
-            res.status(500).send();
+            return res.status(500).send();
         } else {
             updatedUser.password = req.body.password;
 
@@ -128,7 +171,7 @@ router.put('/delete/:id', (req, res) => {
     }, {upset: true}, (err, updatedUser) => {
         if (err) {
             console.log('error occured ' + err);
-            res.status(500).send();
+            return res.status(500).send();
         } else {
             updatedUser.isEnabled = false;
 
