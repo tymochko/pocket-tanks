@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 
-const usersCollection = require('../models/users');
+var usersCollection = require('../models/users');
 
 /* GET users listing. */
 
@@ -53,7 +53,7 @@ router.post('/login', (req, res) => {
     loginName = loginUser.userName;
     loginPassword = loginUser.userPassword;
 
-    usersCollection.findOne({userName: loginName, userPassword: loginPassword}, (err, foundUser) => {
+    usersCollection.findOne({userName: loginName}, (err, foundUser) => {
         if (err) {
             console.log(err);
             return res.status(500).send();
@@ -62,11 +62,15 @@ router.post('/login', (req, res) => {
         if (!foundUser) {
             return res.status(404).send('Username or password does not match');
         }
-
-        foundUser.isOnline = true;
+            usersCollection.comparePassword(loginPassword, foundUser.userPassword, function (err, ress) {
+            if (err) throw err;
+             if (ress) {
+                foundUser.isOnline = true;
         console.log('Logged in user is ' + foundUser);
         res.send(foundUser);
-    });
+            }
+          })
+});
 });
 // curl --data "userName=andrew&userPassword=qweqwe" http://localhost:3000/users/login
 
@@ -87,9 +91,9 @@ router.get('/logout/:id', (req, res) => {
         res.send(foundUser);
     });
 });
-
 // add newUser
 router.post('/add', (req, res) => {
+    
     var newUser = new usersCollection();
 
     newUser.userName = req.body.userName;
@@ -98,15 +102,14 @@ router.post('/add', (req, res) => {
     newUser.userPassword = req.body.userPassword;
     newUser.userAge = req.body.userAge;
     newUser.isEnabled = true;
-
-    newUser.save((err, savedObject) => {
-        if (err) {
+    usersCollection.createUser(newUser ,function(err, user) {
+          if (err) {
             console.log(err);
-            return res.status(500).send();
-        } else {
-            res.send(savedObject);
-        }
+
+            res.status(500).send();
+        };
     });
+  
 });
 
 // edit userName

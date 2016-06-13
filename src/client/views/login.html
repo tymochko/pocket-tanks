@@ -17,7 +17,7 @@
                 
                      <div>
                     <label for="inputPassword" class="">Password:</label>
-                        <input name="password" type="password" class="form-control" id="inputPassword" placeholder="Password" ng-model="user.password" ng-required="true" ng-minLength="6" ng-maxLength="12">
+                        <input name="password" type="password" class="form-control" id="inputPassword" placeholder="Password" ng-model="user.password" ng-required="true" ng-minLength="6" ng-maxlength=12>
                         <span class="error-message" data-ng-show="login_form.password.$error.required && login_form.password.$dirty">Required</span>
                         <span class="error-message" class="error" ng-show="login_form.password.$error.minlength">Password should be at least 6 characters long</span>
                         <span class="error-message" class="error" ng-show="login_form.password.$error.maxlength">Password cannot be longer than 12 characters</span>
