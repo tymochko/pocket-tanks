@@ -139,7 +139,7 @@ router.put('/update', (req, res) => {
 });
 
 // edit userPassword
-router.put('/update/:id', (req, res) => {
+router.put('/update', (req, res) => {
     usersCollection.findOneAndUpdate({
         _id: req.params.id
     },{
