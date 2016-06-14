@@ -4,13 +4,15 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 // require mongoose - MongoDB Object modeling
 const mongoose = require('mongoose');
 var user = require('./models/users');
-
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var game = require('./routes/game');
+var connectMongo = require('connect-mongo');
+var MongoStore = connectMongo(session);
 
 var app = express();
 
@@ -35,6 +37,16 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+app.use(session({
+    secret: 'come_in',
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    cookie: { maxAge: 45 * 60 * 1000 },
+    saveUninitialized: false,
+    resave: true,
+    rolling: true
+}))
+
 //<<<<<<< HEAD
 //app.use('/public', express.static(path.join(__dirname, '..', '..', 'public')));
 
@@ -55,9 +67,9 @@ app.use('/node_modules', express.static(path.resolve('node_modules')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 // error handlers
@@ -65,57 +77,57 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+    app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
-      message: err.message,
-      error: err
+        message: err.message,
+        error: err
     });
-  });
+    });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
+    res.status(err.status || 500);
+    res.render('error', {
     message: err.message,
     error: {}
-  });
+    });
 });
 
 // <<<<<<< HEAD
 
 var fs=require('fs');
 var config = JSON.parse(fs.readFileSync('src/server/MyConfig.json', encoding="ascii"));
-var host=config.host;
-var port=config.port;
+var host = config.host;
+var port = config.port;
 var mongo = require('mongodb').MongoClient;
 var client = require('socket.io').listen(port).sockets;
 
     mongo.connect('mongodb://'+host+'/chat', function(err,db){
         if(err) throw err;
- 
-          client.on('connection',function(socket){
- 
+
+            client.on('connection',function(socket){
+
             var col = db.collection('messages'),
                 sendStatus = function(s){
-                  socket.emit('status',s);
+                    socket.emit('status',s);
                 };
- 
+
                 (col.find().sort({$natural: -1 }).limit(5)).toArray(function(err,res){
                     if(err) throw err;
                     socket.emit('output',res);
                 });
-                
- 
+
+
             socket.on('input', function(data){
                 var name = data.name;
                 var message = data.message;
                 var time=data.time;
- 
+
                 whitespace = /^\s*$/;
- 
+
                 if(whitespace.test(name) || whitespace.test(message))
                 {
                     sendStatus('Name and Message Required');
@@ -123,16 +135,16 @@ var client = require('socket.io').listen(port).sockets;
                 else
                 {
                     col.insert({name: name,message:message,time:time}, function(){
- 
+
                         client.emit('output',[data]);
- 
+
                         sendStatus({
                             message:"Message sent",
                             clear:true
                         });
                     });
                 }
- 
+
             });
          });
     });

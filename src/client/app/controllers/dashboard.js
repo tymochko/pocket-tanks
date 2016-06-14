@@ -1,7 +1,15 @@
 app.controller('DashboardCtrl', ['$scope', '$http', function($scope, $http) {
 
     $http.get('/users').then(function(response){
-        $scope.users = response.data;
+        var users = response.data.users,
+            id = response.data.myId;
+
+        users.forEach(function(value, index) {
+            if (value._id == id) {
+                delete users[index];
+            }
+        })
+        $scope.users = users;
     });
 
     $scope.sendInvite = function(id){

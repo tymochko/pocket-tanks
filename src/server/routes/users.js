@@ -15,6 +15,7 @@ var usersCollection = require('../models/users');
 
 // get all users in database, for instance in dashboard
 router.get('/', (req, res) => {
+    console.log(req);
     usersCollection.find((err, users) => {
         if (err) {
             console.log(err);
@@ -25,7 +26,7 @@ router.get('/', (req, res) => {
             return res.status(404).send('Database is empty');
         }
 
-        res.send(users);
+        res.json({'users': users, 'myId': req.session.user});
     });
 });
 
@@ -41,7 +42,6 @@ router.get('/:id', (req, res) => {
         if (!foundUser) {
             return res.status(404).send();
         }
-
         res.send(foundUser);
     });
 });
@@ -53,29 +53,20 @@ router.post('/login', (req, res) => {
     loginName = loginUser.userName;
     loginPassword = loginUser.userPassword;
 
-    usersCollection.findOne({userName: loginName}, (err, foundUser) => {
+    usersCollection.loginUser(loginName, loginPassword, (err, user) => {
         if (err) {
-            console.log(err);
-            return res.status(500).send();
+            res.status(401).send();
+        } else {
+            req.session.user = user._id;
+            req.session.username = user.userName;
+            res.status(200).send();
         }
-
-        if (!foundUser) {
-            return res.status(404).send('Username or password does not match');
-        }
-            usersCollection.comparePassword(loginPassword, foundUser.userPassword, function (err, ress) {
-            if (err) throw err;
-             if (ress) {
-                foundUser.isOnline = true;
-        console.log('Logged in user is ' + foundUser);
-        res.send(foundUser);
-            }
-          })
-});
+    });
 });
 // curl --data "userName=andrew&userPassword=qweqwe" http://localhost:3000/users/login
 
 // log out user
-router.get('/logout/:id', (req, res) => {
+router.post('/logout/:id', (req, res) => {
     var id = req.params.id;
     usersCollection.findOne({_id: id}, (err, foundUser) => {
         if (err) {
@@ -87,13 +78,19 @@ router.get('/logout/:id', (req, res) => {
             return res.status(404).send();
         }
 
-        foundUser.idOnline = false;
-        res.send(foundUser);
+        usersCollection.update({userName: foundUser.userName}, {isOnline: false}, function(err, res) {
+            if (err)
+                console.log(err);
+            else {
+                res.send(foundUser);
+                req.session.destroy();
+            }
+        });
     });
 });
 // add newUser
 router.post('/add', (req, res) => {
-    
+
     var newUser = new usersCollection();
 
     newUser.userName = req.body.userName;
@@ -101,15 +98,21 @@ router.post('/add', (req, res) => {
     newUser.userEmail = req.body.userEmail;
     newUser.userPassword = req.body.userPassword;
     newUser.userAge = req.body.userAge;
+    newUser.isOnline = false;
     newUser.isEnabled = true;
     usersCollection.createUser(newUser ,function(err, user) {
-          if (err) {
+        if (err) {
             console.log(err);
-
-            res.status(500).send();
-        };
+            res.status(400);
+            res.json({'message': 'This user is already'});
+        } else {
+            req.session.user = user._id;
+            req.session.username = user.userName;
+            res.status(201);
+            res.json({'message': 'User registred'});
+        }
     });
-  
+
 });
 
 // edit userName
