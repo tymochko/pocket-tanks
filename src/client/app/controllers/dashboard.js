@@ -9,6 +9,7 @@ app.controller('DashboardCtrl', ['$scope', '$http', function($scope, $http) {
                 delete users[index];
             }
         })
+        console.log(users);
         $scope.users = users;
     });
 

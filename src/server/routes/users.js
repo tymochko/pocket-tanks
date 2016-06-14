@@ -15,7 +15,6 @@ var usersCollection = require('../models/users');
 
 // get all users in database, for instance in dashboard
 router.get('/', (req, res) => {
-    console.log(req);
     usersCollection.find((err, users) => {
         if (err) {
             console.log(err);
@@ -29,6 +28,10 @@ router.get('/', (req, res) => {
         res.json({'users': users, 'myId': req.session.user});
     });
 });
+
+router.get('/userOne', (req, res) => {
+    res.json({userId: req.session.user});
+})
 
 // get user's info by id, for instance in profile page
 router.get('/:id', (req, res) => {
@@ -66,8 +69,8 @@ router.post('/login', (req, res) => {
 // curl --data "userName=andrew&userPassword=qweqwe" http://localhost:3000/users/login
 
 // log out user
-router.post('/logout/:id', (req, res) => {
-    var id = req.params.id;
+router.post('/logout', (req, res) => {
+    var id = req.body.id;
     usersCollection.findOne({_id: id}, (err, foundUser) => {
         if (err) {
             console.log(err);
@@ -78,11 +81,11 @@ router.post('/logout/:id', (req, res) => {
             return res.status(404).send();
         }
 
-        usersCollection.update({userName: foundUser.userName}, {isOnline: false}, function(err, res) {
+        usersCollection.update({userName: foundUser.userName}, {isOnline: false}, function(err, ress) {
             if (err)
                 console.log(err);
             else {
-                res.send(foundUser);
+                res.status(200).json({message: 'OK'});
                 req.session.destroy();
             }
         });
@@ -116,9 +119,9 @@ router.post('/add', (req, res) => {
 });
 
 // edit userName
-router.put('/update/:id', (req, res) => {
+router.put('/update', (req, res) => {
     usersCollection.findOneAndUpdate({
-        _id: req.params.id
+        _id: req.body._id
     },{
         $set: {
             userName: req.body.userName

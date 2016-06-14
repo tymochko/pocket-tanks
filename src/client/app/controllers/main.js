@@ -1,11 +1,12 @@
-app.controller('mainCtrl', ['$scope', '$uibModal', '$log', 'Auth', '$location',
-    function($scope, $uibModal, $log, $location, Auth) {
+app.controller('mainCtrl', ['$scope', '$uibModal', '$log', 'Auth', '$location', '$http', '$window',
+    function($scope, $uibModal, $log, Auth, $location, $http, $window) {
 
-        //<------------slider-------------> 
+        //<------------slider------------->
         $scope.myInterval = 2000;
         $scope.noWrapSlides = false;
         $scope.active = 0;
         $scope.noPause = true;
+
         var slides = $scope.slides = [];
         var currIndex = 0;
 
@@ -60,9 +61,15 @@ app.controller('mainCtrl', ['$scope', '$uibModal', '$log', 'Auth', '$location',
             }
         }
 
-        $scope.logOut = function() {
-            $location.path('http://foo.bar')
+        $scope.logOut = function(id) {
+            $http.post('/users/logout', {id: id}).then(function(response){
+                    $window.location.reload();
+            });
         }
+
+        $http.get('/users/userOne').then(function(response) {
+            $scope.userId = response.data.userId;
+        });
     }
 ]);
 
@@ -75,12 +82,12 @@ app.controller('LoginCtrl', ['$scope', '$http', '$uibModalInstance', 'items', 'A
         };
 
         $scope.login = function(user) {
-            
+
             console.log($scope.user);
             let userInfo = {
                 userName: user.name,
                 userPassword: user.password
-            };    
+            };
 
             $http.post('/users/login', userInfo)
                 .then(function(response) {
