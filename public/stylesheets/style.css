@@ -38,7 +38,9 @@ body {
 
 div.wrapper {
   background: linear-gradient(to right, #780206 0%, rgba(120, 2, 6, 0.5) 49%, rgba(120, 2, 6, 0.8) 100%);
-  min-height: 92vh; }
+  min-height: 92vh;
+  display: inline-block;
+  width: 100%; }
 
 .slider-view {
   width: 80%;
@@ -58,25 +60,32 @@ footer {
 footer.p {
   margin: 5px; }
 
-.status span {
-  padding-left: 20px;
-  position: relative; }
-  .status span:before {
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 10px;
-    content: "";
-    height: 10px;
-    margin: auto;
-    background: #d3d4da;
-    position: absolute;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -ms-border-radius: 50%;
-    border-radius: 50%; }
-  .status span.true:before {
-    background: #6ed46e; }
+.dashboard {
+  width: 80%;
+  color: white;
+  margin: 0 auto;
+  max-width: 1240px; }
+  .dashboard .status span {
+    padding-left: 20px;
+    position: relative; }
+    .dashboard .status span:before {
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 10px;
+      content: "";
+      height: 10px;
+      margin: auto;
+      background: #d3d4da;
+      position: absolute;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      -ms-border-radius: 50%;
+      border-radius: 50%; }
+    .dashboard .status span.true:before {
+      background: #6ed46e; }
+  .dashboard .table-striped > tbody > tr:nth-of-type(odd) {
+    background: transparent; }
 
 /*Login Form*/
 input.ng-invalid.ng-touched {

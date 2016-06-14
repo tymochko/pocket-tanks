@@ -129,6 +129,18 @@ app.service('sendReg', ['$http', function($http) {
     };
 }]);
 
+app.directive('validPasswordC', function () {
+    return {
+        require: 'ngModel',
+        link: function (scope, elm, attrs, ctrl) {
+            ctrl.$parsers.unshift(function (viewValue, $scope) {
+                var noMatch = viewValue != scope.regForm.password.$viewValue
+                ctrl.$setValidity('noMatch', !noMatch)
+            })
+        }
+    }
+});
+
 
 app
     .run(['$rootScope', '$location', 'Auth', function($rootScope, $location, Auth) {
