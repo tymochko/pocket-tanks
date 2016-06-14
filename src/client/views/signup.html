@@ -3,7 +3,6 @@
 		<div class="form">
         	<h1 class='regHeading'>Registration</h1>
 	        <form name='regForm'>
-	            <!---<p class="signup-success" ng-show="message">{{message}}</p> <!-method="post" ng-submit="signup()"-->
 	            <div class="form-group">
 	                <label for='name'>User name:</label>
 	                <input type="text" id='name' ng-pattern="/^[a-zA-Z0-9]*$/" class="form-control" name='username' ng-model="user.name" placeholder="User name" ng-minlength=5 ng-maxlength=15 />
@@ -31,21 +30,22 @@
     			</div>
 				<div class="form-group" data-ng-class="{'has-error':!regForm.password.$valid}">
 					<label for="password">Password:</label>
- 					<input class="form-control" id='password' type="password" name="password" required="" 					ng-model="user.password" placeholder="Password"  ng-minlength=6 ng-maxlength='12' />
+ 					<input class="form-control" id='password' type="password" name="password" required="" ng-model="user.password" placeholder="Password"  ng-minlength=6 ng-maxlength='12' />
  					<span class="error-message" data-ng-show="regForm.password.$error.required && regForm.password.$dirty">Required</span>
  					<span class="error-message" class="error" ng-show="regForm.password.$error.minlength">Password should be at least 6 characters long</span>
 	        		<span class="error-message" class="error" ng-show="regForm.password.$error.maxlength">Password cannot be longer than 12 characters</span>
  				</div>
-				<div class="form-group" data-ng-class="{'has-error':!regForm.passwordCompare.$valid}">
-					<label for="passwordCompare">Confirm Password:</label>
-					 <input class="form-control" type="password" name="passwordCompare" placeholder="Confirm password" required="" data-ng-match="Password"/>
-					 <span class="error-message" data-ng-show="regForm.passwordCompare.$error.required && regForm.passwordCompare.$dirty">Required</span>
+				<div class="form-group" >
+					<label for="password_c">Confirm Password:</label>
+					 <input class="form-control" type="password" id='password_c' name="password_c" ng-model="user.password_c" valid-password-c placeholder="Confirm password" required="" />
+					 <span class="error-message" data-ng-show="regForm.password_c.$error.require   && regForm.password_c.$dirty">Required</span>
 					 </br>
-					 <span class="error-message" data-ng-show="regForm.passwordCompare.$error.match">Passwords do not match</span>
+					 <span class="error-message" ng-show="regForm.password_c.$error.noMatch && regForm.password.$dirty">Passwords do not match</span>
  				</div>
+
 	        </form>
 		        <div class="form-group">
-		            <button type="submit" class="btn btn-danger center-block" ng-click='register(user)' ng-disabled='regForm.$invalid'>Submit</button>
+		            <button type="submit" class="btn btn-danger center-block" ng-click='register(user)' >Submit</button>
 				</div>
         </div>
     </div>

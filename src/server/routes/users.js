@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 
-const usersCollection = require('../models/users');
+var usersCollection = require('../models/users');
 
 /* GET users listing. */
 
@@ -25,60 +25,16 @@ router.get('/', (req, res) => {
             return res.status(404).send('Database is empty');
         }
 
-        res.send(users);
+        res.json({'users': users, 'myId': req.session.user});
     });
 });
+
+router.get('/userOne', (req, res) => {
+    res.json({userId: req.session.user});
+})
 
 // get user's info by id, for instance in profile page
 router.get('/:id', (req, res) => {
-    var id = req.params.id;
-    usersCollection.findOne({_id: id}, (err, foundUser) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).send();
-        } else {
-            if (!foundUser) {
-                return res.status(404).send();
-            } else {
-                if (req.body.name) {
-                    foundUser.name = req.body.name;
-                }
-
-                if (req.body.password) {
-                    foundUser.password = req.body.password;
-                }
-            }
-        }
-
-        res.send(foundUser);
-    });
-});
-
-// log in user
-router.post('/login', (req, res) => {
-    var loginUser = req.body;
-    loginName = loginUser.userName;
-    loginPassword = loginUser.userPassword;
-
-    usersCollection.findOne({userName: loginName, userPassword: loginPassword}, (err, foundUser) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).send();
-        }
-
-        if (!foundUser) {
-            return res.status(404).send('Username or password does not match');
-        }
-
-        foundUser.isOnline = true;
-        console.log('Logged in user is ' + foundUser);
-        res.send(foundUser);
-    });
-});
-// curl --data "userName=andrew&userPassword=qweqwe" http://localhost:3000/users/login
-
-// log out user
-router.get('/logout/:id', (req, res) => {
     var id = req.params.id;
     usersCollection.findOne({_id: id}, (err, foundUser) => {
         if (err) {
@@ -89,14 +45,55 @@ router.get('/logout/:id', (req, res) => {
         if (!foundUser) {
             return res.status(404).send();
         }
-
-        foundUser.idOnline = false;
         res.send(foundUser);
     });
 });
+// curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:3000/users/:id
 
+// log in user
+router.post('/login', (req, res) => {
+    var loginUser = req.body;
+    loginName = loginUser.userName;
+    loginPassword = loginUser.userPassword;
+
+    usersCollection.loginUser(loginName, loginPassword, (err, user) => {
+        if (err) {
+            res.status(401).send();
+        } else {
+            req.session.user = user._id;
+            req.session.username = user.userName;
+            res.status(200).send();
+        }
+    });
+});
+// curl --data "userName=andrew&userPassword=qweqwe" http://localhost:3000/users/login
+
+// log out user
+router.post('/logout', (req, res) => {
+    var id = req.body.id;
+    usersCollection.findOne({_id: id}, (err, foundUser) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send();
+        }
+
+        if (!foundUser) {
+            return res.status(404).send();
+        }
+
+        usersCollection.update({userName: foundUser.userName}, {isOnline: false}, function(err, ress) {
+            if (err)
+                console.log(err);
+            else {
+                res.status(200).json({message: 'OK'});
+                req.session.destroy();
+            }
+        });
+    });
+});
 // add newUser
 router.post('/add', (req, res) => {
+
     var newUser = new usersCollection();
 
     newUser.userName = req.body.userName;
@@ -104,22 +101,27 @@ router.post('/add', (req, res) => {
     newUser.userEmail = req.body.userEmail;
     newUser.userPassword = req.body.userPassword;
     newUser.userAge = req.body.userAge;
+    newUser.isOnline = false;
     newUser.isEnabled = true;
-
-    newUser.save((err, savedObject) => {
+    usersCollection.createUser(newUser ,function(err, user) {
         if (err) {
             console.log(err);
-            return res.status(500).send();
+            res.status(400);
+            res.json({'message': 'This user is already'});
         } else {
-            res.send(savedObject);
+            req.session.user = user._id;
+            req.session.username = user.userName;
+            res.status(201);
+            res.json({'message': 'User registred'});
         }
     });
+
 });
 
 // edit userName
-router.put('/update/:id', (req, res) => {
+router.put('/update', (req, res) => {
     usersCollection.findOneAndUpdate({
-        _id: req.params.id
+        _id: req.body._id
     },{
         $set: {
             userName: req.body.userName
@@ -137,7 +139,7 @@ router.put('/update/:id', (req, res) => {
 });
 
 // edit userPassword
-router.put('/update/:id', (req, res) => {
+router.put('/update', (req, res) => {
     usersCollection.findOneAndUpdate({
         _id: req.params.id
     },{

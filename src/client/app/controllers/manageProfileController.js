@@ -1,4 +1,4 @@
-app.controller('manageProfileController', ['$scope', '$uibModal', 'profileService', function ($scope, $uibModal, profileService) {
+app.controller('manageProfileController', ['$scope', '$uibModal', 'profileService', '$http', function ($scope, $uibModal, profileService, $http) {
     $scope.emailStatus = true;
     $scope.user = {
         userName: "",
@@ -9,9 +9,14 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
         confirmNewPassword: ""
     };
 
+    $http.get('/users/userOne').then(function(response) {
+        $scope.userId = response.data.userId;
+    });
+
+
     let init = function () {
         //todo delete hardcode
-        profileService.getProfileById("users/5759ad653aa10a78153f4611").then(function (resp) {
+        profileService.getProfileById($scope.userId).then(function (resp) {
             $scope.user = resp.data;
         });
     };
@@ -22,10 +27,10 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
 
         if (user.newPassword === user.confirmNewPassword) {
             let userInfo = {
+                _id: $scope.userId,
                 userName: user.userName,
                 userEmail: user.userEmail,
-                userPassword: user.newPassword,
-                _id:'5759ad653aa10a78153f4611'
+                userPassword: user.newPassword
             };
             profileService.add(userInfo);
 
@@ -67,18 +72,26 @@ app.service('profileService', ['$http',function ($http) {
 
             });
     };
+    var userId = '';
+
+    $http.get('/users/userOne').then(function(response) {
+        userId = response.data.userId;
+    });
 
     this.getProfileById = (id) => {//todo all changes to config
-        return $http.get("http://localhost:3000/" + id);
+        return $http.get("http://localhost:3000/users/" + id);
     };
+
+
     this.deleteAccount = function () {
         //todo add delete router
         return $http.delete('http://localhost:3000/update', userInfo);
 
-
     }
     this.add = function (userInfo) {
-        return $http.put('http://localhost:3000/users/update/5759b00e1997228014585a03', userInfo);
+        $http.put('http://localhost:3000/users/update/', userInfo).then(function(response) {
+            console.log('ok');
+        });
     }
 }]);
 app.controller('ModalInstanceCtrl', ['$scope',function ($scope, $uibModalInstance) {

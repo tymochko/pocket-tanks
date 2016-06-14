@@ -1,55 +1,56 @@
-app.controller('mainCtrl', ['$scope','$uibModal', '$log', '$location', 
-	function($scope, $uibModal, $log, $location) {
+app.controller('mainCtrl', ['$scope', '$uibModal', '$log', 'Auth', '$location', '$http', '$window',
+    function($scope, $uibModal, $log, Auth, $location, $http, $window) {
 
-//<------------slider-------------> 
-	$scope.myInterval = 2000;
-	$scope.noWrapSlides = false;
-	$scope.active = 0;
-	$scope.noPause = true;
-	var slides = $scope.slides = [];
-	var currIndex = 0;
+        //<------------slider------------->
+        $scope.myInterval = 2000;
+        $scope.noWrapSlides = false;
+        $scope.active = 0;
+        $scope.noPause = true;
 
-	$scope.addSlide = function(imageNum) {
-		slides.push({
-			image: 'public/images/home/' + imageNum +'.jpg',
-			id: currIndex++
-		});
-	};
+        var slides = $scope.slides = [];
+        var currIndex = 0;
 
-	for (var i = 0; i < 9; i++) {
-		$scope.addSlide("0" + (i+1));
-	}
-//<-------------------------------->
-	$scope.items = [];
+        $scope.addSlide = function(imageNum) {
+            slides.push({
+                image: 'public/images/home/' + imageNum + '.jpg',
+                id: currIndex++
+            });
+        };
 
-	$scope.animationsEnabled = true;
+        for (var i = 0; i < 9; i++) {
+            $scope.addSlide("0" + (i + 1));
+        }
+        //<-------------------------------->
+        $scope.items = [];
 
-	$scope.open = function () {
-		var modalInstance = $uibModal.open({
-				animation: $scope.animationsEnabled,
-				templateUrl: 'src/client/views/login.html',
-				controller: 'LoginCtrl',
-				resolve: {
-					items: function () {
-					  return $scope.items;
-					}
-				}
-			});
-			modalInstance.result.then(function (selectedItem) {
-		      $scope.selected = selectedItem;
-		    }, function () {
-		      $log.info('Modal dismissed at: ' + new Date());
-		    });
-	}
-}]);
+        $scope.animationsEnabled = true;
 
-/////////////////////// for navbar (needs new file)
-// function notLogged() {
-//     $('.show-after-log').addClass('hidden');
-//     $('.hide-after-log').removeClass('hidden');
-// }
+        $scope.open = function() {
+            var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'src/client/views/login.html',
+                    controller: 'LoginCtrl',
+                    resolve: {
+                        items: function() {
+                            return $scope.items;
+                        }
+                    }
+                });
+                modalInstance.result.then(function(selectedItem) {
+                    $scope.selected = selectedItem;
+                }, function() {
+                    $log.info('Modal dismissed at: ' + new Date());
+                });
+        }
 
-// function logIn() {
-//     $('.hide-after-log').addClass('hidden');
-//     $('.show-after-log').removeClass('hidden');
-// }
+        $scope.logOut = function(id) {
+            $http.post('/users/logout', {id: id}).then(function(response){
+                    $window.location.reload();
+            });
+        }
+
+        $http.get('/users/userOne').then(function(response) {
+            $scope.userId = response.data.userId;
+        });
+    }
+]);
