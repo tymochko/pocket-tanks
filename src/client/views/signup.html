@@ -1,51 +1,51 @@
 <div class="row signup-form">
     <div class="col-md-3.5 col-md-offset-3.5">
 		<div class="form">
-        	<h1 class='regHeading'>Registration</h1>
+        	<h1 class='form-header'>Registration</h1>
 	        <form name='regForm'>
 	            <div class="form-group">
 	                <label for='name'>User name:</label>
-	                <input type="text" id='name' ng-pattern="/^[a-zA-Z0-9]*$/" class="form-control" name='username' ng-model="user.name" placeholder="User name" ng-minlength=5 ng-maxlength=15 />
+	                <input type="text" id='name' ng-pattern="/^[a-zA-Z0-9]*$/" class="form-control" name='username' ng-model="user.name" placeholder="User name" ng-minlength=5 ng-maxlength=15 required/>
 
-	                <span class="error-message" ng-show="regForm.username.$error.pattern">Username should only contain letters and numbers</span>
+	                <span class="form-error-message" ng-show="regForm.username.$error.pattern">Username should only contain letters and numbers</span>
 	                </br>
-		            <span class="error-message" ng-show="regForm.username.$error.minlength">Username should be at least 5 characters long</span>
-	        		<span class="error-message" 
+		            <span class="form-error-message" ng-show="regForm.username.$error.minlength">Username should be at least 5 characters long</span>
+	        		<span class="form-error-message" 
 	                ng-show="regForm.username.$error.maxlength">
 	                Username cannot be longer than 15 characters</span>
-	                <span class="error-message" ng-show="regForm.username.$error.required && regForm.username.$dirty">Required</span>
+	                <span class="form-error-message" ng-show="regForm.username.$error.required && regForm.username.$dirty">Required</span>
 	            </div>
 	            <div class="form-group">
 	                <label for="email">E-mail address:</label>
 	                <input type="email" name="email" id='email' class="form-control" ng-model="user.email" placeholder="E-mail address" required/>
-	                <span class="error-message" ng-show="regForm.email.$error.required && regForm.email.$dirty">Required</span>
-	                <span class="error-message" ng-show="!regForm.email.$error.required && regForm.email.$error.email && regForm.email.$dirty">Invalid e-mail</span>
+	                <span class="form-error-message" ng-show="regForm.email.$error.required && regForm.email.$dirty">Required</span>
+	                <span class="form-error-message" ng-show="!regForm.email.$error.required && regForm.email.$error.email && regForm.email.$dirty">Invalid e-mail</span>
 	            </div>
 				<div class='form-group'>
         			<label for='age'>Age:</label>
 					 <input class='form-control' id='age' name='age' ng-model='user.age' type='number' max='100' min='18' placeholder="Age" required/>
-					 <span class="error-message" ng-show='regForm.age.$error.required && regForm.age.$dirty'>Required</span>
-					 <span class="error-message" ng-show='regForm.age.$error.min'>You should be at least 18 years old</span>
-					 <span class="error-message" ng-show='regForm.age.$error.max'>You cannot be older than 100 years old</span>
+					 <span class="form-error-message" ng-show='regForm.age.$error.required && regForm.age.$dirty'>Required</span>
+					 <span class="form-error-message" ng-show='regForm.age.$error.min'>You should be at least 18 years old</span>
+					 <span class="form-error-message" ng-show='regForm.age.$error.max'>You cannot be older than 100 years old</span>
     			</div>
 				<div class="form-group" data-ng-class="{'has-error':!regForm.password.$valid}">
 					<label for="password">Password:</label>
  					<input class="form-control" id='password' type="password" name="password" required="" ng-model="user.password" placeholder="Password"  ng-minlength=6 ng-maxlength='12' />
- 					<span class="error-message" data-ng-show="regForm.password.$error.required && regForm.password.$dirty">Required</span>
- 					<span class="error-message" class="error" ng-show="regForm.password.$error.minlength">Password should be at least 6 characters long</span>
-	        		<span class="error-message" class="error" ng-show="regForm.password.$error.maxlength">Password cannot be longer than 12 characters</span>
+ 					<span class="form-error-message" data-ng-show="regForm.password.$error.required && regForm.password.$dirty">Required</span>
+ 					<span class="form-error-message" class="error" ng-show="regForm.password.$error.minlength">Password should be at least 6 characters long</span>
+	        		<span class="form-error-message" class="error" ng-show="regForm.password.$error.maxlength">Password cannot be longer than 12 characters</span>
  				</div>
 				<div class="form-group" >
 					<label for="password_c">Confirm Password:</label>
-					 <input class="form-control" type="password" id='password_c' name="password_c" ng-model="user.password_c" valid-password-c placeholder="Confirm password" required="" />
-					 <span class="error-message" data-ng-show="regForm.password_c.$error.require   && regForm.password_c.$dirty">Required</span>
+					 <input class="form-control" type="password" id='password_c' name="password_c" ng-model="user.password_c" valid-password-c placeholder="Confirm password" required />
+					 <span class="form-error-message" data-ng-show="regForm.password_c.$error.require   && regForm.password_c.$dirty">Required</span>
 					 </br>
-					 <span class="error-message" ng-show="regForm.password_c.$error.noMatch && regForm.password.$dirty">Passwords do not match</span>
+					 <span class="form-error-message" ng-show="regForm.password_c.$error.noMatch && regForm.password.$dirty">Passwords do not match</span>
  				</div>
 
 	        </form>
 		        <div class="form-group">
-		            <button type="submit" class="btn btn-danger center-block" ng-click='register(user)' >Submit</button>
+		            <button type="submit" class="btn btn-primary center-block" ng-click='register(user)' >Submit</button>
 				</div>
         </div>
     </div>
