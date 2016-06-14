@@ -1,0 +1,43 @@
+/*====Login & Register Form====*/
+
+$formBgColor: #222222;
+$formHeaderColor: #9d9d9d;
+$formValidBorColor: #509D12;
+$formInvalidBorColor: #da3637;
+$formErrorMesColor: #ff0000;
+
+
+.form {
+  background: $formBgColor;
+  padding: 40px; 
+  margin: 3px auto; 
+  width:592px;
+}
+
+.form-header {
+  text-align:center;
+  color: $formHeaderColor;
+  margin:0 0 30px;
+}
+
+.form-group label{
+  font-family: 'Arial', sans-serif;
+  font-weight:200;  
+  color: $formHeaderColor;
+}
+
+input.ng-invalid.ng-touched {
+	border: 2px solid $formInvalidBorColor;
+}
+
+input.ng-valid.ng-touched {
+	border: 2px solid $formValidBorColor;
+}
+
+.form-error-message {
+	color: $formErrorMesColor;
+}
+
+.form-submitB-margin {
+  margin-top:35px;
+}
