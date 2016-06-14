@@ -87,43 +87,31 @@ footer.p {
   .dashboard .table-striped > tbody > tr:nth-of-type(odd) {
     background: transparent; }
 
-/*Login Form*/
-input.ng-invalid.ng-touched {
-  border: 1px solid #da3637; }
-
-input.ng-valid.ng-touched {
-  border: 1px solid #509D12; }
-
-.error-message {
-  color: red; }
-
-.submitBtn {
-  margin-top: 35px; }
-
-.login-form {
-  background-color: rgba(120, 2, 6, 0.82); }
-
+/*====Login & Register Form====*/
 .form {
   background: #222222;
   padding: 40px;
-  width: 500px;
-  margin: 40px auto 40px auto;
-  border-radius: 7px; }
+  margin: 3px auto;
+  width: 592px; }
 
-.signup-success {
-  text-align: center;
-  color: #509D12; }
-
-.regHeading {
+.form-header {
   text-align: center;
   color: #9d9d9d;
   margin: 0 0 30px; }
 
 .form-group label {
-  font-family: 'Titillium Web', sans-serif;
+  font-family: 'Arial', sans-serif;
   font-weight: 200;
-  height: 25px;
   color: #9d9d9d; }
 
-.signup-form {
-  background-color: rgba(120, 2, 6, 0.82); }
+input.ng-invalid.ng-touched {
+  border: 2px solid #da3637; }
+
+input.ng-valid.ng-touched {
+  border: 2px solid #509D12; }
+
+.form-error-message {
+  color: #ff0000; }
+
+.form-submitB-margin {
+  margin-top: 35px; }
