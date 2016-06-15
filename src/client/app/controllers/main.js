@@ -41,16 +41,12 @@ app.controller('mainCtrl', ['$scope', '$uibModal', '$log', 'Auth', '$location', 
                 }, function() {
                     $log.info('Modal dismissed at: ' + new Date());
                 });
-        }
+        };
 
         $scope.logOut = function(id) {
             $http.post('api/users/logout', {id: id}).then(function(response){
                     $window.location.reload();
             });
-        }
-
-        $http.get('api/users/userOne').then(function(response) {
-            $scope.userId = response.data.userId;
-        });
+        };
     }
 ]);

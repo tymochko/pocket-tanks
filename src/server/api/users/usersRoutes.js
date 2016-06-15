@@ -6,35 +6,32 @@ var usersCollection = require('./usersController');
 
 // get all users in database, for instance in dashboard
 router.get('/', (req, res) => {
-    usersCollection.showAll(req, res);
-});
+    usersCollection.showAll((err, users) => {
+        if (err) {
+            res.status(401).send();
+        }
 
-router.get('/userOne', (req, res) => {
-    res.json({userId: req.session.user});
+        res.json({'users': users, 'sessionId': req.session.user});
+    });
 });
 
 // get user's info by id, for instance in profile page
-router.get('/:id', (req, res) => {
-    var id = req.params.id;
-    usersCollection.findOne({_id: id}, (err, foundUser) => {
+router.get('/profile', (req, res) => {
+    var id = req.session.user;
+    
+    usersCollection.showProfile({_id: id}, (err, foundUser) => {
         if (err) {
-            console.log(err);
-            return res.status(500).send();
+            res.status(401).send();
         }
-
-        if (!foundUser) {
-            return res.status(404).send();
-        }
+        
         res.send(foundUser);
     });
 });
-// curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:3000/users/:id
 
 // log in user
 router.post('/login', (req, res) => {
-    var loginUser = req.body;
-    loginName = loginUser.userName;
-    loginPassword = loginUser.userPassword;
+    var loginName = req.body.userName;
+    var loginPassword = req.body.userPassword;
 
     usersCollection.loginUser(loginName, loginPassword, (err, user) => {
         if (err) {
@@ -46,34 +43,23 @@ router.post('/login', (req, res) => {
         }
     });
 });
-// curl --data "userName=andrew&userPassword=qweqwe" http://localhost:3000/users/login
 
 // log out user
 router.post('/logout', (req, res) => {
-    var id = req.body.id;
-    usersCollection.findOne({_id: id}, (err, foundUser) => {
+    var id = req.session.user;
+
+    usersCollection.logoutUser({_id: id}, (err, foundUser) => {
         if (err) {
-            console.log(err);
-            return res.status(500).send();
+            res.status(401).send();
         }
 
-        if (!foundUser) {
-            return res.status(404).send();
-        }
-
-        usersCollection.update({userName: foundUser.userName}, {isOnline: false}, function(err, ress) {
-            if (err)
-                console.log(err);
-            else {
-                res.status(200).json({message: 'OK'});
-                req.session.destroy();
-            }
-        });
+        console.log(foundUser);
+        res.status(204).send(foundUser);
     });
 });
+
 // add newUser
 router.post('/add', (req, res) => {
-
     var newUser = new usersCollection();
 
     newUser.userName = req.body.userName;
@@ -83,6 +69,7 @@ router.post('/add', (req, res) => {
     newUser.userAge = req.body.userAge;
     newUser.isOnline = false;
     newUser.isEnabled = true;
+
     usersCollection.createUser(newUser ,function(err, user) {
         if (err) {
             console.log(err);
@@ -92,7 +79,7 @@ router.post('/add', (req, res) => {
             req.session.user = user._id;
             req.session.username = user.userName;
             res.status(201);
-            res.json({'message': 'User registred'});
+            res.json({'message': 'User registered'});
         }
     });
 

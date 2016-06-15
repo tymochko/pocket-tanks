@@ -14,7 +14,7 @@ var userSchema = new Schema({
 
 module.exports = mongoose.model('User', userSchema);
 
-module.exports.showAll = function (req, res) {
+module.exports.showAll = function (callback) {
     this.find((err, users) => {
         if (err) {
             console.log(err);
@@ -25,7 +25,22 @@ module.exports.showAll = function (req, res) {
             return res.status(404).send('Database is empty');
         }
 
-        res.json({'users': users, 'sessionId': req.session.user});
+        callback(err, users);
+    });
+};
+
+module.exports.showProfile = function (id, callback) {
+    this.findOne(id, (err, foundUser) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send();
+        }
+
+        if (!foundUser) {
+            return res.status(404).send();
+        }
+
+        callback(err, foundUser);
     });
 };
 
@@ -59,9 +74,26 @@ module.exports.loginUser = function (username, password, callback) {
                     });
             });
         } else {
-            callback(new Error('User is not find'));
+            callback(new Error('User is not found'));
         }
     });
+};
+
+module.exports.logoutUser = function (id, callback) {
+    this.findOneAndUpdate(id, {
+            $set: {isOnline: false}
+        },
+        {upset: true},
+        (err, updatedUser) => {
+            if (err) {
+                console.log('error occured ' + err);
+                return res.status(500).send();
+            } else {
+                updatedUser.isOnline = false;
+
+                callback(updatedUser);
+            }
+        });
 };
 
 module.exports.comparePassword = function (candPassword, hash, callback) {

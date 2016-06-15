@@ -8,11 +8,6 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
         confirmNewPassword: ""
     };
 
-    $http.get('api/users/userOne').then(function(response) {
-        $scope.userId = response.data.userId;
-    });
-
-
     let init = function () {
         //todo delete hardcode
         profileService.getProfileById($scope.userId).then(function (resp) {
@@ -73,26 +68,23 @@ app.service('profileService', ['$http',function ($http) {
     };
     var userId = '';
 
-    $http.get('api/users/userOne').then(function(response) {
-        userId = response.data.userId;
-    });
-
     this.getProfileById = (id) => {//todo all changes to config
-        return $http.get("http://localhost:3000/api/users/" + id);
+        return $http.get("http://localhost:3000/api/users/profile/", id);
     };
-
-
+    
     this.deleteAccount = function () {
         //todo add delete router
         return $http.delete('http://localhost:3000/update', userInfo);
 
-    }
+    };
+    
     this.add = function (userInfo) {
         $http.put('http://localhost:3000/api/users/update/', userInfo).then(function(response) {
             console.log('ok');
         });
     }
 }]);
+
 app.controller('ModalInstanceCtrl', ['$scope',function ($scope, $uibModalInstance) {
 
     $scope.ok = function () {
