@@ -1,6 +1,6 @@
 app.controller('manageProfileController', ['$scope', '$uibModal', 'profileService', '$http', function ($scope, $uibModal, profileService, $http) {
     $scope.emailStatus = true;
-    $scope.nameMinlength = 5;
+    $scope.nameMinLength = 5;
     $scope.nameMaxLength = 15;
     $scope.passMinLength = 6;
     $scope.passMaxLength = 12;
