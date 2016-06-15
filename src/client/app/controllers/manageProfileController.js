@@ -60,9 +60,8 @@ app.service('profileService', ['$http', function ($http) {
         return $http.get("http://localhost:3000/api/users/profile/", id);
     };
     
-    this.deleteAccount = function () {
-        return $http.put('http://localhost:3000/users/delete/', {id: userId});
-
+    this.deleteAccount = () => {
+        return $http.put('http://localhost:3000/api/users/delete/', {id: userId});
     };
 
     this.add = function (userInfo) {

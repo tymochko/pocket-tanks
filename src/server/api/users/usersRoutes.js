@@ -127,7 +127,8 @@ router.put('/update', (req, res) => {
 
 // delete user
 router.put('/delete', (req, res) => {
-	console.log(req.body.id);
+	console.log(req.body);
+	console.log('api ' + req.body.id);
     usersCollection.findOneAndUpdate({
         _id: req.body.id
     },{
