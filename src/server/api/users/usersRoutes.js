@@ -126,9 +126,10 @@ router.put('/update', (req, res) => {
 });
 
 // delete user
-router.put('/delete/:id', (req, res) => {
+router.put('/delete', (req, res) => {
+	console.log(req.body.id);
     usersCollection.findOneAndUpdate({
-        _id: req.params.id
+        _id: req.body.id
     },{
         $set: {
             isEnabled: false
@@ -140,7 +141,7 @@ router.put('/delete/:id', (req, res) => {
         } else {
             updatedUser.isEnabled = false;
 
-            res.status(204);
+            res.status(204).send();
         }
     });
 });
