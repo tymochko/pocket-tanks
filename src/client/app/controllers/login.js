@@ -14,7 +14,7 @@ app.controller('LoginCtrl', ['$scope', '$http', '$uibModalInstance', 'items', 'A
                 userPassword: user.password
             };
 
-            $http.post('/users/login', userInfo)
+            $http.post('api/users/login', userInfo)
                 .then(function(response) {
                             $('.hide-after-log').addClass('hidden');
                             $('.show-after-log').removeClass('hidden');

@@ -14,18 +14,33 @@ var userSchema = new Schema({
 
 module.exports = mongoose.model('User', userSchema);
 
+module.exports.showAll = function (req, res) {
+    this.find((err, users) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send();
+        }
+
+        if (!users) {
+            return res.status(404).send('Database is empty');
+        }
+
+        res.json({'users': users, 'sessionId': req.session.user});
+    });
+};
+
 module.exports.createUser = function (newUser,callback) {
     bcrypt.genSalt(10, function (err, salt) {
         bcrypt.hash(newUser.userPassword, salt, function (err, hash) {
-             newUser.userPassword = hash;
-             newUser.save(function(err, user){
+            newUser.userPassword = hash;
+            newUser.save(function(err, user){
                 if (err) {
                     callback(err);
                 } else {
                     callback(null, user);
                 }
-             });
-         });
+            });
+        });
     });
 };
 
@@ -47,7 +62,7 @@ module.exports.loginUser = function (username, password, callback) {
             callback(new Error('User is not find'));
         }
     });
-}
+};
 
 module.exports.comparePassword = function (candPassword, hash, callback) {
     bcrypt.compare(candPassword, hash, function (err, res) {
@@ -56,4 +71,4 @@ module.exports.comparePassword = function (candPassword, hash, callback) {
         callback(null, res);
     });
 
-}
+};

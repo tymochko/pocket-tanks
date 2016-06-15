@@ -44,12 +44,12 @@ app.controller('mainCtrl', ['$scope', '$uibModal', '$log', 'Auth', '$location', 
         }
 
         $scope.logOut = function(id) {
-            $http.post('/users/logout', {id: id}).then(function(response){
+            $http.post('api/users/logout', {id: id}).then(function(response){
                     $window.location.reload();
             });
         }
 
-        $http.get('/users/userOne').then(function(response) {
+        $http.get('api/users/userOne').then(function(response) {
             $scope.userId = response.data.userId;
         });
     }

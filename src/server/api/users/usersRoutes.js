@@ -2,36 +2,16 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 
-var usersCollection = require('../models/users');
-
-/* GET users listing. */
-
-/* TODO
-
-6) password requirements
-7) log out - change online status
-
-*/
+var usersCollection = require('./usersController');
 
 // get all users in database, for instance in dashboard
 router.get('/', (req, res) => {
-    usersCollection.find((err, users) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).send();
-        }
-
-        if (!users) {
-            return res.status(404).send('Database is empty');
-        }
-
-        res.json({'users': users, 'myId': req.session.user});
-    });
+    usersCollection.showAll(req, res);
 });
 
 router.get('/userOne', (req, res) => {
     res.json({userId: req.session.user});
-})
+});
 
 // get user's info by id, for instance in profile page
 router.get('/:id', (req, res) => {

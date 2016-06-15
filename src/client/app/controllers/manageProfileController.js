@@ -4,12 +4,11 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
         userName: "",
         userEmail: "",
         userPassword: "",
-        userEmail:"",
         newPassword: "",
         confirmNewPassword: ""
     };
 
-    $http.get('/users/userOne').then(function(response) {
+    $http.get('api/users/userOne').then(function(response) {
         $scope.userId = response.data.userId;
     });
 
@@ -74,12 +73,12 @@ app.service('profileService', ['$http',function ($http) {
     };
     var userId = '';
 
-    $http.get('/users/userOne').then(function(response) {
+    $http.get('api/users/userOne').then(function(response) {
         userId = response.data.userId;
     });
 
     this.getProfileById = (id) => {//todo all changes to config
-        return $http.get("http://localhost:3000/users/" + id);
+        return $http.get("http://localhost:3000/api/users/" + id);
     };
 
 
@@ -89,7 +88,7 @@ app.service('profileService', ['$http',function ($http) {
 
     }
     this.add = function (userInfo) {
-        $http.put('http://localhost:3000/users/update/', userInfo).then(function(response) {
+        $http.put('http://localhost:3000/api/users/update/', userInfo).then(function(response) {
             console.log('ok');
         });
     }
