@@ -17,9 +17,7 @@ router.get('/', (req, res) => {
 
 // get user's info by id, for instance in profile page
 router.get('/profile', (req, res) => {
-    var id = req.session.user;
-    
-    usersCollection.showProfile({_id: id}, (err, foundUser) => {
+    usersCollection.showProfile({_id: req.session.user}, (err, foundUser) => {
         if (err) {
             res.status(401).send();
         }
@@ -46,14 +44,11 @@ router.post('/login', (req, res) => {
 
 // log out user
 router.post('/logout', (req, res) => {
-    var id = req.session.user;
-
-    usersCollection.logoutUser({_id: id}, (err, foundUser) => {
+    usersCollection.logoutUser({_id: req.session.user}, (err, foundUser) => {
         if (err) {
             res.status(401).send();
         }
 
-        console.log(foundUser);
         res.status(204).send(foundUser);
     });
 });
@@ -82,68 +77,38 @@ router.post('/add', (req, res) => {
             res.json({'message': 'User registered'});
         }
     });
-
 });
 
 // edit userName
-router.put('/update', (req, res) => {
-    usersCollection.findOneAndUpdate({
-        _id: req.body._id
-    },{
-        $set: {
-            userName: req.body.userName
-        }
-    }, {upset: true}, (err, updatedUser) => {
+router.put('/profile/updateUser', (req, res) => {
+    usersCollection.updateUser({_id: req.session.user}, (err, foundUser) => {
         if (err) {
-            console.log('error occured ' + err);
-            return res.status(500).send();
-        } else {
-            updatedUser.name = req.body.name;
-
-            res.status(204);
+            res.status(401).send();
         }
+
+        res.status(204).send(foundUser);
     });
 });
 
 // edit userPassword
-router.put('/update', (req, res) => {
-    usersCollection.findOneAndUpdate({
-        _id: req.params.id
-    },{
-        $set: {
-            userPassword: req.body.userPassword
-        }
-    }, {upset: true}, (err, updatedUser) => {
+router.put('/profile/updatePassword', (req, res) => {
+    usersCollection.updatePassword({_id: req.session.user}, (err, foundUser) => {
         if (err) {
-            console.log('error occured ' + err);
-            return res.status(500).send();
-        } else {
-            updatedUser.password = req.body.password;
-
-            res.status(204);
+            res.status(401).send();
         }
+
+        res.status(204).send(foundUser);
     });
 });
 
 // delete user
-router.put('/delete', (req, res) => {
-	console.log(req.body);
-	console.log('api ' + req.body.id);
-    usersCollection.findOneAndUpdate({
-        _id: req.body.id
-    },{
-        $set: {
-            isEnabled: false
-        }
-    }, {upset: true}, (err, updatedUser) => {
+router.put('/profile/delete', (req, res) => {
+    usersCollection.deleteUser({_id: req.session.user}, (err, foundUser) => {
         if (err) {
-            console.log('error occured ' + err);
-            return res.status(500).send();
-        } else {
-            updatedUser.isEnabled = false;
-
-            res.status(204).send();
+            res.status(401).send();
         }
+
+        res.status(204).send(foundUser);
     });
 });
 

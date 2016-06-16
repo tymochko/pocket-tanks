@@ -61,11 +61,11 @@ app.service('profileService', ['$http', function ($http) {
     };
     
     this.deleteAccount = () => {
-        return $http.put('http://localhost:3000/api/users/delete/', {id: userId});
+        return $http.put('http://localhost:3000/api/users/profile/delete/', {id: userId});
     };
 
     this.add = function (userInfo) {
-        $http.put('http://localhost:3000/api/users/update/', userInfo).then(function(response) {
+        $http.put('http://localhost:3000/api/users/profile/update/', userInfo).then(function(response) {
             console.log('ok');
         });
     }

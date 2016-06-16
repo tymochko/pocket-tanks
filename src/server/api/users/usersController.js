@@ -81,7 +81,9 @@ module.exports.loginUser = function (username, password, callback) {
 
 module.exports.logoutUser = function (id, callback) {
     this.findOneAndUpdate(id, {
-            $set: {isOnline: false}
+            $set: {
+                isOnline: false
+            }
         },
         {upset: true},
         (err, updatedUser) => {
@@ -89,6 +91,68 @@ module.exports.logoutUser = function (id, callback) {
                 console.log('error occured ' + err);
                 return res.status(500).send();
             } else {
+                updatedUser.isOnline = false;
+
+                callback(updatedUser);
+            }
+        });
+};
+
+module.exports.updateUser = function (id, callback) {
+    this.findOneAndUpdate(id, {
+            $set: {
+                userName: userName
+            }
+        },
+        {upset: true},
+        (err, updatedUser) => {
+            if (err) {
+                console.log('error occured ' + err);
+                return res.status(500).send();
+            } else {
+                updatedUser.userName = userName;
+
+                callback(updatedUser);
+            }
+        });
+};
+
+module.exports.updatePassword = function (id, callback) {
+    console.log('id ' + id);
+    this.findOneAndUpdate(id, {
+            $set: {
+                userPassword: id.userPassword
+            }
+        },
+        {upset: true},
+        (err, updatedUser) => {
+            console.log('Before ' + updatedUser);
+            if (err) {
+                console.log('error occured ' + err);
+                return res.status(500).send();
+            } else {
+                updatedUser.userPassword = req.body.userPassword;
+
+                console.log('After ' + updatedUser);
+                callback(updatedUser);
+            }
+        });
+};
+
+module.exports.deleteUser = function (id, callback) {
+    this.findOneAndUpdate(id, {
+            $set: {
+                isEnabled: false,
+                isOnline: false
+            }
+        },
+        {upset: true},
+        (err, updatedUser) => {
+            if (err) {
+                console.log('error occured ' + err);
+                return res.status(500).send();
+            } else {
+                updatedUser.isEnabled = false;
                 updatedUser.isOnline = false;
 
                 callback(updatedUser);
