@@ -66,6 +66,20 @@ router.post('/login', (req, res) => {
         }
     });
 });
+router.post('/testing', (req, res) => {
+    var loginUser = req.body;
+    loginName = loginUser.userName;
+    loginPassword = loginUser.userPassword;
+
+    usersCollection.loginUser(loginName, loginPassword, (err, user) => {
+        if (err) {
+            res.status(401).send();
+        } else {
+            
+            res.status(200).send(true);
+        }
+    });
+});
 // curl --data "userName=andrew&userPassword=qweqwe" http://localhost:3000/users/login
 
 // log out user

@@ -9,6 +9,7 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
         userEmail: "",
         userPassword: "",
         userEmail: "",
+        oldPassword:"",
         newPassword: "",
         confirmNewPassword: ""
     };
@@ -19,19 +20,37 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
     };
     init();
     $scope.saveChanges = function (user) {
-        if (user.newPassword === user.confirmNewPassword) {
+        if (user.oldPassword){
+            profileService.checkPassword(user).then(function (resss) {
+                if (resss) {
+                    if (user.newPassword === user.confirmNewPassword) {
+                        let userInfo = {
+                            _id: $scope.userId,
+                            userName: user.userName,
+                            userAge: user.userAge,
+                            userEmail: user.userEmail,
+                            userPassword: user.newPassword
+                        };
+                        console.log('i did it!');
+                        profileService.update(userInfo);
+                    }
+                }
+                else {
+                    console.log('sad story!');
+                }
+            })
+        }
+        else {
+
             let userInfo = {
                 _id: $scope.userId,
                 userName: user.userName,
                 userAge: user.userAge,
-                userEmail: user.userEmail,
-                userPassword: user.newPassword
+                userEmail: user.userEmail
             };
-            profileService.add(userInfo);
-
-        } else {
-            console.log('ERROR')
-        }
+            profileService.update(userInfo);
+    	}
+       
     };
     $scope.animationsEnabled = true;
 // Delete popup controller;
@@ -64,13 +83,18 @@ app.service('profileService', ['$http', function ($http) {
     this.getProfileById = (id) => {
         return $http.get("http://localhost:3000/users/" + id);
     };
+    this.checkPassword = function (user) {
+        console.log(user.userName);
+        return $http.post('http://localhost:3000/users/testing',{userPassword:user.oldPassword,
+                                                            userName:user.userName});
 
+    };
 
     this.deleteAccount = function () {
         return $http.put('http://localhost:3000/users/delete/', {id: userId});
 
     };
-    this.add = function (userInfo) {
+    this.update = function (userInfo) {
         $http.put('http://localhost:3000/users/update/', userInfo).then(function (response) {
             console.log('ok');
         });
