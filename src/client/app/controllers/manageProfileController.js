@@ -8,11 +8,15 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
         userName: "",
         userEmail: "",
         userPassword: "",
+<<<<<<< HEAD
         userEmail: "",
         oldPassword:"",
+=======
+>>>>>>> prepullrequest
         newPassword: "",
         confirmNewPassword: ""
     };
+
     let init = function () {
     profileService.getProfileById($scope.userId).then(function (resp) {
            $scope.user = resp.data;
@@ -72,30 +76,26 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
 app.service('profileService', ['$http', function ($http) {
     var userId = '';
 
-    $http.get('/users/userOne').then(function (response) {
-        userId = response.data.userId;
-    });
-
-
-    this.getProfileById = (id) => {
-        return $http.get("http://localhost:3000/users/" + id);
+    this.getProfileById = (id) => {//todo all changes to config
+        return $http.get("http://localhost:3000/api/users/profile/", id);
     };
+
     this.checkPassword = function (user) {
         return $http.post('http://localhost:3000/users/testing',{userPassword:user.oldPassword,
                                                             userName:user.userName});
-
+    };
+    
+    this.deleteAccount = () => {
+        return $http.put('http://localhost:3000/api/users/profile/delete/', {id: userId});
     };
 
-    this.deleteAccount = function () {
-        return $http.put('http://localhost:3000/users/delete/', {id: userId});
-
-    };
     this.update = function (userInfo) {
-        $http.put('http://localhost:3000/users/update/', userInfo).then(function (response) {
+        $http.put('http://localhost:3000/api/users/profile/update/', userInfo).then(function(response) {
             console.log('ok');
         });
     }
 }]);
+
 app.controller('ModalInstanceCtrl', ['$scope','$uibModalInstance', function ($scope, $uibModalInstance) {
 
     $scope.ok = function () {
