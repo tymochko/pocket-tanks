@@ -35,9 +35,6 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
                         profileService.update(userInfo);
                     }
                 }
-                else {
-                    console.log('sad story!');
-                }
             })
         }
         else {
@@ -84,7 +81,6 @@ app.service('profileService', ['$http', function ($http) {
         return $http.get("http://localhost:3000/users/" + id);
     };
     this.checkPassword = function (user) {
-        console.log(user.userName);
         return $http.post('http://localhost:3000/users/testing',{userPassword:user.oldPassword,
                                                             userName:user.userName});
 
