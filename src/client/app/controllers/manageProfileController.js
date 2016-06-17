@@ -8,11 +8,7 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
         userName: "",
         userEmail: "",
         userPassword: "",
-<<<<<<< HEAD
-        userEmail: "",
         oldPassword:"",
-=======
->>>>>>> prepullrequest
         newPassword: "",
         confirmNewPassword: ""
     };
