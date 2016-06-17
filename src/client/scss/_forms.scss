@@ -40,4 +40,14 @@ input.ng-valid.ng-touched {
 
 .form-submitB-margin {
   margin-top:35px;
+
+}
+
+/*====Profile Form====*/
+.profile-form {
+  margin-top: 10px;
+  background: $formBgColor;
+  border:2px solid white;
+  border-radius: 7px;
+  color:$formHeaderColor;
 }
