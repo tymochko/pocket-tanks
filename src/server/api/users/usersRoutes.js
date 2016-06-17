@@ -17,6 +17,7 @@ router.get('/', (req, res) => {
 
 // get user's info by id, for instance in profile page
 router.get('/profile', (req, res) => {
+    console.log('req.session.user ', req.session.user);
     usersCollection.showProfile({_id: req.session.user}, (err, foundUser) => {
         if (err) {
             res.status(401).send();
@@ -81,6 +82,9 @@ router.post('/add', (req, res) => {
 
 // edit userName
 router.put('/profile/updateUser', (req, res) => {
+    var id = req.session.user;
+    console.log('req.session.user ', id);
+    console.log('req.body ', req.body);
     usersCollection.updateUser({_id: req.session.user}, (err, foundUser) => {
         if (err) {
             res.status(401).send();
