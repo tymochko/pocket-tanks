@@ -1,5 +1,7 @@
-app.controller('manageProfileController', ['$scope', '$uibModal', 'profileService', '$http', function ($scope, $uibModal, profileService, $http) {
+app.controller('manageProfileController', ['$scope', '$uibModal', 'profileService', '$http' ,'toastr', function ($scope, $uibModal, profileService, $http, toastr) {
     $scope.emailStatus = true;
+
+
     $scope.nameMinLength = 5;
     $scope.nameMaxLength = 15;
     $scope.passMinLength = 6;
@@ -8,19 +10,28 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
         userName: "",
         userEmail: "",
         userPassword: "",
-        oldPassword:"",
+        oldPassword: "",
         newPassword: "",
         confirmNewPassword: ""
     };
 
+      function savingMsg($scope) {
+             toastr.success('Your changes are saved!', 'Message',{
+          closeButton: true,
+              closeHtml: '<button>&times;</button>'
+      })};
+
+
+
     let init = function () {
-    profileService.getProfileById($scope.userId).then(function (resp) {
-           $scope.user = resp.data;
-       });
+        profileService.getProfileById($scope.userId).then(function (resp) {
+            $scope.user = resp.data;
+        });
     };
     init();
     $scope.saveChanges = function (user) {
-        if (user.oldPassword){
+        savingMsg();
+        if (user.oldPassword) {
             profileService.checkPassword(user).then(function (resss) {
                 if (resss) {
                     if (user.newPassword === user.confirmNewPassword) {
@@ -31,7 +42,7 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
                             userEmail: user.userEmail,
                             userPassword: user.newPassword
                         };
-                        console.log('i did it!');
+
                         profileService.update(userInfo);
                     }
                 }
@@ -46,8 +57,8 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
                 userEmail: user.userEmail
             };
             profileService.update(userInfo);
-    	}
-       
+        }
+
     };
     $scope.animationsEnabled = true;
 // Delete popup controller;
@@ -77,22 +88,24 @@ app.service('profileService', ['$http', function ($http) {
     };
 
     this.checkPassword = function (user) {
-        return $http.post('http://localhost:3000/users/testing',{userPassword:user.oldPassword,
-                                                            userName:user.userName});
+        return $http.post('http://localhost:3000/users/testing', {
+            userPassword: user.oldPassword,
+            userName: user.userName
+        });
     };
-    
+
     this.deleteAccount = () => {
         return $http.put('http://localhost:3000/api/users/profile/delete/', {id: userId});
     };
 
     this.update = function (userInfo) {
-        $http.put('http://localhost:3000/api/users/profile/update/', userInfo).then(function(response) {
-            console.log('ok');
+        $http.put('http://localhost:3000/api/users/profile/update/', userInfo).then(function (response) {
+            savingMsg();
         });
     }
 }]);
 
-app.controller('ModalInstanceCtrl', ['$scope','$uibModalInstance', function ($scope, $uibModalInstance) {
+app.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance) {
 
     $scope.ok = function () {
         $uibModalInstance.close();
