@@ -1,7 +1,14 @@
 app.controller('manageProfileController', ['$scope', '$uibModal', 'profileService', '$http' ,'toastr', function ($scope, $uibModal, profileService, $http, toastr) {
     $scope.emailStatus = true;
 
-
+    $scope.images = [
+        {image : 'public/images/avatars/phoca.jpg' , thumbnail : 'public/images/avatars/phoca.jpg', description: 'Oh... So beautiful phoca!' },
+        {image : 'public/images/avatars/bear.jpg' , thumbnail : 'public/images/avatars/bear.jpg', description: 'So cute...bear!' },
+        {image : 'public/images/avatars/dog.jpg' , thumbnail : 'public/images/avatars/dog.jpg', description: 'Who let the dogs out?!' },
+        {image : 'public/images/avatars/deer.jpg' , thumbnail : 'public/images/avatars/deer.jpg', description: 'Am...yes i am deer!' },
+        {image : 'public/images/avatars/cat.jpg' , thumbnail : 'public/images/avatars/cat.jpg', description: 'Just give me some food for Myaw!' }
+    ];
+    $scope.avatar = $scope.images[0];
     $scope.nameMinLength = 5;
     $scope.nameMaxLength = 15;
     $scope.passMinLength = 6;
@@ -77,6 +84,21 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
     $scope.toggleAnimation = () => {
         $scope.animationsEnabled = !$scope.animationsEnabled;
     };
+    $scope.changeAvatar = function () {
+
+        let modalInstance2 = $uibModal.open({
+            animation: $scope.animationsEnabled,
+            templateUrl: './src/client/views/views/avatarContent.html',
+            controller: 'avatarController'
+        });
+        modalInstance2.result.then(function (img) {
+            $scope.avatar = img;
+        })
+    };
+
+    $scope.toggleAnimation = () => {
+        $scope.animationsEnabled = !$scope.animationsEnabled;
+    };
 
 }]);
 
@@ -114,4 +136,28 @@ app.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', function ($s
     $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
+}]);
+app.controller('avatarController', ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance) {
+    $scope.images = [
+        {image : 'public/images/avatars/phoca.jpg' , thumbnail : 'public/images/avatars/phoca.jpg', description: 'Oh... So beautiful phoca' },
+        {image : 'public/images/avatars/bear.jpg' , thumbnail : 'public/images/avatars/bear.jpg', description: 'So cute...bear!' },
+        {image : 'public/images/avatars/dog.jpg' , thumbnail : 'public/images/avatars/dog.jpg', description: 'Who let the dogs out?!' },
+         {image : 'public/images/avatars/deer.jpg' , thumbnail : 'public/images/avatars/deer.jpg', description: 'Am...yes i am deer!' },
+        {image : 'public/images/avatars/cat.jpg' , thumbnail : 'public/images/avatars/cat.jpg', description: 'Just give me some food for Myaw!' }
+    ];
+
+
+    $scope.currentImage = _.first($scope.images);
+    $scope.setCurrentImage = function (image) {
+        $scope.currentImage = image;
+    };
+    $scope.ok = function () {
+        $uibModalInstance.close($scope.currentImage);
+    };
+
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+
+
 }]);

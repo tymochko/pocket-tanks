@@ -50,4 +50,64 @@ input.ng-valid.ng-touched {
   border:2px solid white;
   border-radius: 7px;
   color:$formHeaderColor;
+
 }
+
+#albumImage {
+    width: 620px;
+    height: 200px;
+    margin-bottom: 10px;
+
+}
+
+#albumImage img {
+    border:1px solid red;
+    border-radius:30%;
+    display: block;
+    margin: auto;
+    width: 200px;
+    height:200px;
+}
+
+#thumbWrapper {
+    width: 500px;
+
+}
+#thumbList {
+    white-space: nowrap;
+    margin: 0px;
+}
+#thumbList li {
+    display: inline;
+    list-style-type: none;
+    padding-left: 2px;
+    padding-right: 2px;
+    cursor: pointer;
+
+
+
+}
+
+#thumbList li:hover {
+    opacity: 0.5;
+}
+.img_bottom {
+    width: 100px;
+    height:100px;
+}
+.avatarImg  {
+  display:inline-block;
+  border-radius:30%;
+  background-color: green;
+  width: 125px;
+  height:125px;
+  float: right;
+  margin-right: 27px;
+  margin-top: 25px;
+}
+.avatarButton {
+  position: absolute;
+  margin-top:165px;
+  margin-left:600px;
+}
+

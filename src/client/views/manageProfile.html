@@ -2,6 +2,12 @@
     <div class="row">
         <div class="profile-form col-md-8 col-md-offset-2">
             <h2 class="text-center">Profile page!</h2>
+            <div id="avatarBlock">
+
+                <img ng-src="{{avatar.image}}" alt="avatar.description" class="avatarImg" >
+                <button type="button" class="btn btn-primary avatarButton" ng-click="changeAvatar()">Change avatar
+                </button>
+            </div>
             <form class="form-horizontal col-md-6 col-md-offset-3" name="profile">
 
                 <div class="form-group">
@@ -11,6 +17,7 @@
                                placeholder="User name"
                                ng-model="user.userName" ng-minlength={{nameMinLength}} ng-maxlength={{nameMaxLength}}
                                name="username">
+
 
                     </div>
                     <span class="form-error-message" ng-show="profile.username.$error.pattern">Username should only contain letters and numbers</span>
@@ -79,6 +86,7 @@
                         <button type="button" class="btn btn-danger col-md-5 col-md-offset-2" ng-click="open()">Delete
                             account
                         </button>
+
                     </div>
                 </div>
 
