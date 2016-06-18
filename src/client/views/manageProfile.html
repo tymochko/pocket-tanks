@@ -4,7 +4,7 @@
             <h2 class="text-center">Profile page!</h2>
             <div id="avatarBlock">
 
-                <img ng-src="{{avatar.image}}" alt="avatar.description" class="avatarImg" >
+                <img ng-src="{{avatar.image}}" alt="avatar.description" class="avatarImg"  ng-model="user.userImg">
                 <button type="button" class="btn btn-primary avatarButton" ng-click="changeAvatar()">Change avatar
                 </button>
             </div>

@@ -1,6 +1,6 @@
 <div>
     <div class="modal-header">
-        <h3 class="modal-title"id="header">{{currentImage.description}}</h3>
+        <h3 class="modal-title">{{currentImage.description}}</h3>
     </div>
 
 
@@ -12,7 +12,7 @@
             
             <li ng-repeat="image in images" >
 
-                <img class="img_bottom" ng-click="setCurrentImage(image)" ng-src="{{image.thumbnail}}" alt="{{description}}">
+                <img class="img_bottom" ng-click="setCurrentImage(image)" ng-src="{{image.image}}" alt="{{image.description}}">
                 
             </li>
         </ul>

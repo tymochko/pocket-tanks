@@ -1,41 +1,45 @@
-app.controller('manageProfileController', ['$scope', '$uibModal', 'profileService', '$http' ,'toastr', function ($scope, $uibModal, profileService, $http, toastr) {
+
+app.controller('manageProfileController', ['$scope', '$uibModal', 'profileService', 'toastr', function ($scope, $uibModal, profileService, toastr) {
     $scope.emailStatus = true;
 
-    $scope.images = [
-        {image : 'public/images/avatars/phoca.jpg' , thumbnail : 'public/images/avatars/phoca.jpg', description: 'Oh... So beautiful phoca!' },
-        {image : 'public/images/avatars/bear.jpg' , thumbnail : 'public/images/avatars/bear.jpg', description: 'So cute...bear!' },
-        {image : 'public/images/avatars/dog.jpg' , thumbnail : 'public/images/avatars/dog.jpg', description: 'Who let the dogs out?!' },
-        {image : 'public/images/avatars/deer.jpg' , thumbnail : 'public/images/avatars/deer.jpg', description: 'Am...yes i am deer!' },
-        {image : 'public/images/avatars/cat.jpg' , thumbnail : 'public/images/avatars/cat.jpg', description: 'Just give me some food for Myaw!' }
-    ];
-    $scope.avatar = $scope.images[0];
     $scope.nameMinLength = 5;
     $scope.nameMaxLength = 15;
     $scope.passMinLength = 6;
     $scope.passMaxLength = 12;
     $scope.user = {
         userName: "",
+        userImg: {},
         userEmail: "",
         userPassword: "",
         oldPassword: "",
         newPassword: "",
-        confirmNewPassword: ""
+        confirmNewPassword: "",
+        userAge:""
     };
 
-      function savingMsg($scope) {
-             toastr.success('Your changes are saved!', 'Message',{
-          closeButton: true,
-              closeHtml: '<button>&times;</button>'
-      })};
-
-
+    function savingMsg() {
+        toastr.success('Your changes are saved!', 'Message', {
+            closeButton: true,
+            closeHtml: '<button>&times;</button>'
+        })
+    }
+    function avatarMsg() {
+        toastr.warning('Do not forget to save changes!!', 'Message', {
+            closeButton: true,
+            closeHtml: '<button>&times;</button>'
+        })
+    }
 
     let init = function () {
         profileService.getProfileById($scope.userId).then(function (resp) {
+            //todo
             $scope.user = resp.data;
+            $scope.avatar = $scope.user.userImg;
         });
     };
+
     init();
+
     $scope.saveChanges = function (user) {
         savingMsg();
         if (user.oldPassword) {
@@ -47,6 +51,7 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
                             userName: user.userName,
                             userAge: user.userAge,
                             userEmail: user.userEmail,
+                            userImg: user.userImg,
                             userPassword: user.newPassword
                         };
 
@@ -61,7 +66,8 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
                 _id: $scope.userId,
                 userName: user.userName,
                 userAge: user.userAge,
-                userEmail: user.userEmail
+                userEmail: user.userEmail,
+                userImg: user.userImg
             };
             profileService.update(userInfo);
         }
@@ -92,6 +98,7 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
             controller: 'avatarController'
         });
         modalInstance2.result.then(function (img) {
+            avatarMsg();
             $scope.avatar = img;
         })
     };
@@ -104,7 +111,7 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
 
 app.service('profileService', ['$http', function ($http) {
     var userId = '';
-
+// todo add norm function without param + change name
     this.getProfileById = (id) => {//todo all changes to config
         return $http.get("http://localhost:3000/api/users/profile/", id);
     };
@@ -137,17 +144,18 @@ app.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', function ($s
         $uibModalInstance.dismiss('cancel');
     };
 }]);
+
 app.controller('avatarController', ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance) {
     $scope.images = [
-        {image : 'public/images/avatars/phoca.jpg' , thumbnail : 'public/images/avatars/phoca.jpg', description: 'Oh... So beautiful phoca' },
-        {image : 'public/images/avatars/bear.jpg' , thumbnail : 'public/images/avatars/bear.jpg', description: 'So cute...bear!' },
-        {image : 'public/images/avatars/dog.jpg' , thumbnail : 'public/images/avatars/dog.jpg', description: 'Who let the dogs out?!' },
-         {image : 'public/images/avatars/deer.jpg' , thumbnail : 'public/images/avatars/deer.jpg', description: 'Am...yes i am deer!' },
-        {image : 'public/images/avatars/cat.jpg' , thumbnail : 'public/images/avatars/cat.jpg', description: 'Just give me some food for Myaw!' }
+        {image: 'public/images/avatars/phoca.jpg', description: 'Oh... So beautiful phoca!'},
+        {image: 'public/images/avatars/bear.jpg', description: 'So cute...bear!'},
+        {image: 'public/images/avatars/dog.jpg', description: 'Who let the dogs out?!'},
+        {image: 'public/images/avatars/deer.jpg', description: 'Am...yes i am deer!'},
+        {image: 'public/images/avatars/cat.jpg', description: 'Just give me some food for Myaw!'}
     ];
 
 
-    $scope.currentImage = _.first($scope.images);
+    $scope.currentImage = $scope.images[0];
     $scope.setCurrentImage = function (image) {
         $scope.currentImage = image;
     };

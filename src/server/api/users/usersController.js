@@ -8,6 +8,7 @@ var userSchema = new Schema({
     userEmail: {type: String, required: true, unique: true},
     userPassword: {type: String, required: true},
     userAge: {type: Number, required: true},
+    userImg: {type: Object},
     isOnline: {type: Boolean},
     isEnabled: {type: Boolean}
 });
