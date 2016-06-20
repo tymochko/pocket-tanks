@@ -155,20 +155,6 @@ module.exports.updateUser = function (id, updatedData, callback) {
         if (err) {
             callback(err);
         } else if (foundUser) {
-            User.update({
-                userName: foundUser.userName,
-                userAge: foundUser.userAge
-            }, {
-                userName: updatedData.userName,
-                userAge: updatedData.userAge
-                },
-                
-                function(err, foundUser) {
-                    console.log('User.update foundUser 2 ', foundUser);
-                    console.log('User.update updatedData 2 ', updatedData);
-                    callback(err, foundUser);
-                });
-
             if (updatedData.userOldPassword) {
 
                 User.comparePassword(updatedData.userOldPassword, foundUser.userPassword, function (err, res) {
@@ -177,21 +163,49 @@ module.exports.updateUser = function (id, updatedData, callback) {
                     }
 
                     if (res) {
-                        console.log('foundUser 1 ', foundUser);
-                        
+
                         if (updatedData.userNewPassword === updatedData.userConfPassword) {
-                            var newPassword = foundUser.userConfPassword;
-                            User.update({userPassword: newPassword}, function (err, foundUser) {
-                                console.log('User.update foundUser 1 ', foundUser);
-                                callback(err, foundUser);
+
+                            bcrypt.genSalt(10, function (err, salt) {
+                                bcrypt.hash(updatedData.userConfPassword, salt, function (err, hash) {
+                                    updatedData.userConfPassword = hash;
+
+                                    User.update({
+                                            userPassword: foundUser.userPassword,
+                                            userName: foundUser.userName,
+                                            userAge: foundUser.userAge
+                                        }, {
+                                            userPassword: updatedData.userConfPassword,
+                                            userName: updatedData.userName,
+                                            userAge: updatedData.userAge
+                                        },
+                                        
+                                        function (err, foundUser) {
+                                            callback(err, foundUser);
+                                        });
+                                });
                             });
+
                         } else {
                             callback(err);
                         }
-
                     }
                 });
-            } 
+            } else {
+                User.update({
+                    userName: foundUser.userName,
+                    userAge: foundUser.userAge
+                }, {
+                    userName: updatedData.userName,
+                    userAge: updatedData.userAge
+                    },
+                
+                    function(err, foundUser) {
+                        callback(err, foundUser);
+                    });
+            }
+
+
         } else {
             callback(new Error('User is not found'));
         }
