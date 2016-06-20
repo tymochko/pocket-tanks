@@ -3,6 +3,7 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 
 var usersCollection = require('./usersController');
+var usersImages = require('./../../usersImages.json');
 
 // get all users in database, for instance in dashboard
 router.get('/', (req, res) => {
@@ -21,7 +22,7 @@ router.get('/profile', (req, res) => {
         if (err) {
             res.status(401).send();
         }
-        
+        //todo send DTO instead database obj
         res.send(foundUser);
     });
 });
@@ -61,7 +62,7 @@ router.post('/add', (req, res) => {
     newUser.userAge = req.body.userAge;
     newUser.userEmail = req.body.userEmail;
     newUser.userPassword = req.body.userPassword;
-    newUser.userAge = req.body.userAge;
+    newUser.userImg = usersImages[0];
     newUser.isOnline = false;
     newUser.isEnabled = true;
 
@@ -81,7 +82,7 @@ router.post('/add', (req, res) => {
 
 // edit user profile
 router.put('/profile/updateUser', (req, res) => {
-    // console.log('req.body ', req.body);
+    console.log('req.body ', req.body);
     usersCollection.updateUser({_id: req.session.user}, req.body, (err, foundUser) => {
         // console.log('this  ', this);
         if (err) {

@@ -1,4 +1,4 @@
-var app = angular.module("tanks", ['ngRoute','ngAnimate', 'ui.bootstrap']);
+var app = angular.module("tanks", ['ngRoute','ngAnimate', 'ui.bootstrap','toastr']);
 
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.

@@ -8,6 +8,7 @@ var userSchema = new Schema({
     userEmail: {type: String, required: true, unique: true},
     userPassword: {type: String, required: true},
     userAge: {type: Number, required: true},
+    userImg: {type: Object},
     isOnline: {type: Boolean},
     isEnabled: {type: Boolean}
 });
@@ -98,53 +99,103 @@ module.exports.logoutUser = function (id, callback) {
         });
 };
 
+// module.exports.updateUser = function (id, updatedData, callback) {
+//         var User = this;
+//
+//     if (updatedData.userAge == undefined) {
+//
+//         User.findOne(id, (err, foundUser) => {
+//             if (err) {
+//                 callback(err);
+//             } else if (foundUser){
+//                 User.comparePassword(updatedData.userPassword, foundUser.userPassword, function(err, res) {
+//                     if (err)
+//                         callback(new Error('Password is incorrect'));
+//                     if (res)
+//                         var newPassword = foundUser.userPassword;
+//                         console.log('foundUser 1 ', foundUser);
+//                         User.update({userPassword: newPassword}, function(err, foundUser) {
+//                             console.log('User.update foundUser 1 ', foundUser);
+//                             callback(err, foundUser);
+//                         });
+//                 });
+//             } else {
+//                 callback(new Error('User is not found'));
+//             }
+//         });
+//     } else {
+//         User.findOne(id, (err, foundUser) => {
+//             if (err) {
+//                 console.log('This is error inside ');
+//                 callback(err);
+//             } else if (foundUser){
+//                 console.log('foundUser 2 ', foundUser);
+//                 User.update({
+//                     userPassword: foundUser.userPassword
+//                 }, {
+//                     userName: foundUser.userName
+//                 }, {
+//                     userAge: foundUser.userAge
+//                 },
+//                     function(err, foundUser) {
+//                     console.log('User.update foundUser 2 ', foundUser);
+//                     callback(err, foundUser);
+//                 });
+//             } else {
+//                 callback(new Error('User is not found'));
+//             }
+//         });
+//     }
+// };
+
 module.exports.updateUser = function (id, updatedData, callback) {
-        var User = this;
+    var User = this;
 
-    if (updatedData.userAge == undefined) {
-
-        User.findOne(id, (err, foundUser) => {
-            if (err) {
-                callback(err);
-            } else if (foundUser){
-                User.comparePassword(updatedData.userPassword, foundUser.userPassword, function(err, res) {
-                    if (err)
-                        callback(new Error('Password is incorrect'));
-                    if (res)
-                        var newPassword = foundUser.userPassword;
-                        console.log('foundUser 1 ', foundUser);
-                        User.update({userPassword: newPassword}, function(err, foundUser) {
-                            console.log('User.update foundUser 1 ', foundUser);
-                            callback(err, foundUser);
-                        });
-                });
-            } else {
-                callback(new Error('User is not found'));
-            }
-        });
-    } else {
-        User.findOne(id, (err, foundUser) => {
-            if (err) {
-                console.log('This is error inside ');
-                callback(err);
-            } else if (foundUser){
-                console.log('foundUser 2 ', foundUser);
-                User.update({
-                    userPassword: foundUser.userPassword
-                }, {
-                    userName: foundUser.userName
-                }, {
-                    userAge: foundUser.userAge
+    User.findOne(id, (err, foundUser) => {
+        if (err) {
+            callback(err);
+        } else if (foundUser) {
+            User.update({
+                userName: foundUser.userName,
+                userAge: foundUser.userAge
+            }, {
+                userName: updatedData.userName,
+                userAge: updatedData.userAge
                 },
-                    function(err, foundUser) {
+                
+                function(err, foundUser) {
                     console.log('User.update foundUser 2 ', foundUser);
+                    console.log('User.update updatedData 2 ', updatedData);
                     callback(err, foundUser);
                 });
-            } else {
-                callback(new Error('User is not found'));
-            }
-        });
-    }
+
+            if (updatedData.userOldPassword) {
+
+                User.comparePassword(updatedData.userOldPassword, foundUser.userPassword, function (err, res) {
+                    if (err) {
+                        callback(new Error('Password is incorrect'));
+                    }
+
+                    if (res) {
+                        console.log('foundUser 1 ', foundUser);
+                        
+                        if (updatedData.userNewPassword === updatedData.userConfPassword) {
+                            var newPassword = foundUser.userConfPassword;
+                            User.update({userPassword: newPassword}, function (err, foundUser) {
+                                console.log('User.update foundUser 1 ', foundUser);
+                                callback(err, foundUser);
+                            });
+                        } else {
+                            callback(err);
+                        }
+
+                    }
+                });
+            } 
+        } else {
+            callback(new Error('User is not found'));
+        }
+    });
 };
 
 module.exports.deleteUser = function (id, callback) {
