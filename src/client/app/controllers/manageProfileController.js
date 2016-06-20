@@ -41,10 +41,7 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
     init();
 
     $scope.saveChanges = function (user) {
-        savingMsg();
         if (user.oldPassword) {
-            profileService.checkPassword(user).then(function (resss) {
-                if (resss) {
                     if (user.newPassword === user.confirmNewPassword) {
                         let userInfo = {
                             _id: $scope.userId,
@@ -52,13 +49,15 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
                             userAge: user.userAge,
                             userEmail: user.userEmail,
                             userImg: user.userImg,
-                            userPassword: user.newPassword
+                            userOldPassword:user.oldPassword,
+                            userNewPassword:user.newPassword,
+                            userConfPassword:user.confirmNewPassword
                         };
 
                         profileService.update(userInfo);
+
                     }
-                }
-            })
+
         }
         else {
 
@@ -70,6 +69,7 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
                 userImg: user.userImg
             };
             profileService.update(userInfo);
+
         }
 
     };
@@ -116,20 +116,13 @@ app.service('profileService', ['$http', function ($http) {
         return $http.get("http://localhost:3000/api/users/profile/", id);
     };
 
-    this.checkPassword = function (user) {
-        return $http.post('http://localhost:3000/users/testing', {
-            userPassword: user.oldPassword,
-            userName: user.userName
-        });
-    };
-
     this.deleteAccount = () => {
         return $http.put('http://localhost:3000/api/users/profile/delete/', {id: userId});
     };
 
     this.update = function (userInfo) {
-        $http.put('http://localhost:3000/api/users/profile/update/', userInfo).then(function (response) {
-            savingMsg();
+        return $http.put('http://localhost:3000/api/users/profile/updateUser/', userInfo).then(function(response) {
+            console.log('ok');
         });
     }
 }]);
