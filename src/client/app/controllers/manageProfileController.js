@@ -41,10 +41,9 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
     init();
 
     $scope.saveChanges = function (user) {
+        let userInfo = {};
         if (user.oldPassword) {
-                    if (user.newPassword === user.confirmNewPassword) {
-                        let userInfo = {
-                            _id: $scope.userId,
+                        userInfo = {
                             userName: user.userName,
                             userAge: user.userAge,
                             userEmail: user.userEmail,
@@ -54,13 +53,12 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
 
                         profileService.update(userInfo);
 
-                    }
+
 
         }
         else {
 
             let userInfo = {
-                _id: $scope.userId,
                 userName: user.userName,
                 userAge: user.userAge,
                 userEmail: user.userEmail,
@@ -98,6 +96,7 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
         modalInstance2.result.then(function (img) {
             avatarMsg();
             $scope.avatar = img;
+            $scope.user.userImg = $scope.avatar;
         })
     };
 
@@ -145,8 +144,6 @@ app.controller('avatarController', ['$scope', '$uibModalInstance', function ($sc
         {image: 'public/images/avatars/cat.jpg', description: 'Just give me some food for Myaw!'}
     ];
 
-
-    $scope.currentImage = $scope.images[0];
     $scope.setCurrentImage = function (image) {
         $scope.currentImage = image;
     };
@@ -160,3 +157,16 @@ app.controller('avatarController', ['$scope', '$uibModalInstance', function ($sc
 
 
 }]);
+
+
+app.directive('validPasswordMatch', function () {
+    return {
+        require: 'ngModel',
+        link: function (scope, elm, attrs, ctrl) {
+            ctrl.$parsers.unshift(function (viewValue, $scope) {
+                var noMatch = viewValue != scope.profile.newpassword.$viewValue;
+                ctrl.$setValidity('noMatch', !noMatch)
+            })
+        }
+    }
+});
