@@ -48,7 +48,9 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
                             userAge: user.userAge,
                             userEmail: user.userEmail,
                             userImg: user.userImg,
-                            userPassword: user.newPassword
+                            userOldPassword:user.oldPassword,
+                            userNewPassword:user.newPassword,
+                            userConfPassword:user.confirmNewPassword
                         };
 
                         profileService.update(userInfo);
@@ -118,8 +120,8 @@ app.service('profileService', ['$http', function ($http) {
     };
 
     this.update = function (userInfo) {
-        $http.put('http://localhost:3000/api/users/profile/updateUser/', userInfo).then(function (response) {
-            savingMsg();
+        return $http.put('http://localhost:3000/api/users/profile/updateUser/', userInfo).then(function(response) {
+            console.log('ok');
         });
     }
 }]);
