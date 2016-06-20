@@ -98,45 +98,53 @@ module.exports.logoutUser = function (id, callback) {
         });
 };
 
-module.exports.updateUser = function (id, callback) {
-    this.findOneAndUpdate(id, {
-            $set: {
-                userName: userName
-            }
-        },
-        {upset: true},
-        (err, updatedUser) => {
-            if (err) {
-                console.log('error occured ' + err);
-                return res.status(500).send();
-            } else {
-                updatedUser.userName = userName;
+module.exports.updateUser = function (id, updatedData, callback) {
+        var User = this;
 
-                callback(updatedUser);
+    if (updatedData.userAge == undefined) {
+
+        User.findOne(id, (err, foundUser) => {
+            if (err) {
+                callback(err);
+            } else if (foundUser){
+                User.comparePassword(updatedData.userPassword, foundUser.userPassword, function(err, res) {
+                    if (err)
+                        callback(new Error('Password is incorrect'));
+                    if (res)
+                        var newPassword = foundUser.userPassword;
+                        console.log('foundUser 1 ', foundUser);
+                        User.update({userPassword: newPassword}, function(err, foundUser) {
+                            console.log('User.update foundUser 1 ', foundUser);
+                            callback(err, foundUser);
+                        });
+                });
+            } else {
+                callback(new Error('User is not found'));
             }
         });
-};
-
-module.exports.updatePassword = function (id, callback) {
-    console.log('id ' + id);
-    this.findOneAndUpdate(id, {
-            $set: {
-                userPassword: id.userPassword
-            }
-        },
-        {upset: true},
-        (err, updatedUser) => {
-            console.log('Before ' + updatedUser);
+    } else {
+        User.findOne(id, (err, foundUser) => {
             if (err) {
-                console.log('error occured ' + err);
-                return res.status(500).send();
+                console.log('This is error inside ');
+                callback(err);
+            } else if (foundUser){
+                console.log('foundUser 2 ', foundUser);
+                User.update({
+                    userPassword: foundUser.userPassword
+                }, {
+                    userName: foundUser.userName
+                }, {
+                    userAge: foundUser.userAge
+                },
+                    function(err, foundUser) {
+                    console.log('User.update foundUser 2 ', foundUser);
+                    callback(err, foundUser);
+                });
             } else {
-                updatedUser.userPassword = req.body.userPassword;
-
-                console.log('After ' + updatedUser);
-                callback(updatedUser);
+                callback(new Error('User is not found'));
             }
         });
+    }
 };
 
 module.exports.deleteUser = function (id, callback) {
@@ -155,6 +163,7 @@ module.exports.deleteUser = function (id, callback) {
                 updatedUser.isEnabled = false;
                 updatedUser.isOnline = false;
 
+                console.log('updatedUser ', updatedUser);
                 callback(updatedUser);
             }
         });
@@ -166,5 +175,4 @@ module.exports.comparePassword = function (candPassword, hash, callback) {
         if (err) throw err;
         callback(null, res);
     });
-
 };

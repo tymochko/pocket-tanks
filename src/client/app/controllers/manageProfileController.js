@@ -77,7 +77,7 @@ app.service('profileService', ['$http', function ($http) {
     };
 
     this.checkPassword = function (user) {
-        return $http.post('http://localhost:3000/users/testing',{userPassword:user.oldPassword,
+        return $http.put('http://localhost:3000/api/users/profile/updateUser/',{userPassword:user.oldPassword,
                                                             userName:user.userName});
     };
     
@@ -86,7 +86,7 @@ app.service('profileService', ['$http', function ($http) {
     };
 
     this.update = function (userInfo) {
-        $http.put('http://localhost:3000/api/users/profile/update/', userInfo).then(function(response) {
+        return $http.put('http://localhost:3000/api/users/profile/updateUser/', userInfo).then(function(response) {
             console.log('ok');
         });
     }

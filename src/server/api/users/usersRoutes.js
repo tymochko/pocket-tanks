@@ -17,7 +17,6 @@ router.get('/', (req, res) => {
 
 // get user's info by id, for instance in profile page
 router.get('/profile', (req, res) => {
-    console.log('req.session.user ', req.session.user);
     usersCollection.showProfile({_id: req.session.user}, (err, foundUser) => {
         if (err) {
             res.status(401).send();
@@ -80,30 +79,29 @@ router.post('/add', (req, res) => {
     });
 });
 
-// edit userName
+// edit user profile
 router.put('/profile/updateUser', (req, res) => {
-    var id = req.session.user;
-    console.log('req.session.user ', id);
-    console.log('req.body ', req.body);
-    usersCollection.updateUser({_id: req.session.user}, (err, foundUser) => {
+    // console.log('req.body ', req.body);
+    usersCollection.updateUser({_id: req.session.user}, req.body, (err, foundUser) => {
+        // console.log('this  ', this);
         if (err) {
             res.status(401).send();
         }
-
+        console.log('Route ', foundUser);
         res.status(204).send(foundUser);
     });
 });
 
-// edit userPassword
-router.put('/profile/updatePassword', (req, res) => {
-    usersCollection.updatePassword({_id: req.session.user}, (err, foundUser) => {
-        if (err) {
-            res.status(401).send();
-        }
-
-        res.status(204).send(foundUser);
-    });
-});
+// // edit userPassword
+// router.put('/profile/updatePassword', (req, res) => {
+//     usersCollection.updatePassword({_id: req.session.user}, (err, foundUser) => {
+//         if (err) {
+//             res.status(401).send();
+//         }
+//
+//         res.status(204).send(foundUser);
+//     });
+// });
 
 // delete user
 router.put('/profile/delete', (req, res) => {
@@ -112,6 +110,7 @@ router.put('/profile/delete', (req, res) => {
             res.status(401).send();
         }
 
+        console.log('foundUser ', foundUser);
         res.status(204).send(foundUser);
     });
 });
