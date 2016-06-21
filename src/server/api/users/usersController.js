@@ -62,7 +62,7 @@ module.exports.createUser = function (newUser,callback) {
 
 module.exports.loginUser = function (username, password, callback) {
     var User = this;
-    //NIGGA! Do checking of user.isEnabled
+    // Do checking of user.isEnabled
     User.findOne({userName: username}, (err, foundUser) => {
         if (err) {
             callback(err);

@@ -9,7 +9,7 @@ app.controller('mainCtrl', ['$scope', '$uibModal', '$log', '$location', '$http',
             else {
                 $('.show-after-log').addClass('hidden');
                 $('.hide-after-log').removeClass('hidden');
-                //session is always alive!!!!!!! Too bad, nigga:(
+                //session is always alive!!!!!!! Yuri... :(
                 console.log('isOnline: false\nBut session is still ALIVE. Whyyyy, whyyyyyyy?:\'(');
                 console.log('and _id as a proof: ' + res.data._id);
             }
