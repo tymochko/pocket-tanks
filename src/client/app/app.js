@@ -1,4 +1,17 @@
-var app = angular.module("tanks", ['ngRoute','ngAnimate', 'ui.bootstrap','toastr']);
+var app = angular.module("tanks", ['ngRoute','ngAnimate', 'ui.bootstrap','toastr','ngSanitize']);
+
+app.factory('socket', ['$rootScope', function($rootScope) {
+  var socket = io.connect();
+
+  return {
+    on: function(eventName, callback){
+      socket.on(eventName, callback);
+    },
+    emit: function(eventName, data) {
+      socket.emit(eventName, data);
+    }
+  };
+}]);
 
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.
@@ -15,6 +28,11 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
         .when('/signup', {
             templateUrl: 'src/client/views/signup.html',
             controller: 'SignupCtrl'
+        })
+
+        .when('/chat', {
+            templateUrl: 'src/client/views/chat.html',
+            controller: 'ChatController'
         })
 
         /*Login Form Route*/

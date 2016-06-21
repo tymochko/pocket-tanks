@@ -34,11 +34,15 @@ module.exports.showProfile = function (id, callback, res) {
     this.findOne(id, (err, foundUser) => {
         if (err) {
             console.log(err);
-            return res.status(500).send();
+            return err;
         }
 
         if (!foundUser) {
+<<<<<<< HEAD
            return callback(new Error('Sorry, user is not found'));
+=======
+            return err;
+>>>>>>> prepullrequest
         }
 
         callback(err, foundUser);
@@ -62,23 +66,42 @@ module.exports.createUser = function (newUser,callback) {
 
 module.exports.loginUser = function (username, password, callback) {
     var User = this;
-    User.findOne({userName: username}, (err, user) => {
-        //NIGGA! Do checking of user.isEnabled
-        if (err)
+    //NIGGA! Do checking of user.isEnabled
+    User.findOne({userName: username}, (err, foundUser) => {
+        if (err) {
             callback(err);
-        else if (user){
-            User.comparePassword(password, user.userPassword, function(err, res) {
-                if (err)
-                    callback(new Error('Password is incorrect'));
-                if (res)
-                    User.update({userName: user.userName}, {isOnline: true}, function(err, userNew) {
-                        callback(null, user);
-                    });
-            });
+        } else if (foundUser) {
+
+            if (foundUser.isEnabled === false) {
+                return callback(new Error('Sorry, this user is deleted'));
+
+            } else {
+                User.comparePassword(password, foundUser.userPassword, function(err, res) {
+                    if (err) {
+                        console.log(err);
+                        return res.status(500).send();
+                    }
+
+                    if (res) {
+                        updateUser(foundUser);
+                    }
+                });
+            }
         } else {
             callback(new Error('User is not found'));
         }
     });
+
+    const updateUser = (foundUser) => {
+        User.update({userName: foundUser.userName}, {isOnline: true}, function (err) {
+            if (err) {
+                console.log('err ', err);
+                return res.status(401).send();
+            } else {
+                callback(err, foundUser);
+            }
+        });
+    }
 };
 
 module.exports.logoutUser = function (id, callback) {
@@ -100,55 +123,6 @@ module.exports.logoutUser = function (id, callback) {
         });
 };
 
-// module.exports.updateUser = function (id, updatedData, callback) {
-//         var User = this;
-//
-//     if (updatedData.userAge == undefined) {
-//
-//         User.findOne(id, (err, foundUser) => {
-//             if (err) {
-//                 callback(err);
-//             } else if (foundUser){
-//                 User.comparePassword(updatedData.userPassword, foundUser.userPassword, function(err, res) {
-//                     if (err)
-//                         callback(new Error('Password is incorrect'));
-//                     if (res)
-//                         var newPassword = foundUser.userPassword;
-//                         console.log('foundUser 1 ', foundUser);
-//                         User.update({userPassword: newPassword}, function(err, foundUser) {
-//                             console.log('User.update foundUser 1 ', foundUser);
-//                             callback(err, foundUser);
-//                         });
-//                 });
-//             } else {
-//                 callback(new Error('User is not found'));
-//             }
-//         });
-//     } else {
-//         User.findOne(id, (err, foundUser) => {
-//             if (err) {
-//                 console.log('This is error inside ');
-//                 callback(err);
-//             } else if (foundUser){
-//                 console.log('foundUser 2 ', foundUser);
-//                 User.update({
-//                     userPassword: foundUser.userPassword
-//                 }, {
-//                     userName: foundUser.userName
-//                 }, {
-//                     userAge: foundUser.userAge
-//                 },
-//                     function(err, foundUser) {
-//                     console.log('User.update foundUser 2 ', foundUser);
-//                     callback(err, foundUser);
-//                 });
-//             } else {
-//                 callback(new Error('User is not found'));
-//             }
-//         });
-//     }
-// };
-
 module.exports.updateUser = function (id, updatedData, callback) {
     var User = this;
 
@@ -158,59 +132,60 @@ module.exports.updateUser = function (id, updatedData, callback) {
         } else if (foundUser) {
             if (updatedData.userOldPassword) {
 
-                User.comparePassword(updatedData.userOldPassword, foundUser.userPassword, function (err, res) {
+                User.comparePassword(updatedData.userOldPassword, foundUser.userPassword, function (err) {
                     if (err) {
-                        callback(new Error('Password is incorrect'));
+                        return callback(new Error('Password is incorrect'));
                     }
 
-                    if (res) {
-
-                        if (updatedData.userNewPassword === updatedData.userConfPassword) {
-
-                            bcrypt.genSalt(10, function (err, salt) {
-                                bcrypt.hash(updatedData.userConfPassword, salt, function (err, hash) {
-                                    updatedData.userConfPassword = hash;
-
-                                    User.update({
-                                            userPassword: foundUser.userPassword,
-                                            userName: foundUser.userName,
-                                            userAge: foundUser.userAge
-                                        }, {
-                                            userPassword: updatedData.userConfPassword,
-                                            userName: updatedData.userName,
-                                            userAge: updatedData.userAge
-                                        },
-                                        
-                                        function (err, foundUser) {
-                                            callback(err, foundUser);
-                                        });
-                                });
-                            });
-
-                        } else {
-                            callback(err);
-                        }
+                    if (updatedData.userNewPassword !== updatedData.userConfPassword) {
+                       return callback(err);
                     }
+
+                    updateUser(updatedData, foundUser, callback);
                 });
             } else {
                 User.update({
                     userName: foundUser.userName,
-                    userAge: foundUser.userAge
+                    userAge: foundUser.userAge,
+                    userImg: foundUser.userImg
                 }, {
                     userName: updatedData.userName,
-                    userAge: updatedData.userAge
+                    userAge: updatedData.userAge,
+                    userImg: updatedData.userImg
                     },
                 
                     function(err, foundUser) {
                         callback(err, foundUser);
                     });
             }
-
-
         } else {
             callback(new Error('User is not found'));
         }
     });
+
+    const updateUser = (updatedData, foundUser, callback) => {
+        bcrypt.genSalt(10, function (err, salt) {
+            bcrypt.hash(updatedData.userConfPassword, salt, function (err, hash) {
+                updatedData.userConfPassword = hash;
+
+                User.update({
+                        userPassword: foundUser.userPassword,
+                        userName: foundUser.userName,
+                        userAge: foundUser.userAge,
+                        userImg: foundUser.userImg
+                    }, {
+                        userPassword: updatedData.userConfPassword,
+                        userName: updatedData.userName,
+                        userAge: updatedData.userAge,
+                        userImg: updatedData.userImg
+                    },
+
+                    function (err, foundUser) {
+                        callback(err, foundUser);
+                    });
+            });
+        });
+    };
 };
 
 module.exports.deleteUser = function (id, callback) {
@@ -229,8 +204,7 @@ module.exports.deleteUser = function (id, callback) {
                 updatedUser.isEnabled = false;
                 updatedUser.isOnline = false;
 
-                console.log('updatedUser ', updatedUser);
-                callback(updatedUser);
+                callback(err, updatedUser);
             }
         });
 };
