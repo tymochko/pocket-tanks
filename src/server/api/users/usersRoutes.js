@@ -32,12 +32,14 @@ router.post('/login', (req, res) => {
     var loginName = req.body.userName;
     var loginPassword = req.body.userPassword;
 
-    usersCollection.loginUser(loginName, loginPassword, (err, user) => {
+    usersCollection.loginUser(loginName, loginPassword, (err, foundUser) => {
         if (err) {
-            res.status(401).send();
+            console.log('Route side error ', err);
+            return res.status(401).send();
         } else {
-            req.session.user = user._id;
-            req.session.username = user.userName;
+            console.log('Route side foundUser ', foundUser);
+            req.session.user = foundUser._id;
+            req.session.username = foundUser.userName;
             res.status(200).send();
         }
     });
@@ -93,17 +95,6 @@ router.put('/profile/updateUser', (req, res) => {
     });
 });
 
-// // edit userPassword
-// router.put('/profile/updatePassword', (req, res) => {
-//     usersCollection.updatePassword({_id: req.session.user}, (err, foundUser) => {
-//         if (err) {
-//             res.status(401).send();
-//         }
-//
-//         res.status(204).send(foundUser);
-//     });
-// });
-
 // delete user
 router.put('/profile/delete', (req, res) => {
     usersCollection.deleteUser({_id: req.session.user}, (err, foundUser) => {
@@ -111,7 +102,6 @@ router.put('/profile/delete', (req, res) => {
             res.status(401).send();
         }
 
-        console.log('foundUser ', foundUser);
         res.status(204).send(foundUser);
     });
 });
