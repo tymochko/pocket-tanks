@@ -88,11 +88,16 @@ footer.p {
     background: transparent; }
 
 /*====Login & Register Form====*/
-.form {
+.form, .regis-form {
   background: #222222;
   padding: 40px;
   margin: 3px auto;
   width: 592px; }
+
+.regis-form {
+  border: 2px solid white;
+  border-radius: 7px;
+  margin-top: 20px; }
 
 .form-header {
   text-align: center;
