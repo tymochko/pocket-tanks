@@ -34,10 +34,8 @@ router.post('/login', (req, res) => {
 
     usersCollection.loginUser(loginName, loginPassword, (err, foundUser) => {
         if (err) {
-            console.log('Route side error ', err);
             return res.status(401).send();
         } else {
-            console.log('Route side foundUser ', foundUser);
             req.session.user = foundUser._id;
             req.session.username = foundUser.userName;
             res.status(200).send();

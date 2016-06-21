@@ -68,8 +68,7 @@ module.exports.loginUser = function (username, password, callback) {
         } else if (foundUser) {
 
             if (foundUser.isEnabled === false) {
-                console.log('This user is deleted');
-                return callback(err);
+                return callback(new Error('Sorry, this user is deleted'));
 
             } else {
                 User.comparePassword(password, foundUser.userPassword, function(err, res) {
@@ -142,10 +141,12 @@ module.exports.updateUser = function (id, updatedData, callback) {
             } else {
                 User.update({
                     userName: foundUser.userName,
-                    userAge: foundUser.userAge
+                    userAge: foundUser.userAge,
+                    userImg: foundUser.userImg
                 }, {
                     userName: updatedData.userName,
-                    userAge: updatedData.userAge
+                    userAge: updatedData.userAge,
+                    userImg: updatedData.userImg
                     },
                 
                     function(err, foundUser) {
@@ -165,11 +166,13 @@ module.exports.updateUser = function (id, updatedData, callback) {
                 User.update({
                         userPassword: foundUser.userPassword,
                         userName: foundUser.userName,
-                        userAge: foundUser.userAge
+                        userAge: foundUser.userAge,
+                        userImg: foundUser.userImg
                     }, {
                         userPassword: updatedData.userConfPassword,
                         userName: updatedData.userName,
-                        userAge: updatedData.userAge
+                        userAge: updatedData.userAge,
+                        userImg: updatedData.userImg
                     },
 
                     function (err, foundUser) {
