@@ -173,10 +173,12 @@ module.exports.updateUser = function (id, updatedData, callback) {
                                     User.update({
                                             userPassword: foundUser.userPassword,
                                             userName: foundUser.userName,
+                                            userImg:foundUser.userImg,
                                             userAge: foundUser.userAge
                                         }, {
                                             userPassword: updatedData.userConfPassword,
                                             userName: updatedData.userName,
+                                            userImg:updatedData.userImg,
                                             userAge: updatedData.userAge
                                         },
                                         
@@ -194,10 +196,12 @@ module.exports.updateUser = function (id, updatedData, callback) {
             } else {
                 User.update({
                     userName: foundUser.userName,
-                    userAge: foundUser.userAge
+                    userAge: foundUser.userAge,
+                    userImg:foundUser.userImg
                 }, {
                     userName: updatedData.userName,
-                    userAge: updatedData.userAge
+                    userAge: updatedData.userAge,
+                    userImg:updatedData.userImg
                     },
                 
                     function(err, foundUser) {
