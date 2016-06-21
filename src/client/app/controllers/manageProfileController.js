@@ -31,7 +31,7 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
                             userEmail: user.userEmail,
                             userPassword: user.newPassword
                         };
-                        console.log('i did it!');
+                        console.log('i did it! ' + $scope.userId);
                         profileService.update(userInfo);
                     }
                 }

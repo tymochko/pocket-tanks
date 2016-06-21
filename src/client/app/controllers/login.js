@@ -16,10 +16,12 @@ app.controller('LoginCtrl', ['$scope', '$http', '$uibModalInstance', 'items', 'A
 
             $http.post('api/users/login', userInfo)
                 .then(function(response) {
-                            $('.hide-after-log').addClass('hidden');
-                            $('.show-after-log').removeClass('hidden');
+                        $('.hide-after-log').addClass('hidden');
+                        $('.show-after-log').removeClass('hidden');
                         Auth.setUser(user);
                         $uibModalInstance.close($scope.selected.item);
+                        console.log('blablabla ' + $scope.userId);
+
                     },
                     function(response) {
                         console.log('failed');

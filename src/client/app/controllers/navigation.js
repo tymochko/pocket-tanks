@@ -3,14 +3,13 @@ app
 
 		var i;
 	    var routes = $scope.routes = [];
-	    $scope.userId = null;
-
-	    $http.get('/users/userOne').then(function(response) {
-	        $scope.userId = response.data.userId;
-	        console.log($scope.userId);
-	    });
-
-	    if($scope.userId) {
+	    //console.log('blablabla ' + $scope.userId);
+	    // $http.get('/users/userOne').then(function(response) {
+	    //     $scope.userId = response.data.userId;
+	    //     console.log($scope.userId);
+	    // });
+	    console.log('fuuuun ' + $scope.usedId);
+	    if($scope.userId != undefined) {
 	    	for (i = 0; i < routeNavigation.routes.length; i++)
 	    		if(routeNavigation.routes[i].log == true) {
 	    			routes.push(routeNavigation.routes[i]);
@@ -46,12 +45,12 @@ app
                 console.log('open() ending');
         }
 
-        $scope.logOut = function(id) {
-            $http.post('/users/logout', {id: id}).then(function(response){
-                    $window.location.reload();
-                    $scope.userId = null;
-            });
-        }
+        // $scope.logOut = function(id) {
+        //     $http.post('/users/logout', {id: id}).then(function(response){
+        //             $window.location.reload();
+        //             $scope.userId = null;
+        //     });
+        // }
 
 	}])
 
@@ -61,11 +60,24 @@ app
 	        restrict: "E",
 	        replace: true,
 	        templateUrl: "src/client/views/navigation.html",
-	        // controller: function ($scope) {
-	        //     $scope.routes = routeNavigation.routes;
-	        //     $scope.activeRoute = routeNavigation.activeRoute;
-	        // }
-	        controller: 'NavigationCtrl'
+	        controller: function ($scope) {
+	            $scope.routes = routeNavigation.routes;
+	            $scope.activeRoute = routeNavigation.activeRoute;
+	        }
+	        //controller: 'NavigationCtrl'
+	    };
+	})
+
+	.directive('rightNav', function (routeNavigation) {
+	    return {
+	        restrict: "E",
+	        replace: true,
+	        templateUrl: "src/client/views/navigation.html",
+	        controller: function ($scope) {
+	            $scope.routes = routeNavigation.routes;
+	            $scope.activeRoute = routeNavigation.activeRoute;
+	        }
+	        //controller: 'NavigationCtrl'
 	    };
 	})
 

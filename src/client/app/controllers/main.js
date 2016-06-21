@@ -1,5 +1,5 @@
-app.controller('mainCtrl', ['$scope', '$uibModal', '$log', 'Auth', '$location', '$http', '$window',
-    function($scope, $uibModal, $log, Auth, $location, $http, $window) {
+app.controller('mainCtrl', ['$scope', '$uibModal', '$log', '$location', '$http', '$window',
+    function($scope, $uibModal, $log, $location, $http, $window) {
 
         //<------------slider------------->
         $scope.myInterval = 2000;
@@ -9,6 +9,11 @@ app.controller('mainCtrl', ['$scope', '$uibModal', '$log', 'Auth', '$location', 
 
         var slides = $scope.slides = [];
         var currIndex = 0;
+        console.log($scope.userId);
+        if($scope.userId) {
+            $('.hide-after-log').addClass('hidden');
+            $('.show-after-log').removeClass('hidden');
+        }
 
         $scope.addSlide = function(imageNum) {
             slides.push({
