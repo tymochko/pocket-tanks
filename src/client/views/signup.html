@@ -3,7 +3,6 @@
 		<div class="regis-form">
         	<h1 class='form-header'>Registration</h1>
 	        <form name="regForm">
-	        	<div class="alert alert-{{notification.type}}" style="display: none;" role="alert" data-notification="{{notification.status}}">{{notification.message}}</div>
 	            <div class="form-group">
 	                <label for="name">User name:</label>
 	                <input type="text" id='name' ng-pattern="/^[a-zA-Z0-9]*$/" class="form-control" name='username' ng-model="user.name" placeholder="User name" ng-minlength={{minname}} ng-maxlength={{maxname}} required/>
@@ -27,26 +26,28 @@
 					 <span class="form-error-message" ng-show='regForm.age.$error.min'>You should be at least {{minage}} years old</span>
 					 <span class="form-error-message" ng-show='regForm.age.$error.max'>You cannot be older than {{maxage}} years old</span>
     			</div>
+    			</form>
+    			<form name="passform">
 				<div class="form-group">
 					<label for="password">Password:</label>
  					<input class="form-control" id='password' type="password" name="password" required="" ng-model="user.password" placeholder="Password"  ng-minlength={{minpassword}} ng-maxlength={{maxpassword}} />
- 					<span class="form-error-message" data-ng-show="regForm.password.$error.required && regForm.password.$dirty">Required</span>
- 					<span class="form-error-message" class="error" ng-show="regForm.password.$error.minlength">Password should be at least {{minpassword}} characters long</span>
-	        		<span class="form-error-message" class="error" ng-show="regForm.password.$error.maxlength">Password cannot be longer than {{maxpassword}} characters</span>
+ 					<span class="form-error-message" data-ng-show="passForm.password.$error.required && passForm.password.$dirty">Required</span>
+ 					<span class="form-error-message" class="error" ng-show="passForm.password.$error.minlength">Password should be at least {{minpassword}} characters long</span>
+	        		<span class="form-error-message" class="error" ng-show="passForm.password.$error.maxlength">Password cannot be longer than {{maxpassword}} characters</span>
  				</div>
 				<div class="form-group" >
 					<label for="password_c">Confirm Password:</label>
 					 <input class="form-control" type="password" id='password_c' name="password_c" ng-model="user.password_c" valid-password-c placeholder="Confirm password" required />
-					 <span class="form-error-message" data-ng-show="regForm.password_c.$error.require   && regForm.password_c.$dirty">Required</span>
+					 <span class="form-error-message" ng-show="passForm.password_c.$error.require 
+					  && passForm.password_c.$dirty">Required</span>
 					 </br>
-					 <span class="form-error-message" ng-show="regForm.password_c.$error.noMatch 
-					 && regForm.password.$dirty">Passwords do not match</span>
+					 <span class="form-error-message" ng-show="passForm.password_c.$error.noMatch 
+					 && passForm.password_c.$dirty">Passwords do not match</span>
  				</div>
 	        </form>
 		        <div class="form-group">
 		            <button type="submit" class="btn btn-danger center-block" ng-click='register(user)' ng-disabled="regForm.$invalid" >Submit</button>
 				</div>
-				<button id="submit" name="submit" class="btn btn-default" type="submit" ng-click="notification.status = 'show'; notification.message = 'Oh yeah!'; notification.type = 'success';">Show</button>
-        </div>
+			</div>
     </div>
 </div>

@@ -1,8 +1,8 @@
-app.controller('SignupCtrl', ['$scope', 'sendReg', function($scope, sendReg) {
+app.controller('SignupCtrl', ['$scope', 'sendReg', 'toastr', function($scope, sendReg, toastr) {
 	$scope.maxname = 10;
 	$scope.minname = 4;
 	$scope.maxpassword = 12;
-	$scope.minpassword = 3;
+	$scope.minpassword = 4;
 	$scope.maxage = 100;
 	$scope.minage = 18;
 
@@ -20,6 +20,10 @@ app.controller('SignupCtrl', ['$scope', 'sendReg', function($scope, sendReg) {
 			userEmail : user.email,
 			userPassword : user.password
 		};
+		toastr.success('You registered successfully \n and can now log in.', 'Congratulations!', {
+            closeButton: true,
+            closeHtml: '<button>&times;</button>'
+        })
 		sendReg.add(userInfo);
 	};
 }]);
@@ -28,39 +32,25 @@ app.service('sendReg',['$http', '$location', function($http, $location){
 	this.add = function(userInfo){
 		return $http.post('http://localhost:3000/api/users/add', userInfo).then(function(res){
 			$location.path('/');
-			alert('Congratulations! You are successfully registered.\nYou can now log in');
 		});
 	};
-}]);
+}]);	
 
-		app.directive('notification', [ function () {
-			return {
-				controller: ['$scope', function ($scope) {
-					$scope.notification = {
-						status: 'hide',
-						type: 'success',
-						message: 'Welcome! It\'s yet another angular alert ;)'
-					};
-				}],
-			 link: function(scope, elem, attrs) {
-					attrs.$observe('notification', function (value) {
-						if (value === 'show') {
-							$(elem).show();
-						}
-					});
-				}
-			};
-		}]);
+app.config(function(toastrConfig) {
+  angular.extend(toastrConfig, {
+    autoDismiss: false,
+    positionClass: 'toast-top-center',
+  });
+});
 
-/*app.directive('validPasswordC', function () {
+app.directive('validPasswordC', function () {
     return {
         require: 'ngModel',
         link: function (scope, elm, attrs, ctrl) {
             ctrl.$parsers.unshift(function (viewValue, $scope) {
-                var noMatch = viewValue != scope.regForm.password.$viewValue;
+                var noMatch = viewValue != scope.passForm.password.$viewValue;
                 ctrl.$setValidity('noMatch', !noMatch);
             });
         }
     };
 });
-*/
