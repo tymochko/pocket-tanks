@@ -30,7 +30,7 @@ module.exports.showAll = function (callback) {
     });
 };
 
-module.exports.showProfile = function (id, callback) {
+module.exports.showProfile = function (id, callback, res) {
     this.findOne(id, (err, foundUser) => {
         if (err) {
             console.log(err);
@@ -38,7 +38,7 @@ module.exports.showProfile = function (id, callback) {
         }
 
         if (!foundUser) {
-            return res.status(404).send();
+           return callback(new Error('Sorry, user is not found'));
         }
 
         callback(err, foundUser);
@@ -63,6 +63,7 @@ module.exports.createUser = function (newUser,callback) {
 module.exports.loginUser = function (username, password, callback) {
     var User = this;
     User.findOne({userName: username}, (err, user) => {
+        //NIGGA! Do checking of user.isEnabled
         if (err)
             callback(err);
         else if (user){

@@ -20,7 +20,7 @@
     <script src="node_modules/angular-toastr/dist/angular-toastr.tpls.js"></script>
     <link rel="stylesheet" href="node_modules/angular-toastr/dist/angular-toastr.css" />
 
-
+    <link rel="icon" type="image/jpeg" href="public/images/myIcon.png">
 
 
     <base href="/">
@@ -53,7 +53,7 @@
 				</ul>
 				<ul class="nav navbar-nav navbar-right show-after-log">
 				<li><a href="/profile"><span class="glyphicon glyphicon-user"></span> Profile </a></li>
-				<li><a href="/" ng-click="logOut(userId)" class="logout-btn"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+				<li><a href="/" ng-click="logOut()" class="logout-btn"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
 				</ul>
 		    </div>
 		  </div>
@@ -62,7 +62,7 @@
 
     <div class="wrapper">
         <header class="header">
-            <navigation></navigation>
+            <!-- <navigation></navigation> -->
         </header>
         <!-- .header-->
         <main class="content">

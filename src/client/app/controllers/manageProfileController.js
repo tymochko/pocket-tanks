@@ -1,5 +1,5 @@
 
-app.controller('manageProfileController', ['$scope', '$uibModal', 'profileService', 'toastr', function ($scope, $uibModal, profileService, toastr) {
+app.controller('manageProfileController', ['$scope', '$uibModal', 'profileService', 'toastr', '$location', function ($scope, $uibModal, profileService, toastr, $location) {
     $scope.emailStatus = true;
 
     $scope.nameMinLength = 5;
@@ -83,16 +83,15 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
         });
         modalInstance.result.then(function () {
             profileService.deleteAccount();
+            $scope.logOut($scope.user._id);
+            $location.path('/');
         })
     };
 
-    $scope.toggleAnimation = () => {
-        $scope.animationsEnabled = !$scope.animationsEnabled;
-    };
     $scope.changeAvatar = function () {
 
         let modalInstance2 = $uibModal.open({
-            animation: $scope.animationsEnabled,
+            animation: true,
             templateUrl: './src/client/views/views/avatarContent.html',
             controller: 'avatarController'
         });
@@ -100,10 +99,6 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
             avatarMsg();
             $scope.avatar = img;
         })
-    };
-
-    $scope.toggleAnimation = () => {
-        $scope.animationsEnabled = !$scope.animationsEnabled;
     };
 
 }]);

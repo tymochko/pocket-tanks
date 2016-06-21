@@ -3,8 +3,8 @@ var app = angular.module("tanks", ['ngRoute','ngAnimate', 'ui.bootstrap','toastr
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.
         when('/', {
-            templateUrl: 'src/client/views/home.html',
-            controller: 'mainCtrl'
+            templateUrl: 'src/client/views/home.html'
+            //controller: 'mainCtrl'
         })
     
         .when('/dashboard', {
@@ -29,8 +29,3 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
 
     $locationProvider.html5Mode(true);
 }]);
-
-//////////// logOut Imitation | temporary function
-function logOut() {
-    location.reload();
-}

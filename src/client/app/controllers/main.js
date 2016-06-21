@@ -1,6 +1,23 @@
 app.controller('mainCtrl', ['$scope', '$uibModal', '$log', '$location', '$http', '$window',
     function($scope, $uibModal, $log, $location, $http, $window) {
 
+        $http.get("http://localhost:3000/api/users/profile/").then(function(res) {
+            if(res.data.isOnline) {
+                $('.hide-after-log').addClass('hidden');
+                $('.show-after-log').removeClass('hidden');
+            }
+            else {
+                $('.show-after-log').addClass('hidden');
+                $('.hide-after-log').removeClass('hidden');
+                //session is always alive!!!!!!! Too bad, nigga:(
+                console.log('isOnline: false\nBut session is still ALIVE. Whyyyy, whyyyyyyy?:\'(');
+                console.log('and _id as a proof: ' + res.data._id);
+            }
+
+        }, function(res) {
+            console.log('really NOT logged in');
+        });
+
         //<------------slider------------->
         $scope.myInterval = 2000;
         $scope.noWrapSlides = false;
@@ -9,11 +26,6 @@ app.controller('mainCtrl', ['$scope', '$uibModal', '$log', '$location', '$http',
 
         var slides = $scope.slides = [];
         var currIndex = 0;
-        console.log($scope.userId);
-        if($scope.userId) {
-            $('.hide-after-log').addClass('hidden');
-            $('.show-after-log').removeClass('hidden');
-        }
 
         $scope.addSlide = function(imageNum) {
             slides.push({
@@ -25,10 +37,9 @@ app.controller('mainCtrl', ['$scope', '$uibModal', '$log', '$location', '$http',
         for (var i = 0; i < 9; i++) {
             $scope.addSlide("0" + (i + 1));
         }
+
         //<-------------------------------->
         $scope.items = [];
-
-        $scope.animationsEnabled = true;
 
         $scope.open = function() {
             var modalInstance = $uibModal.open({
@@ -50,6 +61,7 @@ app.controller('mainCtrl', ['$scope', '$uibModal', '$log', '$location', '$http',
 
         $scope.logOut = function(id) {
             $http.post('api/users/logout', {id: id}).then(function(response){
+                    
                     $window.location.reload();
             });
         };
