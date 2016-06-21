@@ -42,35 +42,26 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
 
     $scope.saveChanges = function (user) {
         let userInfo = {};
+        userInfo = {
+            userName: user.userName,
+            userAge: user.userAge,
+            userEmail: user.userEmail,
+            userImg: user.userImg
+        };
         if (user.oldPassword) {
-                        userInfo = {
-                            userName: user.userName,
-                            userAge: user.userAge,
-                            userEmail: user.userEmail,
-                            userImg: user.userImg,
-                            userOldPassword:user.oldPassword,
-                            userNewPassword:user.newPassword,
-                            userConfPassword:user.confirmNewPassword
-                        };
-
-                        profileService.update(userInfo);
-
-
+            userInfo.userOldPassword= user.oldPassword;
+            userInfo.userNewPassword= user.newPassword;
+            userInfo.userConfPassword= user.confirmNewPasswor;
 
         }
-        else {
+            console.log(userInfo);
+        profileService.update(userInfo);
+            savingMsg();
 
-            let userInfo = {
-                userName: user.userName,
-                userAge: user.userAge,
-                userEmail: user.userEmail,
-                userImg: user.userImg
-            };
-            profileService.update(userInfo);
 
-        }
 
-    };
+        };
+
     $scope.animationsEnabled = true;
 // Delete popup controller;
     $scope.open = function () {
@@ -145,8 +136,9 @@ app.controller('avatarController', ['$scope', '$uibModalInstance', function ($sc
         {image: 'public/images/avatars/deer.jpg', description: 'Am...yes i am deer!'},
         {image: 'public/images/avatars/cat.jpg', description: 'Just give me some food for Myaw!'}
     ];
-
+    $scope.currentImage = $scope.images[0];
     $scope.setCurrentImage = function (image) {
+
         $scope.currentImage = image;
     };
     $scope.ok = function () {
