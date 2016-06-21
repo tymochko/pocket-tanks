@@ -38,11 +38,7 @@ module.exports.showProfile = function (id, callback, res) {
         }
 
         if (!foundUser) {
-<<<<<<< HEAD
-           return callback(new Error('Sorry, user is not found'));
-=======
             return err;
->>>>>>> prepullrequest
         }
 
         callback(err, foundUser);

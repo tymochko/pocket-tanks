@@ -67,7 +67,7 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
 // =======
             userInfo.userOldPassword= user.oldPassword;
             userInfo.userNewPassword= user.newPassword;
-            userInfo.userConfPassword= user.confirmNewPasswor;
+            userInfo.userConfPassword= user.confirmNewPassword;
         }
             console.log(userInfo);
         profileService.update(userInfo);
@@ -77,12 +77,11 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
 
         };
 
-    $scope.animationsEnabled = true;
 // Delete popup controller;
     $scope.open = function () {
 
         let modalInstance = $uibModal.open({
-            animation: $scope.animationsEnabled,
+            animation: true,
             templateUrl: './src/client/views/views/myModalContent.html',
             controller: 'ModalInstanceCtrl'
         });
