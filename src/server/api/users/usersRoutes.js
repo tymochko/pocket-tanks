@@ -3,6 +3,7 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 
 var usersCollection = require('./usersController');
+var usersImages = require('./../../usersImages.json');
 
 // get all users in database, for instance in dashboard
 router.get('/', (req, res) => {
@@ -21,7 +22,7 @@ router.get('/profile', (req, res) => {
         if (err) {
             res.status(401).send();
         }
-        
+        //todo send DTO instead database obj
         res.send(foundUser);
     });
 });
@@ -61,7 +62,7 @@ router.post('/add', (req, res) => {
     newUser.userAge = req.body.userAge;
     newUser.userEmail = req.body.userEmail;
     newUser.userPassword = req.body.userPassword;
-    newUser.userAge = req.body.userAge;
+    newUser.userImg = usersImages[0];
     newUser.isOnline = false;
     newUser.isEnabled = true;
 
@@ -79,27 +80,29 @@ router.post('/add', (req, res) => {
     });
 });
 
-// edit userName
+// edit user profile
 router.put('/profile/updateUser', (req, res) => {
-    usersCollection.updateUser({_id: req.session.user}, (err, foundUser) => {
+    console.log('req.body ', req.body);
+    usersCollection.updateUser({_id: req.session.user}, req.body, (err, foundUser) => {
+        // console.log('this  ', this);
         if (err) {
             res.status(401).send();
         }
-
+        console.log('Route ', foundUser);
         res.status(204).send(foundUser);
     });
 });
 
-// edit userPassword
-router.put('/profile/updatePassword', (req, res) => {
-    usersCollection.updatePassword({_id: req.session.user}, (err, foundUser) => {
-        if (err) {
-            res.status(401).send();
-        }
-
-        res.status(204).send(foundUser);
-    });
-});
+// // edit userPassword
+// router.put('/profile/updatePassword', (req, res) => {
+//     usersCollection.updatePassword({_id: req.session.user}, (err, foundUser) => {
+//         if (err) {
+//             res.status(401).send();
+//         }
+//
+//         res.status(204).send(foundUser);
+//     });
+// });
 
 // delete user
 router.put('/profile/delete', (req, res) => {
@@ -108,6 +111,7 @@ router.put('/profile/delete', (req, res) => {
             res.status(401).send();
         }
 
+        console.log('foundUser ', foundUser);
         res.status(204).send(foundUser);
     });
 });
