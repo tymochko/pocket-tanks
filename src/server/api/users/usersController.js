@@ -79,6 +79,7 @@ const comparePassword = (candPassword, hash, callback) => {
 
 const loginUser = function (username, password, callback) {
     var User = this;
+    // Do checking of user.isEnabled
     User.findOne({userName: username}, (err, foundUser) => {
         if (err) {
             callback(err);

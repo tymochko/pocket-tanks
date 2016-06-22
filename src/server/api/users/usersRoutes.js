@@ -50,7 +50,10 @@ router.post('/logout', (req, res) => {
         if (err) {
             res.status(401).send();
         }
-
+        
+        // req.session.destroy(function(){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+        //     res.redirect('/');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+        // });  
         res.status(204).send(foundUser);
     });
 });

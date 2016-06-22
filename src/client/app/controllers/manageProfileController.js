@@ -1,5 +1,5 @@
 
-app.controller('manageProfileController', ['$scope', '$uibModal', 'profileService', 'toastr', function ($scope, $uibModal, profileService, toastr) {
+app.controller('manageProfileController', ['$scope', '$uibModal', 'profileService', 'toastr', '$location', function ($scope, $uibModal, profileService, toastr, $location) {
     $scope.emailStatus = true;
 
     $scope.nameMinLength = 5;
@@ -49,6 +49,22 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
             userImg: user.userImg
         };
         if (user.oldPassword) {
+// <<<<<<< HEAD
+//                     if (user.newPassword === user.confirmNewPassword) {
+//                         let userInfo = {
+//                             _id: $scope.userId,
+//                             userName: user.userName,
+//                             userAge: user.userAge,
+//                             userEmail: user.userEmail,
+//                             userImg: user.userImg,
+//                             userOldPassword:user.oldPassword,
+//                             userNewPassword:user.newPassword,
+//                             userConfPassword:user.confirmNewPassword
+//                         };
+//                         profileService.update(userInfo);
+
+//                     }
+// =======
             userInfo.userOldPassword= user.oldPassword;
             userInfo.userNewPassword= user.newPassword;
             userInfo.userConfPassword= user.confirmNewPassword;
@@ -62,27 +78,25 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
 
         };
 
-    $scope.animationsEnabled = true;
 // Delete popup controller;
     $scope.open = function () {
 
         let modalInstance = $uibModal.open({
-            animation: $scope.animationsEnabled,
+            animation: true,
             templateUrl: './src/client/views/views/myModalContent.html',
             controller: 'ModalInstanceCtrl'
         });
         modalInstance.result.then(function () {
             profileService.deleteAccount();
+            $scope.logOut($scope.user._id);
+            $location.path('/');
         })
     };
 
-    $scope.toggleAnimation = () => {
-        $scope.animationsEnabled = !$scope.animationsEnabled;
-    };
     $scope.changeAvatar = function () {
 
         let modalInstance2 = $uibModal.open({
-            animation: $scope.animationsEnabled,
+            animation: true,
             templateUrl: './src/client/views/views/avatarContent.html',
             controller: 'avatarController'
         });
@@ -91,10 +105,6 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
             $scope.avatar = img;
             $scope.user.userImg = $scope.avatar;
         })
-    };
-
-    $scope.toggleAnimation = () => {
-        $scope.animationsEnabled = !$scope.animationsEnabled;
     };
 
 }]);
