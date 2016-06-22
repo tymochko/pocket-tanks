@@ -9,10 +9,11 @@ var usersImages = require('./../../usersImages.json');
 router.get('/', (req, res) => {
     usersCollection.showAll((err, users) => {
         if (err) {
+            console.log('err  ', err);
             res.status(401).send();
+        } else {
+            res.json({'users': users, 'sessionId': req.session.user});
         }
-
-        res.json({'users': users, 'sessionId': req.session.user});
     });
 });
 
@@ -20,10 +21,11 @@ router.get('/', (req, res) => {
 router.get('/profile', (req, res) => {
     usersCollection.showProfile({_id: req.session.user}, (err, foundUser) => {
         if (err) {
+            console.log('err  ', err);
             res.status(401).send();
+        } else {
+            res.send(foundUser);
         }
-        //todo send DTO instead database obj
-        res.send(foundUser);
     });
 });
 
@@ -35,6 +37,7 @@ router.post('/login', (req, res) => {
     usersCollection.loginUser(loginName, loginPassword, (err, foundUser) => {
         console.log('foundUser ', foundUser);
         if (err) {
+            console.log('err  ', err);
             return res.status(401).send();
         } else {
             req.session.user = foundUser._id;
@@ -48,13 +51,14 @@ router.post('/login', (req, res) => {
 router.post('/logout', (req, res) => {
     usersCollection.logoutUser({_id: req.session.user}, (err, foundUser) => {
         if (err) {
+            console.log('err  ', err);
             res.status(401).send();
+        } else {
+            // req.session.destroy(function(){
+            //     res.redirect('/');
+            // });
+            res.status(204).send(foundUser);
         }
-        
-        // req.session.destroy(function(){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-        //     res.redirect('/');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
-        // });  
-        res.status(204).send(foundUser);
     });
 });
 
@@ -91,10 +95,8 @@ router.put('/profile/updateUser', (req, res) => {
             console.log('err  ', err);
             res.status(401).send();
         } else {
-            console.log('Route ', foundUser);
             res.status(204).send(foundUser);
         }
-
     });
 });
 
@@ -102,10 +104,11 @@ router.put('/profile/updateUser', (req, res) => {
 router.put('/profile/delete', (req, res) => {
     usersCollection.deleteUser({_id: req.session.user}, (err, foundUser) => {
         if (err) {
+            console.log('err  ', err);
             res.status(401).send();
+        } else {
+            res.status(204).send(foundUser);
         }
-
-        res.status(204).send(foundUser);
     });
 });
 

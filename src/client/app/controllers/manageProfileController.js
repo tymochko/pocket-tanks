@@ -67,7 +67,9 @@ app.controller('manageProfileController', ['$scope', '$uibModal', 'profileServic
 // =======
             userInfo.userOldPassword= user.oldPassword;
             userInfo.userNewPassword= user.newPassword;
-            userInfo.userConfPassword= user.confirmNewPassword;
+            // TODO should be changed back when working
+            // userInfo.userConfPassword= user.confirmNewPassword;
+            userInfo.userConfPassword= user.newPassword;
 
         }
             console.log(userInfo);
