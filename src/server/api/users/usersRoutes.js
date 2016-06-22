@@ -33,6 +33,7 @@ router.post('/login', (req, res) => {
     var loginPassword = req.body.userPassword;
 
     usersCollection.loginUser(loginName, loginPassword, (err, foundUser) => {
+        console.log('foundUser ', foundUser);
         if (err) {
             return res.status(401).send();
         } else {
@@ -82,14 +83,15 @@ router.post('/add', (req, res) => {
 
 // edit user profile
 router.put('/profile/updateUser', (req, res) => {
-    console.log('req.body ', req.body);
     usersCollection.updateUser({_id: req.session.user}, req.body, (err, foundUser) => {
-        // console.log('this  ', this);
         if (err) {
+            console.log('err  ', err);
             res.status(401).send();
+        } else {
+            console.log('Route ', foundUser);
+            res.status(204).send(foundUser);
         }
-        console.log('Route ', foundUser);
-        res.status(204).send(foundUser);
+
     });
 });
 
