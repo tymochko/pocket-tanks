@@ -40,21 +40,12 @@ app.use(session({
     rolling: true
 }));
 
-//<<<<<<< HEAD
-//app.use('/public', express.static(path.join(__dirname, '..', '..', 'public')));
-
-app.use('/', routes);
 app.use('/api/users', users);
 app.use('/game', game);
 
-// started to work on chat
 //=======
-app.use('/public', express.static(path.resolve('public')));
-
-app.use('/src/client', express.static(path.resolve('src/client')));
-app.use('/node_modules', express.static(path.resolve('node_modules')));
-
-//>>>>>>> prepullrequest
+app.use('/public', express.static(path.join(__dirname, '..', '..', 'public')));
+app.use('/*', express.static(path.join(__dirname, '..', '..', 'public')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
