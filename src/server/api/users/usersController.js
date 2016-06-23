@@ -79,6 +79,7 @@ const comparePassword = (candPassword, hash, callback) => {
 
 const loginUser = function (username, password, callback) {
     var User = this;
+    // linux task manager
     // TODO checking of user.isEnabled
     User.findOne({userName: username}, (err, foundUser) => {
         if (err) {
