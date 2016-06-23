@@ -1,12 +1,12 @@
 const gulp = require('gulp');
-const babel = require('gulp-babel');
-const sass = require('gulp-sass');
 const path = require('path');
+const sass = require('gulp-sass');
+const babel = require('gulp-babel');
 const rename = require('gulp-rename');
-const templateCache = require('gulp-angular-templatecache');
-const browserify = require('gulp-browserify');
 const concat = require('gulp-concat');
 const inject = require('gulp-inject');
+const browserify = require('gulp-browserify');
+const templateCache = require('gulp-angular-templatecache');
 
 gulp.task('es6', () => {
     gulp.src('src/server/app.js')
@@ -22,16 +22,33 @@ gulp.task('es6', () => {
 });
 
 gulp.task( 'sass', () => {
-	gulp.src( 'src/client/scss/*.scss' )
-		.pipe( sass().on( 'error', sass.logError ) )
-		.pipe( gulp.dest( 'public/' ) );
+    gulp.src( 'src/client/scss/*.scss' )
+        .pipe( sass().on( 'error', sass.logError ) )
+        .pipe( gulp.dest( 'public/' ) );
 });
 
-gulp.task( 'watch', () => {
-    gulp.watch( 'src/client/scss/**/*.scss', ['sass'] );
+gulp.task('template', () => {
+    return gulp.src('**/*.html', { cwd: 'src/client/modules' })
+        .pipe(templateCache({
+            module: 'tanks',
+            standalone: false,
+            moduleSystem: 'IIFE'
+        }))
+        .pipe(rename('main-partials.js'))
+        .pipe(gulp.dest('public/'));
 });
 
-gulp.task('html', () => {
+gulp.task('js', () =>  {
+    gulp.src(['src/client/app.js'], { read: false })
+        .pipe(browserify({
+            insertGlobals: true,
+            debug: true
+        }))
+        .pipe(concat('main.js'))
+        .pipe(gulp.dest('public/'));
+});
+
+gulp.task('build', ['sass', 'template', 'js'], () => {
     return gulp.src('src/client/index.html')
         .pipe(inject(
             gulp.src(['main.js', 'main-partials.js', 'main.css'], { read: false, cwd: 'public/' }), {
@@ -43,31 +60,9 @@ gulp.task('html', () => {
         .pipe(gulp.dest('public/'));
 });
 
-gulp.task('partials', () => {
-    return gulp.src('**/*.html', { cwd: 'src/client/modules' })
-        .pipe(templateCache({
-            module: 'tanks',
-            standalone: false,
-            moduleSystem: 'IIFE'
-        }))
-        .pipe(rename('main-partials.js'))
-        .pipe(gulp.dest('public/'));
-});
-
-gulp.task('browserify', () =>  {
-    gulp.src(['src/client/app.js'], { read: false })
-        .pipe(browserify({
-            insertGlobals: true,
-            debug: true
-        }))
-        .pipe(concat('main.js'))
-        .pipe(gulp.dest('public/'));
-});
-
-gulp.task('live', () => {
-    gulp.watch('src/client/modules/**/*.js', ['browserify']);
-});
-
-gulp.task('default', ['es6', 'sass', 'browserify', 'partials', 'html'], () => {
+gulp.task('default', ['es6', 'build'], () => {
     gulp.watch('src/server/app.js', ['es6']);
+    gulp.watch('src/client/modules/**/*.js', ['js']);
+    gulp.watch('src/client/modules/**/*.html', ['template'] );
+    gulp.watch('src/client/scss/**/*.scss', ['sass'] );
 });
