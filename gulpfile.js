@@ -44,7 +44,7 @@ gulp.task('html', () => {
 });
 
 gulp.task('partials', () => {
-    return gulp.src('**/*.html', { cwd: 'src/client/controllers' })
+    return gulp.src('**/*.html', { cwd: 'src/client/modules' })
         .pipe(templateCache({
             module: 'tanks',
             standalone: false,
@@ -65,7 +65,7 @@ gulp.task('browserify', () =>  {
 });
 
 gulp.task('live', () => {
-    gulp.watch('src/client/**/*.js', ['browserify']);
+    gulp.watch('src/client/modules/**/*.js', ['browserify']);
 });
 
 gulp.task('default', ['es6', 'sass', 'browserify', 'partials', 'html'], () => {
