@@ -1,8 +1,12 @@
 const gulp = require('gulp');
 const babel = require('gulp-babel');
 const sass = require('gulp-sass');
-const browserify = require('gulp-browserify'),
-    concat = require('gulp-concat');
+const path = require('path');
+const rename = require('gulp-rename');
+const templateCache = require('gulp-angular-templatecache');
+const browserify = require('gulp-browserify');
+const concat = require('gulp-concat');
+const inject = require('gulp-inject');
 
 gulp.task('es6', () => {
     gulp.src('src/server/app.js')
@@ -20,30 +24,50 @@ gulp.task('es6', () => {
 gulp.task( 'sass', () => {
 	gulp.src( 'src/client/scss/*.scss' )
 		.pipe( sass().on( 'error', sass.logError ) )
-		.pipe( gulp.dest( 'public/stylesheets/' ) );
+		.pipe( gulp.dest( 'public/' ) );
 });
 
 gulp.task( 'watch', () => {
     gulp.watch( 'src/client/scss/**/*.scss', ['sass'] );
 });
 
-// <<<<<<< HEAD
-gulp.task('default', ['es6', 'sass'], () => {
-// =======
-gulp.task('browserify', function() {
-    // Single point of entry (make sure not to src ALL your files, browserify will figure it out for you)
-    gulp.src(['src/client/app/app.js'])
+gulp.task('html', () => {
+    return gulp.src('src/client/index.html')
+        .pipe(inject(
+            gulp.src(['main.js', 'main-partials.js', 'main.css'], { read: false, cwd: 'public/' }), {
+                 relative: true,
+                 ignorePath: '../../',
+                 addRootSlash: true
+             }
+        ))
+        .pipe(gulp.dest('public/'));
+});
+
+gulp.task('partials', () => {
+    return gulp.src('**/*.html', { cwd: 'src/client/controllers' })
+        .pipe(templateCache({
+            module: 'tanks',
+            standalone: false,
+            moduleSystem: 'IIFE'
+        }))
+        .pipe(rename('main-partials.js'))
+        .pipe(gulp.dest('public/'));
+});
+
+gulp.task('browserify', () =>  {
+    gulp.src(['src/client/app.js'], { read: false })
         .pipe(browserify({
             insertGlobals: true,
             debug: true
         }))
-        // Bundle to a single file
-        .pipe(concat('bundle.js'))
-        // Output it to our dist folder
-        .pipe(gulp.dest('public/js'));
+        .pipe(concat('main.js'))
+        .pipe(gulp.dest('public/'));
 });
 
-// gulp.task('default', ['es6'], () => {
-// >>>>>>> prepullrequest
-    gulp.watch('src/app.js', ['es6'])
+gulp.task('live', () => {
+    gulp.watch('src/client/**/*.js', ['browserify']);
+});
+
+gulp.task('default', ['es6', 'sass', 'browserify', 'partials', 'html'], () => {
+    gulp.watch('src/server/app.js', ['es6']);
 });

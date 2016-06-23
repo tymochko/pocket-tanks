@@ -40,5 +40,5 @@ jspm_packages
 .idea
 
 dist
-public/stylesheets
+public/
 
