@@ -5,16 +5,26 @@
     <meta charset="utf-8" />
     <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     <title></title>
+
     <meta name="keywords" content="" />
     <meta name="description" content="" />
+
     <link href="public/stylesheets/style.css" rel="stylesheet">
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="node_modules/jquery/dist/jquery.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="node_modules/angular/angular.js"></script>
     <script src="node_modules/angular-animate/angular-animate.min.js"></script>
+    <script src="node_modules/angular-toastr/dist/angular-toastr.tpls.js"></script>
+    <script src="node_modules/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="node_modules/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="node_modules/angular-toastr/dist/angular-toastr.css" />
+
+    <link rel="icon" type="image/jpeg" href="public/images/myIcon.png">
+
 
     <base href="/">
 </head>
@@ -34,7 +44,7 @@
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
-            	<a href="/game" class="btn btn-danger navbar-center show-after-log">Start game</a>
+            	<a href="/chat" class="btn btn-danger navbar-center show-after-log">Start game</a>
             	<ul class="nav navbar-nav show-after-log">
 			        <li><a href="/dashboard">Dashboard</a></li>
 			        <li><a href="/scores">Scores</a></li>
@@ -46,7 +56,7 @@
 				</ul>
 				<ul class="nav navbar-nav navbar-right show-after-log">
 				<li><a href="/profile"><span class="glyphicon glyphicon-user"></span> Profile </a></li>
-				<li><a href="/" ng-click="logOut(userId)" class="logout-btn"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+				<li><a href="/" ng-click="logOut()" class="logout-btn"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
 				</ul>
 		    </div>
 		  </div>
@@ -55,6 +65,7 @@
 
     <div class="wrapper">
         <header class="header">
+            <!-- <navigation></navigation> -->
         </header>
         <!-- .header-->
         <main class="content">
@@ -76,12 +87,16 @@
     <script src="node_modules/angular-route/angular-route.min.js"></script>
     <script src="node_modules/angular-resource/angular-resource.min.js"></script>
 
+
     <!-- Controllers -->
     <script src="src/client/app/controllers/main.js"></script>
     <script src="src/client/app/controllers/dashboard.js"></script>
     <script src="src/client/app/controllers/login.js"></script>
     <script src="src/client/app/controllers/signup.js"></script>
     <script src="src/client/app/controllers/manageProfileController.js"></script>
+    <script src="src/client/app/controllers/navigation.js"></script>
+    <script src="src/client/app/controllers/chat.js"></script>
+    <script src="src/client/app/controllers/smileys.js"></script>
 
 </body>
 

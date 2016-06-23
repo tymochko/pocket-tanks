@@ -5,31 +5,24 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-// require mongoose - MongoDB Object modeling
-const mongoose = require('mongoose');
-var user = require('./models/users');
+
+// remove after MongoStore is removed from app.js
+var mongoose = require('mongoose');
+
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var users = require('./api/users/usersRoutes');
 var game = require('./routes/game');
 var connectMongo = require('connect-mongo');
 var MongoStore = connectMongo(session);
 
 var app = express();
 
-// view engine setup
-//app.set('views', path.join(__dirname, 'views'));
-//app.set('view engine', 'html');
-
 var cons = require('consolidate');
 
 // view engine setup
-app.engine('html', cons.swig)
+app.engine('html', cons.swig);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
-
-// connect to user database
-const db = 'mongodb://localhost/users';
-mongoose.connect(db);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -45,21 +38,19 @@ app.use(session({
     saveUninitialized: false,
     resave: true,
     rolling: true
-}))
+}));
 
 //<<<<<<< HEAD
 //app.use('/public', express.static(path.join(__dirname, '..', '..', 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/api/users', users);
 app.use('/game', game);
 
 // started to work on chat
 //=======
 app.use('/public', express.static(path.resolve('public')));
 
-//app.use('/', routes);
-//app.use('/users', users);
 app.use('/src/client', express.static(path.resolve('src/client')));
 app.use('/node_modules', express.static(path.resolve('node_modules')));
 
@@ -96,16 +87,15 @@ app.use(function(err, req, res, next) {
     });
 });
 
-// <<<<<<< HEAD
 
-var fs=require('fs');
-var config = JSON.parse(fs.readFileSync('src/server/MyConfig.json', encoding="ascii"));
-var host = config.host;
-var port = config.port;
+
+
 var mongo = require('mongodb').MongoClient;
-var client = require('socket.io').listen(port).sockets;
+var io = require('socket.io');
+var client=io();
+app.io=client;
 
-    mongo.connect('mongodb://'+host+'/chat', function(err,db){
+    mongo.connect('mongodb://localhost/users', function(err,db){
         if(err) throw err;
 
             client.on('connection',function(socket){
