@@ -17,10 +17,6 @@ var MongoStore = connectMongo(session);
 
 var app = express();
 
-// view engine setup
-//app.set('views', path.join(__dirname, 'views'));
-//app.set('view engine', 'html');
-
 var cons = require('consolidate');
 
 // view engine setup
@@ -91,16 +87,15 @@ app.use(function(err, req, res, next) {
     });
 });
 
-// <<<<<<< HEAD
 
-var fs=require('fs');
-var config = JSON.parse(fs.readFileSync('src/server/MyConfig.json', encoding="ascii"));
-var host = config.host;
-var port = config.port;
+
+
 var mongo = require('mongodb').MongoClient;
-var client = require('socket.io').listen(port).sockets;
+var io = require('socket.io');
+var client=io();
+app.io=client;
 
-    mongo.connect('mongodb://'+host+'/chat', function(err,db){
+    mongo.connect('mongodb://localhost/users', function(err,db){
         if(err) throw err;
 
             client.on('connection',function(socket){
