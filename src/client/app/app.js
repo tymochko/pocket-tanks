@@ -1,4 +1,18 @@
-var app = angular.module("tanks", ['ngRoute','ngAnimate', 'ui.bootstrap']);
+var app = angular.module("tanks", ['ngRoute','ngAnimate', 'ui.bootstrap','ngSanitize','angular-smilies']);
+// var app = angular.module('scotch-chat', ['ngMaterial', 'ngAnimate', 'ngMdIcons', 'btford.socket-io']);
+
+app.factory('socket', ['$rootScope', function($rootScope) {
+  var socket = io.connect();
+
+  return {
+    on: function(eventName, callback){
+      socket.on(eventName, callback);
+    },
+    emit: function(eventName, data) {
+      socket.emit(eventName, data);
+    }
+  };
+}]);
 
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.
@@ -24,6 +38,11 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
         .when('/profile', {
             templateUrl: 'src/client/views/manageProfile.html',
             controller: 'manageProfileController'
+        })
+        
+        .when('/chat', {
+            templateUrl: 'src/client/views/chat.html',
+            controller: 'ChatController'
         })
 
         .otherwise({

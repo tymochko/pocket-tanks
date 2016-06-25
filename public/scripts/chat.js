@@ -24,7 +24,7 @@
             }
         };
  
-        var socket = io.connect(host+':'+port);
+        var socket = io.connect();
 
         if(socket !== undefined)
         {

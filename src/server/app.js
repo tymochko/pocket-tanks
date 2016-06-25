@@ -90,10 +90,13 @@ var fs=require('fs');
 var config = JSON.parse(fs.readFileSync('src/server/MyConfig.json', encoding="ascii"));
 var host=config.host;
 var port=config.port;
-var mongo = require('mongodb').MongoClient;
-var client = require('socket.io').listen(port).sockets;
+ var mongo = require('mongodb').MongoClient;
+ var io = require('socket.io');
+ console.log(io);
+ var client=io();
+ app.io=client;
 
-    mongo.connect('mongodb://'+host+'/chat', function(err,db){
+    mongo.connect('mongodb://localhost/chat', function(err,db){
         if(err) throw err;
  
           client.on('connection',function(socket){
@@ -113,7 +116,7 @@ var client = require('socket.io').listen(port).sockets;
                 var name = data.name;
                 var message = data.message;
                 var time=data.time;
- 
+
                 whitespace = /^\s*$/;
  
                 if(whitespace.test(name) || whitespace.test(message))
@@ -123,7 +126,7 @@ var client = require('socket.io').listen(port).sockets;
                 else
                 {
                     col.insert({name: name,message:message,time:time}, function(){
- 
+
                         client.emit('output',[data]);
  
                         sendStatus({

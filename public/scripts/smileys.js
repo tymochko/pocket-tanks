@@ -6,7 +6,8 @@ function replaceSmileys(text) {
 	function sm(codes, img_name) { 
 		function rsm(from, to) {
 			path = "public/images/smileys/";
-				text = str_replace(from, '<img class="smiley" src="'+path + to + '" />', text);
+                    text = str_replace(from, '<img class="smiley" src="'+path + to + '" />', text);
+				//text = str_replace(from, path + to, text);
 		}
 		codes = codes.split(',');
 		for(index in codes) {
