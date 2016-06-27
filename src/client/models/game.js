@@ -24,7 +24,7 @@ var drawSky = function(){
 
     ctx.fillStyle=grd;
     ctx.fillRect(0,0,800,500);
-}
+};
 
 var drawGround = function(){
     var points = [[0, 300],[20, 305],[40, 330],[145, 345],[125, 400],[165, 350],[175, 360],[220, 370],
@@ -46,11 +46,9 @@ var drawGround = function(){
 window.setInterval(function(){
     drawSky();
     drawGround();
-    if (Math.random() <= 0.1) {
-        ctx.fillStyle='rgba(255, 255, 255, .5)';
-        ctx.fillRect(0, 0, 800, 500);
-        drawLightning(370, 0);
-    }
+    // if (Math.random() <= 0.1) {
+    //     ctx.fillStyle='rgba(255, 255, 255, .5)';
+    //     ctx.fillRect(0, 0, 800, 500);
+    //     drawLightning(370, 0);
+    // }
 }, 100);
-
-
