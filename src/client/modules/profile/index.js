@@ -122,22 +122,7 @@ function manageProfileController($scope, $uibModal, profileService, toastr, $loc
             userImg: user.userImg
         };
         if (user.oldPassword) {
-// <<<<<<< HEAD
-//                     if (user.newPassword === user.confirmNewPassword) {
-//                         let userInfo = {
-//                             _id: $scope.userId,
-//                             userName: user.userName,
-//                             userAge: user.userAge,
-//                             userEmail: user.userEmail,
-//                             userImg: user.userImg,
-//                             userOldPassword:user.oldPassword,
-//                             userNewPassword:user.newPassword,
-//                             userConfPassword:user.confirmNewPassword
-//                         };
-//                         profileService.update(userInfo);
 
-//                     }
-// =======
             userInfo.userOldPassword= user.oldPassword;
             userInfo.userNewPassword= user.newPassword;
             // TODO should be changed back when working
@@ -158,7 +143,7 @@ function manageProfileController($scope, $uibModal, profileService, toastr, $loc
 
         let modalInstance = $uibModal.open({
             animation: true,
-            templateUrl: './src/client/views/views/myModalContent.html',
+            templateUrl: 'profile/myModalContent.html',
             controller: 'ModalInstanceCtrl'
         });
         modalInstance.result.then(function () {
@@ -172,7 +157,7 @@ function manageProfileController($scope, $uibModal, profileService, toastr, $loc
 
         let modalInstance2 = $uibModal.open({
             animation: true,
-            templateUrl: './src/client/views/views/avatarContent.html',
+            templateUrl: 'profile/avatarContent.html',
             controller: 'avatarController'
         });
         modalInstance2.result.then(function (img) {
