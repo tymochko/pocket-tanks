@@ -63,19 +63,24 @@ var drawGround = function(){
 //     // }
 // }, 100);
 
-let damageX = 500;
-let damageY = 325;
-// let damageX = 267;
-// let damageY = 305;
 // let damageX = 98;
 // let damageY = 335;
-let damagePower = 6;
+// let damageX = 267;
+// let damageY = 305;
+// let damageX = 350;
+// let damageY = 185;
+let damageX = 450;
+let damageY = 215;
+// let damageX = 500;
+// let damageY = 325;
+let damagePower = 5;
 
 const calculateDamageArea = (array) => {
     let damageRadius = 10 * damagePower;
 
-    let leftSegmentPoints = findSegmentLeft(array, damageX, damageY, damageRadius);
-    let rightSegmentPoints = findSegmentRight(array, damageX, damageY, damageRadius);
+    // let leftSegmentPoints = findSegmentLeft(array, damageX, damageY, damageRadius);
+    // let rightSegmentPoints = findSegmentRight(array, damageX, damageY, damageRadius);
+    let segmentPoints = findSegment(array, damageX, damageY, damageRadius);
 
     // TODO calculate points which are even for every ground area
     /*
@@ -91,11 +96,11 @@ const calculateDamageArea = (array) => {
     // ];
     // console.log('damageCoordinates ', damageCoordinates[0], damageCoordinates[1], damageCoordinates[2], damageCoordinates[3], damageCoordinates[4]);
 
-    console.log(leftSegmentPoints, rightSegmentPoints, 'leftSegmentPoints, rightSegmentPoints');
-    return [leftSegmentPoints, rightSegmentPoints];
+    console.log(segmentPoints, 'segmentPoints');
+    return segmentPoints;
 };
 
-const checkDistance = (damageX, damageY, damageRadius, arrayX, arrayY) => {
+const calculateDistance = (damageX, damageY, damageRadius, arrayX, arrayY) => {
     /*check distance between centre of damage and canvas points coordinates*/
     return Math.round( (Math.sqrt( Math.pow( (arrayX - damageX), 2 ) + ( Math.pow( (arrayY - damageY), 2 ) ) )) );
 };
@@ -107,19 +112,21 @@ const findSegmentLeft = (array, damageX, damageY, damageRadius) => {
     let segmentLeftY2;
 
     for (var i = 0; i < array.length; i++) {
-        let distance = checkDistance(damageX, damageY, damageRadius, array[i][0], array[i][1]);
+        let distance = calculateDistance(damageX, damageY, damageRadius, array[i][0], array[i][1]);
+        console.log(distance, 'distance 1');
 
+        /*TODO
+        * ??? should I check if hit point (center of damage) lays on the line-segment?
+        * 1) check distance from hit point to closest coordinates of line-segment
+        * 2) if this found distance is larger than damageRadius - implement this issue as unique */
         if (distance <= damageRadius) {
-            console.log(distance, 'distance');
+            console.log(distance, 'distance 2');
             segmentLeftX1 = array[i][0];
             segmentLeftY1 = array[i][1];
             segmentLeftX2 = array[i -1][0];
             segmentLeftY2 = array[i -1][1];
 
-            console.log(segmentLeftX1, 'segmentLeftX1');
-            console.log(segmentLeftY1, 'segmentLeftY1');
-            console.log(segmentLeftX2, 'segmentLeftX2');
-            console.log(segmentLeftY2, 'segmentLeftY2');
+            console.log(segmentLeftX1, segmentLeftY1, segmentLeftX2, segmentLeftY2, 'segmentLeft: X1, Y1, X2, Y2');
             break;
         }
     }
@@ -130,42 +137,84 @@ const findSegmentLeft = (array, damageX, damageY, damageRadius) => {
     let foundPoint1 = findPointOnSegment(array, leftSegmentPoints[0], leftSegmentPoints[1]);
     let foundPoint2 = findPointOnSegment(array, leftSegmentPoints[2], leftSegmentPoints[3]);
     
-    if (foundPoint1 != undefined) {
+    if (foundPoint1) {
         return foundPoint1;
-    } else {
-        return foundPoint2;
     }
+    return foundPoint2;
+
 };
 
-const findSegmentRight = (array, damageX, damageY, damageRadius) => {
-    let segmentRightX1;
-    let segmentRightY1;
-    let segmentRightX2;
-    let segmentRightY2;
+// const findSegmentRight = (array, damageX, damageY, damageRadius) => {
+//     let segmentRightX1;
+//     let segmentRightY1;
+//     let segmentRightX2;
+//     let segmentRightY2;
+//
+//     for (var i = (array.length - 1); i >= 0; i--) {
+//         let distance = calculateDistance(damageX, damageY, damageRadius, array[i][0], array[i][1]);
+//
+//         if (distance <= damageRadius) {
+//             console.log(distance, 'distance');
+//             segmentRightX1 = array[i + 1][0];
+//             segmentRightY1 = array[i + 1][1];
+//             segmentRightX2 = array[i][0];
+//             segmentRightY2 = array[i][1];
+//
+//             console.log(segmentRightX1, 'segmentRightX1');
+//             console.log(segmentRightY1, 'segmentRightY1');
+//             console.log(segmentRightX2, 'segmentRightX2');
+//             console.log(segmentRightY2, 'segmentRightY2');
+//             break;
+//         }
+//     }
+//
+//     let rightSegmentPoints = findIntersectionCoordinates(segmentRightX1, segmentRightY1, segmentRightX2, segmentRightY2, damageX, damageY, damageRadius);
+//     console.log(rightSegmentPoints, 'rightSegmentPoints');
+//
+//     let foundPoint1 = findPointOnSegment(array, rightSegmentPoints[0], rightSegmentPoints[1]);
+//     let foundPoint2 = findPointOnSegment(array, rightSegmentPoints[2], rightSegmentPoints[3]);
+//
+//     if (foundPoint1 != undefined) {
+//         return foundPoint1;
+//     } else {
+//         return foundPoint2;
+//     }
+// };
 
-    for (var i = (array.length - 1); i >= 0; i--) {
-        let distance = checkDistance(damageX, damageY, damageRadius, array[i][0], array[i][1]);
+const findSegment = (array, damageX, damageY, damageRadius) => {
+    let segmentLeftX;
+    let segmentLeftY;
+    let segmentRightX;
+    let segmentRightY;
+    let distance;
+    let distanceArray = [];
 
+    for (var i = 0; i <= (array.length - 1); i++) {
+        console.log(array[i], 'array[i]');
+        distance = calculateDistance(damageX, damageY, damageRadius, array[i][0], array[i][1]);
+        distanceArray.push(distance);
+        console.log(distanceArray, 'distanceArray');
+        
         if (distance <= damageRadius) {
             console.log(distance, 'distance');
-            segmentRightX1 = array[i + 1][0];
-            segmentRightY1 = array[i + 1][1];
-            segmentRightX2 = array[i][0];
-            segmentRightY2 = array[i][1];
+            segmentLeftX = array[i][0];
+            segmentLeftY = array[i][1];
+            segmentRightX = array[i - 1][0];
+            segmentRightY = array[i - 1][1];
 
-            console.log(segmentRightX1, 'segmentRightX1');
-            console.log(segmentRightY1, 'segmentRightY1');
-            console.log(segmentRightX2, 'segmentRightX2');
-            console.log(segmentRightY2, 'segmentRightY2');
-            break;
+            console.log(segmentLeftX, segmentLeftY, segmentRightX, segmentRightY, 'segmentLeft: X1, Y1, X2, Y2');
         }
+        
+        // if () {
+        //
+        // }
     }
 
-    let rightSegmentPoints = findIntersectionCoordinates(segmentRightX1, segmentRightY1, segmentRightX2, segmentRightY2, damageX, damageY, damageRadius);
-    console.log(rightSegmentPoints, 'rightSegmentPoints');
+    let segmentPoints = findIntersectionCoordinates(segmentLeftX, segmentLeftY, segmentRightX, segmentRightY, damageX, damageY, damageRadius);
+    console.log(segmentPoints, 'segmentPoints');
 
-    let foundPoint1 = findPointOnSegment(array, rightSegmentPoints[0], rightSegmentPoints[1]);
-    let foundPoint2 = findPointOnSegment(array, rightSegmentPoints[2], rightSegmentPoints[3]);
+    let foundPoint1 = findPointOnSegment(array, segmentPoints[0][0], segmentPoints[0][1]);
+    let foundPoint2 = findPointOnSegment(array, segmentPoints[1][0], segmentPoints[1][1]);
 
     if (foundPoint1 != undefined) {
         return foundPoint1;
@@ -189,12 +238,15 @@ const findIntersectionCoordinates = (x1, y1, x2, y2, cX, cY, r) => {
 
     let xPlus = Math.round( ( -b + ( Math.sqrt( (Math.pow(b, 2)) -4 * a * c ) ) ) / (2 * a) );
     let xMinus = Math.round( ( -b - ( Math.sqrt( (Math.pow(b, 2)) -4 * a * c ) ) ) / (2 * a) );
-    
+
     /* using line equation again to calculate two variants of y */
     let yPlus = Math.round(m * xPlus + k);
     let yMinus = Math.round(m * xMinus + k);
-    
-    return [xPlus, yPlus, xMinus, yMinus];
+
+    let point1 = [xPlus, yPlus];
+    let point2 = [xMinus, yMinus];
+
+    return [point1, point2];
 };
 
 const findPointOnSegment = (array, segmentX, segmentY) => {
@@ -211,14 +263,9 @@ const findPointOnSegment = (array, segmentX, segmentY) => {
             console.log([segmentX, segmentY], 'foundPoint lays on a segment of canvas');
             return [segmentX, segmentY];
         }
-    }
-};
 
-const drawPoints = (x, y) => {
-    ctx.beginPath();
-    ctx.fillStyle = '#eeeeee';
-    ctx.fillRect(x, y, 5, 5);
-    ctx.closePath();
+        return null;
+    }
 };
 
 const calculateLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
@@ -227,6 +274,13 @@ const calculateLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
     if (y == segmentY) {
         return y;
     }
+};
+
+const drawPoints = (x, y) => {
+    ctx.beginPath();
+    ctx.fillStyle = '#eeeeee';
+    ctx.fillRect(x, y, 5, 5);
+    ctx.closePath();
 };
 
 // const calculateCircleEquation = (damageX, damageY, damageRadius, y) => {
