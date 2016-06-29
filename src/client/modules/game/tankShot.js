@@ -32,23 +32,42 @@ var drawSky = function(){
     ctx.fillRect(0,0,800,500);
 };
 
-var points = [[0, 300],[20, 305],[40, 330],[145, 345],[125, 400],[165, 350],[175, 360],[220, 370],
+// var points = [[0, 300],[20, 305],[40, 330],[145, 345],[125, 400],[165, 350],[175, 360],[220, 370],
+//     [240, 320],[280, 300],[300, 270],[340, 200],[370, 170],[440, 190],[550, 430],[530, 370],[540, 330],
+//     [575, 310],[630, 340],[685, 340],[690, 355],[700, 340],[750, 300],[755, 305],[795, 270],[800, 270],
+//     [800, 500],[0, 500],[0, 300]];
+//
+// // for (var i = 0; i < points.length; i++) {
+// //     console.log(points[i], 'points[i]');
+// // }
+//
+// var drawGround = function(){
+//     var colors = ['#040905', '#030C37', '#352E58', '#2F010B', '#991E23', '#E72E10', '#FFC057','#F8F984'];
+//     colors.forEach(function (color) {
+//         poligon(points, color);
+//
+//         points = points.map(function(pair) {
+//             pair[1] = pair[1] + 40;
+//             return pair; // в ретурн лише вираз
+//         });
+//     })
+// };
+
+var originalPoints = [[0, 300],[20, 305],[40, 330],[145, 345],[125, 400],[165, 350],[175, 360],[220, 370],
     [240, 320],[280, 300],[300, 270],[340, 200],[370, 170],[440, 190],[550, 430],[530, 370],[540, 330],
     [575, 310],[630, 340],[685, 340],[690, 355],[700, 340],[750, 300],[755, 305],[795, 270],[800, 270],
     [800, 500],[0, 500],[0, 300]];
 
-// for (var i = 0; i < points.length; i++) {
-//     console.log(points[i], 'points[i]');
-// }
-
 var drawGround = function(){
+
+    var points = originalPoints;
+
     var colors = ['#040905', '#030C37', '#352E58', '#2F010B', '#991E23', '#E72E10', '#FFC057','#F8F984'];
     colors.forEach(function (color) {
         poligon(points, color);
 
         points = points.map(function(pair) {
-            pair[1] = pair[1] + 40;
-            return pair; // в ретурн лише вираз
+            return [pair[0], pair[1] + 40];
         });
     })
 };
@@ -100,7 +119,7 @@ const calculateDamageArea = (array) => {
     return segmentPoints;
 };
 
-const calculateDistance = (damageX, damageY, damageRadius, arrayX, arrayY) => {
+const calculateDistance = (damageX, damageY, arrayX, arrayY) => {
     /*check distance between centre of damage and canvas points coordinates*/
     return Math.round( (Math.sqrt( Math.pow( (arrayX - damageX), 2 ) + ( Math.pow( (arrayY - damageY), 2 ) ) )) );
 };
@@ -112,7 +131,7 @@ const findSegmentLeft = (array, damageX, damageY, damageRadius) => {
     let segmentLeftY2;
 
     for (var i = 0; i < array.length; i++) {
-        let distance = calculateDistance(damageX, damageY, damageRadius, array[i][0], array[i][1]);
+        let distance = calculateDistance(damageX, damageY, array[i][0], array[i][1]);
         console.log(distance, 'distance 1');
 
         /*TODO
@@ -182,45 +201,50 @@ const findSegmentLeft = (array, damageX, damageY, damageRadius) => {
 // };
 
 const findSegment = (array, damageX, damageY, damageRadius) => {
-    let segmentLeftX;
-    let segmentLeftY;
-    let segmentRightX;
-    let segmentRightY;
+    // let segmentLeftX;
+    // let segmentLeftY;
+    // let segmentRightX;
+    // let segmentRightY;
+    let segmentPairPoints = [];
     let distance;
     let distanceArray = [];
-
-    for (var i = 0; i <= (array.length - 1); i++) {
-        console.log(array[i], 'array[i]');
-        distance = calculateDistance(damageX, damageY, damageRadius, array[i][0], array[i][1]);
+    
+    let coordinatesOfDamageCenter = findPointOnSegment(array, damageX, damageY);
+    console.log(coordinatesOfDamageCenter, 'coordinatesOfDamageCenter');
+    let distanceOfDamageCenter1 = calculateDistance(damageX, damageY, coordinatesOfDamageCenter[0], coordinatesOfDamageCenter[1]);
+    console.log(distanceOfDamageCenter1, 'distanceOfDamageCenter1');
+    let distanceOfDamageCenter2 = calculateDistance(damageX, damageY, coordinatesOfDamageCenter[2], coordinatesOfDamageCenter[3]);
+    console.log(distanceOfDamageCenter2, 'distanceOfDamageCenter2');
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    for (let i = 0; i <= (array.length - 1); i++) {
+        // console.log(array[i], 'array[i]');
+        distance = calculateDistance(damageX, damageY, array[i][0], array[i][1]);
         distanceArray.push(distance);
-        console.log(distanceArray, 'distanceArray');
         
         if (distance <= damageRadius) {
-            console.log(distance, 'distance');
-            segmentLeftX = array[i][0];
-            segmentLeftY = array[i][1];
-            segmentRightX = array[i - 1][0];
-            segmentRightY = array[i - 1][1];
-
-            console.log(segmentLeftX, segmentLeftY, segmentRightX, segmentRightY, 'segmentLeft: X1, Y1, X2, Y2');
+            // console.log(distance, 'distance');
+            segmentPairPoints.push([array[i - 1][0], array[i - 1][1], array[i][0], array[i][1], i]);
+            console.log(segmentPairPoints, 'segmentPairPoints');
         }
-        
-        // if () {
-        //
-        // }
     }
 
-    let segmentPoints = findIntersectionCoordinates(segmentLeftX, segmentLeftY, segmentRightX, segmentRightY, damageX, damageY, damageRadius);
-    console.log(segmentPoints, 'segmentPoints');
+    for (let i = 0; i < distanceArray.length; i++) {
+        console.log(distanceArray[i], 'distanceArray');
 
-    let foundPoint1 = findPointOnSegment(array, segmentPoints[0][0], segmentPoints[0][1]);
-    let foundPoint2 = findPointOnSegment(array, segmentPoints[1][0], segmentPoints[1][1]);
 
-    if (foundPoint1 != undefined) {
-        return foundPoint1;
-    } else {
-        return foundPoint2;
     }
+
+    // let segmentPoints = findIntersectionCoordinates(segmentLeftX, segmentLeftY, segmentRightX, segmentRightY, damageX, damageY, damageRadius);
+    // console.log(segmentPoints, 'segmentPoints');
+
+    // let foundPoint1 = findPointOnSegment(array, segmentPoints[0][0], segmentPoints[0][1]);
+    // let foundPoint2 = findPointOnSegment(array, segmentPoints[1][0], segmentPoints[1][1]);
+
+    // if (foundPoint1 != undefined) {
+    //     return foundPoint1;
+    // } else {
+    //     return foundPoint2;
+    // }
 };
 
 const findIntersectionCoordinates = (x1, y1, x2, y2, cX, cY, r) => {
@@ -251,27 +275,37 @@ const findIntersectionCoordinates = (x1, y1, x2, y2, cX, cY, r) => {
 
 const findPointOnSegment = (array, segmentX, segmentY) => {
     /*defines point which coordinates lays on the line-segment of canvas*/
-    for (var i = 1; i < array.length; i++) {
-        let x1 = array[i - 1][0];
-        let y1 = array[i - 1][1];
-        let x2 = array[i][0];
-        let y2 = array[i][1];
+    let x1;
+    let y1;
+    let x2;
+    let y2;
 
-        let foundPoint = calculateLineEquation(x1, y1, x2, y2, segmentX, segmentY);
+    let foundPoint;
+
+    for (var i = 1; i < array.length; i++) {
+        x1 = array[i - 1][0];
+        y1 = array[i - 1][1];
+        x2 = array[i][0];
+        y2 = array[i][1];
+
+        foundPoint = calculateLineEquation(x1, y1, x2, y2, segmentX, segmentY);
 
         if ( ((y1 <= foundPoint) && (foundPoint <= y2)) || ((y2 <= foundPoint) && (foundPoint <= y1)) ) {
-            console.log([segmentX, segmentY], 'foundPoint lays on a segment of canvas');
-            return [segmentX, segmentY];
-        }
+            console.log(foundPoint, 'foundPoint');
 
-        return null;
+            console.log([x1, y1, x2, y2, segmentX, segmentY], 'foundPoint lays on a segment of canvas');
+            return [x1, y1, x2, y2, segmentX, segmentY];
+        }
     }
+
+    return null;
 };
 
 const calculateLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
     /*defines point which coordinates lays on the line of segment*/
     let y = Math.round( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
-    if (y == segmentY) {
+    if ( (y - 5) <= segmentY && segmentY <= (y + 5) ) {
+        console.log(y, 'y');
         return y;
     }
 };
@@ -289,13 +323,13 @@ const drawPoints = (x, y) => {
 //     return x;
 // };
 
-let segmentPoints = calculateDamageArea(points);
+let segmentPoints = calculateDamageArea(originalPoints);
 
 drawSky();
 drawGround();
 
 drawPoints(damageX, damageY);
-drawPoints(segmentPoints[0][0], segmentPoints[0][1]);
-drawPoints(segmentPoints[0][2], segmentPoints[0][3]);
-drawPoints(segmentPoints[1][0], segmentPoints[1][1]);
-drawPoints(segmentPoints[1][2], segmentPoints[1][3]);
+// drawPoints(segmentPoints[0][0], segmentPoints[0][1]);
+// drawPoints(segmentPoints[0][2], segmentPoints[0][3]);
+// drawPoints(segmentPoints[1][0], segmentPoints[1][1]);
+// drawPoints(segmentPoints[1][2], segmentPoints[1][3]);
