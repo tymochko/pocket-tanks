@@ -14,11 +14,11 @@ gulp.task('es6', () => {
             presets: ['es2015']
         }))
         .pipe(gulp.dest('dist'));
-    gulp.src('src/client/models/*.js')
-        .pipe(babel({
-            presets: ['es2015']
-        }))
-        .pipe(gulp.dest('public/scripts'));
+    // gulp.src('src/client/models/*.js')
+    //     .pipe(babel({
+    //         presets: ['es2015']
+    //     }))
+    //     .pipe(gulp.dest('public/scripts'));
 });
 
 gulp.task( 'sass', () => {
@@ -39,7 +39,7 @@ gulp.task('template', () => {
 });
 
 gulp.task('js', () =>  {
-    gulp.src(['src/client/app.js'], { read: false })
+    gulp.src(['src/client/app.js', 'src/client/models/*.js'], { read: false })
         .pipe(browserify({
             insertGlobals: true,
             debug: true
