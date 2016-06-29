@@ -39,7 +39,7 @@ gulp.task('template', () => {
 });
 
 gulp.task('js', () =>  {
-    gulp.src(['src/client/app.js', 'src/client/models/*.js'], { read: false })
+    gulp.src(['src/client/app.js'], { read: false })
         .pipe(browserify({
             insertGlobals: true,
             debug: true
