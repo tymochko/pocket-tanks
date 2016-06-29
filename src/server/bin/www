@@ -27,7 +27,7 @@ mongoose.connect(connection_string);
 
 var port = normalizePort(process.env.OPENSHIFT_NODEJS_PORT || conf.PORT);
 app.set('port', port);
-app.set('port', process.env.OPENSHIFT_NODEJS_IP || conf.IP);
+app.set('ip', process.env.OPENSHIFT_NODEJS_IP || conf.IP);
 
 /**
  * Create HTTP server.
