@@ -7,8 +7,8 @@ module.exports = angular.module('tanks.profile', [
     .service('profileService', ['$http', function ($http) {
         var userId = '';
 // todo add norm function without param + change name
-        this.getProfileById = (id) => {//todo all changes to config
-            return $http.get("http://localhost:3000/api/users/profile/", id);
+        this.getProfileById = () => {//todo all changes to config
+            return $http.get("http://localhost:3000/api/users/profile/");
         };
 
         this.deleteAccount = () => {
@@ -24,18 +24,26 @@ module.exports = angular.module('tanks.profile', [
     .controller('MyCtrl',['Upload','$scope', '$uibModalInstance',function( Upload, $scope, $uibModalInstance){
 
         $scope.submit = function(){
+            var uploadedImg;
             if ($scope.upload_form.file.$valid && $scope.file) {
                 //check if from is valid
                 $scope.upload($scope.file);
-                $uibModalInstance.close();
+
+
             }
         };
 
         $scope.upload = function (file) {
             Upload.upload({
-                url: 'http://localhost:8080/upload',
+                url: 'http://localhost:3000/api/users/profile/upload',
                 data:{file:file}
-            })
+                //fgfjjfhjfhjfhjhjfhjfhj
+            }).then(function(resp) {
+                uploadedImg = resp.data;
+                $uibModalInstance.close(uploadedImg);
+
+
+            });
 
         };
         $scope.cancel = function () {
@@ -62,7 +70,7 @@ module.exports = angular.module('tanks.profile', [
             {image: 'public/images/avatars/deer.jpg', description: 'Am...yes i am deer!'},
             {image: 'public/images/avatars/cat.jpg', description: 'Just give me some food for Myaw!'}
         ];
-        $scope.currentImage = $scope.images[0];
+        $scope.currentImage = $scope.images[$scope.images.length-1];
         $scope.setCurrentImage = function (image) {
 
             $scope.currentImage = image;
@@ -82,7 +90,10 @@ module.exports = angular.module('tanks.profile', [
                 controller: 'MyCtrl'
             });
             modalInstance3.result.then(function (img) {
-
+                console.log(img);
+                        $scope.images.push(img);
+                $scope.currentImage = $scope.images[$scope.images.length-1];
+                console.log($scope.images);
             })
 
         };

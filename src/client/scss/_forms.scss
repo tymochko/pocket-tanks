@@ -85,7 +85,9 @@ input.ng-valid.ng-touched {
 }
 
 #thumbWrapper {
-    width: 500px;
+  margin:0 auto;
+    width: 400px;
+  overflow: auto;
 
 }
 #thumbList {
