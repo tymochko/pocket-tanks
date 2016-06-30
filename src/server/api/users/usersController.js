@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
 var nodemailer = require('nodemailer');
+var fs = require('fs');
 
 const Schema = mongoose.Schema;
 
@@ -263,8 +264,19 @@ transporter.sendMail(mailOptions, function(error, info){
     };
 });
 
+};
+
+const rmDir = function (dirPath) {
+            var files = fs.readdirSync(dirPath);
+    if (files.length > 0)
+        for (var i = 0; i < files.length; i++) {
+            var filePath = dirPath + '/' + files[i];
+            if (fs.statSync(filePath).isFile())
+                fs.unlinkSync(filePath);
+        }
 }
 
+module.exports.rmDir = rmDir;
 module.exports.showAll = showAll;
 module.exports.showProfile = showProfile;
 module.exports.createUser = createUser;

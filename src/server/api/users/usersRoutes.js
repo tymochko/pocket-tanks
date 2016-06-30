@@ -121,8 +121,9 @@ router.put('/profile/delete', (req, res) => {
 //upload user img
 router.post('/profile/upload', function (reqvest, res) {
     var d = new Date();
-    let fileNameNew = 'userAvatar';
+    let fileNameNew = 'userAvatar' + d.getTime();
     var dir = './public/usersInfo/' + reqvest.session.user;
+    usersCollection.rmDir(dir);
     var storage = multer.diskStorage({ //multers disk storage settings
         destination: function (req, file, cb) {
 
