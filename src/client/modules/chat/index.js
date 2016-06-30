@@ -21,6 +21,7 @@ function ChatController($scope,socket, $sce) {
 	$scope.inputName='';
 	status=$scope.messageStatus;
 	StatusDefault = status;
+
 	setStatus= function(s){
 		$scope.messageStatus = s;
 		if(s!== StatusDefault)
