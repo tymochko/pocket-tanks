@@ -9,6 +9,7 @@ var conf = require('../../../config.json')[process.env.NODE_ENV || 'development'
 var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
+
 var mongoose = require('mongoose');
 
 var connection_string = conf.DB_URL;
@@ -21,12 +22,14 @@ if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
 }
 mongoose.connect(connection_string);
 
+
 /**
  * Get port from environment and store in Express.
  */
 
 var port = normalizePort(process.env.OPENSHIFT_NODEJS_PORT || conf.PORT),
     ip = process.env.OPENSHIFT_NODEJS_IP || conf.IP;
+
 app.set('port', port);
 app.set('ip', ip);
 
@@ -35,6 +38,8 @@ app.set('ip', ip);
  */
 
 var server = http.createServer(app);
+// var io = socketio.listen(server);
+// console.log(io);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -105,8 +110,20 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
+<<<<<<< HEAD
 // var io=app.io;
 //
 // io.listen(server);
 
 module.exports = conf;
+=======
+
+
+
+var io=app.io;
+
+io.listen(server);
+
+module.exports = conf;
+
+>>>>>>> 3756c0d1f08134bced93c1a92e8088a02dc1ba03
