@@ -60,7 +60,9 @@ gulp.task('build', ['sass', 'template', 'js'], () => {
         .pipe(gulp.dest('public/'));
 });
 
-gulp.task('default', ['es6', 'build'], () => {
+gulp.task('default', ['es6', 'build']);
+
+gulp.task('watch', () => {
     gulp.watch('src/server/app.js', ['es6']);
     gulp.watch('src/client/modules/**/*.js', ['js']);
     gulp.watch('src/client/modules/**/*.html', ['template'] );
