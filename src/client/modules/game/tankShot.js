@@ -84,11 +84,11 @@ const calculateDamageArea = (array) => {
 
     console.log(segmentPoints, 'segmentPoints');
 
-    for (let i = 0; i < segmentPoints.length; i+2) {
-        if (segmentPoints[i][2] == 'inDamage') {
-            
-        }
-    }
+    // for (let i = 0; i < segmentPoints.length; i+2) {
+    //     if (segmentPoints[i][2] == 'inDamage') {
+    //
+    //     }
+    // }
 
     // array with coordinates of rebuild points only. Without special parameters
     let pointsInsert = [];
@@ -210,9 +210,9 @@ const findIntersectionCoordinates = (x1, y1, x2, y2, cX, cY, r) => {
     return [point1, point2];
 };
 
-const findCirclesIntersection = () => {
-    
-};
+// const findCirclesIntersection = () => {
+//
+// };
 
 const findPointOnSegment = (array, segmentX, segmentY) => {
     /*defines point which coordinates lays on the line-segment of canvas*/
@@ -254,9 +254,9 @@ const calculateLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
     }
 };
 
-const drawDamage = () => {
-    
-};
+// const drawDamage = () => {
+//
+// };
 
 const drawPoints = (x, y) => {
     ctx.beginPath();
