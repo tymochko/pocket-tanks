@@ -84,7 +84,7 @@ const calculateDamageArea = (array) => {
 
     console.log(segmentPoints, 'segmentPoints');
 
-    for (let i = 0; i < segmentPoints.length; i++) {
+    for (let i = 0; i < segmentPoints.length; i+2) {
         if (segmentPoints[i][2] == 'inDamage') {
             
         }
@@ -208,6 +208,10 @@ const findIntersectionCoordinates = (x1, y1, x2, y2, cX, cY, r) => {
     let point2 = [xMinus, yMinus];
 
     return [point1, point2];
+};
+
+const findCirclesIntersection = () => {
+    
 };
 
 const findPointOnSegment = (array, segmentX, segmentY) => {
