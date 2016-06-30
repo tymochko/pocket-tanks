@@ -110,20 +110,8 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
-<<<<<<< HEAD
-// var io=app.io;
-//
-// io.listen(server);
-
-module.exports = conf;
-=======
-
-
-
 var io=app.io;
 
 io.listen(server);
 
 module.exports = conf;
-
->>>>>>> 3756c0d1f08134bced93c1a92e8088a02dc1ba03
