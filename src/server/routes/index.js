@@ -3,8 +3,8 @@ var router = express.Router();
 var path = require('path');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-    res.sendfile(path.resolve('src/client/index.html'));
+router.get('/', (req, res, next) => {
+    // res.sendFile(path.resolve('src/client/index.html'));
 });
 
 

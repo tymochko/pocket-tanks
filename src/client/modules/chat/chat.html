@@ -1,0 +1,13 @@
+<div class="menu">
+		<div class="chat">
+		
+			<input type="text" class="chat-name" ng-model="inputName" placeholder="Enter your name" />
+
+			<div id="chat" class="chat-messages" ng-bind-html=sce.trustAsHtml(myHTML)></div>
+
+			<textarea ng-keyup="$event.keyCode == 13 && myFunc($event)" ng-model="inputMessage" placeholder="Type your message"></textarea>
+
+			<div class="chat-status">Status: <span >{{messageStatus}}</span></div>
+
+		</div>
+	</div>

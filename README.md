@@ -1,3 +1,6 @@
-# TODO
+# POCKET-TANKS
 
-- implement redirects on Angular: after signin, after login, after logout
+## Start
+* npm install
+* gulp
+* npm start

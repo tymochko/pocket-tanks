@@ -4,16 +4,25 @@
  * Module dependencies.
  */
 
+var conf = require('../../../config.json')[process.env.NODE_ENV || 'development'];
+
 var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
-//var socketio = require('socket.io');
+
+var mongoose = require('mongoose');
+
+var DB_URL = conf.DB_URL;
+mongoose.connect(DB_URL);
+
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '8080');
+
+var port = normalizePort(conf.PORT);
+
 app.set('port', port);
 
 /**
@@ -27,6 +36,7 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
+
 
 server.listen(port);
 server.on('error', onError);
@@ -92,14 +102,12 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
-function getServer() {
-  return server;
-}
 
-// //exports.server = server;
-// exports.name=function() {
-//   console.log('Yeap');
-// };
+
 
 var io=app.io;
+
 io.listen(server);
+
+module.exports = conf;
+
