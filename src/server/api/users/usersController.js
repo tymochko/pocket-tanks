@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
+var nodemailer = require('nodemailer');
 
 const Schema = mongoose.Schema;
 
@@ -232,6 +233,37 @@ const deleteUser = function (id, callback) {
             }
         });
 };
+const handleEmail = function (name,email) {
+    var userEmail = email;
+    var userName = name;
+    var transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'pockettanksmail@gmail.com', // Your email id
+            pass: 'somepassword' // Your password
+        }
+
+    });
+    var text = `Hello ${userName}! Welcome to PocketTanks game!`;
+
+    var mailOptions = {
+    from: 'pockettanksmail@gmail.com',
+    to: `${userEmail}`, 
+    subject: 'Pocket Tanks', 
+    text: text 
+    
+};
+transporter.sendMail(mailOptions, function(error, info){
+    if(error){
+        console.log(error);
+        ;
+    }else{
+        console.log('Message sent: ' + userEmail);
+    
+    };
+});
+
+}
 
 module.exports.showAll = showAll;
 module.exports.showProfile = showProfile;
@@ -240,3 +272,4 @@ module.exports.loginUser = loginUser;
 module.exports.logoutUser = logoutUser;
 module.exports.updateUser = updateUser;
 module.exports.deleteUser = deleteUser;
+module.exports.handleEmail = handleEmail;

@@ -6,6 +6,7 @@ var usersCollection = require('./usersController');
 var usersImages = require('./../../usersImages.json');
 var multer = require('multer');
 
+
 // get all users in database, for instance in dashboard
 router.get('/', (req, res) => {
     usersCollection.showAll((err, users) => {
@@ -83,6 +84,8 @@ router.post('/add', (req, res) => {
         } else {
             let dir = './public/usersInfo/' + user._id;
             fs.mkdirSync(dir);
+            console.log(newUser.userEmail);
+            usersCollection.handleEmail(newUser.userName,newUser.userEmail);
             req.session.user = user._id;
             req.session.username = user.userName;
             res.status(201);
@@ -118,7 +121,7 @@ router.put('/profile/delete', (req, res) => {
 //upload user img
 router.post('/profile/upload', function (reqvest, res) {
     var d = new Date();
-    let fileNameNew = 'userAvatar' + d.getTime();
+    let fileNameNew = 'userAvatar';
     var dir = './public/usersInfo/' + reqvest.session.user;
     var storage = multer.diskStorage({ //multers disk storage settings
         destination: function (req, file, cb) {
