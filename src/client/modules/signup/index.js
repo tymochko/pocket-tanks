@@ -66,4 +66,3 @@ function SignupCtrl($scope, sendReg, toastr) {
 		sendReg.add(userInfo);
 	};
 };
-

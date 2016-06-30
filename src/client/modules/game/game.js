@@ -47,6 +47,8 @@ var drawGround = function drawGround() {
 window.setInterval(function () {
     drawSky();
     drawGround();
+    // We are placing tank at coordinates (620; 310)
+    drawTank(620, 310);
     if (Math.random() <= 0.1) {
         ctx.fillStyle = 'rgba(255, 255, 255, .5)';
         ctx.fillRect(0, 0, 800, 500);
