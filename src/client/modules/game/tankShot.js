@@ -210,9 +210,29 @@ const findIntersectionCoordinates = (x1, y1, x2, y2, cX, cY, r) => {
     return [point1, point2];
 };
 
-// const findCirclesIntersection = () => {
-//
-// };
+const findCirclesIntersection = (x1, y1, x2, y2, r1, r2) => {
+    // x1, y1, x2, y2, r1, r2 - are centre coordinates and radii of two circles - one of damage and one of distance between damage segments
+    let a = ( ((Math.pow(r1, 2) - Math.pow(r2, 2))) - ((Math.pow(x1, 2) - Math.pow(x2, 2))) - ((Math.pow(y1, 2) - Math.pow(y2, 2))) ) / ( -2 * (x1 - x2));
+
+    let m = (y1 - y2) / (x1 - x2);
+
+    let bigA = 1 - Math.pow(m, 2);
+    let bigB = ( 2 * a * m - 2 * x1 * m - 2 * y1 );
+    let bigC = ( Math.pow(r1, 2) - Math.pow(y1, 2) - Math.pow((a - x1), 2) );
+
+    let bigD = Math.pow(bigB, 2) - 4 * bigA * bigC;
+
+    let yPoint1 = ( (-b + Math.sqrt(bigD)) / 2 * a );
+    let yPoint2 = ( (-b - Math.sqrt(bigD)) / 2 * a );
+
+    let xPoint1 = a - ( (yPoint1 * (y1 - y2)) / (x1 - x2) );
+    let xPoint2 = a - ( (yPoint2 * (y1 - y2)) / (x1 - x2) );
+
+    let point1 = [xPoint1, yPoint1];
+    let point2 = [xPoint2, yPoint2];
+
+    return [point1, point2];
+};
 
 const findPointOnSegment = (array, segmentX, segmentY) => {
     /*defines point which coordinates lays on the line-segment of canvas*/
