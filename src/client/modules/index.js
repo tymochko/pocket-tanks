@@ -7,6 +7,7 @@ var signup = require('./signup/index');
 var profile = require('./profile/index');
 var dashboard = require('./dashboard/index');
 var game = require('./game/index');
+
 // var navigation = require('.controllers/navigation/navigation');
 
 module.exports = angular.module('tanks', [
@@ -14,9 +15,10 @@ module.exports = angular.module('tanks', [
     require('angular-animate'),
     require('angular-ui-bootstrap'),
     require('angular-toastr'),
-    // require('angular-sanitize'),
+    require('angular-sanitize'),
     dashboard.name,
     chat.name,
+    //smiles.name,
     game.name,
     home.name,
     login.name,

@@ -9,16 +9,20 @@ var conf = require('../../../config.json')[process.env.NODE_ENV || 'development'
 var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
+
 var mongoose = require('mongoose');
 
 var DB_URL = conf.DB_URL;
 mongoose.connect(DB_URL);
 
+
 /**
  * Get port from environment and store in Express.
  */
 
+
 var port = normalizePort(conf.PORT);
+
 app.set('port', port);
 
 /**
@@ -26,6 +30,8 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+// var io = socketio.listen(server);
+// console.log(io);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -96,8 +102,12 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
+
+
+
 var io=app.io;
 
 io.listen(server);
 
 module.exports = conf;
+

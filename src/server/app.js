@@ -80,13 +80,16 @@ app.use(function(err, req, res, next) {
 
 
 
+ var mongo = require('mongodb').MongoClient;
+ var io = require('socket.io');
 
-var mongo = require('mongodb').MongoClient;
-var io = require('socket.io');
-var client=io();
-app.io=client;
+ var client=io();
+ app.io=client;
+
+   
 
     mongo.connect('mongodb://localhost/users', function(err,db){
+
         if(err) throw err;
 
             client.on('connection',function(socket){
