@@ -4,65 +4,124 @@ var ngRoute = require('angular-route');
 module.exports = angular.module('tanks.profile', [
     ngRoute
 ]).config(RouteConfig)
-.service('profileService', ['$http', function ($http) {
-    var userId = '';
+    .service('profileService', ['$http', function ($http) {
+        var userId = '';
 // todo add norm function without param + change name
-    this.getProfileById = (id) => {//todo all changes to config
-        return $http.get("http://localhost:3000/api/users/profile/", id);
-    };
+        this.getProfileById = () => {//todo all changes to config
+            return $http.get("http://localhost:3000/api/users/profile/");
+        };
 
-    this.deleteAccount = () => {
-        return $http.put('http://localhost:3000/api/users/profile/delete/', {id: userId});
-    };
+        this.deleteAccount = () => {
+            return $http.put('http://localhost:3000/api/users/profile/delete/', {id: userId});
+        };
 
-    this.update = function (userInfo) {
-        return $http.put('http://localhost:3000/api/users/profile/updateUser/', userInfo).then(function(response) {
-            console.log('ok');
-        });
-    }
-}])
-.controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance) {
-
-    $scope.ok = function () {
-        $uibModalInstance.close();
-    };
-
-    $scope.cancel = function () {
-        $uibModalInstance.dismiss('cancel');
-    };
-}])
-.controller('avatarController', ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance) {
-    $scope.images = [
-        {image: 'public/images/avatars/phoca.jpg', description: 'Oh... So beautiful phoca!'},
-        {image: 'public/images/avatars/bear.jpg', description: 'So cute...bear!'},
-        {image: 'public/images/avatars/dog.jpg', description: 'Who let the dogs out?!'},
-        {image: 'public/images/avatars/deer.jpg', description: 'Am...yes i am deer!'},
-        {image: 'public/images/avatars/cat.jpg', description: 'Just give me some food for Myaw!'}
-    ];
-    $scope.currentImage = $scope.images[0];
-    $scope.setCurrentImage = function (image) {
-
-        $scope.currentImage = image;
-    };
-    $scope.ok = function () {
-        $uibModalInstance.close($scope.currentImage);
-    };
-
-    $scope.cancel = function () {
-        $uibModalInstance.dismiss('cancel');
-    };
-}])
-.directive('validPasswordMatch', function () {
-    return {
-        require: 'ngModel',
-        link: function (scope, elm, attrs, ctrl) {
-            ctrl.$parsers.unshift(function (viewValue, $scope) {
-                var noMatch = viewValue != scope.profile.newpassword.$viewValue;
-                ctrl.$setValidity('noMatch', !noMatch)
-            })
+        this.update = function (userInfo) {
+            return $http.put('http://localhost:3000/api/users/profile/updateUser/', userInfo).then(function () {
+                console.log('ok');
+            });
         }
-    }
-});
+    }])
+    .controller('MyCtrl',['Upload','$scope', '$uibModalInstance',function( Upload, $scope, $uibModalInstance){
+
+        $scope.submit = function(){
+            var uploadedImg;
+            if ($scope.upload_form.file.$valid && $scope.file) {
+                //check if from is valid
+                $scope.upload($scope.file);
+
+
+            }
+        };
+
+        $scope.upload = function (file) {
+            Upload.upload({
+                url: 'http://localhost:3000/api/users/profile/upload',
+                data:{file:file}
+                //fgfjjfhjfhjfhjhjfhjfhj
+            }).then(function(resp) {
+                uploadedImg = resp.data;
+                $uibModalInstance.close(uploadedImg);
+
+
+            });
+
+        };
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+
+
+    }])
+    .controller('ModalInstanceCtrl', ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance) {
+
+        $scope.ok = function () {
+            $uibModalInstance.close();
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+    }])
+    .controller('avatarController', ['$scope', '$uibModalInstance','$uibModal', function ($scope, $uibModalInstance,$uibModal) {
+        $scope.images = [
+            {image: 'public/images/phoca.jpg', description: 'Oh... So beautiful phoca!'},
+            {image: 'public/images/bear.jpg', description: 'So cute...bear!'},
+            {image: 'public/images/dog.jpg', description: 'Who let the dogs out?!'},
+            {image: 'public/images/deer.jpg', description: 'Am...yes i am deer!'},
+            {image: 'public/images/cat.jpg', description: 'Just give me some food for Myaw!'}
+        ];
+        $scope.currentImage = $scope.images[$scope.images.length-1];
+        $scope.setCurrentImage = function (image) {
+
+            $scope.currentImage = image;
+        };
+        $scope.ok = function () {
+            $uibModalInstance.close($scope.currentImage);
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+        $scope.uploadPhoto = function () {
+
+            let modalInstance3 = $uibModal.open({
+                animation: true,
+                templateUrl: 'profile/uploadContent.html',
+                controller: 'MyCtrl'
+            });
+            modalInstance3.result.then(function (img) {
+                console.log(img);
+                        $scope.images.push(img);
+                $scope.currentImage = $scope.images[$scope.images.length-1];
+                console.log($scope.images);
+            })
+
+        };
+
+    }])
+// .directive(directiveId, ['$parse', function ($parse) {
+//     var directive = {
+//         link: link,
+//         restrict: 'A',
+//         require: '?ngModel'
+//     };
+//     return directive;
+//     function link(scope, elem, attrs, ctrl) {
+//         var firstPassword = $parse(attrs[directiveId]);
+//         var validator = function (value) {
+//             var temp = firstPassword(scope),
+//                 v = value === temp;
+//             ctrl.$setValidity('match', v);
+//             return value;
+//         }
+//         ctrl.$parsers.unshift(validator);
+//         ctrl.$formatters.push(validator);
+//         attrs.$observe(directiveId, function () {
+//             validator(ctrl.$viewValue);
+//         });
+//     };
+// }])
+//
 
 RouteConfig.$inject = ['$routeProvider'];
 function RouteConfig($routeProvider) {
@@ -87,7 +146,7 @@ function manageProfileController($scope, $uibModal, profileService, toastr, $loc
         oldPassword: "",
         newPassword: "",
         confirmNewPassword: "",
-        userAge:""
+        userAge: ""
     };
 
     function savingMsg() {
@@ -96,6 +155,7 @@ function manageProfileController($scope, $uibModal, profileService, toastr, $loc
             closeHtml: '<button>&times;</button>'
         })
     }
+
     function avatarMsg() {
         toastr.warning('Do not forget to save changes!!', 'Message', {
             closeButton: true,
@@ -122,43 +182,27 @@ function manageProfileController($scope, $uibModal, profileService, toastr, $loc
             userImg: user.userImg
         };
         if (user.oldPassword) {
-// <<<<<<< HEAD
-//                     if (user.newPassword === user.confirmNewPassword) {
-//                         let userInfo = {
-//                             _id: $scope.userId,
-//                             userName: user.userName,
-//                             userAge: user.userAge,
-//                             userEmail: user.userEmail,
-//                             userImg: user.userImg,
-//                             userOldPassword:user.oldPassword,
-//                             userNewPassword:user.newPassword,
-//                             userConfPassword:user.confirmNewPassword
-//                         };
-//                         profileService.update(userInfo);
 
-//                     }
-// =======
-            userInfo.userOldPassword= user.oldPassword;
-            userInfo.userNewPassword= user.newPassword;
+            userInfo.userOldPassword = user.oldPassword;
+            userInfo.userNewPassword = user.newPassword;
             // TODO should be changed back when working
             // userInfo.userConfPassword= user.confirmNewPassword;
-            userInfo.userConfPassword= user.newPassword;
+            userInfo.userConfPassword = user.newPassword;
 
         }
-            console.log(userInfo);
+        console.log(userInfo);
         profileService.update(userInfo);
-            savingMsg();
+        savingMsg();
 
 
-
-        };
+    };
 
 // Delete popup controller;
     $scope.open = function () {
 
         let modalInstance = $uibModal.open({
             animation: true,
-            templateUrl: './src/client/views/views/myModalContent.html',
+            templateUrl: 'profile/myModalContent.html',
             controller: 'ModalInstanceCtrl'
         });
         modalInstance.result.then(function () {
@@ -172,7 +216,7 @@ function manageProfileController($scope, $uibModal, profileService, toastr, $loc
 
         let modalInstance2 = $uibModal.open({
             animation: true,
-            templateUrl: './src/client/views/views/avatarContent.html',
+            templateUrl: 'profile/avatarContent.html',
             controller: 'avatarController'
         });
         modalInstance2.result.then(function (img) {
@@ -181,5 +225,7 @@ function manageProfileController($scope, $uibModal, profileService, toastr, $loc
             $scope.user.userImg = $scope.avatar;
         })
     };
+
+
 
 };

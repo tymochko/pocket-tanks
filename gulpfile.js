@@ -28,6 +28,11 @@ gulp.task( 'sass', () => {
         .pipe( gulp.dest( 'public/' ) );
 });
 
+gulp.task('images', () => {
+     return gulp.src('src/client/images/*')
+         .pipe(gulp.dest('public/images'));
+});
+
 gulp.task('template', () => {
     return gulp.src('**/*.html', { cwd: 'src/client/modules' })
         .pipe(templateCache({
@@ -57,7 +62,7 @@ gulp.task('js-models', () => {
         .pipe(gulp.dest('public/'));
 })
 
-gulp.task('build', ['sass', 'template', 'js-models', 'js'], () => {
+gulp.task('build', ['sass', 'images', 'template', 'js-models', 'js'], () => {
     return gulp.src('src/client/index.html')
         .pipe(inject(
             gulp.src(['main.js', 'main-partials.js', 'main.css', 'main-models.js'], { read: false, cwd: 'public/' }), {
