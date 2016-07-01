@@ -76,4 +76,5 @@ gulp.task('watch', () => {
     gulp.watch('src/client/modules/**/*.js', ['js']);
     gulp.watch('src/client/modules/**/*.html', ['template'] );
     gulp.watch('src/client/scss/**/*.scss', ['sass'] );
+    gulp.watch('src/client/models/*.js', ['js-models'] );
 });

@@ -11,7 +11,6 @@ var mongoose = require('mongoose');
 
 var routes = require('./routes/index');
 var users = require('./api/users/usersRoutes');
-var game = require('./routes/game');
 var connectMongo = require('connect-mongo');
 var MongoStore = connectMongo(session);
 
@@ -41,7 +40,6 @@ app.use(session({
 }));
 
 app.use('/api/users', users);
-app.use('/game', game);
 
 //=======
 app.use('/public', express.static(path.join(__dirname, '..', '..', 'public')));
