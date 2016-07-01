@@ -1,7 +1,0 @@
-[
-        {"image" : "src/client/images/phoca.jpg" , "description": "Oh... So beautiful phoca!" },
-        {"image" : "src/client/images/bear.jpg" , "description": "So cute...bear!" },
-        {"image" : "src/client/images/dog.jpg" ,  "description": "Who let the dogs out?!" },
-        {"image" : "src/client/images/deer.jpg" , "description": "Am...yes i am deer!" },
-        {"image" : "src/client/images/cat.jpg", "description": "Just give me some food for Myaw!" }
-]
