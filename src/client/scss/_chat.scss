@@ -1,3 +1,4 @@
+
 body {
     color: #222;
     font: 0.8125em/1.5 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -75,12 +76,15 @@ input {
         position: absolute;
     }
     &::after {
+
         border-radius: 20px / 10px;
         content: '';
         display: block;
         position: absolute;
     }
+
     &:before {
+
         border: 10px solid transparent;
         border-bottom-color: rgba(56, 56, 56, 0.8);
         bottom: 0;
@@ -92,6 +96,7 @@ input {
         bottom: 1px;
         left: -5px;
     }
+
 }
 .chat-time {
     opacity: 0.3;
@@ -104,3 +109,4 @@ input {
 .chat-status {
     color: #bbb;
 }
+

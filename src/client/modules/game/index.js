@@ -1,5 +1,7 @@
 var angular = require('angular');
 var ngRoute = require('angular-route');
+// require('../../models/game.js');
+// require('../../models/lightning.js');
 
 module.exports = angular.module('tanks.game', [
     ngRoute

@@ -14,11 +14,11 @@ gulp.task('es6', () => {
             presets: ['es2015']
         }))
         .pipe(gulp.dest('dist'));
-    gulp.src('src/client/models/*.js')
-        .pipe(babel({
-            presets: ['es2015']
-        }))
-        .pipe(gulp.dest('public/scripts'));
+    // gulp.src('src/client/models/*.js')
+    //     .pipe(babel({
+    //         presets: ['es2015']
+    //     }))
+    //     .pipe(gulp.dest('public/scripts'));
 });
 
 gulp.task( 'sass', () => {
@@ -60,7 +60,9 @@ gulp.task('build', ['sass', 'template', 'js'], () => {
         .pipe(gulp.dest('public/'));
 });
 
-gulp.task('default', ['es6', 'build'], () => {
+gulp.task('default', ['es6', 'build']);
+
+gulp.task('watch', () => {
     gulp.watch('src/server/app.js', ['es6']);
     gulp.watch('src/client/modules/**/*.js', ['js']);
     gulp.watch('src/client/modules/**/*.html', ['template'] );
