@@ -3,8 +3,8 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var usersCollection = require('./usersController');
-var usersImages = require('./../../usersImages.json');
 var multer = require('multer');
+
 
 
 // get all users in database, for instance in dashboard
@@ -72,7 +72,6 @@ router.post('/add', (req, res) => {
     newUser.userAge = req.body.userAge;
     newUser.userEmail = req.body.userEmail;
     newUser.userPassword = req.body.userPassword;
-    newUser.userImg = usersImages[0];
     newUser.isOnline = false;
     newUser.isEnabled = true;
 
@@ -145,7 +144,7 @@ router.post('/profile/upload', function (reqvest, res) {
             res.json({error_code: 1, err_desc: err});
             return;
         }
-        res.json({image:dir+'/'+fileNameNew + '.png',description: 'new1'});
+        res.json({image:dir+'/'+fileNameNew + '.png',description: 'userImg'});
 
     });
 });

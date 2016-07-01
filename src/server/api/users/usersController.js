@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
 var nodemailer = require('nodemailer');
 var fs = require('fs');
+var strUserImg =  {"image" : "./public/images/phoca.jpg" , "description": "Oh... So beautiful phoca!" }
 
 const Schema = mongoose.Schema;
 
@@ -56,6 +57,7 @@ const passHash = (userPassword, callback) => {
 };
 
 const createUser = function (newUser, callback) {
+        newUser.userImg = strUserImg;
     passHash(newUser.userPassword, (err, hash) => {
         if (err) {
             return callback(err);

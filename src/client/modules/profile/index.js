@@ -64,11 +64,11 @@ module.exports = angular.module('tanks.profile', [
     }])
     .controller('avatarController', ['$scope', '$uibModalInstance','$uibModal', function ($scope, $uibModalInstance,$uibModal) {
         $scope.images = [
-            {image: 'public/images/avatars/phoca.jpg', description: 'Oh... So beautiful phoca!'},
-            {image: 'public/images/avatars/bear.jpg', description: 'So cute...bear!'},
-            {image: 'public/images/avatars/dog.jpg', description: 'Who let the dogs out?!'},
-            {image: 'public/images/avatars/deer.jpg', description: 'Am...yes i am deer!'},
-            {image: 'public/images/avatars/cat.jpg', description: 'Just give me some food for Myaw!'}
+            {image: 'public/images/phoca.jpg', description: 'Oh... So beautiful phoca!'},
+            {image: 'public/images/bear.jpg', description: 'So cute...bear!'},
+            {image: 'public/images/dog.jpg', description: 'Who let the dogs out?!'},
+            {image: 'public/images/deer.jpg', description: 'Am...yes i am deer!'},
+            {image: 'public/images/cat.jpg', description: 'Just give me some food for Myaw!'}
         ];
         $scope.currentImage = $scope.images[$scope.images.length-1];
         $scope.setCurrentImage = function (image) {
