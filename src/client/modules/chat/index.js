@@ -1,6 +1,6 @@
 var angular = require('angular');
 var ngRoute = require('angular-route');
-var $ = require('jQuery');
+var $ = require('jquery');
 module.exports = angular.module('tanks.chat', [
     ngRoute
 ]).config(RouteConfig);
