@@ -71,9 +71,12 @@ var drawTank = function(xCoordinate, yCoordinate) {
     var weaponWidth = 35;
     tankImage.src = 'tankVehicle.png';
     weaponImage.src = 'tankWeapon.png';
-    ctx.drawImage(tankImage, xCoordinate, yCoordinate, tankWidth, tankHeight);
-    ctx.drawImage(weaponImage, xCoordinate - 13, yCoordinate - 14, weaponWidth, weaponHeight);
-    console.log("Hello");
+    tankImage.onload = function() { 
+    	ctx.drawImage(tankImage, xCoordinate, yCoordinate - 30, tankWidth, tankHeight); 
+    }
+    weaponImage.onload = function() { 
+		ctx.drawImage(weaponImage, xCoordinate + 45, yCoordinate - 44, weaponWidth, weaponHeight);
+    }
 };
 
 // <------Tank movement------>
@@ -96,7 +99,7 @@ var findLinePoints = function(posX) {
                 arr.push([Math.round(a), Math.round(b)]);
             }
             for(var i = 0; i < arr.length; i++) {
-                if(arr[i][0] === posX) return (arr[i][1] - 10);
+                if(arr[i][0] === posX) return (arr[i][1]);
             }
         }
     }
@@ -126,7 +129,8 @@ function doKeyDown(evt){
                 tankX -= dx;
                 tankY = findLinePoints(tankX);
                 clear();
-                circle(tankX, tankY, rad);
+                drawTank(tankX, tankY);
+                //circle(tankX, tankY, rad);
                 fillBackground();
             }
             break;
@@ -135,7 +139,8 @@ function doKeyDown(evt){
                 tankX += dx;
                 tankY = findLinePoints(tankX);
                 clear();
-                circle(tankX, tankY, rad);
+                drawTank(tankX, tankY);
+                //circle(tankX, tankY, rad);
                 fillBackground();
             }
             break;
@@ -393,7 +398,7 @@ for (let i = 0; i < segmentPoints.length; i++) {
 	drawSky();
 	drawGround();
     // We are placing tank at coordinates (625; 310)
-    
+
     
 	drawPoints(damageX, damageY);
 	drawCircle(damageX, damageY, damageRadius);
@@ -403,7 +408,9 @@ for (let i = 0; i < segmentPoints.length; i++) {
     tankX = Math.floor((Math.random() * 330) + 30);
     tankY = findLinePoints(tankX);
     rad = 10;
-	circle(tankX, tankY, rad);
-	drawTank(625, 310);
+    drawTank(tankX, tankY);
+
+	//circle(tankX, tankY, rad);
 	fillBackground();
 })();
+
