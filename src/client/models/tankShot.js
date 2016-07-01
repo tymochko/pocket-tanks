@@ -61,6 +61,27 @@ document.addEventListener("DOMContentLoaded", function(){
         backCtx.fillRect(0,0,800,500);
     };
 
+
+    // <------Tank drawing------>
+
+var drawTank = function(xCoordinate, yCoordinate) {
+    var tankImage = new Image();
+    var weaponImage = new Image();
+    var tankHeight = 30;
+    var tankWidth = 70;
+    var weaponHeight = 20;
+    var weaponWidth = 35;
+    tankImage.src = './public/images/tankVehicle.png';
+    weaponImage.src = './public/images/tankWeapon.png';
+    tankImage.onload = function() { 
+    	ctx.drawImage(tankImage, xCoordinate, yCoordinate - 30, tankWidth, tankHeight); 
+    }
+    weaponImage.onload = function() { 
+		ctx.drawImage(weaponImage, xCoordinate + 45, yCoordinate - 44, weaponWidth, weaponHeight);
+    }
+    console.log("hello");
+};
+
     // <------Tank movement------>
 
     var findLinePoints = function(posX) {
@@ -81,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function(){
                     arr.push([Math.round(a), Math.round(b)]);
                 }
                 for(var i = 0; i < arr.length; i++) {
-                    if(arr[i][0] === posX) return (arr[i][1] - 10);
+                    if(arr[i][0] === posX) return (arr[i][1]);
                 }
             }
         }
@@ -111,7 +132,8 @@ document.addEventListener("DOMContentLoaded", function(){
                 tankX -= dx;
                 tankY = findLinePoints(tankX);
                 clear();
-                circle(tankX, tankY, rad);
+                drawTank(tankX, tankY);
+                //circle(tankX, tankY, rad);
                 fillBackground();
             }
             break;
@@ -120,13 +142,193 @@ document.addEventListener("DOMContentLoaded", function(){
                 tankX += dx;
                 tankY = findLinePoints(tankX);
                 clear();
-                circle(tankX, tankY, rad);
+                drawTank(tankX, tankY);
+                //circle(tankX, tankY, rad);
                 fillBackground();
             }
             break;
-        }
+                case 32: /*SPACE*/
+                    console.log('dvcs');
+                    dt2=0;
+                    power=40;
+                    angle=40;
+                    bullets.push({ pos: [tankX, tankY],
+                        imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
+                        angle: angle,
+                        bulletSpeed: power
+                    });
+                lastFire = Date.now();
+                shotStart();
+                break;
     }
-    window.addEventListener('keydown',doKeyDown,true);
+}
+window.addEventListener('keydown',doKeyDown,true);
+
+//<------Maks's part-------->
+
+
+var requestAnimFrame = (function(){
+    return window.requestAnimationFrame   ||    
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame    ||
+    window.oRequestAnimationFrame      ||
+    window.msRequestAnimationFrame     ||
+    function(callback){
+        window.setTimeout(callback, 1000 / 60);
+    };
+})();
+
+var power,angle;
+var lastTime;
+var dt2=0;
+var bullets = [];
+var bullet;
+var lastFire = Date.now();
+var gameTime = 0;
+var bulletImg=new Image();
+bulletImg.src='./public/images/bullet2.png';
+
+function drawBullet() {
+    clear();
+    circle(tankX, tankY, rad);
+    fillBackground();
+
+    var now = Date.now();
+    var dt = (now - lastTime) / 1000.0;
+    
+    update(dt);
+    render();
+
+    lastTime = now;
+  
+};
+
+function shotStart() {
+    //reset();
+    lastTime = Date.now();
+    drawBullet();
+}
+
+function update(dt) {
+    gameTime += dt;
+
+    updateEntities(dt);
+};
+
+function updateEntities(dt) {
+    for(var i=0; i<bullets.length; i++) {
+        bullet = bullets[i];
+        console.log('1');
+        bullet.pos[0] = tankX + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180);
+        bullet.pos[1]=tankY-(bullet.bulletSpeed*dt2*Math.sin(bullet.angle*Math.PI/180)-9.8*dt2*dt2/2);
+        dt2+=2*dt;
+        	var coords = {x:bullet.pos[0],
+        		y:bullet.pos[1],
+        		width:10,
+        		height:1}
+        if(checkCol(coords,originalPoints)){
+            console.log( 'x:' +  (coords.x + coords.width), 'y:' + (coords.y + coords.height));
+            bullets.splice(i, 1);
+            window.cancelAnimationFrame(requestAnimFrame);
+            i--;
+    //         clear();
+    // circle(tankX, tankY, rad);
+    // fillBackground();
+console.log('nghk;jg;kd');
+    }
+
+        // if(bullet.pos[1] > canvas.height ||
+        //     bullet.pos[0] > canvas.width) {
+        //     bullets.splice(i, 1);
+        //     window.cancelAnimationFrame(requestAnimFrame);
+        //     i--;
+        // }
+        else requestAnimFrame(drawBullet);
+    }
+}
+function checkCol(current, array) {
+    let startPoint = array[0];
+    for (let i = 1; i < array.length; i++) {
+        let endPoint = array[i];
+        if (current.x > startPoint[0] && current.x < endPoint[0]) {
+            if (checkCross(startPoint, endPoint, current)) {
+                return true;
+            }
+        }
+        startPoint = array[i];
+    }
+}
+function checkCross(startPoint, endPoint, currPoint) {
+    let point1 = {
+        x: startPoint[0],
+        y: startPoint[1]
+    };
+    let point2 = {
+        x: endPoint[0],
+        y: endPoint[1]
+    };
+    let objPoint = {
+        x:currPoint.x + currPoint.width,
+        y:currPoint.y + currPoint.height
+    };
+
+    let a = (point2.y - point1.y) / (point2.x - point1.x);
+    let b = point1.y - a * point1.x;
+
+    if(Math.abs(objPoint.y - (a*objPoint.x + b)) < 1.5) {
+        return true;
+    }
+    return false;
+}
+
+function render() {
+    renderEntities(bullets);
+};
+
+function renderEntities(list) {
+    for(var i=0; i<list.length; i++) {
+        renderEntity(list[i]);
+    }    
+}
+
+function renderEntity(entity) {
+    ctx.save();
+    ctx.translate(entity.pos[0], entity.pos[1]);
+    entity.imgInf.render(ctx,dt2);
+    ctx.restore();
+}
+
+function reset() {
+    gameTime = 0;
+    bullets = [];
+};
+
+(function() {
+    function ImgInf(url, pos, angle, v0) {
+        this.pos = pos;
+        this.url = url;
+        this.angle=angle;
+        this.v0=v0;
+    };
+
+    ImgInf.prototype = {
+
+        render: function(ctx, dt2) {
+            var x = this.pos[0];
+            var y = this.pos[1];
+
+            ctx.translate(x,y);
+            var A=this.v0*Math.cos(this.angle*Math.PI/180);
+            var an=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180)-9.81*dt2)/A);
+            ctx.rotate(-an);
+            ctx.drawImage(bulletImg,x, y);
+            ctx.restore();
+        }
+    };
+
+    window.ImgInf = ImgInf;
+})();
+
     //      <------Yuri's part - name it yourself------>
 
     // for (var i = 0; i < originalPoints.length; i++) {
@@ -382,7 +584,8 @@ document.addEventListener("DOMContentLoaded", function(){
         tankX = Math.floor((Math.random() * 330) + 30);
         tankY = findLinePoints(tankX);
         rad = 10;
-        circle(tankX, tankY, rad);
+        //circle(tankX, tankY, rad);
+        drawTank(tankX, tankY);
         fillBackground();
     })();
 });
