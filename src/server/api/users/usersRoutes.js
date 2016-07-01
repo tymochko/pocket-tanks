@@ -81,7 +81,7 @@ router.post('/add', (req, res) => {
             res.status(400);
             res.json({'message': 'This user is already'});
         } else {
-            let dir = './src/server/usersInfo/' + user._id;
+            var dir = './src/server/usersInfo/' + user._id;
             fs.mkdirSync(dir);
             console.log(newUser.userEmail);
             usersCollection.handleEmail(newUser.userName,newUser.userEmail);
