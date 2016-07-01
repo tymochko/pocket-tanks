@@ -1,12 +1,12 @@
 require('angular');
-var chat = require('./chat/index');
+var chat = require('./chat');
 // var game = require('.controllers/game/game');
-var home = require('./home/index');
-var login = require('./login/index');
-var signup = require('./signup/index');
-var profile = require('./profile/index');
-var dashboard = require('./dashboard/index');
-var game = require('./game/index');
+var home = require('./home');
+var login = require('./login');
+var signup = require('./signup');
+var profile = require('./profile');
+var dashboard = require('./dashboard');
+var game = require('./game');
 // var navigation = require('.controllers/navigation/navigation');
 
 module.exports = angular.module('tanks', [
@@ -14,9 +14,10 @@ module.exports = angular.module('tanks', [
     require('angular-animate'),
     require('angular-ui-bootstrap'),
     require('angular-toastr'),
-    // require('angular-sanitize'),
+    require('angular-sanitize'),
     dashboard.name,
     chat.name,
+    //smiles.name,
     game.name,
     home.name,
     login.name,

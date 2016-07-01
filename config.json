@@ -2,7 +2,8 @@
   "development": {
     "DB_URL": "mongodb://localhost/users",
     "HOST": "localhost",
-    "PORT": 3000
+    "PORT": 3000,
+    "IP": "127.0.0.1"
   },
   "production": {
 
