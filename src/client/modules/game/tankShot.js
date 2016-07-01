@@ -81,7 +81,7 @@ let damageRadius = 10 * damagePower;
 const calculateDamageArea = (array) => {
 
     let segmentPoints = findSegment(array, damageX, damageY, damageRadius);
-    // console.log(segmentPoints, 'segmentPoints');
+    console.log(segmentPoints, 'segmentPoints');
 
     let pointsOfIntersect = [];
     for (let i = 0; i < segmentPoints.length; i++) {
@@ -89,9 +89,11 @@ const calculateDamageArea = (array) => {
             pointsOfIntersect.push(segmentPoints[i]);
         }
     }
+
     console.log(pointsOfIntersect, 'pointsOfIntersect');
 
-    let x1, y1, x2, y2, distance, pointsOnCircles;
+    let x1, y1, x2, y2, distance, pointsOnCircles, pointCheck1, pointCheck2;
+    let pointRealOnCircle = [];
     // setting distanceBetweenDamageSegments static as a distance between points of damaged ground
     let distanceBetweenDamageSegments = 15;
     for (let i = 1; i < pointsOfIntersect.length; i++) {
@@ -100,17 +102,43 @@ const calculateDamageArea = (array) => {
         x2 = pointsOfIntersect[i][0];
         y2 = pointsOfIntersect[i][1];
         console.log(x1, y1, x2, y2, 'x1, y1, x2, y2');
-        
+        console.log(i, 'i');
+
+        pointRealOnCircle.push([x1, y1]);
+
         distance = calculateDistance(x1, y1, x2, y2);
-        console.log(distance, 'distance');
         if (distance <= distanceBetweenDamageSegments) {
-            // TODO
-            console.log('DO NOT HAVE TO CALCULATE');
-        } else {
-            pointsOnCircles = findCirclesIntersection(x1, y1, distanceBetweenDamageSegments, damageX, damageY, damageRadius);
-            console.log(pointsOnCircles, 'pointsOnCircles');
+            console.log(distance, 'distance is smaller than minimal agreed distance');
+            pointRealOnCircle.push([x2, y2]);
+            i++;
+            console.log(i, 'i');
+            continue;
         }
+
+        distance = calculateDistance(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2);
+        if (distance <= distanceBetweenDamageSegments) {
+            console.log(distance, 'distance is smaller than minimal agreed distance');
+            pointRealOnCircle.push([x2, y2]);
+            i++;
+            console.log(i, 'i');
+            continue;
+        }
+
+        pointsOnCircles = findCirclesIntersection(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], distanceBetweenDamageSegments, damageX, damageY, damageRadius);
+
+        pointsOnCircles = findCirclesIntersection(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], distanceBetweenDamageSegments, damageX, damageY, damageRadius);
+
+        pointCheck1 = checkGroundPoint(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2, pointsOnCircles[0][0], pointsOnCircles[0][1]);
+        pointCheck2 = checkGroundPoint(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2, pointsOnCircles[1][0], pointsOnCircles[1][1]);
+        if (pointCheck1) {
+            pointRealOnCircle.push(pointCheck1);
+        } else if (pointCheck2) {
+            pointRealOnCircle.push(pointCheck2);
+        }
+
     }
+
+    console.log(pointRealOnCircle, 'pointRealOnCircle');
 
     // array with coordinates of rebuild points only. Without special parameters
     let pointsInsert = [];
@@ -252,14 +280,14 @@ const findCirclesIntersection = (x1, y1, r1, x2, y2, r2) => {
     let p0y = y1 + a / r2 * (y2 - y1);
     // console.log(p0y, 'p0y');
 
-    let p3x = (p0x + ( ( (y2 - y1) / r2 ) * h ) );
+    let p3x = Math.round(p0x + ( ( (y2 - y1) / r2 ) * h ) );
     // console.log(p3x, 'p3x');
-    let p3y = (p0y - ( ( (x2 - x1) / r2 ) * h ) );
+    let p3y = Math.round(p0y - ( ( (x2 - x1) / r2 ) * h ) );
     // console.log(p3y, 'p3y');
 
-    let p4x = (p0x - ( ( (y2 - y1) / r2 ) * h ) );
+    let p4x = Math.round(p0x - ( ( (y2 - y1) / r2 ) * h ) );
     // console.log(p4x, 'p4x');
-    let p4y = (p0y + ( ( (x2 - x1) / r2 ) * h ) );
+    let p4y = Math.round(p0y + ( ( (x2 - x1) / r2 ) * h ) );
     // console.log(p4y, 'p4y');
 
     let point1 = [p3x, p3y];
@@ -269,42 +297,26 @@ const findCirclesIntersection = (x1, y1, r1, x2, y2, r2) => {
     return [point1, point2];
 };
 
-// const findCirclesIntersection = (x1, y1, r1, x2, y2, r2) => {
-//     // x1, y1, r1, x2, y2, r2 - are centre coordinates and radii of two circles - one of damage and one of distance between damage segments
-//     console.log(x1, y1, r1, x2, y2, r2, 'x1, y1, r1, x2, y2, r2');
-//     let m = ( (y1 - y2) / (x1 - x2) );
-//     console.log(m, 'm');
-//     let k = ( ( (Math.pow(r2, 2) - Math.pow(r1, 2)) - (Math.pow(y2, 2) - Math.pow(y1, 2)) - (Math.pow(x2, 2) - Math.pow(x1, 2)) ) / (2 * (x1 - x2)) );
-//     console.log(k, 'k');
-//
-//     let a = (Math.pow(m, 2) + 1);
-//     console.log(a, 'a');
-//     let b = ( (2 * x1 * m) - (2 * m * k) - (2 * y1) );
-//     console.log(b, 'b');
-//     let c = ( Math.pow(y1, 2) - Math.pow(r1, 2) + (Math.pow((k - x1), 2)) );
-//     console.log(c, 'c');
-//     let d = Math.pow(b, 2) - 4 * a * c;
-//     console.log(d, 'd');
-//
-//     let yPoint1 = (-b + Math.sqrt(d)) / 2 * a;
-//     console.log(yPoint1, 'yPoint1');
-//     let yPoint2 = (-b - Math.sqrt(d)) / 2 * a;
-//     console.log(yPoint2, 'yPoint2');
-//
-//     let xPoint1 = k - m * yPoint1;
-//     console.log(xPoint1, 'xPoint1');
-//     let xPoint2 = k - m * yPoint2;
-//     console.log(xPoint2, 'xPoint2');
-//
-//     let point1 = [xPoint1, yPoint1];
-//     let point2 = [xPoint2, yPoint2];
-//
-//     console.log(point1, point2, 'point1, point2');
-//     return [point1, point2];
-// };
+const checkGroundPoint = (point1x, point1y, point2x, point2y, pointIntersectionX, pointIntersectionY) => {
+    // point1 always first on canvas
+    let conditions1x = (point1x < pointIntersectionX && pointIntersectionX < point2x);
+    let conditions1y = (point1y < pointIntersectionY && pointIntersectionY > point1y);
+    let conditions2x = (point1x > pointIntersectionX && pointIntersectionX < point2x);
+    let conditions2y = (point1y < pointIntersectionY && pointIntersectionY < point1y);
+    let conditions3x = (point1x < pointIntersectionX && pointIntersectionX < point2x);
+    let conditions3y = (point1y > pointIntersectionY && pointIntersectionY < point1y);
+    let conditions4x = (point1x < pointIntersectionX && pointIntersectionX > point2x);
+    let conditions4y = (point1y > pointIntersectionY && pointIntersectionY > point1y);
+    let conditions5 = (conditions1x && conditions1y);
+    let conditions6 = (conditions2x && conditions2y);
+    let conditions7 = (conditions3x && conditions3y);
+    let conditions8 = (conditions4x && conditions4y);
 
-const checkGroundPoint = (point1, point2) => {
+    if (conditions5 || conditions6 || conditions7 || conditions8) {
+        return [pointIntersectionX, pointIntersectionY];
+    }
 
+    return false;
 };
 
 const findPointOnSegment = (array, segmentX, segmentY) => {
