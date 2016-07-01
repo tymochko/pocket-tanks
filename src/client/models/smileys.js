@@ -2,7 +2,7 @@ function str_replace(search, replace, subject) {
 	return subject.split(search).join(replace);
 } 
 
-function replaceSmileys(text) {
+var replaceSmileys=function(text) {
 	function sm(codes, img_name) { 
 		function rsm(from, to) {
 			path = "public/images/smileys/";

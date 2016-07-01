@@ -139,7 +139,7 @@ const logoutUser = function (id, callback) {
             } else {
                 updatedUser.isOnline = false;
 
-                callback(updatedUser);
+                callback(err, updatedUser);
             }
         });
 };
@@ -179,7 +179,7 @@ const updateUser = function (id, updatedData, callback) {
                     userAge: updatedData.userAge,
                     userImg: updatedData.userImg
                     },
-                
+
                     function(err, foundUser) {
                         callback(err, foundUser);
                     });
