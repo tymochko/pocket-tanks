@@ -9,7 +9,6 @@ var session = require('express-session');
 // remove after MongoStore is removed from app.js
 var mongoose = require('mongoose');
 
-var routes = require('./routes/index');
 var users = require('./api/users/usersRoutes');
 var connectMongo = require('connect-mongo');
 var MongoStore = connectMongo(session);
