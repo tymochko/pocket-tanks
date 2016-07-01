@@ -147,9 +147,140 @@ var drawTank = function(xCoordinate, yCoordinate) {
                 fillBackground();
             }
             break;
-        }
+                case 32: /*SPACE*/
+                    console.log('dvcs');
+                    dt2=0;
+                    power=40;
+                    angle=40;
+                    bullets.push({ pos: [tankX, tankY],
+                        imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
+                        angle: angle,
+                        bulletSpeed: power
+                    });
+                lastFire = Date.now();
+                shotStart();
+                break;
     }
-    window.addEventListener('keydown',doKeyDown,true);
+}
+window.addEventListener('keydown',doKeyDown,true);
+
+//<------Maks's part-------->
+
+
+var requestAnimFrame = (function(){
+    return window.requestAnimationFrame   ||    
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame    ||
+    window.oRequestAnimationFrame      ||
+    window.msRequestAnimationFrame     ||
+    function(callback){
+        window.setTimeout(callback, 1000 / 60);
+    };
+})();
+
+var power,angle;
+var lastTime;
+var dt2=0;
+var bullets = [];
+var bullet;
+var lastFire = Date.now();
+var gameTime = 0;
+var bulletImg=new Image();
+bulletImg.src='./public/images/bullet2.png';
+
+function drawBullet() {
+    clear();
+    circle(tankX, tankY, rad);
+    fillBackground();
+
+    var now = Date.now();
+    var dt = (now - lastTime) / 1000.0;
+    
+    update(dt);
+    render();
+
+    lastTime = now;
+  
+};
+
+function shotStart() {
+    //reset();
+    lastTime = Date.now();
+    drawBullet();
+}
+
+function update(dt) {
+    gameTime += dt;
+
+    updateEntities(dt);
+};
+
+function updateEntities(dt) {
+    for(var i=0; i<bullets.length; i++) {
+        bullet = bullets[i];
+
+        bullet.pos[0] = tankX + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180);
+        bullet.pos[1]=tankY-(bullet.bulletSpeed*dt2*Math.sin(bullet.angle*Math.PI/180)-9.8*dt2*dt2/2);
+        dt2+=2*dt;
+
+        if(bullet.pos[1] > canvas.height ||
+            bullet.pos[0] > canvas.width) {
+            bullets.splice(i, 1);
+            window.cancelAnimationFrame(requestAnimFrame);
+            i--;
+        }
+        else requestAnimFrame(drawBullet);
+    }
+}
+
+function render() {
+    renderEntities(bullets);
+};
+
+function renderEntities(list) {
+    for(var i=0; i<list.length; i++) {
+        renderEntity(list[i]);
+    }    
+}
+
+function renderEntity(entity) {
+    ctx.save();
+    ctx.translate(entity.pos[0], entity.pos[1]);
+    entity.imgInf.render(ctx,dt2);
+    ctx.restore();
+}
+
+function reset() {
+    gameTime = 0;
+    bullets = [];
+};
+
+(function() {
+    function ImgInf(url, pos, angle, v0) {
+        this.pos = pos;
+        this.url = url;
+        this.angle=angle;
+        this.v0=v0;
+    };
+
+    ImgInf.prototype = {
+
+        render: function(ctx, dt2) {
+            var x = this.pos[0];
+            var y = this.pos[1];
+
+            ctx.translate(x,y);
+            var A=this.v0*Math.cos(this.angle*Math.PI/180);
+            var an=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180)-9.81*dt2)/A);
+            ctx.rotate(-an);
+            ctx.drawImage(bulletImg,x, y);
+            ctx.restore();
+        }
+    };
+
+    window.ImgInf = ImgInf;
+})();
+
     //      <------Yuri's part - name it yourself------>
 
     // for (var i = 0; i < originalPoints.length; i++) {
