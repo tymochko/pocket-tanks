@@ -163,7 +163,7 @@ var bullet;
 var lastFire = Date.now();
 var gameTime = 0;
 var bulletImg=new Image();
-bulletImg.src='bullet2.png';
+bulletImg.src='./public/images/bullet2.png';
 
 function drawBullet() {
     clear();
@@ -177,10 +177,7 @@ function drawBullet() {
     render();
 
     lastTime = now;
-        ctx.beginPath();
-        ctx.arc(300, 300, 10, 0, Math.PI*2, true);
-        ctx.fillStyle = "red";
-        ctx.fill();   
+  
 };
 
 function shotStart() {
@@ -246,15 +243,15 @@ function reset() {
     ImgInf.prototype = {
 
         render: function(ctx, dt2) {
-            // var x = this.pos[0];
-            // var y = this.pos[1];
+            var x = this.pos[0];
+            var y = this.pos[1];
 
-            // ctx.translate(x,y);
-            // var A=this.v0*Math.cos(this.angle*Math.PI/180);
-            // var an=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180)-9.81*dt2)/A);
-            // ctx.rotate(-an);
-            // ctx.drawImage(bulletImg,x, y);
-            // ctx.restore();
+            ctx.translate(x,y);
+            var A=this.v0*Math.cos(this.angle*Math.PI/180);
+            var an=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180)-9.81*dt2)/A);
+            ctx.rotate(-an);
+            ctx.drawImage(bulletImg,x, y);
+            ctx.restore();
         }
     };
 
