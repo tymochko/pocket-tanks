@@ -1,45 +1,40 @@
 'use strict';
 
+//      <------initialization------>
+var backCanvas = document.createElement('canvas');
+var WIDTH = backCanvas.width  = 800;
+var HEIGHT = backCanvas.height = 500;
+var backCtx = backCanvas.getContext('2d');
+
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
+var dx = 5,
+    dy = 5;
+var tankX, tankY, rad;
 
-// console.log('ctx ', ctx);
-
-var poligon = function(array, color) {
-    ctx.beginPath();
-
-    array.forEach(function(pair, number) {
-        if(number == 0) {
-            ctx.moveTo(pair[0], pair[1]);
-        } else {
-            ctx.lineTo(pair[0], pair[1]);
-        }
-    });
-    ctx.fillStyle=color;
-    ctx.fill();
-    ctx.closePath();
-};
-
-
-
-var drawSky = function(){
-    var grd=ctx.createLinearGradient(0,0,0,500);
-    grd.addColorStop(0,"#172059");
-    grd.addColorStop(0.3,"#6D6D85");
-    grd.addColorStop(1,"#A0837D");
-
-    ctx.fillStyle=grd;
-    ctx.fillRect(0,0,800,500);
-};
+var pattern;
 
 var originalPoints = [[0, 300],[20, 305],[40, 330],[145, 345],[125, 400],[165, 350],[175, 360],[220, 370],
     [240, 320],[280, 300],[300, 270],[340, 200],[370, 170],[440, 190],[550, 430],[530, 370],[540, 330],
     [575, 310],[630, 340],[685, 340],[690, 355],[700, 340],[750, 300],[755, 305],[795, 270],[800, 270],
     [800, 500],[0, 500],[0, 300]];
 
-// for (var i = 0; i < originalPoints.length; i++) {
-//     console.log(originalPoints[i], 'points[i]');
-// }
+// <------Ground and sky drawing------>
+
+var poligon = function(array, color) {
+    backCtx.beginPath();
+
+    array.forEach(function(pair, number) {
+        if(number == 0) {
+            backCtx.moveTo(pair[0], pair[1]);
+        } else {
+            backCtx.lineTo(pair[0], pair[1]);
+        }
+    });
+    backCtx.fillStyle=color;
+    backCtx.fill();
+    backCtx.closePath();
+};
 
 var drawGround = function(){
 
@@ -54,6 +49,92 @@ var drawGround = function(){
         // });
     })
 };
+
+var drawSky = function(){
+    var grd=backCtx.createLinearGradient(0,0,0,500);
+    grd.addColorStop(0,"#172059");
+    grd.addColorStop(0.3,"#6D6D85");
+    grd.addColorStop(1,"#A0837D");
+
+    backCtx.fillStyle=grd;
+    backCtx.fillRect(0,0,800,500);
+};
+
+// <------Tank movement------>
+
+var findLinePoints = function(posX) {
+    var arr = [];
+
+    for(var i = originalPoints.length - 1; i > 0; i--) {
+        if(originalPoints[i][0] >= posX && originalPoints[i-1][0] <= posX) {
+            var x1 = originalPoints[i-1][0],
+                x2 = originalPoints[i][0],
+                y1 = originalPoints[i-1][1],
+                y2 = originalPoints[i][1];
+            console.log("Vova: " + x1 + " " + x2 + " " + y1 + " " + y2);
+            var time = Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
+            for (var j = 0; j <= time; j++) {
+                var delta = j/time ;
+                var a =  delta*(x2 - x1) + x1;
+                var b =  delta*(y2 - y1) + y1;
+                arr.push([Math.round(a), Math.round(b)]);
+            }
+            for(var i = 0; i < arr.length; i++) {
+                if(arr[i][0] === posX) return (arr[i][1] - 10);
+            }
+        }
+    }
+};
+
+var clear = function() {
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+};
+
+var fillBackground = function () {
+    ctx.rect(0,0,WIDTH,HEIGHT);
+    ctx.fillStyle = pattern;
+    ctx.fill();
+};
+
+var circle = function(x,y,r) {
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI*2, true);
+    ctx.fillStyle = "purple";
+    ctx.fill();
+};
+
+function doKeyDown(evt){
+    switch (evt.keyCode) {
+        case 37:  /* Left arrow was pressed */
+            if (tankX - dx > 0){
+                tankX -= dx;
+                tankY = findLinePoints(tankX);
+                clear();
+                circle(tankX, tankY, rad);
+                fillBackground();
+            }
+            break;
+        case 39:  /* Right arrow was pressed */
+            if (tankX + dx < WIDTH){
+                tankX += dx;
+                tankY = findLinePoints(tankX);
+                clear();
+                circle(tankX, tankY, rad);
+                fillBackground();
+            }
+            break;
+    }
+}
+window.addEventListener('keydown',doKeyDown,true);
+
+
+//      <------Yuri's part - name it yourself------>
+
+// for (var i = 0; i < originalPoints.length; i++) {
+//     console.log(originalPoints[i], 'points[i]');
+// }
+
+
 
 // window.setInterval(function(){
 //     drawSky();
@@ -259,18 +340,18 @@ const calculateLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
 // };
 
 const drawPoints = (x, y) => {
-    ctx.beginPath();
-    ctx.fillStyle = '#eeeeee';
-    ctx.fillRect(x, y, 5, 5);
-    ctx.closePath();
+    backCtx.beginPath();
+    backCtx.fillStyle = '#eeeeee';
+    backCtx.fillRect(x, y, 5, 5);
+    backCtx.closePath();
 };
 
 const drawCircle = (x, y, r) => {
-    ctx.beginPath();
-    ctx.fillStyle = '#ee55ee';
-    ctx.arc(x, y, r, 0, Math.PI * 2, false);
-    ctx.stroke();
-    ctx.closePath();
+    backCtx.beginPath();
+    backCtx.fillStyle = '#ee55ee';
+    backCtx.arc(x, y, r, 0, Math.PI * 2, false);
+    backCtx.stroke();
+    backCtx.closePath();
 };
 
 // const calculateCircleEquation = (damageX, damageY, damageRadius, y) => {
@@ -281,11 +362,7 @@ const drawCircle = (x, y, r) => {
 
 let segmentPoints = calculateDamageArea(originalPoints);
 
-drawSky();
-drawGround();
 
-drawPoints(damageX, damageY);
-drawCircle(damageX, damageY, damageRadius);
 for (let i = 0; i < segmentPoints.length; i++) {
 
     drawPoints(segmentPoints[i][0], segmentPoints[i][1]);
@@ -294,3 +371,18 @@ for (let i = 0; i < segmentPoints.length; i++) {
 // drawPoints(segmentPoints[0][2], segmentPoints[0][3]);
 // drawPoints(segmentPoints[1][0], segmentPoints[1][1]);
 // drawPoints(segmentPoints[1][2], segmentPoints[1][3]);
+
+(function initialization() {
+	clear();
+	drawSky();
+	drawGround();
+	drawPoints(damageX, damageY);
+	drawCircle(damageX, damageY, damageRadius);
+    
+    pattern = ctx.createPattern(backCanvas, "no-repeat");
+    tankX = Math.floor((Math.random() * 330) + 30);
+    tankY = findLinePoints(tankX);
+    rad = 10;
+	circle(tankX, tankY, rad);
+	fillBackground();
+})();
