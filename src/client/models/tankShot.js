@@ -71,8 +71,8 @@ var drawTank = function(xCoordinate, yCoordinate) {
     var tankWidth = 70;
     var weaponHeight = 20;
     var weaponWidth = 35;
-    tankImage.src = 'tankVehicle.png';
-    weaponImage.src = 'tankWeapon.png';
+    tankImage.src = './public/images/tankVehicle.png';
+    weaponImage.src = './public/images/tankWeapon.png';
     tankImage.onload = function() { 
     	ctx.drawImage(tankImage, xCoordinate, yCoordinate - 30, tankWidth, tankHeight); 
     }
