@@ -195,19 +195,67 @@ function update(dt) {
 function updateEntities(dt) {
     for(var i=0; i<bullets.length; i++) {
         bullet = bullets[i];
-
+        console.log('1');
         bullet.pos[0] = tankX + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180);
         bullet.pos[1]=tankY-(bullet.bulletSpeed*dt2*Math.sin(bullet.angle*Math.PI/180)-9.8*dt2*dt2/2);
         dt2+=2*dt;
-
-        if(bullet.pos[1] > canvas.height ||
-            bullet.pos[0] > canvas.width) {
+        	var coords = {x:bullet.pos[0],
+        		y:bullet.pos[1],
+        		width:10,
+        		height:1}
+        if(checkCol(coords,originalPoints)){
+            console.log( 'x:' +  (coords.x + coords.width), 'y:' + (coords.y + coords.height));
             bullets.splice(i, 1);
             window.cancelAnimationFrame(requestAnimFrame);
             i--;
-        }
+    //         clear();
+    // circle(tankX, tankY, rad);
+    // fillBackground();
+console.log('nghk;jg;kd');
+    }
+
+        // if(bullet.pos[1] > canvas.height ||
+        //     bullet.pos[0] > canvas.width) {
+        //     bullets.splice(i, 1);
+        //     window.cancelAnimationFrame(requestAnimFrame);
+        //     i--;
+        // }
         else requestAnimFrame(drawBullet);
     }
+}
+function checkCol(current, array) {
+    let startPoint = array[0];
+    for (let i = 1; i < array.length; i++) {
+        let endPoint = array[i];
+        if (current.x > startPoint[0] && current.x < endPoint[0]) {
+            if (checkCross(startPoint, endPoint, current)) {
+                return true;
+            }
+        }
+        startPoint = array[i];
+    }
+}
+function checkCross(startPoint, endPoint, currPoint) {
+    let point1 = {
+        x: startPoint[0],
+        y: startPoint[1]
+    };
+    let point2 = {
+        x: endPoint[0],
+        y: endPoint[1]
+    };
+    let objPoint = {
+        x:currPoint.x + currPoint.width,
+        y:currPoint.y + currPoint.height
+    };
+
+    let a = (point2.y - point1.y) / (point2.x - point1.x);
+    let b = point1.y - a * point1.x;
+
+    if(Math.abs(objPoint.y - (a*objPoint.x + b)) < 1.5) {
+        return true;
+    }
+    return false;
 }
 
 function render() {
