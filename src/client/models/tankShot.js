@@ -61,6 +61,27 @@ document.addEventListener("DOMContentLoaded", function(){
         backCtx.fillRect(0,0,800,500);
     };
 
+
+    // <------Tank drawing------>
+
+var drawTank = function(xCoordinate, yCoordinate) {
+    var tankImage = new Image();
+    var weaponImage = new Image();
+    var tankHeight = 30;
+    var tankWidth = 70;
+    var weaponHeight = 20;
+    var weaponWidth = 35;
+    tankImage.src = './public/images/tankVehicle.png';
+    weaponImage.src = './public/images/tankWeapon.png';
+    tankImage.onload = function() { 
+    	ctx.drawImage(tankImage, xCoordinate, yCoordinate - 30, tankWidth, tankHeight); 
+    }
+    weaponImage.onload = function() { 
+		ctx.drawImage(weaponImage, xCoordinate + 45, yCoordinate - 44, weaponWidth, weaponHeight);
+    }
+    console.log("hello");
+};
+
     // <------Tank movement------>
 
     var findLinePoints = function(posX) {
@@ -81,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function(){
                     arr.push([Math.round(a), Math.round(b)]);
                 }
                 for(var i = 0; i < arr.length; i++) {
-                    if(arr[i][0] === posX) return (arr[i][1] - 10);
+                    if(arr[i][0] === posX) return (arr[i][1]);
                 }
             }
         }
@@ -111,7 +132,8 @@ document.addEventListener("DOMContentLoaded", function(){
                 tankX -= dx;
                 tankY = findLinePoints(tankX);
                 clear();
-                circle(tankX, tankY, rad);
+                drawTank(tankX, tankY);
+                //circle(tankX, tankY, rad);
                 fillBackground();
             }
             break;
@@ -120,7 +142,8 @@ document.addEventListener("DOMContentLoaded", function(){
                 tankX += dx;
                 tankY = findLinePoints(tankX);
                 clear();
-                circle(tankX, tankY, rad);
+                drawTank(tankX, tankY);
+                //circle(tankX, tankY, rad);
                 fillBackground();
             }
             break;
@@ -561,7 +584,8 @@ function reset() {
         tankX = Math.floor((Math.random() * 330) + 30);
         tankY = findLinePoints(tankX);
         rad = 10;
-        circle(tankX, tankY, rad);
+        //circle(tankX, tankY, rad);
+        drawTank(tankX, tankY);
         fillBackground();
     })();
 });
