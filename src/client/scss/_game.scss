@@ -1,16 +1,63 @@
-canvas {
-    border: 1px solid grey;
-    display: block;
-    // margin: auto;
-}
 body {
-    background-color: red;
+  background-color: grey;
 }
-.menu {
-    border: 1px solid grey;
-    display: block;
-    margin: auto;
-    width: 800px;
-    height: 200px;
-    background-color: #BA2924;
+.outer {
+  width: 100%;
+}
+.left {
+  display: inline-block;
+}
+.insidecanvas {
+  z-index: 1000;
+  position: absolute;
+  display: block;
+}
+canvas {
+  border: 1px solid grey;
+  display: block;
+  position: relative;
+
+}
+.navigation {
+  background-image: url(../../public/images/panel-200.png);
+  width: 800px;
+  height: 200px;
+  position: relative;
+}
+.topleft, .downleft, .topright, .downright {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 38px;
+  height: 38px;
+}
+.topleft {
+    left: 145px;
+    top: 70px;
+    background-image: url(../../public/images/topleft.png);
+}
+.downleft {
+    left: 145px;
+    top: 115px;
+    background-image: url(../../public/images/downleft.png);
+}
+.topright {
+    right: 168px;
+    top: 70px;
+    background-image: url(../../public/images/topright.png);
+}
+.downright {
+    right: 168px;
+    top: 115px;
+    background-image: url(../../public/images/downright.png);
+}
+.right {
+  display: inline-block;
+  float: right;
+  background-color: #BA2924;
+  width: 530px;
+  height: 640px;
+}
+.test {
+  color: white;
 }

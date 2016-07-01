@@ -1,1 +1,22 @@
-<canvas id="myCanvas" width="800" height="500">I'm hidden</canvas>
+<div class="outer">
+    <div class="left">        
+        <canvas id="myCanvas" width="800" height="440">
+            <div class="insidecanvas">
+            </div>
+        </canvas>
+        <div class="navigation">
+            <div class="topleft"></div>
+            <div class="downleft"></div>
+            <div class="topright"></div>
+            <div class="downright"></div>
+        </div>
+    </div>
+    <div class="right">
+        <div class="chat">
+            <input type="text" class="chat-name" placeholder="Enter your name" />
+            <div class="chat-messages"></div>
+            <textarea placeholder="Type your message"></textarea>
+            <div class="chat-status">Status: <span>Idle</span></div>
+        </div>
+    </div>
+</div>
