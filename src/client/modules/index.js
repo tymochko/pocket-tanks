@@ -10,6 +10,7 @@ var game = require('./game');
 module.exports = angular.module('tanks', [
     require('angular-route'),
     require('angular-animate'),
+    require('ng-file-upload'),
     require('angular-ui-bootstrap'),
     require('angular-toastr'),
     require('angular-sanitize'),

@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
-
+var fs = require('fs');
 var usersCollection = require('./usersController');
-var usersImages = require('./../../usersImages.json');
+var multer = require('multer');
+
+
 
 // get all users in database, for instance in dashboard
 router.get('/', (req, res) => {
@@ -70,7 +72,6 @@ router.post('/add', (req, res) => {
     newUser.userAge = req.body.userAge;
     newUser.userEmail = req.body.userEmail;
     newUser.userPassword = req.body.userPassword;
-    newUser.userImg = usersImages[0];
     newUser.isOnline = false;
     newUser.isEnabled = true;
 
@@ -80,6 +81,10 @@ router.post('/add', (req, res) => {
             res.status(400);
             res.json({'message': 'This user is already'});
         } else {
+            let dir = './public/usersInfo/' + user._id;
+            fs.mkdirSync(dir);
+            console.log(newUser.userEmail);
+            usersCollection.handleEmail(newUser.userName,newUser.userEmail);
             req.session.user = user._id;
             req.session.username = user.userName;
             res.status(201);
@@ -111,5 +116,38 @@ router.put('/profile/delete', (req, res) => {
         }
     });
 });
+
+//upload user img
+router.post('/profile/upload', function (reqvest, res) {
+    var d = new Date();
+    let fileNameNew = 'userAvatar' + d.getTime();
+    var dir = './public/usersInfo/' + reqvest.session.user;
+    usersCollection.rmDir(dir);
+    var storage = multer.diskStorage({ //multers disk storage settings
+        destination: function (req, file, cb) {
+
+
+            cb(null, dir);
+        },
+        filename: function (req, file, cb) {
+            cb(null, fileNameNew + '.' + file.originalname.split('.')[file.originalname.split('.').length - 1]);
+        }
+    });
+;
+    let upload = multer({ //multer settings
+        storage: storage
+    }).single('file');
+
+    upload(reqvest, res, function (err) {
+        if (err) {
+
+            res.json({error_code: 1, err_desc: err});
+            return;
+        }
+        res.json({image:dir+'/'+fileNameNew + '.png',description: 'userImg'});
+
+    });
+});
+
 
 module.exports = router;
