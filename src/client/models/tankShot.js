@@ -125,16 +125,18 @@ document.addEventListener("DOMContentLoaded", function(){
             }
             break;
                 case 32: /*SPACE*/
-            dt2=0;
-            power=40;
-            angle=40;
-            bullets.push({ pos: [tankX, tankY],
-                imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
-                angle: angle,
-                bulletSpeed: power
-            });
-            lastFire = Date.now();
-            shotStart();
+                    console.log('dvcs');
+                    dt2=0;
+                    power=40;
+                    angle=40;
+                    bullets.push({ pos: [tankX, tankY],
+                        imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
+                        angle: angle,
+                        bulletSpeed: power
+                    });
+                lastFire = Date.now();
+                shotStart();
+                break;
     }
 }
 window.addEventListener('keydown',doKeyDown,true);
@@ -174,7 +176,11 @@ function drawBullet() {
     update(dt);
     render();
 
-    lastTime = now;   
+    lastTime = now;
+        ctx.beginPath();
+        ctx.arc(300, 300, 10, 0, Math.PI*2, true);
+        ctx.fillStyle = "red";
+        ctx.fill();   
 };
 
 function shotStart() {
@@ -240,15 +246,15 @@ function reset() {
     ImgInf.prototype = {
 
         render: function(ctx, dt2) {
-            var x = this.pos[0];
-            var y = this.pos[1];
+            // var x = this.pos[0];
+            // var y = this.pos[1];
 
-            ctx.translate(x,y);
-            var A=this.v0*Math.cos(this.angle*Math.PI/180);
-            var an=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180)-9.81*dt2)/A);
-            ctx.rotate(-an);
-            ctx.drawImage(bulletImg,x, y);
-            ctx.restore();
+            // ctx.translate(x,y);
+            // var A=this.v0*Math.cos(this.angle*Math.PI/180);
+            // var an=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180)-9.81*dt2)/A);
+            // ctx.rotate(-an);
+            // ctx.drawImage(bulletImg,x, y);
+            // ctx.restore();
         }
     };
 
