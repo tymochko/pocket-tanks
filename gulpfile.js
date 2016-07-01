@@ -5,15 +5,16 @@ const babel = require('gulp-babel');
 const rename = require('gulp-rename');
 const concat = require('gulp-concat');
 const inject = require('gulp-inject');
+const sourcemaps = require('gulp-sourcemaps');
 const browserify = require('gulp-browserify');
 const templateCache = require('gulp-angular-templatecache');
 
 gulp.task('es6', () => {
-    gulp.src('src/server/app.js')
-        .pipe(babel({
-            presets: ['es2015']
-        }))
-        .pipe(gulp.dest('dist'));
+    // gulp.src('src/server/app.js')
+    //     .pipe(babel({
+    //         presets: ['es2015']
+    //     }))
+    //     .pipe(gulp.dest('dist'));
     // gulp.src('src/client/models/*.js')
     //     .pipe(babel({
     //         presets: ['es2015']
@@ -39,19 +40,27 @@ gulp.task('template', () => {
 });
 
 gulp.task('js', () =>  {
-    gulp.src(['src/client/app.js'], { read: false })
+    gulp.src('src/client/app.js', { read: false })
         .pipe(browserify({
             insertGlobals: true,
             debug: true
         }))
         .pipe(concat('main.js'))
-        .pipe(gulp.dest('public/'));
+        .pipe(gulp.dest('public/'))
 });
 
-gulp.task('build', ['sass', 'template', 'js'], () => {
+gulp.task('js-models', () => {
+    gulp.src('src/client/models/*.js')
+        .pipe(sourcemaps.init())
+        .pipe(concat('main-models.js'))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('public/'));
+})
+
+gulp.task('build', ['sass', 'template', 'js-models', 'js'], () => {
     return gulp.src('src/client/index.html')
         .pipe(inject(
-            gulp.src(['main.js', 'main-partials.js', 'main.css'], { read: false, cwd: 'public/' }), {
+            gulp.src(['main.js', 'main-partials.js', 'main.css', 'main-models.js'], { read: false, cwd: 'public/' }), {
                  relative: true,
                  ignorePath: '../../',
                  addRootSlash: true
@@ -67,4 +76,5 @@ gulp.task('watch', () => {
     gulp.watch('src/client/modules/**/*.js', ['js']);
     gulp.watch('src/client/modules/**/*.html', ['template'] );
     gulp.watch('src/client/scss/**/*.scss', ['sass'] );
+    gulp.watch('src/client/models/*.js', ['js-models'] );
 });
