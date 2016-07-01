@@ -9,15 +9,15 @@ var backCtx = backCanvas.getContext('2d');
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
 var dx = 5,
-    dy = 5;
+dy = 5;
 var tankX, tankY, rad;
 
 var pattern;
 
 var originalPoints = [[0, 300],[20, 305],[40, 330],[145, 345],[125, 400],[165, 350],[175, 360],[220, 370],
-    [240, 320],[280, 300],[300, 270],[340, 200],[370, 170],[440, 190],[550, 430],[530, 370],[540, 330],
-    [575, 310],[630, 340],[685, 340],[690, 355],[700, 340],[750, 300],[755, 305],[795, 270],[800, 270],
-    [800, 500],[0, 500],[0, 300]];
+[240, 320],[280, 300],[300, 270],[340, 200],[370, 170],[440, 190],[550, 430],[530, 370],[540, 330],
+[575, 310],[630, 340],[685, 340],[690, 355],[700, 340],[750, 300],[755, 305],[795, 270],[800, 270],
+[800, 500],[0, 500],[0, 300]];
 
 // <------Ground and sky drawing------>
 
@@ -68,9 +68,9 @@ var findLinePoints = function(posX) {
     for(var i = originalPoints.length - 1; i > 0; i--) {
         if(originalPoints[i][0] >= posX && originalPoints[i-1][0] <= posX) {
             var x1 = originalPoints[i-1][0],
-                x2 = originalPoints[i][0],
-                y1 = originalPoints[i-1][1],
-                y2 = originalPoints[i][1];
+            x2 = originalPoints[i][0],
+            y1 = originalPoints[i-1][1],
+            y2 = originalPoints[i][1];
             console.log("Vova: " + x1 + " " + x2 + " " + y1 + " " + y2);
             var time = Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
             for (var j = 0; j <= time; j++) {
@@ -106,27 +106,153 @@ var circle = function(x,y,r) {
 function doKeyDown(evt){
     switch (evt.keyCode) {
         case 37:  /* Left arrow was pressed */
-            if (tankX - dx > 0){
-                tankX -= dx;
-                tankY = findLinePoints(tankX);
-                clear();
-                circle(tankX, tankY, rad);
-                fillBackground();
-            }
-            break;
+        if (tankX - dx > 0){
+            tankX -= dx;
+            tankY = findLinePoints(tankX);
+            clear();
+            circle(tankX, tankY, rad);
+            fillBackground();
+        }
+        break;
         case 39:  /* Right arrow was pressed */
-            if (tankX + dx < WIDTH){
-                tankX += dx;
-                tankY = findLinePoints(tankX);
-                clear();
-                circle(tankX, tankY, rad);
-                fillBackground();
-            }
-            break;
+        if (tankX + dx < WIDTH){
+            tankX += dx;
+            tankY = findLinePoints(tankX);
+            clear();
+            circle(tankX, tankY, rad);
+            fillBackground();
+        }
+        break;
+        case 32: /*SPACE*/
+            dt2=0;
+            power=40;
+            angle=40;
+            bullets.push({ pos: [tankX, tankY],
+                imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
+                angle: angle,
+                bulletSpeed: power
+            });
+            lastFire = Date.now();
+            shotStart();
     }
 }
 window.addEventListener('keydown',doKeyDown,true);
 
+//<------Maks's part-------->
+
+
+var requestAnimFrame = (function(){
+    return window.requestAnimationFrame   ||    
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame    ||
+    window.oRequestAnimationFrame      ||
+    window.msRequestAnimationFrame     ||
+    function(callback){
+        window.setTimeout(callback, 1000 / 60);
+    };
+})();
+
+var power,angle;
+var lastTime;
+var dt2=0;
+var bullets = [];
+var bullet;
+var lastFire = Date.now();
+var gameTime = 0;
+var bulletImg=new Image();
+bulletImg.src='bullet2.png';
+
+function drawBullet() {
+    clear();
+    circle(tankX, tankY, rad);
+    fillBackground();
+
+    var now = Date.now();
+    var dt = (now - lastTime) / 1000.0;
+    
+    update(dt);
+    render();
+
+    lastTime = now;   
+};
+
+function shotStart() {
+    //reset();
+    lastTime = Date.now();
+    drawBullet();
+}
+
+function update(dt) {
+    gameTime += dt;
+
+    updateEntities(dt);
+};
+
+function updateEntities(dt) {
+    for(var i=0; i<bullets.length; i++) {
+        bullet = bullets[i];
+
+        bullet.pos[0] = tankX + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180);
+        bullet.pos[1]=tankY-(bullet.bulletSpeed*dt2*Math.sin(bullet.angle*Math.PI/180)-9.8*dt2*dt2/2);
+        dt2+=2*dt;
+
+        if(bullet.pos[1] > canvas.height ||
+            bullet.pos[0] > canvas.width) {
+            bullets.splice(i, 1);
+            window.cancelAnimationFrame(requestAnimFrame);
+            i--;
+        }
+        else requestAnimFrame(drawBullet);
+    }
+}
+
+function render() {
+    renderEntities(bullets);
+};
+
+function renderEntities(list) {
+    for(var i=0; i<list.length; i++) {
+        renderEntity(list[i]);
+    }    
+}
+
+function renderEntity(entity) {
+    ctx.save();
+    ctx.translate(entity.pos[0], entity.pos[1]);
+    entity.imgInf.render(ctx,dt2);
+    ctx.restore();
+}
+
+function reset() {
+    gameTime = 0;
+    bullets = [];
+};
+
+(function() {
+    function ImgInf(url, pos, angle, v0) {
+        this.pos = pos;
+        this.url = url;
+        this.angle=angle;
+        this.v0=v0;
+    };
+
+    ImgInf.prototype = {
+
+        render: function(ctx, dt2) {
+            var x = this.pos[0];
+            var y = this.pos[1];
+
+            ctx.translate(x,y);
+            var A=this.v0*Math.cos(this.angle*Math.PI/180);
+            var an=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180)-9.81*dt2)/A);
+            ctx.rotate(-an);
+            ctx.drawImage(bulletImg,x, y);
+            ctx.restore();
+        }
+    };
+
+    window.ImgInf = ImgInf;
+})();
 
 //      <------Yuri's part - name it yourself------>
 
@@ -267,7 +393,7 @@ const findSegment = (array, damageX, damageY, damageRadius) => {
 
 const findIntersectionCoordinates = (x1, y1, x2, y2, cX, cY, r) => {
     /* x1, y1 and x2, y2 - are coordinates of line-segment on canvas
-     * cX, cY and r - are coordinates of center of damage and a radius */
+    * cX, cY and r - are coordinates of center of damage and a radius */
 
     /* using line equation (y = m*x + k) */
     let m = ( (y2 - y1) / (x2 - x1) );
@@ -378,11 +504,11 @@ for (let i = 0; i < segmentPoints.length; i++) {
 	drawGround();
 	drawPoints(damageX, damageY);
 	drawCircle(damageX, damageY, damageRadius);
-    
+
     pattern = ctx.createPattern(backCanvas, "no-repeat");
     tankX = Math.floor((Math.random() * 330) + 30);
     tankY = findLinePoints(tankX);
     rad = 10;
-	circle(tankX, tankY, rad);
-	fillBackground();
+    circle(tankX, tankY, rad);
+    fillBackground();
 })();
