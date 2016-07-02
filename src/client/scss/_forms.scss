@@ -9,8 +9,8 @@ $formErrorMesColor: #ff0000;
 
 .form {
   background: $formBgColor;
-  padding: 40px; 
-  margin: 3px auto; 
+  padding: 40px;
+  margin: 3px auto;
   width:592px;
 }
 
@@ -29,7 +29,7 @@ $formErrorMesColor: #ff0000;
 
 .form-group label {
   font-family: 'Arial', sans-serif;
-  font-weight:200;  
+  font-weight:200;
   color: $formHeaderColor;
 }
 
@@ -100,9 +100,6 @@ input.ng-valid.ng-touched {
     padding-left: 2px;
     padding-right: 2px;
     cursor: pointer;
-
-
-
 }
 
 #thumbList li:hover {
@@ -126,4 +123,3 @@ input.ng-valid.ng-touched {
   margin-top: 10px;
   margin-right:27px;
 }
-

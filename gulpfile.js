@@ -22,6 +22,11 @@ gulp.task('es6', () => {
     //     .pipe(gulp.dest('public/scripts'));
 });
 
+gulp.task('fonts', function() {
+  return gulp.src('src/client/fonts/*')
+    .pipe(gulp.dest('public/fonts'));
+});
+
 gulp.task( 'sass', () => {
     gulp.src( 'src/client/scss/*.scss' )
         .pipe( sass().on( 'error', sass.logError ) )
@@ -62,7 +67,7 @@ gulp.task('js-models', () => {
         .pipe(gulp.dest('public/'));
 })
 
-gulp.task('build', ['sass', 'images', 'template', 'js-models', 'js'], () => {
+gulp.task('build', ['fonts', 'sass', 'images', 'template', 'js-models', 'js'], () => {
     return gulp.src('src/client/index.html')
         .pipe(inject(
             gulp.src(['main.js', 'main-partials.js', 'main.css', 'main-models.js'], { read: false, cwd: 'public/' }), {
