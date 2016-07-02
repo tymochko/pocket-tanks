@@ -266,6 +266,8 @@ function tick(coords){
         xSprite = xSprite + 134;
         window.setTimeout(tick, 70, coords);
         console.log('Coords are: ' + coords.x + ' and ' + coords.y);
+    } else {
+        xSprite = 0;
     }
 }
 
