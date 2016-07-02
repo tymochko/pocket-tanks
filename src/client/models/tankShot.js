@@ -229,6 +229,7 @@ function updateEntities(dt) {
         if(checkCol(coords,originalPoints)){
             console.log( 'x:' +  (coords.x + coords.width), 'y:' + (coords.y + coords.height));
             bullets.splice(i, 1);
+            tick(coords);                                   // <------ Explosion ------>
             window.cancelAnimationFrame(requestAnimFrame);
             i--;
     //         clear();
@@ -246,6 +247,28 @@ console.log('nghk;jg;kd');
         else requestAnimFrame(drawBullet);
     }
 }
+
+    // <------ Explosion ------>
+
+
+var xSprite = 0;
+var sprite = new Image();
+sprite.src = './public/images/explosion_sheet.png';
+function tick(coords){
+    var xExplosion = coords.x - 40;   // x = x-central - R;
+    var yExplosion = coords.y - 40;   // y = y-central - R;
+
+    clear();
+    drawTank(tankX, tankY);                
+    fillBackground(); // it's instead of ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(sprite, xSprite, 0, 134, 134, xExplosion, yExplosion, 134, 134);
+    if (xSprite < 1608) {
+        xSprite = xSprite + 134;
+        window.setTimeout(tick, 70, coords);
+        console.log('Coords are: ' + coords.x + ' and ' + coords.y);
+    }
+}
+
 function checkCol(current, array) {
     let startPoint = array[0];
     for (let i = 1; i < array.length; i++) {
