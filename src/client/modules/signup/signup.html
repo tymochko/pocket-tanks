@@ -26,23 +26,19 @@
 					 <span class="form-error-message" ng-show='regForm.age.$error.min'>You should be at least {{minage}} years old</span>
 					 <span class="form-error-message" ng-show='regForm.age.$error.max'>You cannot be older than {{maxage}} years old</span>
     			</div>
-    			</form>
-    			<form name="passform">
 				<div class="form-group">
 					<label for="password">Password:</label>
- 					<input class="form-control" id='password' type="password" name="password" required="" ng-model="user.password" placeholder="Password"  ng-minlength={{minpassword}} ng-maxlength={{maxpassword}} />
- 					<span class="form-error-message" data-ng-show="passForm.password.$error.required && passForm.password.$dirty">Required</span>
- 					<span class="form-error-message" class="error" ng-show="passForm.password.$error.minlength">Password should be at least {{minpassword}} characters long</span>
-	        		<span class="form-error-message" class="error" ng-show="passForm.password.$error.maxlength">Password cannot be longer than {{maxpassword}} characters</span>
+ 					<input class="form-control" id='password' type="password" name="password" required ng-model="user.password" placeholder="Password"  ng-minlength={{minpassword}} ng-maxlength={{maxpassword}} />
+ 					<span class="form-error-message" data-ng-show="regForm.password.$error.required && regForm.password.$dirty">Required</span>
+ 					<span class="form-error-message" class="error" ng-show="regForm.password.$error.minlength">Password should be at least {{minpassword}} characters long</span>
+	        		<span class="form-error-message" class="error" ng-show="regForm.password.$error.maxlength">Password cannot be longer than {{maxpassword}} characters</span>
  				</div>
 				<div class="form-group" >
-					<label for="password_c">Confirm Password:</label>
-					 <input class="form-control" type="password" id='password_c' name="password_c" ng-model="user.password_c" valid-password-c placeholder="Confirm password" required />
-					 <span class="form-error-message" ng-show="passForm.password_c.$error.require 
-					  && passForm.password_c.$dirty">Required</span>
-					 </br>
-					 <span class="form-error-message" ng-show="passForm.password_c.$error.noMatch 
-					 && passForm.password_c.$dirty">Passwords do not match</span>
+					<label for="passwordConfirm">Confirm Password:</label>
+					 <input class="form-control" type="password" id='passwordConfirm' name="passwordConfirm" ng-model="user.passwordConfirm" placeholder="Confirm password" required />
+					 <span class="form-error-message" ng-show="regForm.passwordConfirm.$error.require 
+					  && regForm.passwordConfirm.$dirty">Required</span>
+					 
  				</div>
 	        </form>
 		        <div class="form-group">
