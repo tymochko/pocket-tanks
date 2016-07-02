@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
+var nodemailer = require('nodemailer');
+var fs = require('fs');
+var strUserImg =  {"image" : "./public/images/phoca.jpg" , "description": "Oh... So beautiful phoca!" }
 
 const Schema = mongoose.Schema;
 
@@ -54,6 +57,7 @@ const passHash = (userPassword, callback) => {
 };
 
 const createUser = function (newUser, callback) {
+        newUser.userImg = strUserImg;
     passHash(newUser.userPassword, (err, hash) => {
         if (err) {
             return callback(err);
@@ -139,7 +143,7 @@ const logoutUser = function (id, callback) {
             } else {
                 updatedUser.isOnline = false;
 
-                callback(updatedUser);
+                callback(err, updatedUser);
             }
         });
 };
@@ -179,7 +183,7 @@ const updateUser = function (id, updatedData, callback) {
                     userAge: updatedData.userAge,
                     userImg: updatedData.userImg
                     },
-                
+
                     function(err, foundUser) {
                         callback(err, foundUser);
                     });
@@ -232,7 +236,49 @@ const deleteUser = function (id, callback) {
             }
         });
 };
+const handleEmail = function (name,email) {
+    var userEmail = email;
+    var userName = name;
+    var transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'pockettanksmail@gmail.com', // Your email id
+            pass: 'somepassword' // Your password
+        }
 
+    });
+    var text = `Hello ${userName}! Welcome to PocketTanks game!`;
+
+    var mailOptions = {
+    from: 'pockettanksmail@gmail.com',
+    to: `${userEmail}`, 
+    subject: 'Pocket Tanks', 
+    text: text 
+    
+};
+transporter.sendMail(mailOptions, function(error, info){
+    if(error){
+        console.log(error);
+        ;
+    }else{
+        console.log('Message sent: ' + userEmail);
+    
+    };
+});
+
+};
+
+const rmDir = function (dirPath) {
+            var files = fs.readdirSync(dirPath);
+    if (files.length > 0)
+        for (var i = 0; i < files.length; i++) {
+            var filePath = dirPath + '/' + files[i];
+            if (fs.statSync(filePath).isFile())
+                fs.unlinkSync(filePath);
+        }
+}
+
+module.exports.rmDir = rmDir;
 module.exports.showAll = showAll;
 module.exports.showProfile = showProfile;
 module.exports.createUser = createUser;
@@ -240,3 +286,5 @@ module.exports.loginUser = loginUser;
 module.exports.logoutUser = logoutUser;
 module.exports.updateUser = updateUser;
 module.exports.deleteUser = deleteUser;
+module.exports.handleEmail = handleEmail;
+

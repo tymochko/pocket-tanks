@@ -16,18 +16,8 @@ module.exports = angular.module('tanks.signup', [
 			$location.path('/');
 		});
 	};
-}])
-.directive('validPasswordC', function () {
-    return {
-        require: 'ngModel',
-        link: function (scope, elm, attrs, ctrl) {
-            ctrl.$parsers.unshift(function (viewValue, $scope) {
-                var noMatch = viewValue != scope.passForm.password.$viewValue;
-                ctrl.$setValidity('noMatch', !noMatch);
-            });
-        }
-    };
-});
+}]);
+
 
 RouteConfig.$inject = ['$routeProvider'];
 function RouteConfig($routeProvider) {
@@ -38,10 +28,10 @@ function RouteConfig($routeProvider) {
 };
 
 function SignupCtrl($scope, sendReg, toastr) {
-	$scope.maxname = 10;
-	$scope.minname = 4;
+	$scope.maxname = 15;
+	$scope.minname = 5;
 	$scope.maxpassword = 12;
-	$scope.minpassword = 4;
+	$scope.minpassword = 6;
 	$scope.maxage = 100;
 	$scope.minage = 18;
 

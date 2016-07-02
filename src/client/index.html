@@ -12,27 +12,12 @@
     <!-- inject:css -->
     <!-- endinject -->
 
-    <!-- <link href="public/stylesheets/style.css" rel="stylesheet"> -->
-    <!-- <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"> -->
-    <!-- // <script src="node_modules/jquery/dist/jquery.js"></script> -->
-    <!-- // <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script> -->
-    <!-- // <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script> -->
-    <!-- // <script src="node_modules/angular/angular.js"></script> -->
-    <!-- // <script src="node_modules/angular-animate/angular-animate.min.js"></script> -->
-    <!-- // <script src="node_modules/angular-toastr/dist/angular-toastr.tpls.js"></script> -->
-    <!-- // <script src="node_modules/angular-sanitize/angular-sanitize.min.js"></script> -->
-    <!-- // <script src="node_modules/angular-bootstrap/ui-bootstrap-tpls.min.js"></script> -->
-    <!-- // <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script> -->
-    <script src="/socket.io/socket.io.js"></script>
-    <!-- <link rel="stylesheet" href="node_modules/angular-toastr/dist/angular-toastr.css" /> -->
-
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
     <link rel="icon" type="image/jpeg" href="public/images/myIcon.png">
-
-
     <base href="/">
 </head>
 
-<body ng-controller="mainCtrl">
+<body ng-controller="mainCtrl" data-ng-init="hideLog()">
 	<div class="container-fullwidth">
         <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
 		  <div class="container-fluid">
@@ -47,7 +32,8 @@
               </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
-            	<a href="/chat" class="btn btn-danger navbar-center show-after-log">Start game</a>
+
+            	<a href="/chat" class="btn btn-danger navbar-center show-after-log">Start chat</a>
             	<ul class="nav navbar-nav show-after-log">
 			        <li><a href="/dashboard">Dashboard</a></li>
 			        <li><a href="/scores">Scores</a></li>
@@ -82,26 +68,8 @@
     </footer>
     <!-- .footer -->
 
-    <!-- Angular & Bootstrap -->
     <!-- inject:js -->
     <!-- endinject -->
-
-    <!-- Modules -->
-  <!--   // <script src="src/client/app/app.js"></script>
-    // <script src="node_modules/angular-route/angular-route.min.js"></script>
-    // <script src="node_modules/angular-resource/angular-resource.min.js"></script> -->
-
-
-    <!-- Controllers -->
-    <!-- <script src="src/client/app/controllers/main.js"></script>
-    // <script src="src/client/app/controllers/dashboard.js"></script>
-    // <script src="src/client/app/controllers/login.js"></script>
-    // <script src="src/client/app/controllers/signup.js"></script>
-    // <script src="src/client/app/controllers/manageProfileController.js"></script>
-    // <script src="src/client/app/controllers/navigation.js"></script>
-    // <script src="src/client/app/controllers/chat.js"></script>
-    // <script src="src/client/app/controllers/smileys.js"></script> -->
-
 </body>
 
 </html>

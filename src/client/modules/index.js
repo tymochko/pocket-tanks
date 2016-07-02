@@ -1,20 +1,19 @@
 require('angular');
-var chat = require('./chat/index');
-// var game = require('.controllers/game/game');
-var home = require('./home/index');
-var login = require('./login/index');
-var signup = require('./signup/index');
-var profile = require('./profile/index');
-var dashboard = require('./dashboard/index');
-var game = require('./game/index');
-// var navigation = require('.controllers/navigation/navigation');
+var chat = require('./chat');
+var home = require('./home');
+var login = require('./login');
+var signup = require('./signup');
+var profile = require('./profile');
+var dashboard = require('./dashboard');
+var game = require('./game');
 
 module.exports = angular.module('tanks', [
     require('angular-route'),
     require('angular-animate'),
+    require('ng-file-upload'),
     require('angular-ui-bootstrap'),
     require('angular-toastr'),
-    // require('angular-sanitize'),
+    require('angular-sanitize'),
     dashboard.name,
     chat.name,
     game.name,
@@ -22,7 +21,6 @@ module.exports = angular.module('tanks', [
     login.name,
     signup.name,
     profile.name
-    // navigation.name
 ]).config(RouteConfig)
 .factory('socket', ['$rootScope', function($rootScope) {
   var socket = io.connect();
