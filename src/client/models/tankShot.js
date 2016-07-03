@@ -193,6 +193,7 @@ function update(dt) {
 };
 
 function updateEntities(dt) {
+
     for(var i=0; i<bullets.length; i++) {
         bullet = bullets[i];
         console.log('1');
@@ -202,7 +203,7 @@ function updateEntities(dt) {
         	var coords = {x:bullet.pos[0],
         		y:bullet.pos[1],
         		width:10,
-        		height:1}
+        		height:10};
         if(checkCol(coords,originalPoints)){
             console.log( 'x:' +  (coords.x + coords.width), 'y:' + (coords.y + coords.height));
             bullets.splice(i, 1);
@@ -252,7 +253,7 @@ function checkCross(startPoint, endPoint, currPoint) {
     let a = (point2.y - point1.y) / (point2.x - point1.x);
     let b = point1.y - a * point1.x;
 
-    if(Math.abs(objPoint.y - (a*objPoint.x + b)) < 1.5) {
+    if(Math.abs(objPoint.y - (a*objPoint.x + b)) < 1) {
         return true;
     }
     return false;

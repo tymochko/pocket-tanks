@@ -4,27 +4,33 @@ var ngRoute = require('angular-route');
 module.exports = angular.module('tanks.profile', [
     ngRoute
 ]).config(RouteConfig)
+
+
     .service('profileService', ['$http', function ($http) {
         var userId = '';
+        const profileURL = 'api/users/profile';
 // todo add norm function without param + change name
         this.getProfileById = () => {//todo all changes to config
-            return $http.get("http://localhost:3000/api/users/profile/");
+            return $http.get(profileURL);
         };
-
+        this.getPublicImages = () => {
+            return $http.get(profileURL + '/publicImages');
+        };
         this.deleteAccount = () => {
-            return $http.put('http://localhost:3000/api/users/profile/delete/', {id: userId});
+            return $http.put(profileURL + '/delete/', {id: userId});
         };
 
         this.update = function (userInfo) {
-            return $http.put('http://localhost:3000/api/users/profile/updateUser/', userInfo).then(function () {
+            return $http.put(profileURL + '/updateUser/', userInfo).then(function () {
                 console.log('ok');
             });
         }
     }])
-    .controller('MyCtrl',['Upload','$scope', '$uibModalInstance',function( Upload, $scope, $uibModalInstance){
+    .controller('MyCtrl', ['$http', 'Upload', '$scope', '$uibModalInstance', function ($http, Upload, $scope, $uibModalInstance) {
 
-        $scope.submit = function(){
+        $scope.submit = function () {
             var uploadedImg;
+
             if ($scope.upload_form.file.$valid && $scope.file) {
                 //check if from is valid
                 $scope.upload($scope.file);
@@ -36,13 +42,10 @@ module.exports = angular.module('tanks.profile', [
         $scope.upload = function (file) {
             Upload.upload({
                 url: 'http://localhost:3000/api/users/profile/upload',
-                data:{file:file}
-                //fgfjjfhjfhjfhjhjfhjfhj
-            }).then(function(resp) {
+                data: {file: file}
+            }).then(function (resp) {
                 uploadedImg = resp.data;
                 $uibModalInstance.close(uploadedImg);
-
-
             });
 
         };
@@ -62,19 +65,20 @@ module.exports = angular.module('tanks.profile', [
             $uibModalInstance.dismiss('cancel');
         };
     }])
-    .controller('avatarController', ['$scope', '$uibModalInstance','$uibModal', function ($scope, $uibModalInstance,$uibModal) {
-        $scope.images = [
-            {image: 'public/images/phoca.jpg', description: 'Oh... So beautiful phoca!'},
-            {image: 'public/images/bear.jpg', description: 'So cute...bear!'},
-            {image: 'public/images/dog.jpg', description: 'Who let the dogs out?!'},
-            {image: 'public/images/deer.jpg', description: 'Am...yes i am deer!'},
-            {image: 'public/images/cat.jpg', description: 'Just give me some food for Myaw!'}
-        ];
-        $scope.currentImage = $scope.images[$scope.images.length-1];
-        $scope.setCurrentImage = function (image) {
+    .controller('avatarController', ['$http', '$scope', '$uibModalInstance', '$uibModal', 'profileService', function ($http, $scope, $uibModalInstance, $uibModal, profileService) {
+        $scope.images = [];
+        $scope.customImages = [];
+        profileService.getPublicImages().then((res) => {
+            $scope.images = res.data;
+            $scope.setCurrentImage($scope.images[0]);
+        }).catch((err) => {
+            console.log(err);
+        });
 
+        $scope.setCurrentImage = function (image) {
             $scope.currentImage = image;
         };
+
         $scope.ok = function () {
             $uibModalInstance.close($scope.currentImage);
         };
@@ -90,15 +94,20 @@ module.exports = angular.module('tanks.profile', [
                 controller: 'MyCtrl'
             });
             modalInstance3.result.then(function (img) {
-                console.log(img);
-                        $scope.images.push(img);
-                $scope.currentImage = $scope.images[$scope.images.length-1];
-                console.log($scope.images);
+                $scope.customImages = [];
+                $scope.customImages.push(img);
+                $scope.setCurrentImage(img);
+
+
+                // console.log(img);
+                // $scope.images.push(img);
+                // $scope.currentImage = $scope.images[$scope.images.length - 1];
+                // console.log($scope.images);
             })
 
         };
 
-    }])
+    }]),
 // .directive(directiveId, ['$parse', function ($parse) {
 //     var directive = {
 //         link: link,
@@ -123,7 +132,7 @@ module.exports = angular.module('tanks.profile', [
 // }])
 //
 
-RouteConfig.$inject = ['$routeProvider'];
+    RouteConfig.$inject = ['$routeProvider'];
 function RouteConfig($routeProvider) {
     $routeProvider.when('/profile', {
         controller: manageProfileController,
@@ -138,6 +147,8 @@ function manageProfileController($scope, $uibModal, profileService, toastr, $loc
     $scope.nameMaxLength = 15;
     $scope.passMinLength = 6;
     $scope.passMaxLength = 12;
+    $scope.selectedImg = "api/users/profile/getImage/userAvatar" + getSalt();
+
     $scope.user = {
         userName: "",
         userImg: {},
@@ -148,6 +159,10 @@ function manageProfileController($scope, $uibModal, profileService, toastr, $loc
         confirmNewPassword: "",
         userAge: ""
     };
+
+    function getSalt (){
+        return "?salt=" + new Date().getTime();
+    }
 
     function savingMsg() {
         toastr.success('Your changes are saved!', 'Message', {
@@ -164,10 +179,9 @@ function manageProfileController($scope, $uibModal, profileService, toastr, $loc
     }
 
     let init = function () {
-        profileService.getProfileById($scope.userId).then(function (resp) {
-            //todo
+        //todo rename getProfile!!!
+        profileService.getProfileById().then(function (resp) {
             $scope.user = resp.data;
-            $scope.avatar = $scope.user.userImg;
         });
     };
 
@@ -194,10 +208,10 @@ function manageProfileController($scope, $uibModal, profileService, toastr, $loc
         profileService.update(userInfo);
         savingMsg();
 
-
     };
 
 // Delete popup controller;
+   // todo rename))))
     $scope.open = function () {
 
         let modalInstance = $uibModal.open({
@@ -213,6 +227,10 @@ function manageProfileController($scope, $uibModal, profileService, toastr, $loc
     };
 
     $scope.changeAvatar = function () {
+        modalWindow();
+    };
+
+    function modalWindow() {
 
         let modalInstance2 = $uibModal.open({
             animation: true,
@@ -223,9 +241,8 @@ function manageProfileController($scope, $uibModal, profileService, toastr, $loc
             avatarMsg();
             $scope.avatar = img;
             $scope.user.userImg = $scope.avatar;
+            $scope.selectedImg = img.image;
         })
-    };
 
-
-
+    }
 };
