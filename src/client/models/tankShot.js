@@ -182,7 +182,7 @@
                 dt2=0;
                 power=40;
                 angle=40;
-                bullets.push({ pos: [tankX, tankY],
+                bullets.push({ pos: [tankX+45, tankY-44],
                     imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
                     angle: angle,
                     bulletSpeed: power
@@ -220,8 +220,9 @@
 
         function drawBullet() {
             clear();
-            circle(tankX, tankY, rad);
+            drawTank(tankX, tankY);
             fillBackground();
+            
 
             var now = Date.now();
             var dt = (now - lastTime) / 1000.0;
@@ -248,9 +249,8 @@
         function updateEntities(dt) {
             for(var i=0; i<bullets.length; i++) {
                 bullet = bullets[i];
-                console.log('1');
-                bullet.pos[0] = tankX + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180);
-                bullet.pos[1]=tankY-(bullet.bulletSpeed*dt2*Math.sin(bullet.angle*Math.PI/180)-9.8*dt2*dt2/2);
+                bullet.pos[0] = tankX+45 + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180);
+                bullet.pos[1]=tankY-44-(bullet.bulletSpeed*dt2*Math.sin(bullet.angle*Math.PI/180)-9.8*dt2*dt2/2);
                 dt2+=2*dt;
 
                 var coords = {x:bullet.pos[0],
@@ -272,12 +272,28 @@
                     clear();
                     drawSky();
                     drawGround();
+                    drawTank(tankX, tankY);
 
                     pattern = ctx.createPattern(backCanvas, "no-repeat");
                     tankY = findLinePoints(tankX);
-                    drawTank(tankX, tankY);
                     fillBackground();
-                } else
+
+                } 
+                else if(bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT)
+                {
+                    bullets.splice(i, 1);
+                    window.cancelAnimationFrame(requestAnimFrame);
+                    i--;
+                    clear();
+                    drawSky();
+                    drawGround();
+                    drawTank(tankX, tankY);
+
+                    pattern = ctx.createPattern(backCanvas, "no-repeat");
+                    tankY = findLinePoints(tankX);
+                    fillBackground();
+                }
+                else
                     requestAnimFrame(drawBullet);
 
             }
