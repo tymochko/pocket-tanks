@@ -77,14 +77,22 @@ document.addEventListener("DOMContentLoaded", function(){
             weaponImage.src = './public/images/tankWeapon.png';
             tankImage.onload = function() {
                 ctx.save();
+                console.log(xCoordinate, yCoordinate - 30, tankWidth, tankHeight);
+                ctx.translate(xCoordinate, yCoordinate - 30);
+                ctx.translate(tankWidth / 2, tankHeight / 2);
                 ctx.rotate(angle);
-                ctx.drawImage(tankImage, xCoordinate, yCoordinate - 30, tankWidth, tankHeight);
+                ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
                 ctx.restore();
             }
             weaponImage.onload = function() {
-                ctx.drawImage(weaponImage, xCoordinate + 45, yCoordinate - 44, weaponWidth, weaponHeight);
+                ctx.save();
+                ctx.translate(xCoordinate + 45, yCoordinate - 44);
+                ctx.translate(weaponWidth / 2, weaponHeight / 2);
+                ctx.rotate(angle);
+                ctx.drawImage(weaponImage, -(weaponWidth / 2), -(weaponHeight / 2), weaponWidth, weaponHeight);
+                ctx.restore();
             }
-            console.log("hello");
+            // console.log("hello");
         };
 
         var tiltTank = function(posX) {
@@ -98,12 +106,12 @@ document.addEventListener("DOMContentLoaded", function(){
             }
             var tan = (y1 > y2) ? (y1 - y2) / (x1 - x2) : (y2 - y1) / (x2 - x1);
 
-            this.angel = Math.atan(tan);
+            this.angle = Math.atan(tan);
 
-            if (tan < 0)
-                this.angle += 180;
+            // if (tan < 0)
+                // this.angle += 180;
 
-            return this.angel;
+            return this.angle;
         }
         // <------Tank movement------>
 
@@ -116,8 +124,7 @@ document.addEventListener("DOMContentLoaded", function(){
                     x2 = originalPoints[i][0],
                     y1 = originalPoints[i-1][1],
                     y2 = originalPoints[i][1];
-                    console.log("Vova: " + x1 + " " + x2 + " " + y1 + " " + y2);
-                    console.log('til', tiltTank(x1, x2, y1, y2));
+                    // console.log("Vova: " + x1 + " " + x2 + " " + y1 + " " + y2);
                     var time = Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
                     for (var j = 0; j <= time; j++) {
                         var delta = j/time ;
@@ -172,7 +179,6 @@ document.addEventListener("DOMContentLoaded", function(){
                 }
                 break;
                 case 32: /*SPACE*/
-                console.log('dvcs');
                 dt2=0;
                 power=40;
                 angle=40;
@@ -347,7 +353,7 @@ document.addEventListener("DOMContentLoaded", function(){
             }
         }
 
-        // ======= Misha's part ======= 
+        // ======= Misha's part =======
 
         function checkCol(current, array) {
             let startPoint = array[0];
