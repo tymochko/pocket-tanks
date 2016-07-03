@@ -1,8 +1,8 @@
 'use strict';
 
-//      <------initialization------>
-document.addEventListener("DOMContentLoaded", function(){
-    if (document.getElementById('myCanvas') != null) {
+// document.addEventListener("DOMContentLoaded", function(){
+    function initGame(){
+        //      <------initialization------>
         var backCanvas = document.createElement('canvas');
         var WIDTH = backCanvas.width  = 800;
         var HEIGHT = backCanvas.height = 500;
@@ -77,14 +77,22 @@ document.addEventListener("DOMContentLoaded", function(){
             weaponImage.src = './public/images/tankWeapon.png';
             tankImage.onload = function() {
                 ctx.save();
+                console.log(xCoordinate, yCoordinate - 30, tankWidth, tankHeight);
+                ctx.translate(xCoordinate, yCoordinate - 30);
+                ctx.translate(tankWidth / 2, tankHeight / 2);
                 ctx.rotate(angle);
-                ctx.drawImage(tankImage, xCoordinate, yCoordinate - 30, tankWidth, tankHeight);
+                ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
                 ctx.restore();
             }
             weaponImage.onload = function() {
-                ctx.drawImage(weaponImage, xCoordinate + 45, yCoordinate - 44, weaponWidth, weaponHeight);
+                ctx.save();
+                ctx.translate(xCoordinate + 45, yCoordinate - 44);
+                ctx.translate(weaponWidth / 2, weaponHeight / 2);
+                ctx.rotate(angle);
+                ctx.drawImage(weaponImage, -(weaponWidth / 2), -(weaponHeight / 2), weaponWidth, weaponHeight);
+                ctx.restore();
             }
-            console.log("hello");
+            // console.log("hello");
         };
 
         var tiltTank = function(posX) {
@@ -98,12 +106,12 @@ document.addEventListener("DOMContentLoaded", function(){
             }
             var tan = (y1 > y2) ? (y1 - y2) / (x1 - x2) : (y2 - y1) / (x2 - x1);
 
-            this.angel = Math.atan(tan);
+            this.angle = Math.atan(tan);
 
-            if (tan < 0)
-                this.angle += 180;
+            // if (tan < 0)
+                // this.angle += 180;
 
-            return this.angel;
+            return this.angle;
         }
         // <------Tank movement------>
 
@@ -116,8 +124,7 @@ document.addEventListener("DOMContentLoaded", function(){
                     x2 = originalPoints[i][0],
                     y1 = originalPoints[i-1][1],
                     y2 = originalPoints[i][1];
-                    console.log("Vova: " + x1 + " " + x2 + " " + y1 + " " + y2);
-                    console.log('til', tiltTank(x1, x2, y1, y2));
+                    // console.log("Vova: " + x1 + " " + x2 + " " + y1 + " " + y2);
                     var time = Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
                     for (var j = 0; j <= time; j++) {
                         var delta = j/time ;
@@ -172,11 +179,10 @@ document.addEventListener("DOMContentLoaded", function(){
                 }
                 break;
                 case 32: /*SPACE*/
-                console.log('dvcs');
                 dt2=0;
                 power=40;
                 angle=40;
-                bullets.push({ pos: [tankX, tankY],
+                bullets.push({ pos: [tankX+45, tankY-44],
                     imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
                     angle: angle,
                     bulletSpeed: power
@@ -214,8 +220,9 @@ document.addEventListener("DOMContentLoaded", function(){
 
         function drawBullet() {
             clear();
-            circle(tankX, tankY, rad);
+            drawTank(tankX, tankY);
             fillBackground();
+            
 
             var now = Date.now();
             var dt = (now - lastTime) / 1000.0;
@@ -242,9 +249,8 @@ document.addEventListener("DOMContentLoaded", function(){
         function updateEntities(dt) {
             for(var i=0; i<bullets.length; i++) {
                 bullet = bullets[i];
-                console.log('1');
-                bullet.pos[0] = tankX + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180);
-                bullet.pos[1]=tankY-(bullet.bulletSpeed*dt2*Math.sin(bullet.angle*Math.PI/180)-9.8*dt2*dt2/2);
+                bullet.pos[0] = tankX+45 + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180);
+                bullet.pos[1]=tankY-44-(bullet.bulletSpeed*dt2*Math.sin(bullet.angle*Math.PI/180)-9.8*dt2*dt2/2);
                 dt2+=2*dt;
 
                 var coords = {x:bullet.pos[0],
@@ -259,19 +265,35 @@ document.addEventListener("DOMContentLoaded", function(){
                     window.cancelAnimationFrame(requestAnimFrame);
                     i--;
 
-                    loriginalPoints = calculateDamageArea(originalPoints, (coords.x + coords.width), (coords.y + coords.height));
-                    console.log('originalPoints has been cutted out');
+                    originalPoints = calculateDamageArea(originalPoints, (coords.x + coords.width), (coords.y + coords.height));
+                    console.log('originalPoints has been cut out');
 
                     // temporary solution for redrawing updated array originalPoints
                     clear();
                     drawSky();
                     drawGround();
+                    drawTank(tankX, tankY);
 
                     pattern = ctx.createPattern(backCanvas, "no-repeat");
                     tankY = findLinePoints(tankX);
-                    drawTank(tankX, tankY);
                     fillBackground();
-                } else
+
+                } 
+                else if(bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT)
+                {
+                    bullets.splice(i, 1);
+                    window.cancelAnimationFrame(requestAnimFrame);
+                    i--;
+                    clear();
+                    drawSky();
+                    drawGround();
+                    drawTank(tankX, tankY);
+
+                    pattern = ctx.createPattern(backCanvas, "no-repeat");
+                    tankY = findLinePoints(tankX);
+                    fillBackground();
+                }
+                else
                     requestAnimFrame(drawBullet);
 
             }
@@ -347,7 +369,7 @@ document.addEventListener("DOMContentLoaded", function(){
             }
         }
 
-        // ======= Misha's part ======= 
+        // ======= Misha's part =======
 
         function checkCol(current, array) {
             let startPoint = array[0];
@@ -388,8 +410,10 @@ document.addEventListener("DOMContentLoaded", function(){
         //<------Yuri's part - generate damage on battlefield ------>
 
         const calculateDamageArea = (array, damageX, damageY) => {
-            Math.round(damageX);
-            Math.round(damageY);
+            damageX = Math.round(damageX);
+            damageY = Math.round(damageY);
+            console.log('Misha\'s coordinates rounded and are:', damageX, damageY);
+
             // TODO bookmark
             // TODO change all 'for' loops into 'map' where is possible
             let x1,
@@ -777,8 +801,6 @@ document.addEventListener("DOMContentLoaded", function(){
                 foundPoint = calculateLineEquation(x1, y1, x2, y2, segmentX, segmentY);
 
                 if ( ((y1 <= foundPoint) && (foundPoint <= y2)) || ((y2 <= foundPoint) && (foundPoint <= y1)) ) {
-                    // console.log(foundPoint, 'foundPoint');
-
                     point1 = [x1, y1, (i - 1)];
                     point2 = [x2, y2, i];
                     // console.log([point1, point2], 'foundPoint lays on a line-segment between these coordinates');
@@ -810,4 +832,4 @@ document.addEventListener("DOMContentLoaded", function(){
             fillBackground();
         })();
     }
-});
+// });
