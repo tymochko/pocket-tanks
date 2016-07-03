@@ -1,8 +1,8 @@
 'use strict';
 
-//      <------initialization------>
-document.addEventListener("DOMContentLoaded", function(){
-    if (document.getElementById('myCanvas') != null) {
+// document.addEventListener("DOMContentLoaded", function(){
+    function initGame(){
+        //      <------initialization------>
         var backCanvas = document.createElement('canvas');
         var WIDTH = backCanvas.width  = 800;
         var HEIGHT = backCanvas.height = 500;
@@ -816,4 +816,4 @@ document.addEventListener("DOMContentLoaded", function(){
             fillBackground();
         })();
     }
-});
+// });
