@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function(){
                     var x1 = originalPoints[i-1][0],
                     x2 = originalPoints[i][0],
                     y1 = originalPoints[i-1][1],
-                    y2 = originalPoints[i][1],
+                    y2 = originalPoints[i][1];
                     console.log("Vova: " + x1 + " " + x2 + " " + y1 + " " + y2);
                     console.log('til', tiltTank(x1, x2, y1, y2));
                     var time = Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
@@ -184,112 +184,115 @@ document.addEventListener("DOMContentLoaded", function(){
                 lastFire = Date.now();
                 shotStart();
                 break;
-    }
-}
-window.addEventListener('keydown',doKeyDown,true);
+            }
+        }
+        window.addEventListener('keydown',doKeyDown,true);
 
-//<------Maks's part-------->
+        //<------Maks's part-------->
 
 
-var requestAnimFrame = (function(){
-    return window.requestAnimationFrame   ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame    ||
-    window.oRequestAnimationFrame      ||
-    window.msRequestAnimationFrame     ||
-    function(callback){
-        window.setTimeout(callback, 1000 / 60);
-    };
-})();
+        var requestAnimFrame = (function(){
+            return window.requestAnimationFrame   ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            window.oRequestAnimationFrame      ||
+            window.msRequestAnimationFrame     ||
+            function(callback){
+                window.setTimeout(callback, 1000 / 60);
+            };
+        })();
 
-var power,angle;
-var lastTime;
-var dt2=0;
-var bullets = [];
-var bullet;
-var lastFire = Date.now();
-var gameTime = 0;
-var bulletImg=new Image();
-bulletImg.src='./public/images/bullet2.png';
+        var power,angle;
+        var lastTime;
+        var dt2=0;
+        var bullets = [];
+        var bullet;
+        var lastFire = Date.now();
+        var gameTime = 0;
+        var bulletImg=new Image();
+        bulletImg.src='./public/images/bullet2.png';
 
-function drawBullet() {
-    clear();
-    circle(tankX, tankY, rad);
-    fillBackground();
+        function drawBullet() {
+            clear();
+            circle(tankX, tankY, rad);
+            fillBackground();
 
-    var now = Date.now();
-    var dt = (now - lastTime) / 1000.0;
+            var now = Date.now();
+            var dt = (now - lastTime) / 1000.0;
 
-    update(dt);
-    render();
+            update(dt);
+            render();
 
-    lastTime = now;
+            lastTime = now;
 
-}
+        }
 
-function shotStart() {
-    //reset();
-    lastTime = Date.now();
-    drawBullet();
-}
+        function shotStart() {
+            //reset();
+            lastTime = Date.now();
+            drawBullet();
+        }
 
-function update(dt) {
-    gameTime += dt;
+        function update(dt) {
+            gameTime += dt;
 
-    updateEntities(dt);
-}
+            updateEntities(dt);
+        }
 
-function updateEntities(dt) {
-    for(var i=0; i<bullets.length; i++) {
-        bullet = bullets[i];
-        console.log('1');
-        bullet.pos[0] = tankX + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180);
-        bullet.pos[1]=tankY-(bullet.bulletSpeed*dt2*Math.sin(bullet.angle*Math.PI/180)-9.8*dt2*dt2/2);
-        dt2+=2*dt;
+        function updateEntities(dt) {
+            for(var i=0; i<bullets.length; i++) {
+                bullet = bullets[i];
+                console.log('1');
+                bullet.pos[0] = tankX + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180);
+                bullet.pos[1]=tankY-(bullet.bulletSpeed*dt2*Math.sin(bullet.angle*Math.PI/180)-9.8*dt2*dt2/2);
+                dt2+=2*dt;
 
-        var coords = {x:bullet.pos[0],
-            y:bullet.pos[1],
-            width:10,
-            height:1};
+                var coords = {x:bullet.pos[0],
+                    y:bullet.pos[1],
+                    width:10,
+                    height:1};
 
-        if(checkCol(coords,originalPoints)){
-            console.log( 'x:' +  (coords.x + coords.width), 'y:' + (coords.y + coords.height));
-            bullets.splice(i, 1);
-            tick(coords);                                   // <------ Explosion ------>
-            window.cancelAnimationFrame(requestAnimFrame);
-            i--;
+                if (checkCol(coords,originalPoints)){
+                    console.log( 'x:' +  (coords.x + coords.width), 'y:' + (coords.y + coords.height));
+                    bullets.splice(i, 1);
+                    tick(coords);                                   // <------ Explosion ------>
+                    window.cancelAnimationFrame(requestAnimFrame);
+                    i--;
 
-            let generateDamage = calculateDamageArea(originalPoints, (coords.x + coords.width), (coords.y + coords.height));
-            console.log(generateDamage, 'generateDamage - returns rebuilt array of originalPoints');
-            originalPoints = generateDamage;
-    //         clear();
-    // circle(tankX, tankY, rad);
-    // fillBackground();
-}
+                    let generateDamage = calculateDamageArea(originalPoints, (coords.x + coords.width), (coords.y + coords.height));
+                    console.log(generateDamage, 'generateDamage - returns rebuilt array of originalPoints');
+                    originalPoints = generateDamage;
+                    //         clear();
+                    // circle(tankX, tankY, rad);
+                    // fillBackground();
+                } else
+                    requestAnimFrame(drawBullet);
 
+            }
+        }
         //<------Maks's part-------->
 
     // <------ Explosion ------>
 
-var xSprite = 0;
-var sprite = new Image();
-sprite.src = './public/images/explosion_sheet.png';
-function tick(coords){
-    var xExplosion = coords.x - 40;   // x = x-central - R;
-    var yExplosion = coords.y - 40;   // y = y-central - R;
+        var xSprite = 0;
+        var sprite = new Image();
+        sprite.src = './public/images/explosion_sheet.png';
+        function tick(coords){
+            var xExplosion = coords.x - 40;   // x = x-central - R;
+            var yExplosion = coords.y - 40;   // y = y-central - R;
 
-    clear();
-    drawTank(tankX, tankY);
-    fillBackground(); // it's instead of ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(sprite, xSprite, 0, 134, 134, xExplosion, yExplosion, 134, 134);
-    if (xSprite < 1608) {
-        xSprite = xSprite + 134;
-        window.setTimeout(tick, 70, coords);
-        console.log('Coords are: ' + coords.x + ' and ' + coords.y);
-    } else {
-        xSprite = 0;
-    }
-}
+            clear();
+            drawTank(tankX, tankY);
+            fillBackground(); // it's instead of ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(sprite, xSprite, 0, 134, 134, xExplosion, yExplosion, 134, 134);
+            if (xSprite < 1608) {
+                xSprite = xSprite + 134;
+                window.setTimeout(tick, 70, coords);
+                console.log('Coords are: ' + coords.x + ' and ' + coords.y);
+            } else {
+                xSprite = 0;
+            }
+        }
 
     // ======= Misha's part ======= START
 
