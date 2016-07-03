@@ -79,7 +79,6 @@ var drawTank = function(xCoordinate, yCoordinate) {
     weaponImage.onload = function() { 
 		ctx.drawImage(weaponImage, xCoordinate + 45, yCoordinate - 44, weaponWidth, weaponHeight);
     }
-    console.log("hello");
 };
 
     // <------Tank movement------>
@@ -234,9 +233,19 @@ function updateEntities(dt) {
             window.cancelAnimationFrame(requestAnimFrame);
             i--;
 
-            let generateDamage = calculateDamageArea(originalPoints, (coords.x + coords.width), (coords.y + coords.height));
-            console.log(generateDamage, 'generateDamage - returns rebuilt array of originalPoints');
-            originalPoints = generateDamage;
+            originalPoints = calculateDamageArea(originalPoints, (coords.x + coords.width), (coords.y + coords.height));
+            console.log('originalPoints has been cutted out');
+
+            // temporary solution for redrawing updated array originalPoints
+            clear();
+            drawSky();
+            drawGround();
+
+            pattern = ctx.createPattern(backCanvas, "no-repeat");
+            tankY = findLinePoints(tankX);
+            drawTank(tankX, tankY);
+            fillBackground();
+            
     //         clear();
     // circle(tankX, tankY, rad);
     // fillBackground();
@@ -341,20 +350,6 @@ function reset() {
 })();
 
     //      <------Yuri's part - generate damage on battlefield ------>
-
-    // let damageX = 98;
-// let damageY = 335;
-//     let damageX = 311;
-//     let damageY = 251;
-// let damageX = 267;
-// let damageY = 303;
-// let damageX = 240;
-// let damageY = 320;
-// let damageX = 450;
-// let damageY = 215;
-// let damageX = 500;
-// let damageY = 325;
-
 
     const calculateDamageArea = (array, damageX, damageY) => {
         Math.round(damageX);
@@ -777,8 +772,6 @@ function reset() {
         pattern = ctx.createPattern(backCanvas, "no-repeat");
         tankX = Math.floor((Math.random() * 330) + 30);
         tankY = findLinePoints(tankX);
-        rad = 10;
-        //circle(tankX, tankY, rad);
         drawTank(tankX, tankY);
         fillBackground();
     })();
