@@ -183,7 +183,30 @@ router.get('/profile/getImage/:scope/:imageName?', (req, res) => {
     }
 });
 
-function getPublicImage(req, res) {
+
+router.get('/profile/publicImages', (req, res) => {
+    fs.readdir(__dirname + '/../../images/' + '/', function (e, files) {
+        if (!e && files.length > 0) {
+            var images = [];
+            for (var file in files) {
+                images.push({image: publicImgURL + files[file] + getSalt(), uploadedImg: false});
+            }
+
+            var userId = req.session.user;
+            const userDir = __dirname + '/../../usersInfo/' + userId + '/';
+
+            fs.readdir(userDir, function (e, files) {
+                console.log(e, files.length > 0);
+                if (!e && files.length > 0)
+                    images.push({image: userImgURL + files[0] + getSalt(), uploadedImg: true});
+                res.send(200, images);
+            });
+        }
+        else
+            res.send(404);
+    });
+});
+const getPublicImage =  function (req, res) {
     res.sendFile(path.resolve(__dirname + '/../../images/' + req.params.imageName), function (err) {
         if (err) {
             console.log(err);
@@ -192,7 +215,7 @@ function getPublicImage(req, res) {
     });
 }
 
-function getUserImage(req, res) {
+function getUserImage (req, res) {
     var userId = req.session.user;
     var userImage;
     var userDir;
@@ -218,7 +241,7 @@ function getUserImage(req, res) {
     });
 }
 
-function getUserUploadedImage(req, res) {
+function getUserUploadedImage (req, res) {
     var userId = req.session.user;
     var imageName = req.params.imageName;
     var imageDir = __dirname + '/../../usersInfo/' + userId + '/' + imageName;
@@ -230,31 +253,9 @@ function getUserUploadedImage(req, res) {
         }
     });
 }
-
-router.get('/profile/publicImages', (req, res) => {
-    fs.readdir(__dirname + '/../../images/' + '/', function (e, files) {
-        if (!e && files.length > 0) {
-            var images = [];
-            for (var file in files) {
-                images.push({image: publicImgURL + files[file] + getSalt(), uploadedImg: false});
-            }
-
-            var userId = req.session.user;
-            const userDir = __dirname + '/../../usersInfo/' + userId + '/';
-
-            fs.readdir(userDir, function (e, files) {
-                console.log(e, files.length > 0);
-                if (!e && files.length > 0)
-                    images.push({image: userImgURL + files[0] + getSalt(), uploadedImg: true});
-                res.send(200, images);
-            });
-        }
-        else
-            res.send(404);
-    });
-});
-
 function getSalt (){
     return "?salt=" + new Date().getTime();
 }
+
+
 module.exports = router;

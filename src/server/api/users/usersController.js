@@ -5,6 +5,7 @@ var fs = require('fs');
 var strUserImg =  {"image" : "cat.jpg", uploadedImg:false};
 const Schema = mongoose.Schema;
 
+
 var userSchema = new Schema({
     userName: {type: String, required: true, unique: true},
     userEmail: {type: String, required: true, unique: true},
@@ -276,6 +277,9 @@ const rmDir = function (dirPath) {
                 fs.unlinkSync(filePath);
         }
 }
+
+
+
 
 module.exports.rmDir = rmDir;
 module.exports.showAll = showAll;
