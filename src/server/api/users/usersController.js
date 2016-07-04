@@ -11,6 +11,7 @@ const publicScopeName       = 'public';
 const userUploadsScopeName  = 'userUploads';
 
 
+
 var userSchema = new Schema({
     userName: {type: String, required: true, unique: true},
     userEmail: {type: String, required: true, unique: true},
@@ -338,6 +339,7 @@ const getUserUploadedImage = function (req, res) {
 const getSalt = function  (){
     return "?salt=" + new Date().getTime();
 }
+
 
 module.exports.getUserImage = getUserImage;
 module.exports.getSalt = getSalt;
