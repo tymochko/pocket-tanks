@@ -9,11 +9,12 @@
   </div>
     <div id="thumbWrapper">
         <ul id="thumbList">
-            
-            <li ng-repeat="image in images" >
 
-                <img class="img_bottom" ng-click="setCurrentImage(image)" ng-src="{{image.image}}" alt="{{image.description}}">
-                
+            <li ng-repeat="image in images" >
+                <img class="img_bottom" ng-click="setCurrentImage(image)" ng-src="{{image.image}}">
+            </li>
+            <li ng-repeat="image in customImages" >
+                <img class="img_bottom" ng-click="setCurrentImage(image)" ng-src="{{image.image}}" >
             </li>
         </ul>
     </div>

@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
 var nodemailer = require('nodemailer');
 var fs = require('fs');
-var strUserImg =  {"image" : "./public/images/phoca.jpg" , "description": "Oh... So beautiful phoca!" }
-
+var strUserImg =  {"image" : "cat.jpg", uploadedImg:false};
 const Schema = mongoose.Schema;
+
 
 var userSchema = new Schema({
     userName: {type: String, required: true, unique: true},
@@ -251,10 +251,10 @@ const handleEmail = function (name,email) {
 
     var mailOptions = {
     from: 'pockettanksmail@gmail.com',
-    to: `${userEmail}`, 
-    subject: 'Pocket Tanks', 
-    text: text 
-    
+    to: `${userEmail}`,
+    subject: 'Pocket Tanks',
+    text: text
+
 };
 transporter.sendMail(mailOptions, function(error, info){
     if(error){
@@ -262,7 +262,7 @@ transporter.sendMail(mailOptions, function(error, info){
         ;
     }else{
         console.log('Message sent: ' + userEmail);
-    
+
     };
 });
 
@@ -278,6 +278,9 @@ const rmDir = function (dirPath) {
         }
 }
 
+
+
+
 module.exports.rmDir = rmDir;
 module.exports.showAll = showAll;
 module.exports.showProfile = showProfile;
@@ -287,4 +290,3 @@ module.exports.logoutUser = logoutUser;
 module.exports.updateUser = updateUser;
 module.exports.deleteUser = deleteUser;
 module.exports.handleEmail = handleEmail;
-
