@@ -272,10 +272,10 @@
                     clear();
                     drawSky();
                     drawGround();
-                    drawTank(tankX, tankY);
 
                     pattern = ctx.createPattern(backCanvas, "no-repeat");
                     tankY = findLinePoints(tankX);
+                    drawTank(tankX, tankY);
                     fillBackground();
 
                 } 
@@ -287,10 +287,10 @@
                     clear();
                     drawSky();
                     drawGround();
-                    drawTank(tankX, tankY);
 
                     pattern = ctx.createPattern(backCanvas, "no-repeat");
                     tankY = findLinePoints(tankX);
+                    drawTank(tankX, tankY);
                     fillBackground();
                 }
                 else
@@ -412,7 +412,6 @@
         const calculateDamageArea = (array, damageX, damageY) => {
             damageX = Math.round(damageX);
             damageY = Math.round(damageY);
-            console.log('Misha\'s coordinates rounded and are:', damageX, damageY);
 
             // TODO bookmark
             // TODO change all 'for' loops into 'map' where is possible
@@ -431,7 +430,6 @@
                 damageRadius = 40;
 
             let segmentPoints = findDamageLimits(array, damageX, damageY, damageRadius);
-            // console.log(segmentPoints, 'segmentPoints');
 
             let pointsOfIntersect = [];
             for (let i = 0; i < segmentPoints.length; i++) {
@@ -439,7 +437,6 @@
                     pointsOfIntersect.push(segmentPoints[i]);
                 }
             }
-            // console.log(pointsOfIntersect, 'pointsOfIntersect');
 
             for (let i = 1; i < pointsOfIntersect.length; i++) {
                 if (i % 2) {
@@ -447,44 +444,32 @@
                     y1 = pointsOfIntersect[i - 1][1];
                     x2 = pointsOfIntersect[i][0];
                     y2 = pointsOfIntersect[i][1];
-                    // console.log(x1, y1, x2, y2, 'x1, y1, x2, y2');
-                    // console.log(i, 'i');
 
                     pointRealOnCircle.push([x1, y1]);
 
                     distance = calculateDistance(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2);
                     if (distance <= distanceBetweenDamageSegments) {
-                        // console.log('minimal distance is set');
                         pointRealOnCircle.push([x2, y2]);
                         continue;
                     }
 
                     while (distance > distanceBetweenDamageSegments) {
-                        // console.log(distance, 'distance inside');
-                        // console.log('pointRealOnCircle current point', pointRealOnCircle.length-1, pointRealOnCircle[pointRealOnCircle.length-1]);
 
                         pointsOnCircles = findCirclesIntersection(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], distanceBetweenDamageSegments, damageX, damageY, damageRadius);
-                        // console.log(pointsOnCircles, 'pointsOnCircles');
 
                         pointCheck1 = checkGroundPoint(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2, pointsOnCircles[0][0], pointsOnCircles[0][1]);
-                        // console.log(pointCheck1, 'pointCheck1');
 
                         pointCheck2 = checkGroundPoint(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2, pointsOnCircles[1][0], pointsOnCircles[1][1]);
-                        // console.log(pointCheck2, 'pointCheck2');
 
                         if (pointCheck1) {
 
                             pointRealOnCircle.push(pointCheck1);
-                            // console.log('pointRealOnCircle current point >>>>>>> pointCheck1', pointRealOnCircle.length-1, pointRealOnCircle[pointRealOnCircle.length-1]);
                             distance = calculateDistance(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2);
-                            // console.log(distance, 'distance >>>>>>> pointCheck1');
 
                         } else if (pointCheck2) {
 
                             pointRealOnCircle.push(pointCheck2);
-                            // console.log('pointRealOnCircle current point >>>>>>> pointCheck2', pointRealOnCircle.length-1, pointRealOnCircle[pointRealOnCircle.length-1]);
                             distance = calculateDistance(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2);
-                            // console.log(distance, 'distance >>>>>>> pointCheck2');
 
                         } else {
 
@@ -494,33 +479,18 @@
                         }
 
                         if (distance <= distanceBetweenDamageSegments) {
-                            // console.log('minimal distance is set');
                             pointRealOnCircle.push([x2, y2]);
                         }
                     }
                 }
-                // console.log('Loop is still working');
             }
 
-            // console.log(pointRealOnCircle, 'pointRealOnCircle[i]');
             // replace damage points in segmentPoints array with extended damage points
             segmentPoints.splice(1, segmentPoints.length-2);
             for (let i = 0; i < pointRealOnCircle.length; i++) {
                 segmentPoints.splice((1 + i), 0, pointRealOnCircle[i]);
             }
 
-            // console.log(segmentPoints[0],
-            //     segmentPoints[1],
-            //     segmentPoints[2],
-            //     segmentPoints[3],
-            //     segmentPoints[4],
-            //     segmentPoints[5],
-            //     segmentPoints[6],
-            //     segmentPoints[7],
-            //     segmentPoints[8],
-            //     segmentPoints[9],
-            //     segmentPoints[10],
-            //     segmentPoints[11], 'segmentPoints');
             // insert damage points into originalPoints array with extended damage points
             elementToChangeFrom = segmentPoints[0][2];
             array.splice(elementToChangeFrom, 4);
@@ -532,37 +502,6 @@
                 array.splice(elementToChangeFrom, 0, item);
                 elementToChangeFrom++;
             });
-
-            // console.log(array[0],
-            //     array[1],
-            //     array[2],
-            //     array[3],
-            //     array[4],
-            //     array[5],
-            //     array[6],
-            //     array[7],
-            //     array[8],
-            //     array[9],
-            //     array[10],
-            //     array[11],
-            //     array[12],
-            //     array[13],
-            //     array[14],
-            //     array[15],
-            //     array[16],
-            //     array[17],
-            //     array[18],
-            //     array[19],
-            //     array[20],
-            //     array[21],
-            //     array[22],
-            //     array[23],
-            //     array[24],
-            //     array[25],
-            //     array[26],
-            //     array[27],
-            //     array[28],
-            //     array[29], 'originalPoints modified');
 
             return array;
         };
@@ -584,17 +523,13 @@
                 distanceFromDamageCenter1,
                 distanceFromDamageCenter2;
 
-            pointsOfDamageCenterSegment = findPointOnSegment(array, damageX, damageY);
+            pointsOfDamageCenterSegment = findDamageCenterPointOnSegment(array, damageX, damageY);
             if (pointsOfDamageCenterSegment == null) {
                 console.log('Point is out of the ground');
             }
             // TODO implement logic if pointOfDamageCenter is equal to point in originalPoints
-            // console.log(pointsOfDamageCenterSegment[0], 'pointsOfDamageCenterSegment[0]');
-            // console.log(pointsOfDamageCenterSegment[1], 'pointsOfDamageCenterSegment[1]');
             distanceFromDamageCenter1 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[0][0], pointsOfDamageCenterSegment[0][1]);
-            // console.log(distanceFromDamageCenter1, 'distanceFromDamageCenter1');
             distanceFromDamageCenter2 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[1][0], pointsOfDamageCenterSegment[1][1]);
-            // console.log(distanceFromDamageCenter2, 'distanceFromDamageCenter2');
 
             if (distanceFromDamageCenter1 >= damageRadius || damageRadius <= distanceFromDamageCenter2) {
                 segmentPairPoints.push(pointsOfDamageCenterSegment[0]);
@@ -628,13 +563,11 @@
                     segmentPairPoints.splice(i, 1);
                 }
             }
-            // console.log(segmentPairPoints, 'segmentPairPoints');
 
             // populating array pointsRebuild with points of area which is going to be modified
             pointsRebuild.push(segmentPairPoints[0]);
             for (let i = 1; i < segmentPairPoints.length; i++) {
                 pointsOnDamageLine = findIntersectionCoordinates(segmentPairPoints[i - 1][0], segmentPairPoints[i - 1][1], segmentPairPoints[i][0], segmentPairPoints[i][1], damageX, damageY, damageRadius);
-                // console.log(pointsOnDamageLine, 'pointsOnDamageLine');
 
                 segmentWithDamage1 = findPointOnSegment(array, pointsOnDamageLine[0][0], pointsOnDamageLine[0][1]);
 
@@ -643,13 +576,11 @@
                 if (segmentWithDamage1 != undefined) {
                     pointsOnDamageLine[0].push('inDamage');
                     pointsRebuild.push(pointsOnDamageLine[0]);
-                    // console.log(pointsOnDamageLine[0], 'pointsOnDamageLine[0]');
                 }
 
                 if (segmentWithDamage2 != undefined) {
                     pointsOnDamageLine[1].push('inDamage');
                     pointsRebuild.push(pointsOnDamageLine[1]);
-                    // console.log(pointsOnDamageLine[1], 'pointsOnDamageLine[1]');
                 }
             }
 
@@ -659,7 +590,6 @@
             // also setting index number from originalPoints array
             pointsRebuild[pointsRebuild.length - 1].push(numberOfLast);
 
-            // console.log(pointsRebuild, 'pointsRebuild');
             return pointsRebuild;
         };
 
@@ -694,41 +624,29 @@
             // d = a + b - distance between centers of two circles
             // p0 - point between a and b
             // h - distance between p0 and points of intersections: p3 and p4
-            // console.log(x1, y1, r1, x2, y2, r2, 'x1, y1, r1, x2, y2, r2');
             let b = ( (Math.pow(r2, 2) - Math.pow(r1, 2) + Math.pow(r2, 2) ) / (2 * r2) );
-            // console.log(b, 'b');
 
             let a = r2 - b;
-            // console.log(a, 'a');
 
             let h = ( Math.sqrt( Math.pow(r1, 2) - Math.pow(a, 2) ) );
-            // console.log(h, 'h');
 
             let p0x = x1 + a / r2 * (x2 - x1);
-            // console.log(p0x, 'p0x');
             let p0y = y1 + a / r2 * (y2 - y1);
-            // console.log(p0y, 'p0y');
 
             let p3x = Math.round(p0x + ( ( (y2 - y1) / r2 ) * h ) );
-            // console.log(p3x, 'p3x');
             let p3y = Math.round(p0y - ( ( (x2 - x1) / r2 ) * h ) );
-            // console.log(p3y, 'p3y');
 
             let p4x = Math.round(p0x - ( ( (y2 - y1) / r2 ) * h ) );
-            // console.log(p4x, 'p4x');
             let p4y = Math.round(p0y + ( ( (x2 - x1) / r2 ) * h ) );
-            // console.log(p4y, 'p4y');
 
             let point1 = [p3x, p3y];
             let point2 = [p4x, p4y];
 
-            // console.log(point1, point2, 'point1, point2');
             return [point1, point2];
         };
 
         const checkGroundPoint = (point1x, point1y, point2x, point2y, pointIntersectionX, pointIntersectionY) => {
             // point1 always first on canvas
-            // console.log(point1x, point1y, point2x, point2y, pointIntersectionX, pointIntersectionY, 'point1x, point1y, point2x, point2y, pointIntersectionX, pointIntersectionY ======= checkGroundPoint parameters');
 
             // general cases
             let conditions1x = (point1x < pointIntersectionX && pointIntersectionX < point2x);
@@ -803,7 +721,6 @@
                 if ( ((y1 <= foundPoint) && (foundPoint <= y2)) || ((y2 <= foundPoint) && (foundPoint <= y1)) ) {
                     point1 = [x1, y1, (i - 1)];
                     point2 = [x2, y2, i];
-                    // console.log([point1, point2], 'foundPoint lays on a line-segment between these coordinates');
                     return [point1, point2];
                 }
             }
@@ -813,9 +730,46 @@
         const calculateLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
             /*defines point which coordinates lays on the line of segment*/
             let y = Math.round( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
-            // console.log(y, 'y outside');
-            if ( (y) <= segmentY && segmentY <= (y) ) {
-                // console.log(y, 'y inside');
+
+            if ( (y - 5) <= segmentY && segmentY <= (y + 5) ) {
+                return y;
+            }
+        };
+
+        // dirty hack while Misha's point is underground
+        const findDamageCenterPointOnSegment = (array, segmentX, segmentY) => {
+            /*defines point which coordinates lays on the line-segment of canvas*/
+            let x1;
+            let y1;
+            let x2;
+            let y2;
+            let foundPoint;
+            let point1;
+            let point2;
+
+            for (let i = 1; i < array.length; i++) {
+                x1 = array[i - 1][0];
+                y1 = array[i - 1][1];
+                x2 = array[i][0];
+                y2 = array[i][1];
+
+                foundPoint = calculateDamageCenterLineEquation(x1, y1, x2, y2, segmentX, segmentY);
+
+                if ( ((y1 <= foundPoint) && (foundPoint <= y2)) || ((y2 <= foundPoint) && (foundPoint <= y1)) ) {
+                    point1 = [x1, y1, (i - 1)];
+                    point2 = [x2, y2, i];
+                    return [point1, point2];
+                }
+            }
+            return null;
+        };
+
+        const calculateDamageCenterLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
+            /*defines point which coordinates lays on the line of segment*/
+            let y = Math.round( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
+
+            // temporary solution before Misha fixes point to be on the ground instead of underground
+            if ( (y - 5) <= segmentY && segmentY <= (y + 5) ) {
                 return y;
             }
         };
