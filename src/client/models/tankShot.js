@@ -95,34 +95,6 @@
 
         }
         const drawTank = drawTankFn();
-        // function drawTank2(xCoordinate, yCoordinate) {
-        //     var tankImage = new Image();
-        //     var weaponImage = new Image();
-        //     var tankHeight = 30;
-        //     var tankWidth = 70;
-        //     var weaponHeight = 20;
-        //     var weaponWidth = 35;
-        //     var angle = tiltTank(xCoordinate);
-        //     tankImage.src = './public/images/tankVehicle.png';
-        //     weaponImage.src = './public/images/tankWeapon.png';
-        //     tankImage.onload = function() {
-        //         ctx.save();
-        //         console.log(xCoordinate, yCoordinate - 30, tankWidth, tankHeight);
-        //         ctx.translate(xCoordinate, yCoordinate - 30);
-        //         ctx.translate(tankWidth / 2, tankHeight / 2);
-        //         ctx.rotate(angle);
-        //         ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
-        //         ctx.restore();
-        //     }
-        //     weaponImage.onload = function() {
-        //         ctx.save();
-        //         ctx.translate(xCoordinate + 45, yCoordinate - 44);
-        //         ctx.translate(weaponWidth / 2, weaponHeight / 2);
-        //         ctx.rotate(angle);
-        //         ctx.drawImage(weaponImage, -(weaponWidth / 2), -(weaponHeight / 2), weaponWidth, weaponHeight);
-        //         ctx.restore();
-        //     }
-        // };
 
         var tiltTank = function(posX) {
             for(var i = originalPoints.length - 1; i > 0; i--) {
@@ -229,8 +201,6 @@
 
         function makeShot() {
             dt2=0;
-            power=40;
-            angle=40;
             bullets.push({ pos: [tankX+45, tankY-44],
                 imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
                 angle: angle,
@@ -335,7 +305,6 @@
         }
 
         function shotStart() {
-            //reset();
             lastTime = Date.now();
             drawBullet();
         }
