@@ -507,7 +507,6 @@
                         pointOnCircle = rotateFixed(damageX, damageY, damageRadius, theta);
 
                         distance = calculateDistance(pointOnCircle[0], pointOnCircle[1], x2, y2);
-                        // debugger;
                     }
                     while (distance > distanceBetweenDamageSegments);
 
