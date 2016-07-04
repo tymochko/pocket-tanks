@@ -419,8 +419,10 @@
                 y1,
                 x2,
                 y2,
+                theta,
+                delta = (Math.PI / 12),
                 distance,
-                pointsOnCircles,
+                pointOnCircle,
                 pointCheck1,
                 pointCheck2,
                 pointRealOnCircle = [],
@@ -437,6 +439,7 @@
                     pointsOfIntersect.push(segmentPoints[i]);
                 }
             }
+            console.log(pointsOfIntersect, 'pointsOfIntersect');
 
             for (let i = 1; i < pointsOfIntersect.length; i++) {
                 if (i % 2) {
@@ -448,40 +451,28 @@
                     pointRealOnCircle.push([x1, y1]);
 
                     distance = calculateDistance(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2);
+
                     if (distance <= distanceBetweenDamageSegments) {
                         pointRealOnCircle.push([x2, y2]);
                         continue;
                     }
 
-                    while (distance > distanceBetweenDamageSegments) {
+                    theta = findInitialAngle(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], damageX, damageY);
 
-                        pointsOnCircles = findCirclesIntersection(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], distanceBetweenDamageSegments, damageX, damageY, damageRadius);
-
-                        pointCheck1 = checkGroundPoint(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2, pointsOnCircles[0][0], pointsOnCircles[0][1]);
-
-                        pointCheck2 = checkGroundPoint(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2, pointsOnCircles[1][0], pointsOnCircles[1][1]);
-
-                        if (pointCheck1) {
-
-                            pointRealOnCircle.push(pointCheck1);
-                            distance = calculateDistance(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2);
-
-                        } else if (pointCheck2) {
-
-                            pointRealOnCircle.push(pointCheck2);
-                            distance = calculateDistance(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2);
-
-                        } else {
-
-                            console.log('Oops! You may want to add this unique condition to checkGroundPoint function');
-                            pointRealOnCircle.push([x2, y2]);
-                            break;
+                    do {
+                        if (pointOnCircle) {
+                            pointRealOnCircle.push(pointOnCircle);
                         }
 
-                        if (distance <= distanceBetweenDamageSegments) {
-                            pointRealOnCircle.push([x2, y2]);
-                        }
+                        theta -= delta;
+
+                        pointOnCircle = rotateFixed(damageX, damageY, damageRadius, theta);
+
+                        distance = calculateDistance(pointOnCircle[0], pointOnCircle[1], x2, y2);
                     }
+                    while (distance > distanceBetweenDamageSegments);
+
+                    pointRealOnCircle.push([x2, y2]);
                 }
             }
 
@@ -528,6 +519,8 @@
                 console.log('Point is out of the ground');
             }
             // TODO implement logic if pointOfDamageCenter is equal to point in originalPoints
+
+
             distanceFromDamageCenter1 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[0][0], pointsOfDamageCenterSegment[0][1]);
             distanceFromDamageCenter2 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[1][0], pointsOfDamageCenterSegment[1][1]);
 
@@ -619,85 +612,18 @@
             return [point1, point2];
         };
 
-        const findCirclesIntersection = (x1, y1, r1, x2, y2, r2) => {
-            // x1, y1, r1, x2, y2, r2 - are centre coordinates and radii of two circles - one of damage and one of distance between damage segments
-            // d = a + b - distance between centers of two circles
-            // p0 - point between a and b
-            // h - distance between p0 and points of intersections: p3 and p4
-            let b = ( (Math.pow(r2, 2) - Math.pow(r1, 2) + Math.pow(r2, 2) ) / (2 * r2) );
-
-            let a = r2 - b;
-
-            let h = ( Math.sqrt( Math.pow(r1, 2) - Math.pow(a, 2) ) );
-
-            let p0x = x1 + a / r2 * (x2 - x1);
-            let p0y = y1 + a / r2 * (y2 - y1);
-
-            let p3x = Math.round(p0x + ( ( (y2 - y1) / r2 ) * h ) );
-            let p3y = Math.round(p0y - ( ( (x2 - x1) / r2 ) * h ) );
-
-            let p4x = Math.round(p0x - ( ( (y2 - y1) / r2 ) * h ) );
-            let p4y = Math.round(p0y + ( ( (x2 - x1) / r2 ) * h ) );
-
-            let point1 = [p3x, p3y];
-            let point2 = [p4x, p4y];
-
-            return [point1, point2];
+        const findInitialAngle = (x, y, cx, cy) => {
+            return Math.atan2((y - cy), (x - cx));
         };
 
-        const checkGroundPoint = (point1x, point1y, point2x, point2y, pointIntersectionX, pointIntersectionY) => {
-            // point1 always first on canvas
+        const rotateFixed = (cx, cy, r, theta) => {
+            let px2,
+                py2;
 
-            // general cases
-            let conditions1x = (point1x < pointIntersectionX && pointIntersectionX < point2x);
-            let conditions1y = (point1y < pointIntersectionY && pointIntersectionY > point2y);
-            let conditions2x = (point1x > pointIntersectionX && pointIntersectionX < point2x);
-            let conditions2y = (point1y < pointIntersectionY && pointIntersectionY < point2y);
-            let conditions3x = (point1x > pointIntersectionX && pointIntersectionX > point2x);
-            let conditions3y = (point1y > pointIntersectionY && pointIntersectionY < point2y);
-            let conditions4x = (point1x < pointIntersectionX && pointIntersectionX > point2x);
-            let conditions4y = (point1y > pointIntersectionY && pointIntersectionY > point2y);
+            px2 = cx + (r * Math.cos(theta));
+            py2 = cy + (r * Math.sin(theta));
 
-            // cases when p1 == x and y == p2 or vise versa
-            let conditions5x = (point1x < pointIntersectionX && pointIntersectionX == point2x);
-            let conditions5y = (point1y == pointIntersectionY && pointIntersectionY > point2y);
-            let conditions6x = (point1x == pointIntersectionX && pointIntersectionX > point2x);
-            let conditions6y = (point1y > pointIntersectionY && pointIntersectionY == point2y);
-            let conditions7x = (point1x > pointIntersectionX && pointIntersectionX == point2x);
-            let conditions7y = (point1y == pointIntersectionY && pointIntersectionY < point2y);
-            let conditions8x = (point1x == pointIntersectionX && pointIntersectionX < point2x);
-            let conditions8y = (point1y < pointIntersectionY && pointIntersectionY == point2y);
-
-            // TODO tons of cases
-            // cases when p1 == y
-            let conditions9x = (point1x < pointIntersectionX && pointIntersectionX < point2x);
-            let conditions9y = (point1y == pointIntersectionY && pointIntersectionY > point2y);
-            // let conditions6x = (point1x == pointIntersectionX && pointIntersectionX > point2x);
-            // let conditions6y = (point1y > pointIntersectionY && pointIntersectionY == point2y);
-            // let conditions7x = (point1x > pointIntersectionX && pointIntersectionX == point2x);
-            // let conditions7y = (point1y == pointIntersectionY && pointIntersectionY < point2y);
-            // let conditions8x = (point1x == pointIntersectionX && pointIntersectionX < point2x);
-            // let conditions8y = (point1y < pointIntersectionY && pointIntersectionY == point2y);
-
-            let conditions10x = (point1x > pointIntersectionX && pointIntersectionX > point2x);
-            let conditions10y = (point1y > pointIntersectionY && pointIntersectionY > point2y);
-
-            let conditions1 = (conditions1x && conditions1y);
-            let conditions2 = (conditions2x && conditions2y);
-            let conditions3 = (conditions3x && conditions3y);
-            let conditions4 = (conditions4x && conditions4y);
-            let conditions5 = (conditions5x && conditions5y);
-            let conditions6 = (conditions6x && conditions6y);
-            let conditions7 = (conditions7x && conditions7y);
-            let conditions8 = (conditions8x && conditions8y);
-            let conditions9 = (conditions9x && conditions9y);
-            let conditions10 = (conditions10x && conditions10y);
-
-            if (conditions1 || conditions2 || conditions3 || conditions4 || conditions5 || conditions6 || conditions7 || conditions8 || conditions9 || conditions10) {
-                return [pointIntersectionX, pointIntersectionY];
-            }
-
-            return false;
+            return [px2, py2];
         };
 
         const findPointOnSegment = (array, segmentX, segmentY) => {
@@ -769,7 +695,7 @@
             let y = Math.round( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
 
             // temporary solution before Misha fixes point to be on the ground instead of underground
-            if ( (y - 5) <= segmentY && segmentY <= (y + 5) ) {
+            if ( (y - 10) <= segmentY && segmentY <= (y + 10) ) {
                 return y;
             }
         };
