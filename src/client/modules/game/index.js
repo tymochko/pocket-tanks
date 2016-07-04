@@ -8,6 +8,11 @@ module.exports = angular.module('tanks.game', [
 RouteConfig.$inject = ['$routeProvider'];
 function RouteConfig($routeProvider) {
     $routeProvider.when('/game', {
-        templateUrl: 'game/game.html'
+        templateUrl: 'game/game.html',
+        controller: gameCtrl
     });
 };
+
+function gameCtrl(){
+    initGame();
+}

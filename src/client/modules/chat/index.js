@@ -16,23 +16,11 @@ function RouteConfig($routeProvider) {
 function ChatController($scope,socket, $sce) {
 	$scope.nam=[];
 	$scope.mes=[];
-	$scope.messageStatus='Ide';
 	$scope.inputMessage='';
 	$scope.inputName='';
-	status=$scope.messageStatus;
-	StatusDefault = status;
 
-	setStatus= function(s){
-		$scope.messageStatus = s;
-		if(s!== StatusDefault)
-		{
-			var delay = setTimeout(function(){
-				setStatus(StatusDefault);
-			},3000);
-		}
-	};
 
-	if(socket !== undefined)
+	if(socket)
 	{
 		socket.on('output', function(data){
 			var date=new Date();
@@ -47,16 +35,7 @@ function ChatController($scope,socket, $sce) {
 			}
 		});
 
-		socket.on('status',function(data){
-			setStatus((typeof data === 'object')? data.message: data);
-
-			if(data.clear === true )
-			{
-                     $scope.inputMessage = '';
-                }
-            });
-
-			$scope.myFunc=function(event){
+			$scope.sentEventLis=function(event){
 				var inputMessage = $scope.inputMessage,
 				name = $scope.inputName;
 				var date=new Date();
@@ -67,7 +46,6 @@ function ChatController($scope,socket, $sce) {
 					time: date.toUTCString()
 				});
 
-				$scope.inputMessage='';
 
 				event.preventDefault();
 		};

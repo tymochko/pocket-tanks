@@ -1,8 +1,8 @@
 'use strict';
 
-//      <------initialization------>
-document.addEventListener("DOMContentLoaded", function(){
-    if (document.getElementById('myCanvas') != null) {
+// document.addEventListener("DOMContentLoaded", function(){
+    function initGame(){
+        //      <------initialization------>
         var backCanvas = document.createElement('canvas');
         var WIDTH = backCanvas.width  = 800;
         var HEIGHT = backCanvas.height = 500;
@@ -64,31 +64,69 @@ document.addEventListener("DOMContentLoaded", function(){
             backCtx.fillRect(0,0,800,500);
         };
 
-
         // <------Tank drawing------>
+		const tankImage = new Image();
+    	const weaponImage = new Image();
 
-        var drawTank = function(xCoordinate, yCoordinate) {
-
-            var tankHeight = 30;
+        const drawTankFn = () => {
+        	
+        	var tankHeight = 30;
             var tankWidth = 70;
             var weaponHeight = 20;
             var weaponWidth = 35;
-            var angle = tiltTank(xCoordinate);
 
             tankImage.src = './public/images/tankVehicle.png';
             weaponImage.src = './public/images/tankWeapon.png';
-            tankImage.onload = function() {
-                ctx.save();
-                ctx.rotate(angle);
-                ctx.drawImage(tankImage, xCoordinate, yCoordinate - 30, tankWidth, tankHeight);
-                ctx.restore();
-                console.log("hello maaaaaaan");
-            }
-            weaponImage.onload = function() {
-                ctx.drawImage(weaponImage, xCoordinate + 45, yCoordinate - 44, weaponWidth, weaponHeight);
-            }
 
-        };
+            return (xCoordinate, yCoordinate) => {
+            	console.log(ctx);
+            	ctx.save();
+            	var angle = tiltTank(xCoordinate);
+             	ctx.translate(xCoordinate, yCoordinate - 30);
+                ctx.translate(tankWidth / 2, tankHeight / 2);
+                ctx.rotate(angle);
+                ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
+                console.log(tankImage);
+                ctx.restore();
+                ctx.save();
+                ctx.translate(xCoordinate + 45, yCoordinate - 44);
+                ctx.translate(weaponWidth / 2, weaponHeight / 2);
+                ctx.rotate(angle);
+                ctx.drawImage(weaponImage, -(weaponWidth / 2), -(weaponHeight / 2), weaponWidth, weaponHeight);
+                ctx.restore();
+
+            };
+
+        }
+        const drawTank = drawTankFn();
+        // function drawTank2(xCoordinate, yCoordinate) {
+        //     var tankImage = new Image();
+        //     var weaponImage = new Image();
+        //     var tankHeight = 30;
+        //     var tankWidth = 70;
+        //     var weaponHeight = 20;
+        //     var weaponWidth = 35;
+        //     var angle = tiltTank(xCoordinate);
+        //     tankImage.src = './public/images/tankVehicle.png';
+        //     weaponImage.src = './public/images/tankWeapon.png';
+        //     tankImage.onload = function() {
+        //         ctx.save();
+        //         console.log(xCoordinate, yCoordinate - 30, tankWidth, tankHeight);
+        //         ctx.translate(xCoordinate, yCoordinate - 30);
+        //         ctx.translate(tankWidth / 2, tankHeight / 2);
+        //         ctx.rotate(angle);
+        //         ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
+        //         ctx.restore();
+        //     }
+        //     weaponImage.onload = function() {
+        //         ctx.save();
+        //         ctx.translate(xCoordinate + 45, yCoordinate - 44);
+        //         ctx.translate(weaponWidth / 2, weaponHeight / 2);
+        //         ctx.rotate(angle);
+        //         ctx.drawImage(weaponImage, -(weaponWidth / 2), -(weaponHeight / 2), weaponWidth, weaponHeight);
+        //         ctx.restore();
+        //     }
+        // };
 
         var tiltTank = function(posX) {
             for(var i = originalPoints.length - 1; i > 0; i--) {
@@ -103,8 +141,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
             this.angle = Math.atan(tan);
 
-            if (tan < 0)
-                this.angle += 180;
+            // if (tan < 0)
+                // this.angle += 180;
 
             return this.angle;
         }
@@ -119,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function(){
                         x2 = originalPoints[i][0],
                         y1 = originalPoints[i-1][1],
                         y2 = originalPoints[i][1];
-                    console.log('til', tiltTank(x1, x2, y1, y2));
+                    // console.log("Vova: " + x1 + " " + x2 + " " + y1 + " " + y2);
                     var time = Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
                     for (var j = 0; j <= time; j++) {
                         var delta = j/time ;
@@ -168,25 +206,23 @@ document.addEventListener("DOMContentLoaded", function(){
                 }
                 tankY = findLinePoints(tankX);
                 clear();
-                drawTank(tankX, tankY);
                 fillBackground();
-            }, 2000);
+                drawTank(tankX, tankY);
+            }, 1500);
         };
+
 
         function doKeyDown(evt){
             var now = new Date().getTime();
-            if(now - lastTimeTankMoved > 2000) {
+            if(now - lastTimeTankMoved > 1500) {
                 switch (evt.keyCode) {
                     case 37:  /* Left arrow was pressed */
                         tankMove('left');
                         break;
-
                     case 39:  /* Right arrow was pressed */
                         tankMove('right');
                         break;
-
                     case 32: /*SPACE*/
-                        console.log('SHOT');
                         dt2=0;
                         power=40;
                         angle=40;
@@ -199,7 +235,7 @@ document.addEventListener("DOMContentLoaded", function(){
                         shotStart();
                         break;
                 }
-                lastTimeTankMoved = now;
+            lastTimeTankMoved = now;
             }
         }
         window.addEventListener('keydown',doKeyDown,true);
@@ -227,20 +263,18 @@ document.addEventListener("DOMContentLoaded", function(){
         var gameTime = 0;
         var bulletImg=new Image();
         bulletImg.src='./public/images/bullet2.png';
-
+            
         function drawBullet() {
             clear();
-            drawTank(tankX, tankY);
+
             fillBackground();
+            drawTank(tankX,tankY);
 
             var now = Date.now();
             var dt = (now - lastTime) / 1000.0;
-
             update(dt);
             render();
-
             lastTime = now;
-
         }
 
         function shotStart() {
@@ -251,22 +285,20 @@ document.addEventListener("DOMContentLoaded", function(){
 
         function update(dt) {
             gameTime += dt;
-
             updateEntities(dt);
         }
 
         function updateEntities(dt) {
             for(var i=0; i<bullets.length; i++) {
                 bullet = bullets[i];
-                console.log('1');
-                bullet.pos[0] = tankX + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180);
-                bullet.pos[1]=tankY-(bullet.bulletSpeed*dt2*Math.sin(bullet.angle*Math.PI/180)-9.8*dt2*dt2/2);
+                bullet.pos[0] = tankX+45 + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180);
+                bullet.pos[1]=tankY-44-(bullet.bulletSpeed*dt2*Math.sin(bullet.angle*Math.PI/180)-9.8*dt2*dt2/2);
                 dt2+=2*dt;
 
                 var coords = {x:bullet.pos[0],
                     y:bullet.pos[1],
                     width:10,
-                    height:1};
+                    height:10};
 
                 if (checkCol(coords,originalPoints)){
                     console.log( 'x:' +  (coords.x + coords.width), 'y:' + (coords.y + coords.height));
@@ -275,8 +307,8 @@ document.addEventListener("DOMContentLoaded", function(){
                     window.cancelAnimationFrame(requestAnimFrame);
                     i--;
 
-                    loriginalPoints = calculateDamageArea(originalPoints, (coords.x + coords.width), (coords.y + coords.height));
-                    console.log('originalPoints has been cutted out');
+                    originalPoints = calculateDamageArea(originalPoints, (coords.x + coords.width), (coords.y + coords.height));
+                    console.log('originalPoints has been cut out');
 
                     // temporary solution for redrawing updated array originalPoints
                     clear();
@@ -285,11 +317,29 @@ document.addEventListener("DOMContentLoaded", function(){
 
                     pattern = ctx.createPattern(backCanvas, "no-repeat");
                     tankY = findLinePoints(tankX);
-                    drawTank(tankX, tankY);
+                    
                     fillBackground();
-                } else
-                    requestAnimFrame(drawBullet);
+                    drawTank(tankX, tankY);
+                } 
+                else if(bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT)
+                {
+                    bullets.splice(i, 1);
+                    window.cancelAnimationFrame(requestAnimFrame);
+                    i--;
+                    clear();
+                    drawSky();
+                    drawGround();
 
+                    pattern = ctx.createPattern(backCanvas, "no-repeat");
+                    tankY = findLinePoints(tankX);
+                    
+                    fillBackground();
+                    drawTank(tankX, tankY);
+                }
+                else
+                {
+                    requestAnimFrame(drawBullet);
+                }
             }
         }
 
@@ -351,19 +401,20 @@ document.addEventListener("DOMContentLoaded", function(){
             var yExplosion = coords.y - 40;   // y = y-central - R;
 
             clear();
-            drawTank(tankX, tankY);
+            
             fillBackground(); // it's instead of ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawTank(tankX, tankY);
             ctx.drawImage(sprite, xSprite, 0, 134, 134, xExplosion, yExplosion, 134, 134);
             if (xSprite < 1608) {
                 xSprite = xSprite + 134;
                 window.setTimeout(tick, 70, coords);
-                console.log('Coords are: ' + coords.x + ' and ' + coords.y);
+                // console.log('Coords are: ' + coords.x + ' and ' + coords.y);
             } else {
                 xSprite = 0;
             }
         }
 
-        // ======= Misha's part ======= 
+        // ======= Misha's part =======
 
         function checkCol(current, array) {
             let startPoint = array[0];
@@ -395,7 +446,7 @@ document.addEventListener("DOMContentLoaded", function(){
             let a = (point2.y - point1.y) / (point2.x - point1.x);
             let b = point1.y - a * point1.x;
 
-            if(Math.abs(objPoint.y - (a*objPoint.x + b)) < 1.5) {
+            if(Math.abs(objPoint.y - (a*objPoint.x + b)) < 2) {
                 return true;
             }
             return false;
@@ -404,8 +455,9 @@ document.addEventListener("DOMContentLoaded", function(){
         //<------Yuri's part - generate damage on battlefield ------>
 
         const calculateDamageArea = (array, damageX, damageY) => {
-            Math.round(damageX);
-            Math.round(damageY);
+            damageX = Math.round(damageX);
+            damageY = Math.round(damageY);
+
             // TODO bookmark
             // TODO change all 'for' loops into 'map' where is possible
             let x1,
@@ -423,7 +475,6 @@ document.addEventListener("DOMContentLoaded", function(){
                 damageRadius = 40;
 
             let segmentPoints = findDamageLimits(array, damageX, damageY, damageRadius);
-            // console.log(segmentPoints, 'segmentPoints');
 
             let pointsOfIntersect = [];
             for (let i = 0; i < segmentPoints.length; i++) {
@@ -431,7 +482,6 @@ document.addEventListener("DOMContentLoaded", function(){
                     pointsOfIntersect.push(segmentPoints[i]);
                 }
             }
-            // console.log(pointsOfIntersect, 'pointsOfIntersect');
 
             for (let i = 1; i < pointsOfIntersect.length; i++) {
                 if (i % 2) {
@@ -439,44 +489,32 @@ document.addEventListener("DOMContentLoaded", function(){
                     y1 = pointsOfIntersect[i - 1][1];
                     x2 = pointsOfIntersect[i][0];
                     y2 = pointsOfIntersect[i][1];
-                    // console.log(x1, y1, x2, y2, 'x1, y1, x2, y2');
-                    // console.log(i, 'i');
 
                     pointRealOnCircle.push([x1, y1]);
 
                     distance = calculateDistance(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2);
                     if (distance <= distanceBetweenDamageSegments) {
-                        // console.log('minimal distance is set');
                         pointRealOnCircle.push([x2, y2]);
                         continue;
                     }
 
                     while (distance > distanceBetweenDamageSegments) {
-                        // console.log(distance, 'distance inside');
-                        // console.log('pointRealOnCircle current point', pointRealOnCircle.length-1, pointRealOnCircle[pointRealOnCircle.length-1]);
 
                         pointsOnCircles = findCirclesIntersection(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], distanceBetweenDamageSegments, damageX, damageY, damageRadius);
-                        // console.log(pointsOnCircles, 'pointsOnCircles');
 
                         pointCheck1 = checkGroundPoint(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2, pointsOnCircles[0][0], pointsOnCircles[0][1]);
-                        // console.log(pointCheck1, 'pointCheck1');
 
                         pointCheck2 = checkGroundPoint(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2, pointsOnCircles[1][0], pointsOnCircles[1][1]);
-                        // console.log(pointCheck2, 'pointCheck2');
 
                         if (pointCheck1) {
 
                             pointRealOnCircle.push(pointCheck1);
-                            // console.log('pointRealOnCircle current point >>>>>>> pointCheck1', pointRealOnCircle.length-1, pointRealOnCircle[pointRealOnCircle.length-1]);
                             distance = calculateDistance(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2);
-                            // console.log(distance, 'distance >>>>>>> pointCheck1');
 
                         } else if (pointCheck2) {
 
                             pointRealOnCircle.push(pointCheck2);
-                            // console.log('pointRealOnCircle current point >>>>>>> pointCheck2', pointRealOnCircle.length-1, pointRealOnCircle[pointRealOnCircle.length-1]);
                             distance = calculateDistance(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2);
-                            // console.log(distance, 'distance >>>>>>> pointCheck2');
 
                         } else {
 
@@ -486,33 +524,18 @@ document.addEventListener("DOMContentLoaded", function(){
                         }
 
                         if (distance <= distanceBetweenDamageSegments) {
-                            // console.log('minimal distance is set');
                             pointRealOnCircle.push([x2, y2]);
                         }
                     }
                 }
-                // console.log('Loop is still working');
             }
 
-            // console.log(pointRealOnCircle, 'pointRealOnCircle[i]');
             // replace damage points in segmentPoints array with extended damage points
             segmentPoints.splice(1, segmentPoints.length-2);
             for (let i = 0; i < pointRealOnCircle.length; i++) {
                 segmentPoints.splice((1 + i), 0, pointRealOnCircle[i]);
             }
 
-            // console.log(segmentPoints[0],
-            //     segmentPoints[1],
-            //     segmentPoints[2],
-            //     segmentPoints[3],
-            //     segmentPoints[4],
-            //     segmentPoints[5],
-            //     segmentPoints[6],
-            //     segmentPoints[7],
-            //     segmentPoints[8],
-            //     segmentPoints[9],
-            //     segmentPoints[10],
-            //     segmentPoints[11], 'segmentPoints');
             // insert damage points into originalPoints array with extended damage points
             elementToChangeFrom = segmentPoints[0][2];
             array.splice(elementToChangeFrom, 4);
@@ -524,37 +547,6 @@ document.addEventListener("DOMContentLoaded", function(){
                 array.splice(elementToChangeFrom, 0, item);
                 elementToChangeFrom++;
             });
-
-            // console.log(array[0],
-            //     array[1],
-            //     array[2],
-            //     array[3],
-            //     array[4],
-            //     array[5],
-            //     array[6],
-            //     array[7],
-            //     array[8],
-            //     array[9],
-            //     array[10],
-            //     array[11],
-            //     array[12],
-            //     array[13],
-            //     array[14],
-            //     array[15],
-            //     array[16],
-            //     array[17],
-            //     array[18],
-            //     array[19],
-            //     array[20],
-            //     array[21],
-            //     array[22],
-            //     array[23],
-            //     array[24],
-            //     array[25],
-            //     array[26],
-            //     array[27],
-            //     array[28],
-            //     array[29], 'originalPoints modified');
 
             return array;
         };
@@ -576,17 +568,13 @@ document.addEventListener("DOMContentLoaded", function(){
                 distanceFromDamageCenter1,
                 distanceFromDamageCenter2;
 
-            pointsOfDamageCenterSegment = findPointOnSegment(array, damageX, damageY);
+            pointsOfDamageCenterSegment = findDamageCenterPointOnSegment(array, damageX, damageY);
             if (pointsOfDamageCenterSegment == null) {
                 console.log('Point is out of the ground');
             }
             // TODO implement logic if pointOfDamageCenter is equal to point in originalPoints
-            // console.log(pointsOfDamageCenterSegment[0], 'pointsOfDamageCenterSegment[0]');
-            // console.log(pointsOfDamageCenterSegment[1], 'pointsOfDamageCenterSegment[1]');
             distanceFromDamageCenter1 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[0][0], pointsOfDamageCenterSegment[0][1]);
-            // console.log(distanceFromDamageCenter1, 'distanceFromDamageCenter1');
             distanceFromDamageCenter2 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[1][0], pointsOfDamageCenterSegment[1][1]);
-            // console.log(distanceFromDamageCenter2, 'distanceFromDamageCenter2');
 
             if (distanceFromDamageCenter1 >= damageRadius || damageRadius <= distanceFromDamageCenter2) {
                 segmentPairPoints.push(pointsOfDamageCenterSegment[0]);
@@ -620,13 +608,11 @@ document.addEventListener("DOMContentLoaded", function(){
                     segmentPairPoints.splice(i, 1);
                 }
             }
-            // console.log(segmentPairPoints, 'segmentPairPoints');
 
             // populating array pointsRebuild with points of area which is going to be modified
             pointsRebuild.push(segmentPairPoints[0]);
             for (let i = 1; i < segmentPairPoints.length; i++) {
                 pointsOnDamageLine = findIntersectionCoordinates(segmentPairPoints[i - 1][0], segmentPairPoints[i - 1][1], segmentPairPoints[i][0], segmentPairPoints[i][1], damageX, damageY, damageRadius);
-                // console.log(pointsOnDamageLine, 'pointsOnDamageLine');
 
                 segmentWithDamage1 = findPointOnSegment(array, pointsOnDamageLine[0][0], pointsOnDamageLine[0][1]);
 
@@ -635,13 +621,11 @@ document.addEventListener("DOMContentLoaded", function(){
                 if (segmentWithDamage1 != undefined) {
                     pointsOnDamageLine[0].push('inDamage');
                     pointsRebuild.push(pointsOnDamageLine[0]);
-                    // console.log(pointsOnDamageLine[0], 'pointsOnDamageLine[0]');
                 }
 
                 if (segmentWithDamage2 != undefined) {
                     pointsOnDamageLine[1].push('inDamage');
                     pointsRebuild.push(pointsOnDamageLine[1]);
-                    // console.log(pointsOnDamageLine[1], 'pointsOnDamageLine[1]');
                 }
             }
 
@@ -651,7 +635,6 @@ document.addEventListener("DOMContentLoaded", function(){
             // also setting index number from originalPoints array
             pointsRebuild[pointsRebuild.length - 1].push(numberOfLast);
 
-            // console.log(pointsRebuild, 'pointsRebuild');
             return pointsRebuild;
         };
 
@@ -686,41 +669,29 @@ document.addEventListener("DOMContentLoaded", function(){
             // d = a + b - distance between centers of two circles
             // p0 - point between a and b
             // h - distance between p0 and points of intersections: p3 and p4
-            // console.log(x1, y1, r1, x2, y2, r2, 'x1, y1, r1, x2, y2, r2');
             let b = ( (Math.pow(r2, 2) - Math.pow(r1, 2) + Math.pow(r2, 2) ) / (2 * r2) );
-            // console.log(b, 'b');
 
             let a = r2 - b;
-            // console.log(a, 'a');
 
             let h = ( Math.sqrt( Math.pow(r1, 2) - Math.pow(a, 2) ) );
-            // console.log(h, 'h');
 
             let p0x = x1 + a / r2 * (x2 - x1);
-            // console.log(p0x, 'p0x');
             let p0y = y1 + a / r2 * (y2 - y1);
-            // console.log(p0y, 'p0y');
 
             let p3x = Math.round(p0x + ( ( (y2 - y1) / r2 ) * h ) );
-            // console.log(p3x, 'p3x');
             let p3y = Math.round(p0y - ( ( (x2 - x1) / r2 ) * h ) );
-            // console.log(p3y, 'p3y');
 
             let p4x = Math.round(p0x - ( ( (y2 - y1) / r2 ) * h ) );
-            // console.log(p4x, 'p4x');
             let p4y = Math.round(p0y + ( ( (x2 - x1) / r2 ) * h ) );
-            // console.log(p4y, 'p4y');
 
             let point1 = [p3x, p3y];
             let point2 = [p4x, p4y];
 
-            // console.log(point1, point2, 'point1, point2');
             return [point1, point2];
         };
 
         const checkGroundPoint = (point1x, point1y, point2x, point2y, pointIntersectionX, pointIntersectionY) => {
             // point1 always first on canvas
-            // console.log(point1x, point1y, point2x, point2y, pointIntersectionX, pointIntersectionY, 'point1x, point1y, point2x, point2y, pointIntersectionX, pointIntersectionY ======= checkGroundPoint parameters');
 
             // general cases
             let conditions1x = (point1x < pointIntersectionX && pointIntersectionX < point2x);
@@ -793,11 +764,8 @@ document.addEventListener("DOMContentLoaded", function(){
                 foundPoint = calculateLineEquation(x1, y1, x2, y2, segmentX, segmentY);
 
                 if ( ((y1 <= foundPoint) && (foundPoint <= y2)) || ((y2 <= foundPoint) && (foundPoint <= y1)) ) {
-                    // console.log(foundPoint, 'foundPoint');
-
                     point1 = [x1, y1, (i - 1)];
                     point2 = [x2, y2, i];
-                    // console.log([point1, point2], 'foundPoint lays on a line-segment between these coordinates');
                     return [point1, point2];
                 }
             }
@@ -807,9 +775,46 @@ document.addEventListener("DOMContentLoaded", function(){
         const calculateLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
             /*defines point which coordinates lays on the line of segment*/
             let y = Math.round( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
-            // console.log(y, 'y outside');
-            if ( (y) <= segmentY && segmentY <= (y) ) {
-                // console.log(y, 'y inside');
+
+            if ( (y - 5) <= segmentY && segmentY <= (y + 5) ) {
+                return y;
+            }
+        };
+
+        // dirty hack while Misha's point is underground
+        const findDamageCenterPointOnSegment = (array, segmentX, segmentY) => {
+            /*defines point which coordinates lays on the line-segment of canvas*/
+            let x1;
+            let y1;
+            let x2;
+            let y2;
+            let foundPoint;
+            let point1;
+            let point2;
+
+            for (let i = 1; i < array.length; i++) {
+                x1 = array[i - 1][0];
+                y1 = array[i - 1][1];
+                x2 = array[i][0];
+                y2 = array[i][1];
+
+                foundPoint = calculateDamageCenterLineEquation(x1, y1, x2, y2, segmentX, segmentY);
+
+                if ( ((y1 <= foundPoint) && (foundPoint <= y2)) || ((y2 <= foundPoint) && (foundPoint <= y1)) ) {
+                    point1 = [x1, y1, (i - 1)];
+                    point2 = [x2, y2, i];
+                    return [point1, point2];
+                }
+            }
+            return null;
+        };
+
+        const calculateDamageCenterLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
+            /*defines point which coordinates lays on the line of segment*/
+            let y = Math.round( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
+
+            // temporary solution before Misha fixes point to be on the ground instead of underground
+            if ( (y - 5) <= segmentY && segmentY <= (y + 5) ) {
                 return y;
             }
         };
@@ -823,8 +828,11 @@ document.addEventListener("DOMContentLoaded", function(){
             tankX = Math.floor((Math.random() * 330) + 30);
             tankY = findLinePoints(tankX);
             lastTimeTankMoved = 0;
-            drawTank(tankX, tankY);
             fillBackground();
+            tankImage.onload = function() {
+            	drawTank(tankX, tankY);
+            }
         })();
+        
     }
-});
+// });
