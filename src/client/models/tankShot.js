@@ -463,8 +463,6 @@
                 delta = (Math.PI / 12),
                 distance,
                 pointOnCircle,
-                pointCheck1,
-                pointCheck2,
                 pointRealOnCircle = [],
                 elementToChangeFrom,
             // setting distanceBetweenDamageSegments static as a distance between points of damaged ground
@@ -479,7 +477,6 @@
                     pointsOfIntersect.push(segmentPoints[i]);
                 }
             }
-            console.log(pointsOfIntersect, 'pointsOfIntersect');
 
             for (let i = 1; i < pointsOfIntersect.length; i++) {
                 if (i % 2) {
