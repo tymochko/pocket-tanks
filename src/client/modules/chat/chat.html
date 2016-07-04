@@ -5,9 +5,8 @@
 
 			<div id="chat" class="chat-messages" ng-bind-html=sce.trustAsHtml(myHTML)></div>
 
-			<textarea ng-keyup="$event.keyCode == 13 && myFunc($event)" ng-model="inputMessage" placeholder="Type your message"></textarea>
+			<textarea ng-keyup="$event.keyCode == 13 && sentEventLis($event)" ng-model="inputMessage" placeholder="Type your message"></textarea>
 
-			<div class="chat-status">Status: <span >{{messageStatus}}</span></div>
 
 		</div>
 	</div>
