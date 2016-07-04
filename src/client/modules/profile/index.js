@@ -32,7 +32,7 @@ module.exports = angular.module('tanks.profile', [
         };
         $scope.upload = (file) => {
             Upload.upload({
-                url: 'http://localhost:3000/api/users/profile/upload',
+                url: 'api/users/profile/upload',
                 data: {file: file}
             }).then((resp) => {
                 uploadedImg = resp.data;

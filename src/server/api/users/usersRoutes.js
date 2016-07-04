@@ -106,8 +106,12 @@ router.post('/add', (req, res) => {
 
 // edit user profile
 router.put('/profile/updateUser', (req, res) => {
-    req.body.userImg.image = req.body.userImg.image.split("/").pop().split('?').shift();
-
+    //TODO add comment
+    let isUserImgPresent = req.body.userImg && req.body.userImg.image;
+    if(isUserImgPresent) {
+        req.body.userImg.image = req.body.userImg.image.split("/").pop().split('?').shift();
+    }
+    
     usersCollection.updateUser({_id: req.session.user}, req.body, (err, foundUser) => {
         if (err) {
             console.log('err  ', err);
@@ -166,7 +170,6 @@ router.post('/profile/upload', function (request, res) {
 router.get('/profile/getImage/:scope/:imageName?', function  (req, res) {
 
     var userId = req.session.user;
-    console.log(userId + '!!!!!!!!!!!')
     try {
         var scope = req.params.scope;
         switch (scope) {

@@ -186,7 +186,7 @@ const updateUser = function (id, updatedData, callback) {
                 }, {
                     userName: updatedData.userName,
                     userAge: updatedData.userAge,
-                    userImg: updatedData.userImg
+                    userImg: (!updatedData.userImg || !updatedData.userImg.image) ? foundUser.userImg : updatedData.userImg
                     },
 
                     function(err, foundUser) {
@@ -285,7 +285,6 @@ const rmDir = function (dirPath) {
 const getUserImage = function (req, res) {
 
     var userId = req.session.user;
-    console.log(userId);
     var userImage;
     var userDir;
 
@@ -298,7 +297,6 @@ const getUserImage = function (req, res) {
         function cb(err,foundUser) {
 
             userImage = foundUser.userImg;
-            console.log('userImage  ', userImage);
             if(userImage.uploadedImg) {
                 userDir = __dirname + '/../../usersInfo/' + userId + '/' + userImage.image;
             } else {
