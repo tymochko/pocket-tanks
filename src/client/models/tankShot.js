@@ -62,38 +62,69 @@
             backCtx.fillRect(0,0,800,500);
         };
 
-
         // <------Tank drawing------>
+		const tankImage = new Image();
+    	const weaponImage = new Image();
 
-        var drawTank = function(xCoordinate, yCoordinate) {
-            var tankImage = new Image();
-            var weaponImage = new Image();
-            var tankHeight = 30;
+        const drawTankFn = () => {
+        	
+        	var tankHeight = 30;
             var tankWidth = 70;
             var weaponHeight = 20;
             var weaponWidth = 35;
-            var angle = tiltTank(xCoordinate);
             tankImage.src = './public/images/tankVehicle.png';
             weaponImage.src = './public/images/tankWeapon.png';
-            tankImage.onload = function() {
-                ctx.save();
-                console.log(xCoordinate, yCoordinate - 30, tankWidth, tankHeight);
-                ctx.translate(xCoordinate, yCoordinate - 30);
+
+            return (xCoordinate, yCoordinate) => {
+            	console.log(ctx);
+            	ctx.save();
+            	var angle = tiltTank(xCoordinate);
+             	ctx.translate(xCoordinate, yCoordinate - 30);
                 ctx.translate(tankWidth / 2, tankHeight / 2);
                 ctx.rotate(angle);
                 ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
+                console.log(tankImage);
                 ctx.restore();
-            }
-            weaponImage.onload = function() {
                 ctx.save();
                 ctx.translate(xCoordinate + 45, yCoordinate - 44);
                 ctx.translate(weaponWidth / 2, weaponHeight / 2);
                 ctx.rotate(angle);
                 ctx.drawImage(weaponImage, -(weaponWidth / 2), -(weaponHeight / 2), weaponWidth, weaponHeight);
                 ctx.restore();
-            }
-            // console.log("hello");
-        };
+            };
+
+        }
+        const drawTank = drawTankFn();
+        // function drawTank2(xCoordinate, yCoordinate) {
+        //     var tankImage = new Image();
+        //     var weaponImage = new Image();
+        //     var tankHeight = 30;
+        //     var tankWidth = 70;
+        //     var weaponHeight = 20;
+        //     var weaponWidth = 35;
+        //     var angle = tiltTank(xCoordinate);
+        //     tankImage.src = './public/images/tankVehicle.png';
+        //     weaponImage.src = './public/images/tankWeapon.png';
+        //     tankImage.onload = function() {
+        //         ctx.save();
+        //         console.log(xCoordinate, yCoordinate - 30, tankWidth, tankHeight);
+        //         ctx.translate(xCoordinate, yCoordinate - 30);
+        //         ctx.translate(tankWidth / 2, tankHeight / 2);
+        //         ctx.rotate(angle);
+        //         ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
+        //         ctx.restore();
+        //     }
+        //     weaponImage.onload = function() {
+        //         ctx.save();
+        //         ctx.translate(xCoordinate + 45, yCoordinate - 44);
+        //         ctx.translate(weaponWidth / 2, weaponHeight / 2);
+        //         ctx.rotate(angle);
+        //         ctx.drawImage(weaponImage, -(weaponWidth / 2), -(weaponHeight / 2), weaponWidth, weaponHeight);
+        //         ctx.restore();
+        //     }
+        // };
+
+   
 
         var tiltTank = function(posX) {
             for(var i = originalPoints.length - 1; i > 0; i--) {
@@ -163,9 +194,9 @@
                     tankX -= dx;
                     tankY = findLinePoints(tankX);
                     clear();
-                    drawTank(tankX, tankY);
-                    //circle(tankX, tankY, rad);
+                    
                     fillBackground();
+                    drawTank(tankX, tankY);
                 }
                 break;
                 case 39:  /* Right arrow was pressed */
@@ -173,16 +204,16 @@
                     tankX += dx;
                     tankY = findLinePoints(tankX);
                     clear();
-                    drawTank(tankX, tankY);
-                    //circle(tankX, tankY, rad);
+                    
                     fillBackground();
+                    drawTank(tankX, tankY);
                 }
                 break;
                 case 32: /*SPACE*/
                 dt2=0;
                 power=40;
                 angle=40;
-                bullets.push({ pos: [tankX+45, tankY-44],
+                bullets.push({ pos: [tankX, tankY],
                     imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
                     angle: angle,
                     bulletSpeed: power
@@ -217,21 +248,18 @@
         var gameTime = 0;
         var bulletImg=new Image();
         bulletImg.src='./public/images/bullet2.png';
-
+            
         function drawBullet() {
             clear();
-            drawTank(tankX, tankY);
+
             fillBackground();
-            
+            drawTank(tankX,tankY);
 
             var now = Date.now();
             var dt = (now - lastTime) / 1000.0;
-
             update(dt);
             render();
-
             lastTime = now;
-
         }
 
         function shotStart() {
@@ -242,7 +270,6 @@
 
         function update(dt) {
             gameTime += dt;
-
             updateEntities(dt);
         }
 
@@ -256,7 +283,7 @@
                 var coords = {x:bullet.pos[0],
                     y:bullet.pos[1],
                     width:10,
-                    height:1};
+                    height:10};
 
                 if (checkCol(coords,originalPoints)){
                     console.log( 'x:' +  (coords.x + coords.width), 'y:' + (coords.y + coords.height));
@@ -275,9 +302,9 @@
 
                     pattern = ctx.createPattern(backCanvas, "no-repeat");
                     tankY = findLinePoints(tankX);
-                    drawTank(tankX, tankY);
+                    
                     fillBackground();
-
+                    drawTank(tankX, tankY);
                 } 
                 else if(bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT)
                 {
@@ -290,12 +317,14 @@
 
                     pattern = ctx.createPattern(backCanvas, "no-repeat");
                     tankY = findLinePoints(tankX);
-                    drawTank(tankX, tankY);
+                    
                     fillBackground();
+                    drawTank(tankX, tankY);
                 }
                 else
+                {
                     requestAnimFrame(drawBullet);
-
+                }
             }
         }
 
@@ -357,8 +386,9 @@
             var yExplosion = coords.y - 40;   // y = y-central - R;
 
             clear();
-            drawTank(tankX, tankY);
+            
             fillBackground(); // it's instead of ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawTank(tankX, tankY);
             ctx.drawImage(sprite, xSprite, 0, 134, 134, xExplosion, yExplosion, 134, 134);
             if (xSprite < 1608) {
                 xSprite = xSprite + 134;
@@ -401,7 +431,7 @@
             let a = (point2.y - point1.y) / (point2.x - point1.x);
             let b = point1.y - a * point1.x;
 
-            if(Math.abs(objPoint.y - (a*objPoint.x + b)) < 1.5) {
+            if(Math.abs(objPoint.y - (a*objPoint.x + b)) < 2) {
                 return true;
             }
             return false;
@@ -782,8 +812,12 @@
             pattern = ctx.createPattern(backCanvas, "no-repeat");
             tankX = Math.floor((Math.random() * 330) + 30);
             tankY = findLinePoints(tankX);
-            drawTank(tankX, tankY);
+            
             fillBackground();
+            tankImage.onload = function() {
+            	drawTank(tankX, tankY);
+            }
         })();
+        
     }
 // });
