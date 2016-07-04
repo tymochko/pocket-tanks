@@ -10,9 +10,8 @@
 
         var canvas = document.getElementById('myCanvas');
         var ctx = canvas.getContext('2d');
-        var dx = 5,
-        dy = 5;
-        var tankX, tankY, rad;
+        var lastTimeTankMoved;
+        var tankX, tankY;
 
         var pattern;
 
@@ -62,38 +61,67 @@
             backCtx.fillRect(0,0,800,500);
         };
 
-
         // <------Tank drawing------>
+		const tankImage = new Image();
+    	const weaponImage = new Image();
 
-        var drawTank = function(xCoordinate, yCoordinate) {
-            var tankImage = new Image();
-            var weaponImage = new Image();
-            var tankHeight = 30;
+        const drawTankFn = () => {
+        	
+        	var tankHeight = 30;
             var tankWidth = 70;
             var weaponHeight = 20;
             var weaponWidth = 35;
-            var angle = tiltTank(xCoordinate);
+
             tankImage.src = './public/images/tankVehicle.png';
             weaponImage.src = './public/images/tankWeapon.png';
-            tankImage.onload = function() {
-                ctx.save();
-                console.log(xCoordinate, yCoordinate - 30, tankWidth, tankHeight);
-                ctx.translate(xCoordinate, yCoordinate - 30);
+
+            return (xCoordinate, yCoordinate) => {
+            	ctx.save();
+            	var angle = tiltTank(xCoordinate);
+             	ctx.translate(xCoordinate, yCoordinate - 30);
                 ctx.translate(tankWidth / 2, tankHeight / 2);
                 ctx.rotate(angle);
                 ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
                 ctx.restore();
-            }
-            weaponImage.onload = function() {
                 ctx.save();
                 ctx.translate(xCoordinate + 45, yCoordinate - 44);
                 ctx.translate(weaponWidth / 2, weaponHeight / 2);
                 ctx.rotate(angle);
                 ctx.drawImage(weaponImage, -(weaponWidth / 2), -(weaponHeight / 2), weaponWidth, weaponHeight);
                 ctx.restore();
-            }
-            // console.log("hello");
-        };
+
+            };
+
+        }
+        const drawTank = drawTankFn();
+        // function drawTank2(xCoordinate, yCoordinate) {
+        //     var tankImage = new Image();
+        //     var weaponImage = new Image();
+        //     var tankHeight = 30;
+        //     var tankWidth = 70;
+        //     var weaponHeight = 20;
+        //     var weaponWidth = 35;
+        //     var angle = tiltTank(xCoordinate);
+        //     tankImage.src = './public/images/tankVehicle.png';
+        //     weaponImage.src = './public/images/tankWeapon.png';
+        //     tankImage.onload = function() {
+        //         ctx.save();
+        //         console.log(xCoordinate, yCoordinate - 30, tankWidth, tankHeight);
+        //         ctx.translate(xCoordinate, yCoordinate - 30);
+        //         ctx.translate(tankWidth / 2, tankHeight / 2);
+        //         ctx.rotate(angle);
+        //         ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
+        //         ctx.restore();
+        //     }
+        //     weaponImage.onload = function() {
+        //         ctx.save();
+        //         ctx.translate(xCoordinate + 45, yCoordinate - 44);
+        //         ctx.translate(weaponWidth / 2, weaponHeight / 2);
+        //         ctx.rotate(angle);
+        //         ctx.drawImage(weaponImage, -(weaponWidth / 2), -(weaponHeight / 2), weaponWidth, weaponHeight);
+        //         ctx.restore();
+        //     }
+        // };
 
         var tiltTank = function(posX) {
             for(var i = originalPoints.length - 1; i > 0; i--) {
@@ -121,9 +149,9 @@
             for(var i = originalPoints.length - 1; i > 0; i--) {
                 if(originalPoints[i][0] >= posX && originalPoints[i-1][0] <= posX) {
                     var x1 = originalPoints[i-1][0],
-                    x2 = originalPoints[i][0],
-                    y1 = originalPoints[i-1][1],
-                    y2 = originalPoints[i][1];
+                        x2 = originalPoints[i][0],
+                        y1 = originalPoints[i-1][1],
+                        y2 = originalPoints[i][1];
                     // console.log("Vova: " + x1 + " " + x2 + " " + y1 + " " + y2);
                     var time = Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
                     for (var j = 0; j <= time; j++) {
@@ -149,47 +177,60 @@
             ctx.fill();
         };
 
-        var circle = function(x,y,r) {
-            ctx.beginPath();
-            ctx.arc(x, y, r, 0, Math.PI*2, true);
-            ctx.fillStyle = "purple";
-            ctx.fill();
+        var animate = function(draw, duration) {
+            var start = performance.now();
+            requestAnimFrame(function animate(time) {
+                var timePassed = time - start;
+                if (timePassed > duration) timePassed = duration;
+                draw(timePassed);
+                if(tankX >= WIDTH - 11 || tankX <= 11){
+                    window.cancelAnimationFrame(requestAnimFrame);
+                    console.log('stop!!!');
+                } else if (timePassed < duration) {
+                    requestAnimFrame(animate);
+                }
+            });
         };
 
+        var tankMove = function(direction) {
+            animate(function(timePassed) {
+                if(direction === "right") {
+                    tankX++;
+                } else {
+                    tankX--;
+                }
+                tankY = findLinePoints(tankX);
+                clear();
+                fillBackground();
+                drawTank(tankX, tankY);
+            }, 1500);
+        };
+
+
         function doKeyDown(evt){
-            switch (evt.keyCode) {
-                case 37:  /* Left arrow was pressed */
-                if (tankX - dx > 0){
-                    tankX -= dx;
-                    tankY = findLinePoints(tankX);
-                    clear();
-                    drawTank(tankX, tankY);
-                    //circle(tankX, tankY, rad);
-                    fillBackground();
+            var now = new Date().getTime();
+            if(now - lastTimeTankMoved > 1500) {
+                switch (evt.keyCode) {
+                    case 37:  /* Left arrow was pressed */
+                        tankMove('left');
+                        break;
+                    case 39:  /* Right arrow was pressed */
+                        tankMove('right');
+                        break;
+                    case 32: /*SPACE*/
+                        dt2=0;
+                        power=40;
+                        angle=40;
+                        bullets.push({ pos: [tankX, tankY],
+                            imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
+                            angle: angle,
+                            bulletSpeed: power
+                        });
+                        lastFire = Date.now();
+                        shotStart();
+                        break;
                 }
-                break;
-                case 39:  /* Right arrow was pressed */
-                if (tankX + dx < WIDTH){
-                    tankX += dx;
-                    tankY = findLinePoints(tankX);
-                    clear();
-                    drawTank(tankX, tankY);
-                    //circle(tankX, tankY, rad);
-                    fillBackground();
-                }
-                break;
-                case 32: /*SPACE*/
-                dt2=0;
-                power=40;
-                angle=40;
-                bullets.push({ pos: [tankX+45, tankY-44],
-                    imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
-                    angle: angle,
-                    bulletSpeed: power
-                });
-                lastFire = Date.now();
-                shotStart();
-                break;
+            lastTimeTankMoved = now;
             }
         }
         window.addEventListener('keydown',doKeyDown,true);
@@ -217,21 +258,18 @@
         var gameTime = 0;
         var bulletImg=new Image();
         bulletImg.src='./public/images/bullet2.png';
-
+            
         function drawBullet() {
             clear();
-            drawTank(tankX, tankY);
+
             fillBackground();
-            
+            drawTank(tankX,tankY);
 
             var now = Date.now();
             var dt = (now - lastTime) / 1000.0;
-
             update(dt);
             render();
-
             lastTime = now;
-
         }
 
         function shotStart() {
@@ -242,7 +280,6 @@
 
         function update(dt) {
             gameTime += dt;
-
             updateEntities(dt);
         }
 
@@ -256,7 +293,7 @@
                 var coords = {x:bullet.pos[0],
                     y:bullet.pos[1],
                     width:10,
-                    height:1};
+                    height:10};
 
                 if (checkCol(coords,originalPoints)){
                     console.log( 'x:' +  (coords.x + coords.width), 'y:' + (coords.y + coords.height));
@@ -275,9 +312,9 @@
 
                     pattern = ctx.createPattern(backCanvas, "no-repeat");
                     tankY = findLinePoints(tankX);
-                    drawTank(tankX, tankY);
+                    
                     fillBackground();
-
+                    drawTank(tankX, tankY);
                 } 
                 else if(bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT)
                 {
@@ -290,12 +327,14 @@
 
                     pattern = ctx.createPattern(backCanvas, "no-repeat");
                     tankY = findLinePoints(tankX);
-                    drawTank(tankX, tankY);
+                    
                     fillBackground();
+                    drawTank(tankX, tankY);
                 }
                 else
+                {
                     requestAnimFrame(drawBullet);
-
+                }
             }
         }
 
@@ -357,13 +396,14 @@
             var yExplosion = coords.y - 40;   // y = y-central - R;
 
             clear();
-            drawTank(tankX, tankY);
+            
             fillBackground(); // it's instead of ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawTank(tankX, tankY);
             ctx.drawImage(sprite, xSprite, 0, 134, 134, xExplosion, yExplosion, 134, 134);
             if (xSprite < 1608) {
                 xSprite = xSprite + 134;
                 window.setTimeout(tick, 70, coords);
-                console.log('Coords are: ' + coords.x + ' and ' + coords.y);
+                // console.log('Coords are: ' + coords.x + ' and ' + coords.y);
             } else {
                 xSprite = 0;
             }
@@ -401,7 +441,7 @@
             let a = (point2.y - point1.y) / (point2.x - point1.x);
             let b = point1.y - a * point1.x;
 
-            if(Math.abs(objPoint.y - (a*objPoint.x + b)) < 1.5) {
+            if(Math.abs(objPoint.y - (a*objPoint.x + b)) < 2) {
                 return true;
             }
             return false;
@@ -708,8 +748,12 @@
             pattern = ctx.createPattern(backCanvas, "no-repeat");
             tankX = Math.floor((Math.random() * 330) + 30);
             tankY = findLinePoints(tankX);
-            drawTank(tankX, tankY);
+            lastTimeTankMoved = 0;
             fillBackground();
+            weaponImage.onload = function() {
+            	drawTank(tankX, tankY);
+            }
         })();
+        
     }
 // });
