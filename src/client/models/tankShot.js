@@ -283,8 +283,9 @@
             var yExplosion = coords.y - 40;   // y = y-central - R;
 
             clear();
-            drawTank(tankX, tankY);
+            
             fillBackground(); // it's instead of ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawTank(tankX, tankY);
             ctx.drawImage(sprite, xSprite, 0, 134, 134, xExplosion, yExplosion, 134, 134);
             if (xSprite < 1608) {
                 xSprite = xSprite + 134;
