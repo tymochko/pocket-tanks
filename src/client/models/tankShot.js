@@ -272,10 +272,10 @@
                     clear();
                     drawSky();
                     drawGround();
-                    drawTank(tankX, tankY);
 
                     pattern = ctx.createPattern(backCanvas, "no-repeat");
                     tankY = findLinePoints(tankX);
+                    drawTank(tankX, tankY);
                     fillBackground();
 
                 } 
@@ -287,10 +287,10 @@
                     clear();
                     drawSky();
                     drawGround();
-                    drawTank(tankX, tankY);
 
                     pattern = ctx.createPattern(backCanvas, "no-repeat");
                     tankY = findLinePoints(tankX);
+                    drawTank(tankX, tankY);
                     fillBackground();
                 }
                 else
@@ -584,7 +584,7 @@
                 distanceFromDamageCenter1,
                 distanceFromDamageCenter2;
 
-            pointsOfDamageCenterSegment = findPointOnSegment(array, damageX, damageY);
+            pointsOfDamageCenterSegment = findDamageCenterPointOnSegment(array, damageX, damageY);
             if (pointsOfDamageCenterSegment == null) {
                 console.log('Point is out of the ground');
             }
@@ -814,7 +814,49 @@
             /*defines point which coordinates lays on the line of segment*/
             let y = Math.round( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
             // console.log(y, 'y outside');
-            if ( (y) <= segmentY && segmentY <= (y) ) {
+
+            if ( (y - 5) <= segmentY && segmentY <= (y + 5) ) {
+                // console.log(y, 'y inside');
+                return y;
+            }
+        };
+
+        // dirty hack while Misha's point is underground
+        const findDamageCenterPointOnSegment = (array, segmentX, segmentY) => {
+            /*defines point which coordinates lays on the line-segment of canvas*/
+            let x1;
+            let y1;
+            let x2;
+            let y2;
+            let foundPoint;
+            let point1;
+            let point2;
+
+            for (let i = 1; i < array.length; i++) {
+                x1 = array[i - 1][0];
+                y1 = array[i - 1][1];
+                x2 = array[i][0];
+                y2 = array[i][1];
+
+                foundPoint = calculateDamageCenterLineEquation(x1, y1, x2, y2, segmentX, segmentY);
+
+                if ( ((y1 <= foundPoint) && (foundPoint <= y2)) || ((y2 <= foundPoint) && (foundPoint <= y1)) ) {
+                    point1 = [x1, y1, (i - 1)];
+                    point2 = [x2, y2, i];
+                    // console.log([point1, point2], 'foundPoint lays on a line-segment between these coordinates');
+                    return [point1, point2];
+                }
+            }
+            return null;
+        };
+
+        const calculateDamageCenterLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
+            /*defines point which coordinates lays on the line of segment*/
+            let y = Math.round( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
+            // console.log(y, 'y outside');
+
+            // temporary solution before Misha fixes point to be on the ground instead of underground
+            if ( (y - 5) <= segmentY && segmentY <= (y + 5) ) {
                 // console.log(y, 'y inside');
                 return y;
             }
