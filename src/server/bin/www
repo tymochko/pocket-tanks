@@ -109,10 +109,10 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
-// 
-var io=app.io;
-
-io.listen(server);
+//
+// var io=app.io;
+//
+// io.listen(server);
 
 
 module.exports = conf;

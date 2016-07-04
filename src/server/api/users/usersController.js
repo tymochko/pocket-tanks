@@ -250,10 +250,10 @@ const handleEmail = function (name,email) {
 
     var mailOptions = {
     from: 'pockettanksmail@gmail.com',
-    to: `${userEmail}`, 
-    subject: 'Pocket Tanks', 
-    text: text 
-    
+    to: `${userEmail}`,
+    subject: 'Pocket Tanks',
+    text: text
+
 };
 transporter.sendMail(mailOptions, function(error, info){
     if(error){
@@ -261,7 +261,7 @@ transporter.sendMail(mailOptions, function(error, info){
         ;
     }else{
         console.log('Message sent: ' + userEmail);
-    
+
     };
 });
 
@@ -286,4 +286,3 @@ module.exports.logoutUser = logoutUser;
 module.exports.updateUser = updateUser;
 module.exports.deleteUser = deleteUser;
 module.exports.handleEmail = handleEmail;
-
