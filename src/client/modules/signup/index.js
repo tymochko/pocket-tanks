@@ -1,7 +1,7 @@
 var angular = require('angular');
 var ngRoute = require('angular-route');
 
-module.exports = angular.module('tanks.signup', [
+module.exports = angular.module('tanks.signup',  [
     ngRoute
 ]).config(RouteConfig)
 .config(function(toastrConfig) {
