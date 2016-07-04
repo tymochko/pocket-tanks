@@ -13,9 +13,6 @@
         var lastTimeTankMoved;
         var tankX, tankY;
 
-        var tankImage = new Image();
-        var weaponImage = new Image();
-
         var pattern;
 
         var originalPoints = [[0, 300],[20, 305],[40, 330],[145, 345],[125, 400],[165, 350],[175, 360],[220, 370],
