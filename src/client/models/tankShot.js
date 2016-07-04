@@ -2,6 +2,7 @@
 
 // document.addEventListener("DOMContentLoaded", function(){
     function initGame(){
+
         //      <------initialization------>
         var backCanvas = document.createElement('canvas');
         var WIDTH = backCanvas.width  = 800;
@@ -16,10 +17,10 @@
 
         var pattern;
 
-        var originalPoints = [[0, 300],[20, 305],[40, 330],[145, 345],[125, 400],[165, 350],[175, 360],[220, 370],
-        [240, 320],[280, 300],[300, 270],[340, 200],[370, 170],[440, 190],[550, 430],[530, 370],[540, 330],
-        [575, 310],[630, 340],[685, 340],[690, 355],[700, 340],[750, 300],[755, 305],[795, 270],[800, 270],
-        [800, 500],[0, 500],[0, 300]];
+        var originalPoints = [[0, 280],[20, 285],[40, 310],[145, 325],[125, 380],[165, 330],[175, 340],[220, 350],
+        [240, 300],[280, 280],[300, 250],[340, 180],[370, 150],[440, 170],[550, 410],[530, 350],[540, 310],
+        [575, 290],[630, 320],[685, 320],[690, 335],[700, 320],[750, 280],[755, 285],[795, 250],[800, 250],
+        [800, 500],[0, 500],[0, 280]];
 
         // <------Ground and sky drawing------>
 
@@ -178,21 +179,81 @@
                     fillBackground();
                 }
                 break;
-                case 32: /*SPACE*/
-                dt2=0;
-                power=40;
-                angle=40;
-                bullets.push({ pos: [tankX+45, tankY-44],
-                    imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
-                    angle: angle,
-                    bulletSpeed: power
-                });
-                lastFire = Date.now();
-                shotStart();
+                case 13: /*SPACE*/
+                    makeShot();
                 break;
             }
         }
         window.addEventListener('keydown',doKeyDown,true);
+
+        function makeShot() {
+            dt2=0;
+            power=40;
+            angle=40;
+            bullets.push({ pos: [tankX+45, tankY-44],
+                imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
+                angle: angle,
+                bulletSpeed: power
+            });
+            lastFire = Date.now();
+            shotStart();
+        }
+
+
+// <------Vika's part - Navigation ------>
+
+        function getId(id) {
+            return document.getElementById(id);
+        }    
+
+        getId('fire').onclick = function() {
+            makeShot();
+        }
+
+        getId('morePower').onclick = function (){
+            power++;
+            getId('power').innerHTML = power;
+            power = parseInt(getId('power').innerHTML);
+        }
+        getId('lessPower').onclick = function (){
+            power--;
+            getId('power').innerHTML = power;
+            power = parseInt(getId('power').innerHTML);
+        }
+
+        getId('moreAngle').onclick = function (){
+            angle++;
+            getId('angle').innerHTML = angle;
+            angle = parseInt(getId('angle').innerHTML);
+        }
+        getId('lessAngle').onclick = function (){
+            angle--;
+            getId('angle').innerHTML = angle;
+            angle = parseInt(getId('angle').innerHTML);
+        }
+
+        // <------Vika's part - Explosion ------>
+
+        var xSprite = 0;
+        var sprite = new Image();
+        sprite.src = './public/images/explosion_sheet.png';
+        function tick(coords){
+            var xExplosion = coords.x - 40;   // x = x-central - R;
+            var yExplosion = coords.y - 40;   // y = y-central - R;
+
+            clear();
+            drawTank(tankX, tankY);
+            fillBackground(); // it's instead of ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(sprite, xSprite, 0, 134, 134, xExplosion, yExplosion, 134, 134);
+            if (xSprite < 1608) {
+                xSprite = xSprite + 134;
+                window.setTimeout(tick, 70, coords);
+                // console.log('Coords are: ' + coords.x + ' and ' + coords.y);
+            } else {
+                xSprite = 0;
+            }
+        }
+
 
         //<------Maks's part-------->
 
@@ -207,8 +268,8 @@
                 window.setTimeout(callback, 1000 / 60);
             };
         })();
-
-        var power,angle;
+        var power =  parseInt(getId('power').innerHTML);
+        var angle = parseInt(getId('angle').innerHTML);;
         var lastTime;
         var dt2=0;
         var bullets = [];
@@ -346,28 +407,6 @@
 
             window.ImgInf = ImgInf;
         })();
-
-        // <------Vika's part Explosion ------>
-
-        var xSprite = 0;
-        var sprite = new Image();
-        sprite.src = './public/images/explosion_sheet.png';
-        function tick(coords){
-            var xExplosion = coords.x - 40;   // x = x-central - R;
-            var yExplosion = coords.y - 40;   // y = y-central - R;
-
-            clear();
-            drawTank(tankX, tankY);
-            fillBackground(); // it's instead of ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(sprite, xSprite, 0, 134, 134, xExplosion, yExplosion, 134, 134);
-            if (xSprite < 1608) {
-                xSprite = xSprite + 134;
-                window.setTimeout(tick, 70, coords);
-                // console.log('Coords are: ' + coords.x + ' and ' + coords.y);
-            } else {
-                xSprite = 0;
-            }
-        }
 
         // ======= Misha's part =======
 
