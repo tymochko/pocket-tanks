@@ -303,7 +303,6 @@
                     i--;
 
                     originalPoints = calculateDamageArea(originalPoints, (coords.x + coords.width), (coords.y + coords.height));
-                    console.log('originalPoints has been cut out');
 
                     // temporary solution for redrawing updated array originalPoints
                     clear();
@@ -467,11 +466,12 @@
                 elementToChangeFrom,
             // setting distanceBetweenDamageSegments static as a distance between points of damaged ground
                 distanceBetweenDamageSegments = 15,
-                damageRadius = 40;
+                damageRadius = 40,
+                segmentPoints,
+                pointsOfIntersect = [];
 
-            let segmentPoints = findDamageLimits(array, damageX, damageY, damageRadius);
+            segmentPoints = findDamageLimits(array, damageX, damageY, damageRadius);
 
-            let pointsOfIntersect = [];
             for (let i = 0; i < segmentPoints.length; i++) {
                 if (segmentPoints[i][2] == 'inDamage') {
                     pointsOfIntersect.push(segmentPoints[i]);
@@ -487,13 +487,6 @@
 
                     pointRealOnCircle.push([x1, y1]);
 
-                    distance = calculateDistance(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2);
-
-                    if (distance <= distanceBetweenDamageSegments) {
-                        pointRealOnCircle.push([x2, y2]);
-                        continue;
-                    }
-
                     theta = findInitialAngle(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], damageX, damageY);
 
                     do {
@@ -506,6 +499,7 @@
                         pointOnCircle = rotateFixed(damageX, damageY, damageRadius, theta);
 
                         distance = calculateDistance(pointOnCircle[0], pointOnCircle[1], x2, y2);
+                        // debugger;
                     }
                     while (distance > distanceBetweenDamageSegments);
 
@@ -557,7 +551,6 @@
             }
             // TODO implement logic if pointOfDamageCenter is equal to point in originalPoints
 
-
             distanceFromDamageCenter1 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[0][0], pointsOfDamageCenterSegment[0][1]);
             distanceFromDamageCenter2 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[1][0], pointsOfDamageCenterSegment[1][1]);
 
@@ -597,6 +590,7 @@
             // populating array pointsRebuild with points of area which is going to be modified
             pointsRebuild.push(segmentPairPoints[0]);
             for (let i = 1; i < segmentPairPoints.length; i++) {
+
                 pointsOnDamageLine = findIntersectionCoordinates(segmentPairPoints[i - 1][0], segmentPairPoints[i - 1][1], segmentPairPoints[i][0], segmentPairPoints[i][1], damageX, damageY, damageRadius);
 
                 segmentWithDamage1 = findPointOnSegment(array, pointsOnDamageLine[0][0], pointsOnDamageLine[0][1]);
@@ -613,6 +607,8 @@
                     pointsRebuild.push(pointsOnDamageLine[1]);
                 }
             }
+
+            pointsRebuild.sort();
 
             // number of last point of damaged line-segment in canvas array
             numberOfLast = segmentPairPoints[segmentPairPoints.length - 1][2] + 1;
@@ -657,8 +653,8 @@
             let px2,
                 py2;
 
-            px2 = cx + (r * Math.cos(theta));
-            py2 = cy + (r * Math.sin(theta));
+            px2 = Math.round( cx + (r * Math.cos(theta)) );
+            py2 = Math.round( cy + (r * Math.sin(theta)) );
 
             return [px2, py2];
         };
@@ -721,6 +717,7 @@
                 if ( ((y1 <= foundPoint) && (foundPoint <= y2)) || ((y2 <= foundPoint) && (foundPoint <= y1)) ) {
                     point1 = [x1, y1, (i - 1)];
                     point2 = [x2, y2, i];
+
                     return [point1, point2];
                 }
             }
@@ -732,7 +729,7 @@
             let y = Math.round( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
 
             // temporary solution before Misha fixes point to be on the ground instead of underground
-            if ( (y - 10) <= segmentY && segmentY <= (y + 10) ) {
+            if ( (y - 5) <= segmentY && segmentY <= (y + 5) ) {
                 return y;
             }
         };
