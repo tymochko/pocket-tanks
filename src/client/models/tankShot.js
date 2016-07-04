@@ -80,46 +80,51 @@
             	
             	
                 var angle = tiltTank(xCoordinate);
-                console.log("angle" + angle);
+                //console.log("angle" + angle);
+                ctx.save();
                 if (angle > 0) {
                     var angle_curr = angle / Math.PI * 180;
                     angle_curr = Math.round(angle_curr / 10);
-                    var xCof = angle_curr * 2,
+                    // console.log("angle_curr" + angle_curr);
+                    var xCof = angle_curr * 2;
                     yCof = angle_curr * 7;
+                    //console.log("yCof1" + yCof);
                 } 
 
                 else {
                     var angle_curr = -angle / Math.PI * 180;
                     angle_curr = Math.round(angle_curr / 10);
-                    var xCof = angle_curr * 5.5,
+                    var xCof = angle_curr * 5.5;
                     yCof = angle_curr * 5.5;
+                    //console.log("yCof2" + yCof);
                 }
                 
                 if (angle < angleWeapon) {
                     var angleWeapon_curr = angleWeapon / Math.PI * 180;
                     angleWeapon_curr = Math.round(angleWeapon_curr / 10);
                     yCof = yCof + (angleWeapon_curr * 6.5);
+                    console.log("yCof3" + yCof);
                 } 
-                else {
+                else if (angle < angleWeapon) {
                     var angleWeapon_curr = angleWeapon / Math.PI * 180;
                     angleWeapon_curr = Math.round(angleWeapon_curr / 10);
-                    yCof = yCof - (angleWeapon_curr * 6.5);
+                    yCof =yCof - (angleWeapon_curr * 6.5);
+                console.log("angle" + xCof +"=="+ yCof);
                 }
-
-                ctx.save();
+                
              	ctx.translate(xCoordinate, yCoordinate - 30);
                 ctx.translate(tankWidth / 2, tankHeight / 2);
                 ctx.rotate(angle);
                 ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
                 ctx.restore();
 
-                ctx.save();
-                console.log("angle" + xCof +"=="+ yCof);
+               ctx.save();
+
                 if (angle > 0) {
-                    ctx.translate(xCoordinate + 48, yCoordinate - 43);
+                    ctx.translate(xCoordinate + 48 - xCof, yCoordinate - 43 + yCof);
                 } 
                 else {
-                    ctx.translate(xCoordinate + 48, yCoordinate - 43);
+                    ctx.translate(xCoordinate + 48 - xCof, yCoordinate - 43 - yCof);
                 }
                 ctx.translate(tankWidth / 2, tankHeight / 2);
                 if (typeof angleWeapon != 'undefined') {
@@ -130,7 +135,8 @@
                 }
                 ctx.drawImage(weaponImage, -(tankWidth / 2), -(tankHeight / 2), weaponWidth, weaponHeight);
                 ctx.restore();
-                
+            
+
                 /*ctx.save();
 
                 if (angle > 0) {
@@ -154,13 +160,15 @@
         }
         const drawTank = drawTankFn();
 
-        let angle_weapon = 0;
+        /*let angle_weapon = 0;
 
         let reDrawWeapon = (angle) => {
             clear();
-            drawTank(tankX, tankY,angle);
+            
+                drawTank(tankX, tankY,angle);
+            
             fillBackground();
-        }
+        }*/
 
         // function drawTank2(xCoordinate, yCoordinate) {
         //     var tankImage = new Image();
@@ -297,18 +305,18 @@
                         lastFire = Date.now();
                         shotStart();
                         break;
-                    case 38:    / Up arrow was pressed /
-                        console.log('38', angle_weapon);
-                        if (angle_weapon >= 1.3962634015954636) {return;}
-                        angle_weapon += 0.17453292519943295;
-                        reDrawWeapon(angle_weapon);
+                    /*case 38:    / Up arrow was pressed /
+                    console.log('38', angle_weapon);
+                    if (angle_weapon >= 1.3962634015954636) {return;}
+                    angle_weapon += 0.17453292519943295;
+                    reDrawWeapon(angle_weapon);
                     break;
-                    case 40:    / Down arrow was pressed /
-                        console.log('38', angle_weapon);
-                        if (angle_weapon <= 0) {return;}
-                        angle_weapon -= 0.17453292519943295;
-                        reDrawWeapon(angle_weapon);
-                    break;
+                case 40:    / Down arrow was pressed /
+                    console.log('38', angle_weapon);
+                    if (angle_weapon <= 0) {return;}
+                    angle_weapon -= 0.17453292519943295;
+                    reDrawWeapon(angle_weapon);
+                    break;*/
                 }
             lastTimeTankMoved = now;
             }
