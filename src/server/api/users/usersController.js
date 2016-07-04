@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
 var nodemailer = require('nodemailer');
 var fs = require('fs');
-var strUserImg =  {"image" : "./public/images/phoca.jpg" , "description": "Oh... So beautiful phoca!" }
-
+var strUserImg =  {"image" : "cat.jpg", uploadedImg:false};
 const Schema = mongoose.Schema;
+
 
 var userSchema = new Schema({
     userName: {type: String, required: true, unique: true},
@@ -277,6 +277,9 @@ const rmDir = function (dirPath) {
                 fs.unlinkSync(filePath);
         }
 }
+
+
+
 
 module.exports.rmDir = rmDir;
 module.exports.showAll = showAll;
