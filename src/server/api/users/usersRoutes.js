@@ -166,7 +166,6 @@ router.post('/profile/upload', function (request, res) {
 router.get('/profile/getImage/:scope/:imageName?', function  (req, res) {
 
     var userId = req.session.user;
-    console.log(userId + '!!!!!!!!!!!')
     try {
         var scope = req.params.scope;
         switch (scope) {
@@ -185,29 +184,4 @@ router.get('/profile/getImage/:scope/:imageName?', function  (req, res) {
         console.log(e)
     };
 });
-
-router.get('/profile/publicImages', (req, res) => {
-    fs.readdir(__dirname + '/../../images/' + '/', function (e, files) {
-        if (!e && files.length > 0) {
-            var images = [];
-            for (var file in files) {
-                images.push({image: publicImgURL + files[file] + usersCollection.getSalt(), uploadedImg: false});
-            }
-
-            var userId = req.session.user;
-            const userDir = __dirname + '/../../usersInfo/' + userId + '/';
-
-            fs.readdir(userDir, function (e, files) {
-                console.log(e, files.length > 0);
-                if (!e && files.length > 0)
-                    images.push({image: userImgURL + files[0] + usersCollection.getSalt(), uploadedImg: true});
-                res.send(200, images);
-            });
-        }
-        else
-            res.send(404);
-    });
-});
-
-
 module.exports = router;

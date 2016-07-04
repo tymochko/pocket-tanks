@@ -11,6 +11,7 @@ const publicScopeName       = 'public';
 const userUploadsScopeName  = 'userUploads';
 
 
+
 var userSchema = new Schema({
     userName: {type: String, required: true, unique: true},
     userEmail: {type: String, required: true, unique: true},
@@ -285,7 +286,6 @@ const rmDir = function (dirPath) {
 const getUserImage = function (req, res) {
 
     var userId = req.session.user;
-    console.log(userId);
     var userImage;
     var userDir;
 
@@ -296,9 +296,7 @@ const getUserImage = function (req, res) {
         cb(err, foundUser);
     });
         function cb(err,foundUser) {
-
             userImage = foundUser.userImg;
-            console.log('userImage  ', userImage);
             if(userImage.uploadedImg) {
                 userDir = __dirname + '/../../usersInfo/' + userId + '/' + userImage.image;
             } else {
