@@ -10,12 +10,12 @@
     <div class="collapse navbar-collapse" ng-class="{in: showMobileNav}">
         <ul class="nav navbar-nav">
             <li ng-repeat="route in routes" ng-class="{active: activeRoute(route)}">
-                <a href="/{{ route.template }}" ng-click="{{::route.click}}">{{ route.name }}</a>
+                <a href="/{{ route.template }}" ng-click="{{route.click}}">{{ route.name }}</a>
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li ng-repeat="route in routes">
-                <a href="{{ route.template }}" ng-click="{{::route.click}}">{{ route.name }}</a>
+                <a href="{{ route.template }}" ng-click="{{route.click}}">{{ route.name }}</a>
             </li>
         </ul>
     </div>

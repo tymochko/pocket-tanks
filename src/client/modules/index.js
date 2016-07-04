@@ -6,6 +6,7 @@ var signup = require('./signup');
 var profile = require('./profile');
 var dashboard = require('./dashboard');
 var game = require('./game');
+//var navigation = require('./navigation');
 
 module.exports = angular.module('tanks', [
     require('angular-route'),
@@ -21,6 +22,7 @@ module.exports = angular.module('tanks', [
     login.name,
     signup.name,
     profile.name
+    //navigation.name
 ]).config(RouteConfig)
 .factory('socket', ['$rootScope', function($rootScope) {
   var socket = io.connect();
