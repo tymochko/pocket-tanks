@@ -165,7 +165,7 @@ router.post('/profile/upload', function (reqvest, res) {
 
 router.get('/profile/getImage/:scope/:imageName?', (req, res) => {
     try {
-        let scope = req.params.scope;
+        var scope = req.params.scope;
         switch (scope) {
             case publicScopeName:
                 getPublicImage(req, res);
