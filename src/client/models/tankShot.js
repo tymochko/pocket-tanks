@@ -76,14 +76,12 @@
             weaponImage.src = './public/images/tankWeapon.png';
 
             return (xCoordinate, yCoordinate) => {
-            	console.log(ctx);
             	ctx.save();
             	var angle = tiltTank(xCoordinate);
              	ctx.translate(xCoordinate, yCoordinate - 30);
                 ctx.translate(tankWidth / 2, tankHeight / 2);
                 ctx.rotate(angle);
                 ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
-                console.log(tankImage);
                 ctx.restore();
                 ctx.save();
                 ctx.translate(xCoordinate + 45, yCoordinate - 44);
@@ -826,7 +824,7 @@
             tankY = findLinePoints(tankX);
             lastTimeTankMoved = 0;
             fillBackground();
-            tankImage.onload = function() {
+            weaponImage.onload = function() {
             	drawTank(tankX, tankY);
             }
         })();
