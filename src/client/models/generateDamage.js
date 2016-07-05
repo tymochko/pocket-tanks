@@ -1,11 +1,10 @@
+// const _ = require('lodash');
 
-//<------Yuri's part - generate damage on battlefield ------>
-
+// const calculateDamageArea = _.memoize((array, damageX, damageY) => {
 const calculateDamageArea = (array, damageX, damageY) => {
     damageX = Math.round(damageX);
     damageY = Math.round(damageY);
 
-    // TODO bookmark
     // TODO change all 'for' loops into 'map' where is possible
     let x1,
         y1,
@@ -17,7 +16,7 @@ const calculateDamageArea = (array, damageX, damageY) => {
         pointOnCircle,
         pointRealOnCircle = [],
         elementToChangeFrom,
-    // setting distanceBetweenDamageSegments static as a distance between points of damaged ground
+        // setting distanceBetweenDamageSegments static as a distance between points of damaged ground
         distanceBetweenDamageSegments = 15,
         damageRadius = 40,
         segmentPoints,
@@ -80,11 +79,6 @@ const calculateDamageArea = (array, damageX, damageY) => {
     return array;
 };
 
-const calculateDistance = (x1, y1, x2, y2) => {
-    /*check distance between two points coordinates*/
-    return Math.round( (Math.sqrt( Math.pow( (x2 - x1), 2 ) + ( Math.pow( (y2 - y1), 2 ) ) )) );
-};
-
 const findDamageLimits = (array, damageX, damageY, damageRadius) => {
     let segmentPairPoints = [],
         distance,
@@ -94,12 +88,14 @@ const findDamageLimits = (array, damageX, damageY, damageRadius) => {
         numberOfLast,
         pointsRebuild = [],
         pointsOfDamageCenterSegment = [],
+        // TODO why?
         distanceFromDamageCenter1,
         distanceFromDamageCenter2;
 
     pointsOfDamageCenterSegment = findDamageCenterPointOnSegment(array, damageX, damageY);
     if (pointsOfDamageCenterSegment == null) {
         console.log('Point is out of the ground');
+        // TODO should I keep it?
     }
     // TODO implement logic if pointOfDamageCenter is equal to point in originalPoints
 
@@ -171,6 +167,8 @@ const findDamageLimits = (array, damageX, damageY, damageRadius) => {
     return pointsRebuild;
 };
 
+// helper-functions
+
 const findIntersectionCoordinates = (x1, y1, x2, y2, cX, cY, r) => {
     /* x1, y1 and x2, y2 - are coordinates of line-segment on canvas
      * cX, cY and r - are coordinates of center of damage and a radius */
@@ -199,6 +197,7 @@ const findIntersectionCoordinates = (x1, y1, x2, y2, cX, cY, r) => {
 
 const findInitialAngle = (x, y, cx, cy) => {
     return Math.atan2((y - cy), (x - cx));
+    // TODO always return angle less than PI. why?
 };
 
 const rotateFixed = (cx, cy, r, theta) => {
@@ -235,6 +234,7 @@ const findPointOnSegment = (array, segmentX, segmentY) => {
             return [point1, point2];
         }
     }
+
     return null;
 };
 
@@ -242,7 +242,7 @@ const calculateLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
     /*defines point which coordinates lays on the line of segment*/
     let y = Math.round( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
 
-    if ( (y - 5) <= segmentY && segmentY <= (y + 5) ) {
+    if ( y <= segmentY && segmentY <= y ) {
         return y;
     }
 };
@@ -264,6 +264,14 @@ const findDamageCenterPointOnSegment = (array, segmentX, segmentY) => {
         x2 = array[i][0];
         y2 = array[i][1];
 
+        // TODO should/can I encapsulate this function if it differs only with this part of code?
+        if (array[i - 1][0] == segmentX && array[i - 1][1] == segmentY) {
+            point1 = [array[i - 2][0], array[i - 2][1], (i - 1)];   // should I implement when this is null
+            point2 = [x2, y2, i];                                   // should I implement when this is null
+
+            return [point1, point2];
+        }
+
         foundPoint = calculateDamageCenterLineEquation(x1, y1, x2, y2, segmentX, segmentY);
 
         if ( ((y1 <= foundPoint) && (foundPoint <= y2)) || ((y2 <= foundPoint) && (foundPoint <= y1)) ) {
@@ -273,6 +281,7 @@ const findDamageCenterPointOnSegment = (array, segmentX, segmentY) => {
             return [point1, point2];
         }
     }
+
     return null;
 };
 
@@ -284,4 +293,9 @@ const calculateDamageCenterLineEquation = (x1, y1, x2, y2, segmentX, segmentY) =
     if ( (y - 5) <= segmentY && segmentY <= (y + 5) ) {
         return y;
     }
+};
+
+const calculateDistance = (x1, y1, x2, y2) => {
+    /*check distance between two points coordinates*/
+    return Math.round( (Math.sqrt( Math.pow( (x2 - x1), 2 ) + ( Math.pow( (y2 - y1), 2 ) ) )) );
 };
