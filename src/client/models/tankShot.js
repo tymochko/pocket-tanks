@@ -67,7 +67,7 @@
 		const tankImage = new Image();
     	const weaponImage = new Image();
         var xCof, yCof;
-        var angle;
+        var angle_second;
         var angleWeapon;
         var angle_weapon = 0;
 
@@ -76,37 +76,37 @@
             var tankWidth = 70;
             var weaponHeight = 20;
             var weaponWidth = 35;
-           
+
 
             tankImage.src = './public/images/tankVehicle.png';
             weaponImage.src = './public/images/tankWeapon.png';
-        	
 
-            return (xCoordinate, yCoordinate, angleWeapon) => {            	
-            	
-                angle = tiltTank(xCoordinate);
+
+            return (xCoordinate, yCoordinate, angleWeapon) => {
+
+                angle_second = tiltTank(xCoordinate);
                 ctx.save();
-                if (angle > 0) {
-                    var angle_curr = angle / Math.PI * 180;
+                if (angle_second > 0) {
+                    var angle_curr = angle_second / Math.PI * 180;
                     angle_curr = Math.round(angle_curr / 10);
                     var xCof = angle_curr * 2;
                     yCof = angle_curr * 7;
-                } 
+                }
 
                 else {
-                    var angle_curr = -angle / Math.PI * 180;
+                    var angle_curr = -angle_second / Math.PI * 180;
                     angle_curr = Math.round(angle_curr / 10);
                     var xCof = angle_curr * 5.5;
                     yCof = angle_curr * 5.5;
                 }
-                
-                if (angle < angleWeapon) {
+
+                if (angle_second < angleWeapon) {
                     var angleWeapon_curr = angleWeapon / Math.PI * 180;
                     angleWeapon_curr = Math.round(angleWeapon_curr / 10);
                     yCof = yCof + (angleWeapon_curr * 6.5);
-                    
-                } 
-                else if (angle > angleWeapon){
+
+                }
+                else if (angle_second > angleWeapon){
                     var angleWeapon_curr = angleWeapon / Math.PI * 180;
                     angleWeapon_curr = Math.round(angleWeapon_curr / 10);
                     yCof =yCof + (angleWeapon_curr * 6.5);
@@ -114,15 +114,15 @@
 
              	ctx.translate(xCoordinate, yCoordinate - 30);
                 ctx.translate(tankWidth / 2, tankHeight / 2);
-                ctx.rotate(angle);
+                ctx.rotate(angle_second);
                 ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
                 ctx.restore();
 
                 ctx.save();
 
-                if (angle > 0) {
+                if (angle_second > 0) {
                     ctx.translate(xCoordinate + 48 - xCof, yCoordinate - 43 + yCof);
-                }    
+                }
 
                 else {
                     ctx.translate(xCoordinate + 48 - xCof, yCoordinate - 43 - yCof);
@@ -135,7 +135,7 @@
                 }
 
                 else {
-                    ctx.rotate(angle);
+                    ctx.rotate(angle_second);
                 }
                 ctx.drawImage(weaponImage, -(tankWidth / 2), -(tankHeight / 2), weaponWidth, weaponHeight);
                 ctx.restore();
@@ -145,7 +145,7 @@
         const drawTank = drawTankFn();
 
         // <------Tank Weapon Movement------>
-       
+
         var angle_weapon_rot = angle_weapon_rot || 0;
 
         var moveWeapon = function (xCoordinate, yCoordinate, angleWeapon) {
@@ -153,17 +153,17 @@
             var tankWidth = 70;
             var weaponHeight = 20;
             var weaponWidth = 35;
-                            
+
             ctx.save();
             ctx.translate(xCoordinate+weaponWidth+12, yCoordinate-weaponWidth/2-weaponHeight/4);
-            ctx.rotate(-angle_weapon_rot*Math.PI/180);  
+            ctx.rotate(-angle_weapon_rot*Math.PI/180);
             ctx.drawImage(weaponImage, 0,-weaponHeight-4+weaponHeight/4, weaponWidth,weaponHeight);
             ctx.restore();
 
             ctx.save();
             ctx.translate(xCoordinate, yCoordinate - 30);
             ctx.translate(tankWidth / 2, tankHeight / 2);
-            ctx.rotate(angle);
+            ctx.rotate(angle_second);
             ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
             ctx.restore();
         }
@@ -269,8 +269,6 @@
 
                     case 32: /*SPACE*/
                         dt2=0;
-                        power=40;
-                        angle=40;
                         bullets.push({ pos: [tankX, tankY],
                             imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
                             angle: angle,
@@ -281,15 +279,15 @@
                         break;
 
                     case 38:    //Up arrow was pressed /
-                    if(angle_weapon_rot >= 45) {return;}              
+                    if(angle_weapon_rot >= 45) {return;}
                         clear();
                         fillBackground();
                         angle_weapon_rot +=15;
-                        moveWeapon(tankX, tankY,angle_weapon);                             
+                        moveWeapon(tankX, tankY,angle_weapon);
                         break;
 
                     case 40:    //Down arrow was pressed /
-                    if(angle_weapon_rot <= -45) {return;}              
+                    if(angle_weapon_rot <= -45) {return;}
                         clear();
                         fillBackground();
                         angle_weapon_rot -=15;
@@ -323,7 +321,7 @@
 
         function getId(id) {
             return document.getElementById(id);
-        }    
+        }
 
         getId('fire').onclick = function() {
             makeShot();
@@ -361,7 +359,7 @@
             var yExplosion = coords.y - 40;   // y = y-central - R;
 
             clear();
-            
+
             fillBackground(); // it's instead of ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawTank(tankX, tankY);
             ctx.drawImage(sprite, xSprite, 0, 134, 134, xExplosion, yExplosion, 134, 134);
@@ -398,7 +396,7 @@
         var gameTime = 0;
         var bulletImg=new Image();
         bulletImg.src='./public/images/bullet2.png';
-            
+
         function drawBullet() {
             clear();
 
@@ -450,10 +448,10 @@
 
                     pattern = ctx.createPattern(backCanvas, "no-repeat");
                     tankY = findLinePoints(tankX);
-                    
+
                     fillBackground();
                     drawTank(tankX, tankY);
-                } 
+                }
                 else if(bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT)
                 {
                     bullets.splice(i, 1);
@@ -465,7 +463,7 @@
 
                     pattern = ctx.createPattern(backCanvas, "no-repeat");
                     tankY = findLinePoints(tankX);
-                    
+
                     fillBackground();
                     drawTank(tankX, tankY);
                 }
@@ -864,6 +862,6 @@
             	drawTank(tankX, tankY);
             }
         })();
-        
+
     }
 // });
