@@ -2,6 +2,7 @@
 
 // document.addEventListener("DOMContentLoaded", function(){
     function initGame(){
+
         //      <------initialization------>
         var backCanvas = document.createElement('canvas');
         var WIDTH = backCanvas.width  = 800;
@@ -10,16 +11,15 @@
 
         var canvas = document.getElementById('myCanvas');
         var ctx = canvas.getContext('2d');
-        var dx = 5,
-        dy = 5;
-        var tankX, tankY, rad;
+        var lastTimeTankMoved;
+        var tankX, tankY;
 
         var pattern;
 
-        var originalPoints = [[0, 300],[20, 305],[40, 330],[145, 345],[125, 400],[165, 350],[175, 360],[220, 370],
-        [240, 320],[280, 300],[300, 270],[340, 200],[370, 170],[440, 190],[550, 430],[530, 370],[540, 330],
-        [575, 310],[630, 340],[685, 340],[690, 355],[700, 340],[750, 300],[755, 305],[795, 270],[800, 270],
-        [800, 500],[0, 500],[0, 300]];
+        var originalPoints = [[0, 280],[20, 285],[40, 310],[145, 325],[125, 380],[165, 330],[175, 340],[220, 350],
+        [240, 300],[280, 280],[300, 250],[340, 180],[370, 150],[440, 170],[550, 410],[530, 350],[540, 310],
+        [575, 290],[630, 320],[685, 320],[690, 335],[700, 320],[750, 280],[755, 285],[795, 250],[800, 250],
+        [800, 500],[0, 500],[0, 280]];
 
         // <------Ground and sky drawing------>
 
@@ -62,75 +62,114 @@
             backCtx.fillRect(0,0,800,500);
         };
 
-
         // <------Tank drawing------>
 
-        var drawTank = function(xCoordinate, yCoordinate, angleWeapon) {
-            var tankImage = new Image();
-            var weaponImage = new Image();
+		const tankImage = new Image();
+    	const weaponImage = new Image();
+        var xCof, yCof;
+        var angle;
+        var angleWeapon;
+        var angle_weapon = 0;
+
+        const drawTankFn = (xCoordinate, yCoordinate, angleWeapon) => {
+        	var tankHeight = 30;
+            var tankWidth = 70;
+            var weaponHeight = 20;
+            var weaponWidth = 35;
+
+            tankImage.src = './public/images/tankVehicle.png';
+            weaponImage.src = './public/images/tankWeapon.png';
+
+
+            return (xCoordinate, yCoordinate, angleWeapon) => {
+
+                angle = tiltTank(xCoordinate);
+                ctx.save();
+
+                if (angle > 0) {
+                    var angle_curr = angle / Math.PI * 180;
+                    angle_curr = Math.round(angle_curr / 10);
+                    var xCof = angle_curr * 2;
+                    yCof = angle_curr * 7;
+                }
+
+                else {
+                    var angle_curr = -angle / Math.PI * 180;
+                    angle_curr = Math.round(angle_curr / 10);
+                    var xCof = angle_curr * 5.5;
+                    yCof = angle_curr * 5.5;
+                }
+
+                if (angle < angleWeapon) {
+                    var angleWeapon_curr = angleWeapon / Math.PI * 180;
+                    angleWeapon_curr = Math.round(angleWeapon_curr / 10);
+                    yCof = yCof + (angleWeapon_curr * 6.5);
+
+                }
+                else if (angle > angleWeapon){
+                    var angleWeapon_curr = angleWeapon / Math.PI * 180;
+                    angleWeapon_curr = Math.round(angleWeapon_curr / 10);
+                    yCof =yCof + (angleWeapon_curr * 6.5);
+                }
+
+             	ctx.translate(xCoordinate, yCoordinate - 30);
+                ctx.translate(tankWidth / 2, tankHeight / 2);
+                ctx.rotate(angle);
+                ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
+                ctx.restore();
+
+
+                ctx.save();
+
+                if (angle > 0) {
+                    ctx.translate(xCoordinate + 48 - xCof, yCoordinate - 43 + yCof);
+                }
+
+                else {
+                    ctx.translate(xCoordinate + 48 - xCof, yCoordinate - 43 - yCof);
+                }
+
+                ctx.translate(tankWidth / 2, tankHeight / 2);
+
+                if (typeof angleWeapon != 'undefined') {
+                    ctx.rotate(angle_weapon);
+                }
+
+                else {
+                    ctx.rotate(angle);
+                }
+                ctx.drawImage(weaponImage, -(tankWidth / 2), -(tankHeight / 2), weaponWidth, weaponHeight);
+                ctx.restore();
+            };
+
+        }
+        const drawTank = drawTankFn();
+
+        // <------Tank Weapon Movement------>
+
+        var angle_weapon_rot = angle_weapon_rot || 0;
+
+        var moveWeapon = function (xCoordinate, yCoordinate, angleWeapon) {
             var tankHeight = 30;
             var tankWidth = 70;
             var weaponHeight = 20;
             var weaponWidth = 35;
 
-            var xCoordinate = 160;
-            var yCoordinate = 160;
+            ctx.save();
+            ctx.translate(xCoordinate+weaponWidth+12, yCoordinate-weaponWidth/2-weaponHeight/4);
+            ctx.rotate(-angle_weapon_rot*Math.PI/180);
+            ctx.drawImage(weaponImage, 0,-weaponHeight-4+weaponHeight/4, weaponWidth,weaponHeight);
+            ctx.restore();
 
+            ctx.save();
+            ctx.translate(xCoordinate, yCoordinate - 30);
+            ctx.translate(tankWidth / 2, tankHeight / 2);
+            ctx.rotate(angle);
+            ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
+            ctx.restore();
+        }
 
-            var angle = 0.3490658503988659;
-            // var angle = tiltTank(xCoordinate);
-
-            if (angle > 0) {
-                var angle_curr = angle / Math.PI * 180;
-                angle_curr = Math.round(angle_curr / 10);
-                var xCof = angle_curr * 2,
-                    yCof = angle_curr * 7;
-            } else {
-                var angle_curr = -angle / Math.PI * 180;
-                angle_curr = Math.round(angle_curr / 10);
-                var xCof = angle_curr * 5.5,
-                    yCof = angle_curr * 5.5;
-            }
-
-            console.log(angle < angleWeapon, yCof);
-            if (angle < angleWeapon) {
-                var angleWeapon_curr = angleWeapon / Math.PI * 180;
-                angleWeapon_curr = Math.round(angleWeapon_curr / 10);
-                yCof = yCof + (angleWeapon_curr * 6.5);
-            } else {
-                var angleWeapon_curr = angleWeapon / Math.PI * 180;
-                angleWeapon_curr = Math.round(angleWeapon_curr / 10);
-                yCof = yCof - (angleWeapon_curr * 6.5);
-            }
-
-
-            console.log(angle / Math.PI * 180, angleWeapon / Math.PI * 180, angle_curr, xCof, yCof);
-
-            tankImage.src = './public/images/tankVehicle.png';
-            weaponImage.src = './public/images/tankWeapon.png';
-            tankImage.onload = function() {
-                ctx.save();
-                // console.log(xCoordinate, yCoordinate - 30, tankWidth, tankHeight);
-                ctx.translate(xCoordinate, yCoordinate - 30);
-                ctx.translate(tankWidth / 2, tankHeight / 2);
-                ctx.rotate(angle);
-                ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
-                ctx.restore();
-                ctx.save();
-                if (angle > 0) {
-                    ctx.translate(xCoordinate + 48 - xCof, yCoordinate - 43 + yCof);
-                } else {
-                    ctx.translate(xCoordinate + 48 - xCof, yCoordinate - 43 - yCof);
-                }
-                ctx.translate(tankWidth / 2, tankHeight / 2);
-                if (typeof angleWeapon != 'undefined')
-                    ctx.rotate(angle_weapon);
-                else
-                    ctx.rotate(angle);
-                ctx.drawImage(weaponImage, -(tankWidth / 2), -(tankHeight / 2), weaponWidth, weaponHeight);
-                ctx.restore();
-            }
-        };
+        // <------Tank Tilt------>
 
         let angle_weapon = 0;
 
@@ -158,6 +197,7 @@
 
             return this.angle;
         }
+
         // <------Tank movement------>
 
         var findLinePoints = function(posX) {
@@ -166,9 +206,9 @@
             for(var i = originalPoints.length - 1; i > 0; i--) {
                 if(originalPoints[i][0] >= posX && originalPoints[i-1][0] <= posX) {
                     var x1 = originalPoints[i-1][0],
-                    x2 = originalPoints[i][0],
-                    y1 = originalPoints[i-1][1],
-                    y2 = originalPoints[i][1];
+                        x2 = originalPoints[i][0],
+                        y1 = originalPoints[i-1][1],
+                        y2 = originalPoints[i][1];
                     // console.log("Vova: " + x1 + " " + x2 + " " + y1 + " " + y2);
                     var time = Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
                     for (var j = 0; j <= time; j++) {
@@ -194,64 +234,155 @@
             ctx.fill();
         };
 
-        var circle = function(x,y,r) {
-            ctx.beginPath();
-            ctx.arc(x, y, r, 0, Math.PI*2, true);
-            ctx.fillStyle = "purple";
-            ctx.fill();
+        var animate = function(draw, duration) {
+            var start = performance.now();
+            requestAnimFrame(function animate(time) {
+                var timePassed = time - start;
+                if (timePassed > duration) timePassed = duration;
+                draw(timePassed);
+                if(tankX >= WIDTH - 11 || tankX <= 11){
+                    window.cancelAnimationFrame(requestAnimFrame);
+                    console.log('stop!!!');
+                } else if (timePassed < duration) {
+                    requestAnimFrame(animate);
+                }
+            });
         };
 
+        var tankMove = function(direction) {
+            animate(function(timePassed) {
+                if(direction === "right") {
+                    tankX++;
+                } else {
+                    tankX--;
+                }
+                angle_weapon_rot = 0;
+                tankY = findLinePoints(tankX);
+                clear();
+                fillBackground();
+                drawTank(tankX, tankY);
+            }, 1500);
+        };
+
+
         function doKeyDown(evt){
-            switch (evt.keyCode) {
-                case 37:  /* Left arrow was pressed */
-                    if (tankX - dx > 0){
-                        tankX -= dx;
-                        tankY = findLinePoints(tankX);
+            var now = new Date().getTime();
+            if(now - lastTimeTankMoved > 1500) {
+                switch (evt.keyCode) {
+                    case 37:  /* Left arrow was pressed */
+                        tankMove('left');
+                        break;
+                    case 39:  /* Right arrow was pressed */
+                        tankMove('right');
+                        break;
+
+                    case 32: /*SPACE*/
+                        dt2=0;
+                        power=40;
+                        angle=40;
+                        bullets.push({ pos: [tankX, tankY],
+                            imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
+                            angle: angle,
+                            bulletSpeed: power
+                        });
+                        lastFire = Date.now();
+                        shotStart();
+                        break;
+
+                    case 38:    //Up arrow was pressed /
+                    if(angle_weapon_rot >= 45) {return;}
                         clear();
-                        drawTank(tankX, tankY);
-                        // drawWeapon(tankX, tankY)
-                        //circle(tankX, tankY, rad);
                         fillBackground();
-                    }
-                break;
-                case 39:  /* Right arrow was pressed */
-                    if (tankX + dx < WIDTH){
-                        tankX += dx;
-                        tankY = findLinePoints(tankX);
+                        angle_weapon_rot +=15;
+                        moveWeapon(tankX, tankY,angle_weapon);
+                        break;
+
+                    case 40:    //Down arrow was pressed /
+                    if(angle_weapon_rot <= -45) {return;}
                         clear();
-                        drawTank(tankX, tankY);
-                        // drawWeapon(tankX, tankY);
-                        //circle(tankX, tankY, rad);
                         fillBackground();
-                    }
+                        angle_weapon_rot -=15;
+                        moveWeapon(tankX, tankY,angle_weapon);
+                        break;
+
+                    case 13: /*ENTER*/
+                        makeShot();
                     break;
-                case 32: /*SPACE*/
-                    dt2=0;
-                    power=40;
-                    angle=40;
-                    bullets.push({ pos: [tankX+45, tankY-44],
-                        imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
-                        angle: angle,
-                        bulletSpeed: power
-                    });
-                    lastFire = Date.now();
-                    shotStart();
-                    break;
-                case 38:    / Up arrow was pressed /
-                    console.log('38', angle_weapon);
-                    if (angle_weapon >= 1.3962634015954636) {return;}
-                    angle_weapon += 0.17453292519943295;
-                    reDrawWeapon(angle_weapon);
-                    break;
-                case 40:    / Down arrow was pressed /
-                    console.log('38', angle_weapon);
-                    if (angle_weapon <= 0) {return;}
-                    angle_weapon -= 0.17453292519943295;
-                    reDrawWeapon(angle_weapon);
-                    break;
+
+                }
+            lastTimeTankMoved = now;
             }
         }
+
         window.addEventListener('keydown',doKeyDown,true);
+
+        function makeShot() {
+            dt2=0;
+            bullets.push({ pos: [tankX+45, tankY-44],
+                imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
+                angle: angle,
+                bulletSpeed: power
+            });
+            lastFire = Date.now();
+            shotStart();
+        }
+
+
+// <------Vika's part - Navigation ------>
+
+        function getId(id) {
+            return document.getElementById(id);
+        }
+
+        getId('fire').onclick = function() {
+            makeShot();
+        }
+
+        getId('morePower').onclick = function (){
+            power++;
+            getId('power').innerHTML = power;
+            power = parseInt(getId('power').innerHTML);
+        }
+        getId('lessPower').onclick = function (){
+            power--;
+            getId('power').innerHTML = power;
+            power = parseInt(getId('power').innerHTML);
+        }
+
+        getId('moreAngle').onclick = function (){
+            angle++;
+            getId('angle').innerHTML = angle;
+            angle = parseInt(getId('angle').innerHTML);
+        }
+        getId('lessAngle').onclick = function (){
+            angle--;
+            getId('angle').innerHTML = angle;
+            angle = parseInt(getId('angle').innerHTML);
+        }
+
+        // <------Vika's part - Explosion ------>
+
+        var xSprite = 0;
+        var sprite = new Image();
+        sprite.src = './public/images/explosion_sheet.png';
+        function tick(coords){
+            var xExplosion = coords.x - 40;   // x = x-central - R;
+            var yExplosion = coords.y - 40;   // y = y-central - R;
+
+            clear();
+
+            fillBackground(); // it's instead of ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawTank(tankX, tankY);
+            ctx.drawImage(sprite, xSprite, 0, 134, 134, xExplosion, yExplosion, 134, 134);
+            if (xSprite < 1608) {
+                xSprite = xSprite + 134;
+                window.setTimeout(tick, 70, coords);
+                // console.log('Coords are: ' + coords.x + ' and ' + coords.y);
+            } else {
+                xSprite = 0;
+            }
+        }
+
 
         //<------Maks's part-------->
 
@@ -266,8 +397,8 @@
                 window.setTimeout(callback, 1000 / 60);
             };
         })();
-
-        var power,angle;
+        var power =  parseInt(getId('power').innerHTML);
+        var angle = parseInt(getId('angle').innerHTML);;
         var lastTime;
         var dt2=0;
         var bullets = [];
@@ -279,29 +410,24 @@
 
         function drawBullet() {
             clear();
-            drawTank(tankX, tankY);
-            fillBackground();
 
+            fillBackground();
+            drawTank(tankX,tankY);
 
             var now = Date.now();
             var dt = (now - lastTime) / 1000.0;
-
             update(dt);
             render();
-
             lastTime = now;
-
         }
 
         function shotStart() {
-            //reset();
             lastTime = Date.now();
             drawBullet();
         }
 
         function update(dt) {
             gameTime += dt;
-
             updateEntities(dt);
         }
 
@@ -315,7 +441,7 @@
                 var coords = {x:bullet.pos[0],
                     y:bullet.pos[1],
                     width:10,
-                    height:1};
+                    height:10};
 
                 if (checkCol(coords,originalPoints)){
                     console.log( 'x:' +  (coords.x + coords.width), 'y:' + (coords.y + coords.height));
@@ -325,18 +451,17 @@
                     i--;
 
                     originalPoints = calculateDamageArea(originalPoints, (coords.x + coords.width), (coords.y + coords.height));
-                    console.log('originalPoints has been cut out');
 
                     // temporary solution for redrawing updated array originalPoints
                     clear();
                     drawSky();
                     drawGround();
-                    drawTank(tankX, tankY);
 
                     pattern = ctx.createPattern(backCanvas, "no-repeat");
                     tankY = findLinePoints(tankX);
-                    fillBackground();
 
+                    fillBackground();
+                    drawTank(tankX, tankY);
                 }
                 else if(bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT)
                 {
@@ -346,15 +471,17 @@
                     clear();
                     drawSky();
                     drawGround();
-                    drawTank(tankX, tankY);
 
                     pattern = ctx.createPattern(backCanvas, "no-repeat");
                     tankY = findLinePoints(tankX);
+
                     fillBackground();
+                    drawTank(tankX, tankY);
                 }
                 else
+                {
                     requestAnimFrame(drawBullet);
-
+                }
             }
         }
 
@@ -406,28 +533,6 @@
             window.ImgInf = ImgInf;
         })();
 
-        // <------Vika's part Explosion ------>
-
-        var xSprite = 0;
-        var sprite = new Image();
-        sprite.src = './public/images/explosion_sheet.png';
-        function tick(coords){
-            var xExplosion = coords.x - 40;   // x = x-central - R;
-            var yExplosion = coords.y - 40;   // y = y-central - R;
-
-            clear();
-            drawTank(tankX, tankY);
-            fillBackground(); // it's instead of ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(sprite, xSprite, 0, 134, 134, xExplosion, yExplosion, 134, 134);
-            if (xSprite < 1608) {
-                xSprite = xSprite + 134;
-                window.setTimeout(tick, 70, coords);
-                // console.log('Coords are: ' + coords.x + ' and ' + coords.y);
-            } else {
-                xSprite = 0;
-            }
-        }
-
         // ======= Misha's part =======
 
         function checkCol(current, array) {
@@ -460,7 +565,7 @@
             let a = (point2.y - point1.y) / (point2.x - point1.x);
             let b = point1.y - a * point1.x;
 
-            if(Math.abs(objPoint.y - (a*objPoint.x + b)) < 1.5) {
+            if(Math.abs(objPoint.y - (a*objPoint.x + b)) < 2) {
                 return true;
             }
             return false;
@@ -471,7 +576,6 @@
         const calculateDamageArea = (array, damageX, damageY) => {
             damageX = Math.round(damageX);
             damageY = Math.round(damageY);
-            console.log('Misha\'s coordinates rounded and are:', damageX, damageY);
 
             // TODO bookmark
             // TODO change all 'for' loops into 'map' where is possible
@@ -479,26 +583,25 @@
                 y1,
                 x2,
                 y2,
+                theta,
+                delta = (Math.PI / 12),
                 distance,
-                pointsOnCircles,
-                pointCheck1,
-                pointCheck2,
+                pointOnCircle,
                 pointRealOnCircle = [],
                 elementToChangeFrom,
             // setting distanceBetweenDamageSegments static as a distance between points of damaged ground
                 distanceBetweenDamageSegments = 15,
-                damageRadius = 40;
+                damageRadius = 40,
+                segmentPoints,
+                pointsOfIntersect = [];
 
-            let segmentPoints = findDamageLimits(array, damageX, damageY, damageRadius);
-            // console.log(segmentPoints, 'segmentPoints');
+            segmentPoints = findDamageLimits(array, damageX, damageY, damageRadius);
 
-            let pointsOfIntersect = [];
             for (let i = 0; i < segmentPoints.length; i++) {
                 if (segmentPoints[i][2] == 'inDamage') {
                     pointsOfIntersect.push(segmentPoints[i]);
                 }
             }
-            // console.log(pointsOfIntersect, 'pointsOfIntersect');
 
             for (let i = 1; i < pointsOfIntersect.length; i++) {
                 if (i % 2) {
@@ -506,80 +609,34 @@
                     y1 = pointsOfIntersect[i - 1][1];
                     x2 = pointsOfIntersect[i][0];
                     y2 = pointsOfIntersect[i][1];
-                    // console.log(x1, y1, x2, y2, 'x1, y1, x2, y2');
-                    // console.log(i, 'i');
 
                     pointRealOnCircle.push([x1, y1]);
 
-                    distance = calculateDistance(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2);
-                    if (distance <= distanceBetweenDamageSegments) {
-                        // console.log('minimal distance is set');
-                        pointRealOnCircle.push([x2, y2]);
-                        continue;
-                    }
+                    theta = findInitialAngle(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], damageX, damageY);
 
-                    while (distance > distanceBetweenDamageSegments) {
-                        // console.log(distance, 'distance inside');
-                        // console.log('pointRealOnCircle current point', pointRealOnCircle.length-1, pointRealOnCircle[pointRealOnCircle.length-1]);
-
-                        pointsOnCircles = findCirclesIntersection(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], distanceBetweenDamageSegments, damageX, damageY, damageRadius);
-                        // console.log(pointsOnCircles, 'pointsOnCircles');
-
-                        pointCheck1 = checkGroundPoint(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2, pointsOnCircles[0][0], pointsOnCircles[0][1]);
-                        // console.log(pointCheck1, 'pointCheck1');
-
-                        pointCheck2 = checkGroundPoint(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2, pointsOnCircles[1][0], pointsOnCircles[1][1]);
-                        // console.log(pointCheck2, 'pointCheck2');
-
-                        if (pointCheck1) {
-
-                            pointRealOnCircle.push(pointCheck1);
-                            // console.log('pointRealOnCircle current point >>>>>>> pointCheck1', pointRealOnCircle.length-1, pointRealOnCircle[pointRealOnCircle.length-1]);
-                            distance = calculateDistance(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2);
-                            // console.log(distance, 'distance >>>>>>> pointCheck1');
-
-                        } else if (pointCheck2) {
-
-                            pointRealOnCircle.push(pointCheck2);
-                            // console.log('pointRealOnCircle current point >>>>>>> pointCheck2', pointRealOnCircle.length-1, pointRealOnCircle[pointRealOnCircle.length-1]);
-                            distance = calculateDistance(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2);
-                            // console.log(distance, 'distance >>>>>>> pointCheck2');
-
-                        } else {
-
-                            console.log('Oops! You may want to add this unique condition to checkGroundPoint function');
-                            pointRealOnCircle.push([x2, y2]);
-                            break;
+                    do {
+                        if (pointOnCircle) {
+                            pointRealOnCircle.push(pointOnCircle);
                         }
 
-                        if (distance <= distanceBetweenDamageSegments) {
-                            // console.log('minimal distance is set');
-                            pointRealOnCircle.push([x2, y2]);
-                        }
+                        theta -= delta;
+
+                        pointOnCircle = rotateFixed(damageX, damageY, damageRadius, theta);
+
+                        distance = calculateDistance(pointOnCircle[0], pointOnCircle[1], x2, y2);
                     }
+                    while (distance > distanceBetweenDamageSegments);
+
+                    pointRealOnCircle.push([x2, y2]);
                 }
-                // console.log('Loop is still working');
             }
 
-            // console.log(pointRealOnCircle, 'pointRealOnCircle[i]');
             // replace damage points in segmentPoints array with extended damage points
             segmentPoints.splice(1, segmentPoints.length-2);
             for (let i = 0; i < pointRealOnCircle.length; i++) {
                 segmentPoints.splice((1 + i), 0, pointRealOnCircle[i]);
             }
 
-            // console.log(segmentPoints[0],
-            //     segmentPoints[1],
-            //     segmentPoints[2],
-            //     segmentPoints[3],
-            //     segmentPoints[4],
-            //     segmentPoints[5],
-            //     segmentPoints[6],
-            //     segmentPoints[7],
-            //     segmentPoints[8],
-            //     segmentPoints[9],
-            //     segmentPoints[10],
-            //     segmentPoints[11], 'segmentPoints');
             // insert damage points into originalPoints array with extended damage points
             elementToChangeFrom = segmentPoints[0][2];
             array.splice(elementToChangeFrom, 4);
@@ -591,37 +648,6 @@
                 array.splice(elementToChangeFrom, 0, item);
                 elementToChangeFrom++;
             });
-
-            // console.log(array[0],
-            //     array[1],
-            //     array[2],
-            //     array[3],
-            //     array[4],
-            //     array[5],
-            //     array[6],
-            //     array[7],
-            //     array[8],
-            //     array[9],
-            //     array[10],
-            //     array[11],
-            //     array[12],
-            //     array[13],
-            //     array[14],
-            //     array[15],
-            //     array[16],
-            //     array[17],
-            //     array[18],
-            //     array[19],
-            //     array[20],
-            //     array[21],
-            //     array[22],
-            //     array[23],
-            //     array[24],
-            //     array[25],
-            //     array[26],
-            //     array[27],
-            //     array[28],
-            //     array[29], 'originalPoints modified');
 
             return array;
         };
@@ -643,17 +669,14 @@
                 distanceFromDamageCenter1,
                 distanceFromDamageCenter2;
 
-            pointsOfDamageCenterSegment = findPointOnSegment(array, damageX, damageY);
+            pointsOfDamageCenterSegment = findDamageCenterPointOnSegment(array, damageX, damageY);
             if (pointsOfDamageCenterSegment == null) {
                 console.log('Point is out of the ground');
             }
             // TODO implement logic if pointOfDamageCenter is equal to point in originalPoints
-            // console.log(pointsOfDamageCenterSegment[0], 'pointsOfDamageCenterSegment[0]');
-            // console.log(pointsOfDamageCenterSegment[1], 'pointsOfDamageCenterSegment[1]');
+
             distanceFromDamageCenter1 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[0][0], pointsOfDamageCenterSegment[0][1]);
-            // console.log(distanceFromDamageCenter1, 'distanceFromDamageCenter1');
             distanceFromDamageCenter2 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[1][0], pointsOfDamageCenterSegment[1][1]);
-            // console.log(distanceFromDamageCenter2, 'distanceFromDamageCenter2');
 
             if (distanceFromDamageCenter1 >= damageRadius || damageRadius <= distanceFromDamageCenter2) {
                 segmentPairPoints.push(pointsOfDamageCenterSegment[0]);
@@ -687,13 +710,12 @@
                     segmentPairPoints.splice(i, 1);
                 }
             }
-            // console.log(segmentPairPoints, 'segmentPairPoints');
 
             // populating array pointsRebuild with points of area which is going to be modified
             pointsRebuild.push(segmentPairPoints[0]);
             for (let i = 1; i < segmentPairPoints.length; i++) {
+
                 pointsOnDamageLine = findIntersectionCoordinates(segmentPairPoints[i - 1][0], segmentPairPoints[i - 1][1], segmentPairPoints[i][0], segmentPairPoints[i][1], damageX, damageY, damageRadius);
-                // console.log(pointsOnDamageLine, 'pointsOnDamageLine');
 
                 segmentWithDamage1 = findPointOnSegment(array, pointsOnDamageLine[0][0], pointsOnDamageLine[0][1]);
 
@@ -702,15 +724,15 @@
                 if (segmentWithDamage1 != undefined) {
                     pointsOnDamageLine[0].push('inDamage');
                     pointsRebuild.push(pointsOnDamageLine[0]);
-                    // console.log(pointsOnDamageLine[0], 'pointsOnDamageLine[0]');
                 }
 
                 if (segmentWithDamage2 != undefined) {
                     pointsOnDamageLine[1].push('inDamage');
                     pointsRebuild.push(pointsOnDamageLine[1]);
-                    // console.log(pointsOnDamageLine[1], 'pointsOnDamageLine[1]');
                 }
             }
+
+            pointsRebuild.sort();
 
             // number of last point of damaged line-segment in canvas array
             numberOfLast = segmentPairPoints[segmentPairPoints.length - 1][2] + 1;
@@ -718,7 +740,6 @@
             // also setting index number from originalPoints array
             pointsRebuild[pointsRebuild.length - 1].push(numberOfLast);
 
-            // console.log(pointsRebuild, 'pointsRebuild');
             return pointsRebuild;
         };
 
@@ -748,97 +769,18 @@
             return [point1, point2];
         };
 
-        const findCirclesIntersection = (x1, y1, r1, x2, y2, r2) => {
-            // x1, y1, r1, x2, y2, r2 - are centre coordinates and radii of two circles - one of damage and one of distance between damage segments
-            // d = a + b - distance between centers of two circles
-            // p0 - point between a and b
-            // h - distance between p0 and points of intersections: p3 and p4
-            // console.log(x1, y1, r1, x2, y2, r2, 'x1, y1, r1, x2, y2, r2');
-            let b = ( (Math.pow(r2, 2) - Math.pow(r1, 2) + Math.pow(r2, 2) ) / (2 * r2) );
-            // console.log(b, 'b');
-
-            let a = r2 - b;
-            // console.log(a, 'a');
-
-            let h = ( Math.sqrt( Math.pow(r1, 2) - Math.pow(a, 2) ) );
-            // console.log(h, 'h');
-
-            let p0x = x1 + a / r2 * (x2 - x1);
-            // console.log(p0x, 'p0x');
-            let p0y = y1 + a / r2 * (y2 - y1);
-            // console.log(p0y, 'p0y');
-
-            let p3x = Math.round(p0x + ( ( (y2 - y1) / r2 ) * h ) );
-            // console.log(p3x, 'p3x');
-            let p3y = Math.round(p0y - ( ( (x2 - x1) / r2 ) * h ) );
-            // console.log(p3y, 'p3y');
-
-            let p4x = Math.round(p0x - ( ( (y2 - y1) / r2 ) * h ) );
-            // console.log(p4x, 'p4x');
-            let p4y = Math.round(p0y + ( ( (x2 - x1) / r2 ) * h ) );
-            // console.log(p4y, 'p4y');
-
-            let point1 = [p3x, p3y];
-            let point2 = [p4x, p4y];
-
-            // console.log(point1, point2, 'point1, point2');
-            return [point1, point2];
+        const findInitialAngle = (x, y, cx, cy) => {
+            return Math.atan2((y - cy), (x - cx));
         };
 
-        const checkGroundPoint = (point1x, point1y, point2x, point2y, pointIntersectionX, pointIntersectionY) => {
-            // point1 always first on canvas
-            // console.log(point1x, point1y, point2x, point2y, pointIntersectionX, pointIntersectionY, 'point1x, point1y, point2x, point2y, pointIntersectionX, pointIntersectionY ======= checkGroundPoint parameters');
+        const rotateFixed = (cx, cy, r, theta) => {
+            let px2,
+                py2;
 
-            // general cases
-            let conditions1x = (point1x < pointIntersectionX && pointIntersectionX < point2x);
-            let conditions1y = (point1y < pointIntersectionY && pointIntersectionY > point2y);
-            let conditions2x = (point1x > pointIntersectionX && pointIntersectionX < point2x);
-            let conditions2y = (point1y < pointIntersectionY && pointIntersectionY < point2y);
-            let conditions3x = (point1x > pointIntersectionX && pointIntersectionX > point2x);
-            let conditions3y = (point1y > pointIntersectionY && pointIntersectionY < point2y);
-            let conditions4x = (point1x < pointIntersectionX && pointIntersectionX > point2x);
-            let conditions4y = (point1y > pointIntersectionY && pointIntersectionY > point2y);
+            px2 = Math.round( cx + (r * Math.cos(theta)) );
+            py2 = Math.round( cy + (r * Math.sin(theta)) );
 
-            // cases when p1 == x and y == p2 or vise versa
-            let conditions5x = (point1x < pointIntersectionX && pointIntersectionX == point2x);
-            let conditions5y = (point1y == pointIntersectionY && pointIntersectionY > point2y);
-            let conditions6x = (point1x == pointIntersectionX && pointIntersectionX > point2x);
-            let conditions6y = (point1y > pointIntersectionY && pointIntersectionY == point2y);
-            let conditions7x = (point1x > pointIntersectionX && pointIntersectionX == point2x);
-            let conditions7y = (point1y == pointIntersectionY && pointIntersectionY < point2y);
-            let conditions8x = (point1x == pointIntersectionX && pointIntersectionX < point2x);
-            let conditions8y = (point1y < pointIntersectionY && pointIntersectionY == point2y);
-
-            // TODO tons of cases
-            // cases when p1 == y
-            let conditions9x = (point1x < pointIntersectionX && pointIntersectionX < point2x);
-            let conditions9y = (point1y == pointIntersectionY && pointIntersectionY > point2y);
-            // let conditions6x = (point1x == pointIntersectionX && pointIntersectionX > point2x);
-            // let conditions6y = (point1y > pointIntersectionY && pointIntersectionY == point2y);
-            // let conditions7x = (point1x > pointIntersectionX && pointIntersectionX == point2x);
-            // let conditions7y = (point1y == pointIntersectionY && pointIntersectionY < point2y);
-            // let conditions8x = (point1x == pointIntersectionX && pointIntersectionX < point2x);
-            // let conditions8y = (point1y < pointIntersectionY && pointIntersectionY == point2y);
-
-            let conditions10x = (point1x > pointIntersectionX && pointIntersectionX > point2x);
-            let conditions10y = (point1y > pointIntersectionY && pointIntersectionY > point2y);
-
-            let conditions1 = (conditions1x && conditions1y);
-            let conditions2 = (conditions2x && conditions2y);
-            let conditions3 = (conditions3x && conditions3y);
-            let conditions4 = (conditions4x && conditions4y);
-            let conditions5 = (conditions5x && conditions5y);
-            let conditions6 = (conditions6x && conditions6y);
-            let conditions7 = (conditions7x && conditions7y);
-            let conditions8 = (conditions8x && conditions8y);
-            let conditions9 = (conditions9x && conditions9y);
-            let conditions10 = (conditions10x && conditions10y);
-
-            if (conditions1 || conditions2 || conditions3 || conditions4 || conditions5 || conditions6 || conditions7 || conditions8 || conditions9 || conditions10) {
-                return [pointIntersectionX, pointIntersectionY];
-            }
-
-            return false;
+            return [px2, py2];
         };
 
         const findPointOnSegment = (array, segmentX, segmentY) => {
@@ -862,7 +804,6 @@
                 if ( ((y1 <= foundPoint) && (foundPoint <= y2)) || ((y2 <= foundPoint) && (foundPoint <= y1)) ) {
                     point1 = [x1, y1, (i - 1)];
                     point2 = [x2, y2, i];
-                    // console.log([point1, point2], 'foundPoint lays on a line-segment between these coordinates');
                     return [point1, point2];
                 }
             }
@@ -872,9 +813,47 @@
         const calculateLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
             /*defines point which coordinates lays on the line of segment*/
             let y = Math.round( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
-            // console.log(y, 'y outside');
-            if ( (y) <= segmentY && segmentY <= (y) ) {
-                // console.log(y, 'y inside');
+
+            if ( (y - 5) <= segmentY && segmentY <= (y + 5) ) {
+                return y;
+            }
+        };
+
+        // dirty hack while Misha's point is underground
+        const findDamageCenterPointOnSegment = (array, segmentX, segmentY) => {
+            /*defines point which coordinates lays on the line-segment of canvas*/
+            let x1;
+            let y1;
+            let x2;
+            let y2;
+            let foundPoint;
+            let point1;
+            let point2;
+
+            for (let i = 1; i < array.length; i++) {
+                x1 = array[i - 1][0];
+                y1 = array[i - 1][1];
+                x2 = array[i][0];
+                y2 = array[i][1];
+
+                foundPoint = calculateDamageCenterLineEquation(x1, y1, x2, y2, segmentX, segmentY);
+
+                if ( ((y1 <= foundPoint) && (foundPoint <= y2)) || ((y2 <= foundPoint) && (foundPoint <= y1)) ) {
+                    point1 = [x1, y1, (i - 1)];
+                    point2 = [x2, y2, i];
+
+                    return [point1, point2];
+                }
+            }
+            return null;
+        };
+
+        const calculateDamageCenterLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
+            /*defines point which coordinates lays on the line of segment*/
+            let y = Math.round( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
+
+            // temporary solution before Misha fixes point to be on the ground instead of underground
+            if ( (y - 5) <= segmentY && segmentY <= (y + 5) ) {
                 return y;
             }
         };
@@ -887,11 +866,13 @@
             pattern = ctx.createPattern(backCanvas, "no-repeat");
             tankX = Math.floor((Math.random() * 330) + 30);
             tankY = findLinePoints(tankX);
-            // angle_weapon = tiltTank(tankX);
-            angle_weapon = 0.3490658503988659;
-            drawTank(tankX, tankY);
-            // drawWeapon(tankX, tankY);
+            lastTimeTankMoved = 0;
             fillBackground();
+            angle_weapon = tiltTank(tankX);
+            weaponImage.onload = function() {
+            	drawTank(tankX, tankY);
+            }
         })();
+
     }
 // });
