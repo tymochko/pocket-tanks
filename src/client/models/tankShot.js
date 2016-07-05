@@ -80,19 +80,20 @@
                 console.log(xCoordinate, yCoordinate - 30, tankWidth, tankHeight);
                 ctx.translate(xCoordinate, yCoordinate - 30);
                 ctx.translate(tankWidth / 2, tankHeight / 2);
-                ctx.rotate(angle);
-                ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
-                ctx.restore();
-            }
-            weaponImage.onload = function() {
-                ctx.save();
                 ctx.translate(xCoordinate + 45, yCoordinate - 44);
                 ctx.translate(weaponWidth / 2, weaponHeight / 2);
                 ctx.rotate(angle);
+                ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
                 ctx.drawImage(weaponImage, -(weaponWidth / 2), -(weaponHeight / 2), weaponWidth, weaponHeight);
                 ctx.restore();
             }
-            // console.log("hello");
+           /* weaponImage.onload = function() {
+                ctx.save();
+                
+                ctx.rotate(angle);
+                
+                ctx.restore();
+            }*/
         };
 
         var tiltTank = function(posX) {
