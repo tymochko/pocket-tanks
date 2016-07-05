@@ -2,6 +2,7 @@
 
 // document.addEventListener("DOMContentLoaded", function(){
     function initGame(){
+
         //      <------initialization------>
         var backCanvas = document.createElement('canvas');
         var WIDTH = backCanvas.width  = 800;
@@ -15,10 +16,10 @@
 
         var pattern;
 
-        var originalPoints = [[0, 300],[20, 305],[40, 330],[145, 345],[125, 400],[165, 350],[175, 360],[220, 370],
-        [240, 320],[280, 300],[300, 270],[340, 200],[370, 170],[440, 190],[550, 430],[530, 370],[540, 330],
-        [575, 310],[630, 340],[685, 340],[690, 355],[700, 340],[750, 300],[755, 305],[795, 270],[800, 270],
-        [800, 500],[0, 500],[0, 300]];
+        var originalPoints = [[0, 280],[20, 285],[40, 310],[145, 325],[125, 380],[165, 330],[175, 340],[220, 350],
+        [240, 300],[280, 280],[300, 250],[340, 180],[370, 150],[440, 170],[550, 410],[530, 350],[540, 310],
+        [575, 290],[630, 320],[685, 320],[690, 335],[700, 320],[750, 280],[755, 285],[795, 250],[800, 250],
+        [800, 500],[0, 500],[0, 280]];
 
         // <------Ground and sky drawing------>
 
@@ -265,6 +266,7 @@
                     case 39:  /* Right arrow was pressed */
                         tankMove('right');
                         break;
+
                     case 32: /*SPACE*/
                         dt2=0;
                         power=40;
@@ -293,12 +295,85 @@
                         angle_weapon_rot -=15;
                         moveWeapon(tankX, tankY,angle_weapon);
                         break;
+
+                    case 13: /*ENTER*/
+                        makeShot();
+                    break;
+
                 }
             lastTimeTankMoved = now;
             }
         }
 
         window.addEventListener('keydown',doKeyDown,true);
+
+        function makeShot() {
+            dt2=0;
+            bullets.push({ pos: [tankX+45, tankY-44],
+                imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
+                angle: angle,
+                bulletSpeed: power
+            });
+            lastFire = Date.now();
+            shotStart();
+        }
+
+
+// <------Vika's part - Navigation ------>
+
+        function getId(id) {
+            return document.getElementById(id);
+        }    
+
+        getId('fire').onclick = function() {
+            makeShot();
+        }
+
+        getId('morePower').onclick = function (){
+            power++;
+            getId('power').innerHTML = power;
+            power = parseInt(getId('power').innerHTML);
+        }
+        getId('lessPower').onclick = function (){
+            power--;
+            getId('power').innerHTML = power;
+            power = parseInt(getId('power').innerHTML);
+        }
+
+        getId('moreAngle').onclick = function (){
+            angle++;
+            getId('angle').innerHTML = angle;
+            angle = parseInt(getId('angle').innerHTML);
+        }
+        getId('lessAngle').onclick = function (){
+            angle--;
+            getId('angle').innerHTML = angle;
+            angle = parseInt(getId('angle').innerHTML);
+        }
+
+        // <------Vika's part - Explosion ------>
+
+        var xSprite = 0;
+        var sprite = new Image();
+        sprite.src = './public/images/explosion_sheet.png';
+        function tick(coords){
+            var xExplosion = coords.x - 40;   // x = x-central - R;
+            var yExplosion = coords.y - 40;   // y = y-central - R;
+
+            clear();
+            
+            fillBackground(); // it's instead of ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawTank(tankX, tankY);
+            ctx.drawImage(sprite, xSprite, 0, 134, 134, xExplosion, yExplosion, 134, 134);
+            if (xSprite < 1608) {
+                xSprite = xSprite + 134;
+                window.setTimeout(tick, 70, coords);
+                // console.log('Coords are: ' + coords.x + ' and ' + coords.y);
+            } else {
+                xSprite = 0;
+            }
+        }
+
 
         //<------Maks's part-------->
 
@@ -313,8 +388,8 @@
                 window.setTimeout(callback, 1000 / 60);
             };
         })();
-
-        var power,angle;
+        var power =  parseInt(getId('power').innerHTML);
+        var angle = parseInt(getId('angle').innerHTML);;
         var lastTime;
         var dt2=0;
         var bullets = [];
@@ -338,7 +413,6 @@
         }
 
         function shotStart() {
-            //reset();
             lastTime = Date.now();
             drawBullet();
         }
@@ -368,7 +442,6 @@
                     i--;
 
                     originalPoints = calculateDamageArea(originalPoints, (coords.x + coords.width), (coords.y + coords.height));
-                    console.log('originalPoints has been cut out');
 
                     // temporary solution for redrawing updated array originalPoints
                     clear();
@@ -451,29 +524,6 @@
             window.ImgInf = ImgInf;
         })();
 
-        // <------Vika's part Explosion ------>
-
-        var xSprite = 0;
-        var sprite = new Image();
-        sprite.src = './public/images/explosion_sheet.png';
-        function tick(coords){
-            var xExplosion = coords.x - 40;   // x = x-central - R;
-            var yExplosion = coords.y - 40;   // y = y-central - R;
-
-            clear();
-            
-            fillBackground(); // it's instead of ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawTank(tankX, tankY);
-            ctx.drawImage(sprite, xSprite, 0, 134, 134, xExplosion, yExplosion, 134, 134);
-            if (xSprite < 1608) {
-                xSprite = xSprite + 134;
-                window.setTimeout(tick, 70, coords);
-                // console.log('Coords are: ' + coords.x + ' and ' + coords.y);
-            } else {
-                xSprite = 0;
-            }
-        }
-
         // ======= Misha's part =======
 
         function checkCol(current, array) {
@@ -532,11 +582,12 @@
                 elementToChangeFrom,
             // setting distanceBetweenDamageSegments static as a distance between points of damaged ground
                 distanceBetweenDamageSegments = 15,
-                damageRadius = 40;
+                damageRadius = 40,
+                segmentPoints,
+                pointsOfIntersect = [];
 
-            let segmentPoints = findDamageLimits(array, damageX, damageY, damageRadius);
+            segmentPoints = findDamageLimits(array, damageX, damageY, damageRadius);
 
-            let pointsOfIntersect = [];
             for (let i = 0; i < segmentPoints.length; i++) {
                 if (segmentPoints[i][2] == 'inDamage') {
                     pointsOfIntersect.push(segmentPoints[i]);
@@ -551,13 +602,6 @@
                     y2 = pointsOfIntersect[i][1];
 
                     pointRealOnCircle.push([x1, y1]);
-
-                    distance = calculateDistance(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], x2, y2);
-
-                    if (distance <= distanceBetweenDamageSegments) {
-                        pointRealOnCircle.push([x2, y2]);
-                        continue;
-                    }
 
                     theta = findInitialAngle(pointRealOnCircle[pointRealOnCircle.length - 1][0], pointRealOnCircle[pointRealOnCircle.length - 1][1], damageX, damageY);
 
@@ -622,7 +666,6 @@
             }
             // TODO implement logic if pointOfDamageCenter is equal to point in originalPoints
 
-
             distanceFromDamageCenter1 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[0][0], pointsOfDamageCenterSegment[0][1]);
             distanceFromDamageCenter2 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[1][0], pointsOfDamageCenterSegment[1][1]);
 
@@ -662,6 +705,7 @@
             // populating array pointsRebuild with points of area which is going to be modified
             pointsRebuild.push(segmentPairPoints[0]);
             for (let i = 1; i < segmentPairPoints.length; i++) {
+
                 pointsOnDamageLine = findIntersectionCoordinates(segmentPairPoints[i - 1][0], segmentPairPoints[i - 1][1], segmentPairPoints[i][0], segmentPairPoints[i][1], damageX, damageY, damageRadius);
 
                 segmentWithDamage1 = findPointOnSegment(array, pointsOnDamageLine[0][0], pointsOnDamageLine[0][1]);
@@ -678,6 +722,8 @@
                     pointsRebuild.push(pointsOnDamageLine[1]);
                 }
             }
+
+            pointsRebuild.sort();
 
             // number of last point of damaged line-segment in canvas array
             numberOfLast = segmentPairPoints[segmentPairPoints.length - 1][2] + 1;
@@ -722,8 +768,8 @@
             let px2,
                 py2;
 
-            px2 = cx + (r * Math.cos(theta));
-            py2 = cy + (r * Math.sin(theta));
+            px2 = Math.round( cx + (r * Math.cos(theta)) );
+            py2 = Math.round( cy + (r * Math.sin(theta)) );
 
             return [px2, py2];
         };
@@ -786,6 +832,7 @@
                 if ( ((y1 <= foundPoint) && (foundPoint <= y2)) || ((y2 <= foundPoint) && (foundPoint <= y1)) ) {
                     point1 = [x1, y1, (i - 1)];
                     point2 = [x2, y2, i];
+
                     return [point1, point2];
                 }
             }
@@ -797,7 +844,7 @@
             let y = Math.round( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
 
             // temporary solution before Misha fixes point to be on the ground instead of underground
-            if ( (y - 10) <= segmentY && segmentY <= (y + 10) ) {
+            if ( (y - 5) <= segmentY && segmentY <= (y + 5) ) {
                 return y;
             }
         };

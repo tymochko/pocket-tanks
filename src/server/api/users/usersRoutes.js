@@ -28,7 +28,7 @@ router.get('/', (req, res) => {
 // get user's info by id, for instance in profile page
 router.get('/profile', (req, res) => {
     usersCollection.showProfile({_id: req.session.user}, (err, foundUser) => {
-        if (err) {
+            if (err) {
             console.log('err  ', err);
             res.status(401).send();
         } else {
@@ -106,8 +106,12 @@ router.post('/add', (req, res) => {
 
 // edit user profile
 router.put('/profile/updateUser', (req, res) => {
-    req.body.userImg.image = req.body.userImg.image.split("/").pop().split('?').shift();
-
+    //TODO add comment
+    var isUserImgPresent = req.body.userImg && req.body.userImg.image;
+    if(isUserImgPresent) {
+        req.body.userImg.image = req.body.userImg.image.split("/").pop().split('?').shift();
+    }
+    
     usersCollection.updateUser({_id: req.session.user}, req.body, (err, foundUser) => {
         if (err) {
             console.log('err  ', err);
@@ -131,11 +135,11 @@ router.put('/profile/delete', (req, res) => {
 });
 
 //upload user img
-router.post('/profile/upload', function (reqvest, res) {
+router.post('/profile/upload', function (request, res) {
     var d = new Date();
     var originName;
     var fileNameNew = 'userAvatar' + d.getTime();
-    var dir = './src/server/usersInfo/' + reqvest.session.user;
+    var dir = './src/server/usersInfo/' + request.session.user;
     usersCollection.rmDir(dir);
     var storage = multer.diskStorage({ //multers disk storage settings
         destination: function (req, file, cb) {
@@ -151,45 +155,46 @@ router.post('/profile/upload', function (reqvest, res) {
         storage: storage
     }).single('file');
 
-    upload(reqvest, res, function (err) {
+    upload(request, res, function (err) {
         if (err) {
 
             res.json({error_code: 1, err_desc: err});
             return;
         }
         var extension = originName.split('.')[originName.split('.').length - 1];
-        res.json({image: userImgURL + fileNameNew + '.' + extension + getSalt(), uploadedImg: true});
+        res.json({image: userImgURL + fileNameNew + '.' + extension + usersCollection.getSalt(), uploadedImg: true});
     });
 });
 
 
-router.get('/profile/getImage/:scope/:imageName?', (req, res) => {
+router.get('/profile/getImage/:scope/:imageName?', function  (req, res) {
+
+    var userId = req.session.user;
     try {
         var scope = req.params.scope;
         switch (scope) {
             case publicScopeName:
-                getPublicImage(req, res);
+                usersCollection.getPublicImage(req, res);
                 break;
             case userScopeName:
-                getUserImage(req, res);
+                usersCollection.getUserImage(req, res);
                 break;
             case userUploadsScopeName:
-                getUserUploadedImage(req, res);
+                usersCollection.getUserUploadedImage(req, res);
                 break;
         }
     }
     catch (e) {
         console.log(e)
-    }
+    };
 });
-
 
 router.get('/profile/publicImages', (req, res) => {
     fs.readdir(__dirname + '/../../images/' + '/', function (e, files) {
         if (!e && files.length > 0) {
             var images = [];
             for (var file in files) {
-                images.push({image: publicImgURL + files[file] + getSalt(), uploadedImg: false});
+                images.push({image: publicImgURL + files[file] + usersCollection.getSalt(), uploadedImg: false});
             }
 
             var userId = req.session.user;
@@ -198,7 +203,7 @@ router.get('/profile/publicImages', (req, res) => {
             fs.readdir(userDir, function (e, files) {
                 console.log(e, files.length > 0);
                 if (!e && files.length > 0)
-                    images.push({image: userImgURL + files[0] + getSalt(), uploadedImg: true});
+                    images.push({image: userImgURL + files[0] + usersCollection.getSalt(), uploadedImg: true});
                 res.send(200, images);
             });
         }
@@ -206,56 +211,5 @@ router.get('/profile/publicImages', (req, res) => {
             res.send(404);
     });
 });
-const getPublicImage =  function (req, res) {
-    res.sendFile(path.resolve(__dirname + '/../../images/' + req.params.imageName), function (err) {
-        if (err) {
-            console.log(err);
-            res.status(err.status).end();
-        }
-    });
-}
-
-function getUserImage (req, res) {
-    var userId = req.session.user;
-    var userImage;
-    var userDir;
-    usersCollection.showProfile({_id: userId}, (err, foundUser) => {
-        if (err) {
-            console.log('err  ', err);
-            res.status(401).send();
-        } else {
-            userImage = foundUser.userImg;
-            console.log('userImage  ', userImage);
-            if(userImage.uploadedImg) {
-                userDir = __dirname + '/../../usersInfo/' + userId + '/' + userImage.image;
-            } else {
-                userDir = __dirname + '/../../images/' + userImage.image;
-            }
-            res.sendFile(path.resolve(userDir), function (err) {
-                if (err) {
-                    console.log('err:  ', err);
-                    res.status(403).end();
-                }
-            });
-        }
-    });
-}
-
-function getUserUploadedImage (req, res) {
-    var userId = req.session.user;
-    var imageName = req.params.imageName;
-    var imageDir = __dirname + '/../../usersInfo/' + userId + '/' + imageName;
-
-    res.sendFile(path.resolve(imageDir), function (err) {
-        if (err) {
-            console.log('err:  ', err);
-            res.status(403).end();
-        }
-    });
-}
-function getSalt (){
-    return "?salt=" + new Date().getTime();
-}
-
 
 module.exports = router;

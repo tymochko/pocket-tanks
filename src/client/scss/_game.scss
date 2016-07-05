@@ -14,21 +14,23 @@
     box-shadow: inset 0 0 30px rgba(255, 80, 80, 1);
 }
 
-body {
-    background-color: grey;
-    .outer {
-        font-family: 'Digital_tech', sans-serif;
-    }
-    .right-col {
-        display: inline-block;
-        float: right;
-        background-color: #BA2924;
-        width: 530px;
-        height: 640px;
-    }
+.outer {
+    font-family: 'Digital_tech', sans-serif;
+    text-align: center;
     .left-col {
         display: inline-block;
     }
+    // .right-col {
+    //     display: inline-block;
+    //     float: right;
+    //     background-color: #BA2924;
+    //     width: 530px;
+    //     height: 610px;
+    // }
+    // .chat{
+    //     height: 610px;
+    //     width: 530px;
+    // }
 }
 
 .canvas-wrap {
@@ -62,7 +64,10 @@ body {
     width: 800px;
     height: 200px;
     position: relative;
-    top: 440px; 
+    top: 410px; 
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
     .topleft, .downleft, .topright, .downright {
         position: absolute;
         background-repeat: no-repeat;
@@ -74,6 +79,7 @@ body {
         color: #09090F;
         line-height: 38px;
         text-align: center;
+
         &:hover {
             @include lightning();
             box-shadow: 0 0 20px rgba(255, 80, 80, 1);
@@ -103,7 +109,7 @@ body {
         transform: rotate(270deg);
     }
 
-    .velocity-block, .push-block, .angle-block {
+    .power-block, .fire-block, .angle-block {
         top: 74px;
         position: absolute;
         width: 122px;
@@ -111,13 +117,13 @@ body {
         font-size: 50px;
         text-align: center;
     }
-    .velocity-block {
+    .power-block {
         left: 190px;
         background-color: rgba(10, 15, 33, 0.7);
     }
-    .push-block {
+    .fire-block {
         left: 327px;
-        background-image: url(../../public/images/push.png);
+        background-image: url(../../public/images/fire.png);
         background-repeat: no-repeat;
         background-size: cover;
         &:hover {
@@ -130,7 +136,7 @@ body {
         background-color: rgba(10, 15, 33, 0.7);
     }
 
-    .velocity-text, .push-text, .angle-text {
+    .power-text, .fire-text, .angle-text {
         top: 163px;
         position: absolute;
         width: 125px;
@@ -139,18 +145,13 @@ body {
         margin-left: 3px;
         text-align: center;
     }
-    .velocity-text {
+    .power-text {
         left: 190px;
     }
-    .push-text {
+    .fire-text {
         left: 327px;
     }
     .angle-text {
         left: 465px;
     }
-}
-
-.chat{
-    height: 640px;
-    width: 530px;
 }
