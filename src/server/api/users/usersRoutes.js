@@ -107,7 +107,7 @@ router.post('/add', (req, res) => {
 // edit user profile
 router.put('/profile/updateUser', (req, res) => {
     //TODO add comment
-    let isUserImgPresent = req.body.userImg && req.body.userImg.image;
+    var isUserImgPresent = req.body.userImg && req.body.userImg.image;
     if(isUserImgPresent) {
         req.body.userImg.image = req.body.userImg.image.split("/").pop().split('?').shift();
     }
