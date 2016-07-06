@@ -1,6 +1,5 @@
-// const _ = require('lodash');
-
 // const calculateDamageArea = _.memoize((array, damageX, damageY) => {
+// TODO works only first shot. Every next does not change canvas
 const calculateDamageArea = (array, damageX, damageY) => {
     damageX = Math.round(damageX);
     damageY = Math.round(damageY);
@@ -19,14 +18,14 @@ const calculateDamageArea = (array, damageX, damageY) => {
         // setting distanceBetweenDamageSegments static as a distance between points of damaged ground
         distanceBetweenDamageSegments = 15,
         damageRadius = 40,
-        segmentPoints,
+        pointsToReplace,
         pointsOfIntersect = [];
 
-    segmentPoints = findDamageLimits(array, damageX, damageY, damageRadius);
+    pointsToReplace = findDamageLimits(array, damageX, damageY, damageRadius);
 
-    for (let i = 0; i < segmentPoints.length; i++) {
-        if (segmentPoints[i][2] == 'inDamage') {
-            pointsOfIntersect.push(segmentPoints[i]);
+    for (let i = 0; i < pointsToReplace.length; i++) {
+        if (pointsToReplace[i][2] == 'inDamage') {
+            pointsOfIntersect.push(pointsToReplace[i]);
         }
     }
 
@@ -58,41 +57,37 @@ const calculateDamageArea = (array, damageX, damageY) => {
         }
     }
 
-    // replace damage points in segmentPoints array with extended damage points
-    segmentPoints.splice(1, segmentPoints.length-2);
+    // replace damage points in pointsToReplace array with extended damage points
+    pointsToReplace.splice(1, pointsToReplace.length-2);
     for (let i = 0; i < pointRealOnCircle.length; i++) {
-        segmentPoints.splice((1 + i), 0, pointRealOnCircle[i]);
+        pointsToReplace.splice((1 + i), 0, pointRealOnCircle[i]);
     }
 
     // insert damage points into originalPoints array with extended damage points
-    elementToChangeFrom = segmentPoints[0][2];
+    elementToChangeFrom = pointsToReplace[0][2];
     array.splice(elementToChangeFrom, 4);
     // removing property of '1' from array points
-    segmentPoints[0].pop();
-    segmentPoints[segmentPoints.length - 1].pop();
+    pointsToReplace[0].pop();
+    pointsToReplace[pointsToReplace.length - 1].pop();
 
-    segmentPoints.map((item) => {
+    pointsToReplace.map((item) => {
         array.splice(elementToChangeFrom, 0, item);
         elementToChangeFrom++;
     });
 
     return array;
 };
+// });
 
-const findDamageLimits = (array, damageX, damageY, damageRadius) => {
+const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
     let segmentPairPoints = [],
         distance,
-        pointsOnDamageLine = [],
-        segmentWithDamage1 = [],
-        segmentWithDamage2 = [],
         numberOfLast,
-        pointsRebuild = [],
-        pointsOfDamageCenterSegment = [],
-        // TODO why?
+        pointsOfDamageCenterSegment,
         distanceFromDamageCenter1,
         distanceFromDamageCenter2;
 
-    pointsOfDamageCenterSegment = findDamageCenterPointOnSegment(array, damageX, damageY);
+    pointsOfDamageCenterSegment = findPointOnSegment(array, damageX, damageY, true);
     if (pointsOfDamageCenterSegment == null) {
         console.log('Point is out of the ground');
         // TODO should I keep it?
@@ -102,41 +97,60 @@ const findDamageLimits = (array, damageX, damageY, damageRadius) => {
     distanceFromDamageCenter1 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[0][0], pointsOfDamageCenterSegment[0][1]);
     distanceFromDamageCenter2 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[1][0], pointsOfDamageCenterSegment[1][1]);
 
-    if (distanceFromDamageCenter1 >= damageRadius || damageRadius <= distanceFromDamageCenter2) {
+    if (distanceFromDamageCenter1 >= damageRadius && damageRadius <= distanceFromDamageCenter2) {
         segmentPairPoints.push(pointsOfDamageCenterSegment[0]);
         segmentPairPoints.push(pointsOfDamageCenterSegment[1]);
+
+    } else {
+        for (let i = 1; i < array.length; i++) {
+            distance = calculateDistance(damageX, damageY, array[i][0], array[i][1]);
+            if (distance < damageRadius) {
+                // setting extra property 1 - point is within damage radius
+                segmentPairPoints.push([array[i - 1][0], array[i - 1][1], (i - 1)]);
+                segmentPairPoints.push([array[i][0], array[i][1], i]);
+            }
+        }
+
+        segmentPairPoints.sort((a, b) => {
+            if (a[2] > b[2]) {
+                return 1;
+            }
+
+            if (a[2] < b[2]) {
+                return -1;
+            }
+
+            return 0;
+        });
+
+        // removing duplicated coordinates
+        for (let i = 1; i < segmentPairPoints.length; i++) {
+            if (segmentPairPoints[i][2] == segmentPairPoints[i - 1][2]) {
+                segmentPairPoints.splice(i, 1);
+            }
+        }
+
+        // number of last point of damaged line-segment in canvas array
+        numberOfLast = segmentPairPoints[segmentPairPoints.length - 1][2] + 1;
+        segmentPairPoints.push(array[numberOfLast]);
+        // also setting index number from originalPoints array
+        segmentPairPoints[segmentPairPoints.length - 1].push(numberOfLast);
     }
 
-    for (let i = 0; i <= (array.length - 1); i++) {
-        distance = calculateDistance(damageX, damageY, array[i][0], array[i][1]);
-        if (distance < damageRadius) {
-            // setting extra property 1 - point is within damage radius
-            segmentPairPoints.push([array[i - 1][0], array[i - 1][1], (i - 1)]);
-            segmentPairPoints.push([array[i][0], array[i][1], i]);
-        }
-    }
+    return segmentPairPoints;
+};
 
-    segmentPairPoints.sort((a, b) => {
-        if (a[2] > b[2]) {
-            return 1;
-        }
+const findDamageLimits = (array, damageX, damageY, damageRadius) => {
+    let pointsOnDamageLine = [],
+        segmentWithDamage1 = [],
+        segmentWithDamage2 = [],
+        pointsToReplace = [],
+        segmentPairPoints;
 
-        if (a[2] < b[2]) {
-            return -1;
-        }
+    segmentPairPoints = findOriginalPointsToReplace(array, damageX, damageY, damageRadius);
 
-        return 0;
-    });
-
-    // removing duplicated coordinates
-    for (let i = 1; i < segmentPairPoints.length; i++) {
-        if (segmentPairPoints[i][2] == segmentPairPoints[i - 1][2]) {
-            segmentPairPoints.splice(i, 1);
-        }
-    }
-
-    // populating array pointsRebuild with points of area which is going to be modified
-    pointsRebuild.push(segmentPairPoints[0]);
+    // populating array pointsToReplace with points of area which is going to be modified
+    pointsToReplace.push(segmentPairPoints[0]);
     for (let i = 1; i < segmentPairPoints.length; i++) {
 
         pointsOnDamageLine = findIntersectionCoordinates(segmentPairPoints[i - 1][0], segmentPairPoints[i - 1][1], segmentPairPoints[i][0], segmentPairPoints[i][1], damageX, damageY, damageRadius);
@@ -145,26 +159,54 @@ const findDamageLimits = (array, damageX, damageY, damageRadius) => {
 
         segmentWithDamage2 = findPointOnSegment(array, pointsOnDamageLine[1][0], pointsOnDamageLine[1][1]);
 
-        if (segmentWithDamage1 != undefined) {
-            pointsOnDamageLine[0].push('inDamage');
-            pointsRebuild.push(pointsOnDamageLine[0]);
-        }
+        if ( (segmentWithDamage1 != null) && (segmentWithDamage2 != null)) {
 
-        if (segmentWithDamage2 != undefined) {
+            // TODO hard to read comparison
+            if ( (segmentPairPoints[i][0] > segmentPairPoints[i - 1][0]) || ( (segmentPairPoints[i][0] == segmentPairPoints[i - 1][0]) && (segmentPairPoints[i - 1][1] > segmentPairPoints[i][1]) )) {
+
+                // we never know which of the pointsOnDamageLine is larger
+                if ( (pointsOnDamageLine[1][0] > pointsOnDamageLine[0][0]) || ( (pointsOnDamageLine[1][0] == pointsOnDamageLine[0][0]) && (pointsOnDamageLine[1][1] < pointsOnDamageLine[0][1]) ) ) {
+                    pointsOnDamageLine[0].push('inDamage');
+                    pointsToReplace.push(pointsOnDamageLine[0]);
+                    pointsOnDamageLine[1].push('inDamage');
+                    pointsToReplace.push(pointsOnDamageLine[1]);
+
+                } else {
+                    pointsOnDamageLine[1].push('inDamage');
+                    pointsToReplace.push(pointsOnDamageLine[1]);
+                    pointsOnDamageLine[0].push('inDamage');
+                    pointsToReplace.push(pointsOnDamageLine[0]);
+                }
+            } else {
+
+                // we never know which of the pointsOnDamageLine is larger
+                if ( (pointsOnDamageLine[1][0] > pointsOnDamageLine[0][0]) || ( (pointsOnDamageLine[1][0] == pointsOnDamageLine[0][0]) && (pointsOnDamageLine[1][1] < pointsOnDamageLine[0][1]) )) {
+                    pointsOnDamageLine[1].push('inDamage');
+                    pointsToReplace.push(pointsOnDamageLine[1]);
+                    pointsOnDamageLine[0].push('inDamage');
+                    pointsToReplace.push(pointsOnDamageLine[0]);
+
+                } else {
+                    pointsOnDamageLine[0].push('inDamage');
+                    pointsToReplace.push(pointsOnDamageLine[0]);
+                    pointsOnDamageLine[1].push('inDamage');
+                    pointsToReplace.push(pointsOnDamageLine[1]);
+                }
+            }
+
+        } else if (segmentWithDamage1 != null) {
+            pointsOnDamageLine[0].push('inDamage');
+            pointsToReplace.push(pointsOnDamageLine[0]);
+        } else {
             pointsOnDamageLine[1].push('inDamage');
-            pointsRebuild.push(pointsOnDamageLine[1]);
+            pointsToReplace.push(pointsOnDamageLine[1]);
         }
     }
+    // manually sorting. starting on line 154
+    // pointsToReplace.sort();
+    pointsToReplace.push(segmentPairPoints[segmentPairPoints.length - 1]);
 
-    pointsRebuild.sort();
-
-    // number of last point of damaged line-segment in canvas array
-    numberOfLast = segmentPairPoints[segmentPairPoints.length - 1][2] + 1;
-    pointsRebuild.push(array[numberOfLast]);
-    // also setting index number from originalPoints array
-    pointsRebuild[pointsRebuild.length - 1].push(numberOfLast);
-
-    return pointsRebuild;
+    return pointsToReplace;
 };
 
 // helper-functions
@@ -196,8 +238,8 @@ const findIntersectionCoordinates = (x1, y1, x2, y2, cX, cY, r) => {
 };
 
 const findInitialAngle = (x, y, cx, cy) => {
+    // warning! in canvas positive x goes to the right but positive y goes to the bottom!
     return Math.atan2((y - cy), (x - cx));
-    // TODO always return angle less than PI. why?
 };
 
 const rotateFixed = (cx, cy, r, theta) => {
@@ -210,15 +252,15 @@ const rotateFixed = (cx, cy, r, theta) => {
     return [px2, py2];
 };
 
-const findPointOnSegment = (array, segmentX, segmentY) => {
+const findPointOnSegment = (array, segmentX, segmentY, checkDamageCenter = false) => {
     /*defines point which coordinates lays on the line-segment of canvas*/
-    let x1;
-    let y1;
-    let x2;
-    let y2;
-    let foundPoint;
-    let point1;
-    let point2;
+    let x1,
+        y1,
+        x2,
+        y2,
+        foundPoint,
+        point1,
+        point2;
 
     for (let i = 1; i < array.length; i++) {
         x1 = array[i - 1][0];
@@ -226,11 +268,24 @@ const findPointOnSegment = (array, segmentX, segmentY) => {
         x2 = array[i][0];
         y2 = array[i][1];
 
-        foundPoint = calculateLineEquation(x1, y1, x2, y2, segmentX, segmentY);
+        if (checkDamageCenter && (array[i - 1][0] == segmentX && array[i - 1][1] == segmentY)) {
+            // setting extra property 1 - point is within damage radius
+            point1 = [array[i - 2][0], array[i - 2][1], (i - 1)];   // should I implement when this is null
+            point2 = [x2, y2, i];                                   // should I implement when this is null
+
+            return [point1, point2];
+        }
+
+        if (checkDamageCenter) {
+            foundPoint = calculateDamageCenterLineEquation(x1, y1, x2, y2, segmentX, segmentY);
+        } else {
+            foundPoint = calculateLineEquation(x1, y1, x2, y2, segmentX, segmentY);
+        }
 
         if ( ((y1 <= foundPoint) && (foundPoint <= y2)) || ((y2 <= foundPoint) && (foundPoint <= y1)) ) {
             point1 = [x1, y1, (i - 1)];
             point2 = [x2, y2, i];
+
             return [point1, point2];
         }
     }
@@ -242,44 +297,8 @@ const calculateLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
     /*defines point which coordinates lays on the line of segment*/
     let y = Math.round( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
 
-    if ( y <= segmentY && segmentY <= y ) {
+    if ( y == segmentY ) {
         return y;
-    }
-};
-
-// dirty hack while Misha's point is underground
-const findDamageCenterPointOnSegment = (array, segmentX, segmentY) => {
-    /*defines point which coordinates lays on the line-segment of canvas*/
-    let x1;
-    let y1;
-    let x2;
-    let y2;
-    let foundPoint;
-    let point1;
-    let point2;
-
-    for (let i = 1; i < array.length; i++) {
-        x1 = array[i - 1][0];
-        y1 = array[i - 1][1];
-        x2 = array[i][0];
-        y2 = array[i][1];
-
-        // TODO should/can I encapsulate this function if it differs only with this part of code?
-        if (array[i - 1][0] == segmentX && array[i - 1][1] == segmentY) {
-            point1 = [array[i - 2][0], array[i - 2][1], (i - 1)];   // should I implement when this is null
-            point2 = [x2, y2, i];                                   // should I implement when this is null
-
-            return [point1, point2];
-        }
-
-        foundPoint = calculateDamageCenterLineEquation(x1, y1, x2, y2, segmentX, segmentY);
-
-        if ( ((y1 <= foundPoint) && (foundPoint <= y2)) || ((y2 <= foundPoint) && (foundPoint <= y1)) ) {
-            point1 = [x1, y1, (i - 1)];
-            point2 = [x2, y2, i];
-
-            return [point1, point2];
-        }
     }
 
     return null;
@@ -293,6 +312,8 @@ const calculateDamageCenterLineEquation = (x1, y1, x2, y2, segmentX, segmentY) =
     if ( (y - 5) <= segmentY && segmentY <= (y + 5) ) {
         return y;
     }
+
+    return null;
 };
 
 const calculateDistance = (x1, y1, x2, y2) => {
