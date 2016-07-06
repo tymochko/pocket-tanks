@@ -187,7 +187,7 @@ const updateUser = function (id, updatedData, callback) {
                 }, {
                     userName: updatedData.userName,
                     userAge: updatedData.userAge,
-                    userImg: updatedData.userImg
+                    userImg: (!updatedData.userImg || !updatedData.userImg.image) ? foundUser.userImg : updatedData.userImg
                     },
 
                     function(err, foundUser) {
@@ -338,6 +338,7 @@ const getUserUploadedImage = function (req, res) {
 const getSalt = function  (){
     return "?salt=" + new Date().getTime();
 }
+
 
 module.exports.getUserImage = getUserImage;
 module.exports.getSalt = getSalt;

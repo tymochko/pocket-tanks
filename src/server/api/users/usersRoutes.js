@@ -106,8 +106,12 @@ router.post('/add', (req, res) => {
 
 // edit user profile
 router.put('/profile/updateUser', (req, res) => {
-    req.body.userImg.image = req.body.userImg.image.split("/").pop().split('?').shift();
-
+    //TODO add comment
+    var isUserImgPresent = req.body.userImg && req.body.userImg.image;
+    if(isUserImgPresent) {
+        req.body.userImg.image = req.body.userImg.image.split("/").pop().split('?').shift();
+    }
+    
     usersCollection.updateUser({_id: req.session.user}, req.body, (err, foundUser) => {
         if (err) {
             console.log('err  ', err);
@@ -184,4 +188,28 @@ router.get('/profile/getImage/:scope/:imageName?', function  (req, res) {
         console.log(e)
     };
 });
+
+router.get('/profile/publicImages', (req, res) => {
+    fs.readdir(__dirname + '/../../images/' + '/', function (e, files) {
+        if (!e && files.length > 0) {
+            var images = [];
+            for (var file in files) {
+                images.push({image: publicImgURL + files[file] + usersCollection.getSalt(), uploadedImg: false});
+            }
+
+            var userId = req.session.user;
+            const userDir = __dirname + '/../../usersInfo/' + userId + '/';
+
+            fs.readdir(userDir, function (e, files) {
+                console.log(e, files.length > 0);
+                if (!e && files.length > 0)
+                    images.push({image: userImgURL + files[0] + usersCollection.getSalt(), uploadedImg: true});
+                res.send(200, images);
+            });
+        }
+        else
+            res.send(404);
+    });
+});
+
 module.exports = router;
