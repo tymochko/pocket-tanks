@@ -1,5 +1,4 @@
 require('angular');
-var chat = require('./chat');
 var home = require('./home');
 var login = require('./login');
 var signup = require('./signup');
@@ -15,7 +14,6 @@ module.exports = angular.module('tanks', [
     require('angular-toastr'),
     require('angular-sanitize'),
     dashboard.name,
-    chat.name,
     game.name,
     home.name,
     login.name,

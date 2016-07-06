@@ -12,7 +12,7 @@ module.exports = angular.module('tanks.signup',  [
 })
 .service('sendReg',['$http', '$location', function($http, $location){
 	this.add = function(userInfo){
-		return $http.post('http://localhost:3000/api/users/add', userInfo).then(function(res){
+		return $http.post('/api/users/add', userInfo).then(function(res){
 			$location.path('/');
 		});
 	};
@@ -56,4 +56,3 @@ function SignupCtrl($scope, sendReg, toastr) {
 		sendReg.add(userInfo);
 	};
 };
-
