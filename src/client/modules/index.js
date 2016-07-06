@@ -1,4 +1,5 @@
 require('angular');
+const _ = require('lodash');
 var home = require('./home');
 var login = require('./login');
 var signup = require('./signup');
@@ -34,6 +35,7 @@ module.exports = angular.module('tanks', [
     }
   };
 }]);
+
 
 RouteConfig.$inject = ['$routeProvider', '$locationProvider'];
 function RouteConfig($routeProvider, $locationProvider) {
