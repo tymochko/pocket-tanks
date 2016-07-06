@@ -5,7 +5,6 @@ var signup = require('./signup');
 var profile = require('./profile');
 var dashboard = require('./dashboard');
 var game = require('./game');
-
 module.exports = angular.module('tanks', [
     require('angular-route'),
     require('angular-animate'),
@@ -32,6 +31,7 @@ module.exports = angular.module('tanks', [
     }
   };
 }]);
+
 
 RouteConfig.$inject = ['$routeProvider', '$locationProvider'];
 function RouteConfig($routeProvider, $locationProvider) {

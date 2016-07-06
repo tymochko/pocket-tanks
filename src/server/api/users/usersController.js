@@ -3,13 +3,17 @@ var bcrypt = require('bcryptjs');
 var express = require('express');
 var nodemailer = require('nodemailer');
 var fs = require('fs');
-var strUserImg =  {"image" : "cat.jpg", uploadedImg:false};
+var strUserImg = {"image": "cat.jpg", uploadedImg: false};
 var path = require('path');
+var multer = require('multer');
+var fsHelper = require('../libs/fsHelper');
 
 const Schema = mongoose.Schema;
-const publicScopeName       = 'public';
-const userUploadsScopeName  = 'userUploads';
-
+const userScopeName = 'userAvatar';
+const publicScopeName = 'public';
+const userUploadsScopeName = 'userUploads';
+const publicImgURL = "/api/users/profile/getImage/" + publicScopeName + '/';
+const userImgURL = '/api/users/profile/getImage/' + userUploadsScopeName + '/';
 
 
 var userSchema = new Schema({
@@ -63,14 +67,14 @@ const passHash = (userPassword, callback) => {
 };
 
 const createUser = function (newUser, callback) {
-        newUser.userImg = strUserImg;
+    newUser.userImg = strUserImg;
     passHash(newUser.userPassword, (err, hash) => {
         if (err) {
             return callback(err);
         }
 
         newUser.userPassword = hash;
-        newUser.save(function(err, user){
+        newUser.save(function (err, user) {
             if (err) {
                 return callback(err);
             }
@@ -100,7 +104,7 @@ const loginUser = function (username, password, callback) {
                 return callback(new Error('Sorry, this user is deleted'));
 
             } else {
-                comparePassword(password, foundUser.userPassword, function(err, res) {
+                comparePassword(password, foundUser.userPassword, function (err, res) {
                     if (err) {
                         console.log(err);
                         return res.status(500).send();
@@ -181,16 +185,16 @@ const updateUser = function (id, updatedData, callback) {
                 });
             } else {
                 User.update({
-                    userName: foundUser.userName,
-                    userAge: foundUser.userAge,
-                    userImg: foundUser.userImg
-                }, {
-                    userName: updatedData.userName,
-                    userAge: updatedData.userAge,
-                    userImg: (!updatedData.userImg || !updatedData.userImg.image) ? foundUser.userImg : updatedData.userImg
+                        userName: foundUser.userName,
+                        userAge: foundUser.userAge,
+                        userImg: foundUser.userImg
+                    }, {
+                        userName: updatedData.userName,
+                        userAge: updatedData.userAge,
+                        userImg: (!updatedData.userImg || !updatedData.userImg.image) ? foundUser.userImg : updatedData.userImg
                     },
 
-                    function(err, foundUser) {
+                    function (err, foundUser) {
                         callback(err, foundUser);
                     });
             }
@@ -242,7 +246,61 @@ const deleteUser = function (id, callback) {
             }
         });
 };
-const handleEmail = function (name,email) {
+
+
+const getUserImage = function (req, res) {
+
+    var userId = req.session.user;
+    var userImage;
+    var userDir;
+
+    this.findOne({_id: userId}, function (err, foundUser) {
+        if (err) {
+            res.status(401).send();
+        }
+        cb(err, foundUser);
+    });
+    function cb(err, foundUser) {
+        userImage = foundUser.userImg;
+        if (userImage.uploadedImg) {
+            userDir = __dirname + '/../../static/usersInfo/' + userId + '/' + userImage.image;
+        } else {
+            userDir = __dirname + '/../../static/images/' + userImage.image;
+        }
+        res.sendFile(path.resolve(userDir), function (err) {
+            if (err) {
+                console.log('err:  ', err);
+                res.status(403).end();
+            }
+        });
+    }
+
+};
+
+const getPublicImage = function (req, res) {
+    res.sendFile(path.resolve(__dirname + '/../../static/images/' + req.params.imageName), function (err) {
+        if (err) {
+            console.log(err);
+            res.status(err.status).end();
+        }
+    });
+};
+
+
+const getUserUploadedImage = function (req, res) {
+    var userId = req.session.user;
+    var imageName = req.params.imageName;
+    var imageDir = __dirname + '/../../static/usersInfo/' + userId + '/' + imageName;
+
+    res.sendFile(path.resolve(imageDir), function (err) {
+        if (err) {
+            console.log('err:  ', err);
+            res.status(403).end();
+        }
+    });
+};
+
+const handleEmail = function (name, email) {
     var userEmail = email;
     var userName = name;
     var transporter = nodemailer.createTransport({
@@ -256,95 +314,87 @@ const handleEmail = function (name,email) {
     var text = `Hello ${userName}! Welcome to PocketTanks game!`;
 
     var mailOptions = {
-    from: 'pockettanksmail@gmail.com',
-    to: `${userEmail}`,
-    subject: 'Pocket Tanks',
-    text: text
-
-};
-transporter.sendMail(mailOptions, function(error, info){
-    if(error){
-        console.log(error);
-        ;
-    }else{
-        console.log('Message sent: ' + userEmail);
+        from: 'pockettanksmail@gmail.com',
+        to: `${userEmail}`,
+        subject: 'Pocket Tanks',
+        text: text
 
     };
-});
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+            ;
+        } else {
+            console.log('Message sent: ' + userEmail);
+
+        }
+        ;
+    });
 
 };
+const uploadImg = function (request, res) {
+    var d = new Date();
+    var originName;
+    var fileNameNew = 'userAvatar' + d.getTime();
+    var dir = './src/server/static/usersInfo/' + request.session.user;
+    fsHelper.rmDir(dir);
+    var storage = multer.diskStorage({ //multers disk storage settings
+        destination: function (req, file, cb) {
+            originName = file.originalname;
 
-const rmDir = function (dirPath) {
-            var files = fs.readdirSync(dirPath);
-    if (files.length > 0)
-        for (var i = 0; i < files.length; i++) {
-            var filePath = dirPath + '/' + files[i];
-            if (fs.statSync(filePath).isFile())
-                fs.unlinkSync(filePath);
+            cb(null, dir);
+        },
+        filename: function (req, file, cb) {
+            cb(null, fileNameNew + '.' + file.originalname.split('.')[file.originalname.split('.').length - 1]);
         }
-}
-const getUserImage = function (req, res) {
-
-    var userId = req.session.user;
-    var userImage;
-    var userDir;
-
-    this.findOne({_id: userId}, function (err, foundUser) {
-        if (err) {
-            res.status(401).send();
-        }
-        cb(err, foundUser);
     });
-        function cb(err,foundUser) {
-            userImage = foundUser.userImg;
-            if(userImage.uploadedImg) {
-                userDir = __dirname + '/../../usersInfo/' + userId + '/' + userImage.image;
-            } else {
-                userDir = __dirname + '/../../images/' + userImage.image;
+    var upload = multer({ //multer settings
+        storage: storage
+    }).single('file');
+
+    upload(request, res, function (err) {
+        if (err) {
+
+            ress.json({error_code: 1, err_desc: err});
+            return;
+        }
+        var extension = originName.split('.')[originName.split('.').length - 1];
+        res.json({image: userImgURL + fileNameNew + '.' + extension + fsHelper.getSalt(), uploadedImg: true});
+
+    });
+};
+
+const getPublicImg = function (req, res) {
+    fs.readdir(__dirname + '/../../static/images/' + '/', function (e, files) {
+        if (!e && files.length > 0) {
+            var images = [];
+            for (var file in files) {
+                images.push({image: publicImgURL + files[file] + fsHelper.getSalt(), uploadedImg: false});
             }
-            res.sendFile(path.resolve(userDir), function (err) {
-                if (err) {
-                    console.log('err:  ', err);
-                    res.status(403).end();
-                }
+
+            var userId = req.session.user;
+            const userDir = __dirname + '/../../static/usersInfo/' + userId + '/';
+
+            fs.readdir(userDir, function (e, files) {
+                console.log(e, files.length > 0);
+                if (!e && files.length > 0)
+                    images.push({image: userImgURL + files[0] + fsHelper.getSalt(), uploadedImg: true});
+                res.send(200, images);
             });
         }
-
-};
-
-const getPublicImage = function (req, res) {
-    res.sendFile(path.resolve(__dirname + '/../../images/' + req.params.imageName), function (err) {
-        if (err) {
-            console.log(err);
-            res.status(err.status).end();
-        }
+        else
+            res.send(404);
     });
+
 };
 
 
-const getUserUploadedImage = function (req, res) {
-    var userId = req.session.user;
-    var imageName = req.params.imageName;
-    var imageDir = __dirname + '/../../usersInfo/' + userId + '/' + imageName;
-
-    res.sendFile(path.resolve(imageDir), function (err) {
-        if (err) {
-            console.log('err:  ', err);
-            res.status(403).end();
-        }
-    });
-};
-
-const getSalt = function  (){
-    return "?salt=" + new Date().getTime();
-}
-
-
+module.exports.getPublicImg = getPublicImg;
+module.exports.uploadImg = uploadImg;
 module.exports.getUserImage = getUserImage;
-module.exports.getSalt = getSalt;
 module.exports.getUserUploadedImage = getUserUploadedImage;
 module.exports.getPublicImage = getPublicImage;
-module.exports.rmDir = rmDir;
+module.exports.handleEmail = handleEmail;
 module.exports.showAll = showAll;
 module.exports.showProfile = showProfile;
 module.exports.createUser = createUser;
@@ -352,5 +402,5 @@ module.exports.loginUser = loginUser;
 module.exports.logoutUser = logoutUser;
 module.exports.updateUser = updateUser;
 module.exports.deleteUser = deleteUser;
-module.exports.handleEmail = handleEmail;
+
 
