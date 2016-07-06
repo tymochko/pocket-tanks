@@ -1,4 +1,5 @@
 require('angular');
+const _ = require('lodash');
 var home = require('./home');
 var login = require('./login');
 var signup = require('./signup');
