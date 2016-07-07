@@ -100,6 +100,14 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
         segmentPairPoints.push(pointsOfDamageCenterSegment[0]);
         segmentPairPoints.push(pointsOfDamageCenterSegment[1]);
 
+    } else if (distanceFromDamageCenter1 >= damageRadius && distanceFromDamageCenter2 == undefined) {
+        segmentPairPoints.push(pointsOfDamageCenterSegment[0]);
+        segmentPairPoints.push( [damageX, (damageY - damageRadius)] );
+
+    } else if (distanceFromDamageCenter2 >= damageRadius && distanceFromDamageCenter1 == undefined) {
+        segmentPairPoints.push( [damageX, (damageY - damageRadius)] );
+        segmentPairPoints.push(pointsOfDamageCenterSegment[1]);
+
     } else {
         for (let i = 1; i < array.length; i++) {
             distance = calculateDistance(damageX, damageY, array[i][0], array[i][1]);
@@ -266,15 +274,28 @@ const findPointOnSegment = (array, segmentX, segmentY, checkDamageCenter = false
         point2;
 
     for (let i = 1; i < array.length; i++) {
+        console.log(array[i - 2], 'array[i - 2]');
+        console.log(array[i - 1], 'array[i - 1]');
+        console.log(array[i], 'array[i]');
+        console.log(array[i + 1], 'array[i + 1]');
+        console.log('-------');
+
         x1 = array[i - 1][0];
         y1 = array[i - 1][1];
         x2 = array[i][0];
         y2 = array[i][1];
 
-        if (checkDamageCenter && (array[i - 1][0] == segmentX && array[i - 1][1] == segmentY)) {
-            // setting extra property 1 - point is within damage radius
-            point1 = [array[i - 2][0], array[i - 2][1], (i - 1)];   // TODO should I implement when this is null
-            point2 = [x2, y2, i];                                   // TODO should I implement when this is null
+        if (checkDamageCenter && (x1 == segmentX && y1 == segmentY)) {
+            if ( (point1 != undefined) || (point2 != undefined) ) {
+                point1 = [array[i - 2][0], array[i - 2][1], (i - 1)];
+                point2 = [x2, y2, i];
+
+            } else if (point1 == undefined) {
+                point2 = [x2, y2, i];
+
+            } else {
+                point1 = [array[i - 2][0], array[i - 2][1], (i - 1)];
+            }
 
             return [point1, point2];
         }
@@ -298,7 +319,7 @@ const findPointOnSegment = (array, segmentX, segmentY, checkDamageCenter = false
 
 const calculateLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
     /*defines point which coordinates lays on the line of segment*/
-    /*deltaY is a tolerance between equation and actual point on the canvas's array of points*/
+    /*deltaY is a tolerance between equation result and actual point on the canvas's array of points*/
     let deltaY = 2;
     let y = ( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
 
@@ -311,7 +332,7 @@ const calculateLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
 
 const calculateDamageCenterLineEquation = (x1, y1, x2, y2, segmentX, segmentY) => {
     /*defines point which coordinates lays on the line of segment*/
-    /*deltaY is a tolerance between equation and actual point on the canvas's array of points*/
+    /*deltaY is a tolerance between equation result and actual point on the canvas's array of points*/
     // 5 is a temporary solution before Misha fixes point to be on the ground instead of underground
     let deltaY = 5;
     let y = ( ( (segmentX - x1) * (y2 - y1) ) / (x2 - x1) + y1 );
