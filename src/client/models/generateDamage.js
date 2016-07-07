@@ -90,8 +90,7 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
 
     pointsOfDamageCenterSegment = findPointOnSegment(array, damageX, damageY, true);
     if (pointsOfDamageCenterSegment == null) {
-        console.log('Point is out of the ground');
-        // TODO should I keep it?
+        console.log('WARNING! Point is out of the ground');
     }
 
     distanceFromDamageCenter1 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[0][0], pointsOfDamageCenterSegment[0][1]);
@@ -235,8 +234,8 @@ const findIntersectionCoordinates = (x1, y1, x2, y2, cX, cY, r) => {
     let yPlus = (m * xPlus + k);
     let yMinus = (m * xMinus + k);
 
-    let point1 = [xPlus, yPlus];
-    let point2 = [xMinus, yMinus];
+    let point1 = [Math.round(xPlus), Math.round(yPlus)];
+    let point2 = [Math.round(xMinus), Math.round(yMinus)];
 
     return [point1, point2];
 };
@@ -250,8 +249,8 @@ const rotateFixed = (cx, cy, r, theta) => {
     let pX,
         pY;
 
-    pX = ( cx + (r * Math.cos(theta)) );
-    pY = ( cy + (r * Math.sin(theta)) );
+    pX = Math.round( cx + (r * Math.cos(theta)) );
+    pY = Math.round( cy + (r * Math.sin(theta)) );
 
     return [pX, pY];
 };
