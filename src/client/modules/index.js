@@ -22,7 +22,7 @@ module.exports = angular.module('tanks', [
     home.name,
     login.name,
     signup.name,
-    profile.name
+    profile.name,
     navigation.name
 ]).config(RouteConfig)
 .factory('socket', ['$rootScope', function($rootScope) {

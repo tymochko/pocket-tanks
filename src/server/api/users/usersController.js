@@ -388,6 +388,21 @@ const getPublicImg = function (req, res) {
 
 };
 
+const checkUser = function (id, callback) {
+    this.findOne(id, function (err, foundUser) {
+        if (err) {
+            console.log(err);
+            return err;
+        }
+
+        if (!foundUser) {
+            return err;
+        }
+
+        callback(err, foundUser);
+    });
+};
+
 
 module.exports.getPublicImg = getPublicImg;
 module.exports.uploadImg = uploadImg;

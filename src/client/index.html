@@ -14,10 +14,10 @@
     <!-- endinject -->
 
     <script src="/socket.io/socket.io.js"></script>
-    <link rel="icon" type="image/jpeg" href="public/images/myIcon.png">
+    <link rel="icon" type="image/jpeg" href="public/images/icon.png">
 </head>
 
-<body ng-controller="mainCtrl" data-ng-init="hideLog()">
+<body ng-controller="mainCtrl">
 	<div class="container-fullwidth">
         <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
 		  <div class="container-fluid">
@@ -33,17 +33,17 @@
             </div>
             <div class="collapse navbar-collapse" id="navbar">
 
-            	<a href="/game" class="btn btn-danger navbar-center show-after-log" id="startGame">Start GAME</a>
-            	<ul class="nav navbar-nav show-after-log">
+            	<a href="/game" class="btn btn-danger navbar-center" id="startGame">Start GAME</a>
+            	<ul class="nav navbar-nav">
 			        <li><a href="/dashboard">Dashboard</a></li>
 			        <li><a href="/scores">Scores</a></li>
 			        <li><a href="/about">About</a></li>
 		      	</ul>
-				<ul class="nav navbar-nav navbar-right hide-after-log">
+				<!-- <ul class="nav navbar-nav navbar-right hide-after-log">
 				<li><a href="/signup"><span class="glyphicon glyphicon-plus"></span> Sign Up</a></li>
 				<li><a href="/" ng-click="open()"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right show-after-log">
+				</ul> -->
+				<ul class="nav navbar-nav navbar-right">
 				<li><a href="/profile"><span class="glyphicon glyphicon-user"></span> Profile </a></li>
 				<li><a href="/" ng-click="logOut()" class="logout-btn"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
 				</ul>
@@ -54,7 +54,7 @@
 
     <div class="wrapper">
         <header class="header">
-            <!-- <navigation></navigation> -->
+            <navigation></navigation>
         </header>
         <!-- .header-->
         <main class="content">
