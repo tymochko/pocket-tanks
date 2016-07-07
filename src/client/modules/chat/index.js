@@ -3,36 +3,14 @@ var ngRoute = require('angular-route');
 var $ = require('jquery');
 module.exports = angular.module('tanks.chat', [
     ngRoute
-]).config(RouteConfig);
-
-RouteConfig.$inject = ['$routeProvider'];
-function RouteConfig($routeProvider) {
-    $routeProvider.when('/chat', {
-        controller: ChatController,
-        templateUrl: 'chat/chat.html'
-    });
-};
-
-function ChatController($scope,socket, $sce) {
+]).controller('ChatController',['$scope','socket', '$sce',function($scope,socket, $sce) {
 	$scope.nam=[];
 	$scope.mes=[];
-	$scope.messageStatus='Ide';
 	$scope.inputMessage='';
 	$scope.inputName='';
-	status=$scope.messageStatus;
-	StatusDefault = status;
 
-	setStatus= function(s){
-		$scope.messageStatus = s;
-		if(s!== StatusDefault)
-		{
-			var delay = setTimeout(function(){
-				setStatus(StatusDefault);
-			},3000);
-		}
-	};
 
-	if(socket !== undefined)
+	if(socket)
 	{
 		socket.on('output', function(data){
 			var date=new Date();
@@ -47,16 +25,7 @@ function ChatController($scope,socket, $sce) {
 			}
 		});
 
-		socket.on('status',function(data){
-			setStatus((typeof data === 'object')? data.message: data);
-
-			if(data.clear === true )
-			{
-                     $scope.inputMessage = '';
-                }
-            });
-
-			$scope.myFunc=function(event){
+			$scope.sentEventLis=function(event){
 				var inputMessage = $scope.inputMessage,
 				name = $scope.inputName;
 				var date=new Date();
@@ -67,12 +36,11 @@ function ChatController($scope,socket, $sce) {
 					time: date.toUTCString()
 				});
 
-				$scope.inputMessage='';
 
 				event.preventDefault();
 		};
 	}
-}
+}]);
 
 
 

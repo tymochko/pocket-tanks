@@ -7,7 +7,7 @@ module.exports = angular.module('tanks.home', [
 ]).controller('mainCtrl', ['$scope', '$uibModal', '$log', '$location', '$http', '$window',
     function($scope, $uibModal, $log, $location, $http, $window) {
 
-        $http.get("api/users/profile/").then(function(res) {
+        $http.get("/api/users/profile/").then(function(res) {
             if(res.data.isOnline) {
                 $('.hide-after-log').addClass('hidden');
                 $('.show-after-log').removeClass('hidden');
