@@ -38,8 +38,7 @@ app.set('ip', ip);
  */
 
 var server = http.createServer(app);
-// var io = socketio.listen(server);
-// console.log(io);
+
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -109,10 +108,12 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
-//
-// var io=app.io;
-//
-// io.listen(server);
+
+var chat=require('../chat');
+
+
+var io=chat.io;
+io.listen(server);
 
 
 module.exports = conf;

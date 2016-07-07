@@ -6,6 +6,7 @@ var signup = require('./signup');
 var profile = require('./profile');
 var dashboard = require('./dashboard');
 var game = require('./game');
+var chat = require('./chat');
 
 module.exports = angular.module('tanks', [
     require('angular-route'),
@@ -16,6 +17,7 @@ module.exports = angular.module('tanks', [
     require('angular-sanitize'),
     dashboard.name,
     game.name,
+    chat.name,
     home.name,
     login.name,
     signup.name,
@@ -33,6 +35,7 @@ module.exports = angular.module('tanks', [
     }
   };
 }]);
+
 
 RouteConfig.$inject = ['$routeProvider', '$locationProvider'];
 function RouteConfig($routeProvider, $locationProvider) {
