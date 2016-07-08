@@ -1,10 +1,13 @@
 require('angular');
+const _ = require('lodash');
 var home = require('./home');
 var login = require('./login');
 var signup = require('./signup');
 var profile = require('./profile');
 var dashboard = require('./dashboard');
 var game = require('./game');
+var navigation = require('./navigation');
+var chat = require('./chat');
 
 module.exports = angular.module('tanks', [
     require('angular-route'),
@@ -15,10 +18,12 @@ module.exports = angular.module('tanks', [
     require('angular-sanitize'),
     dashboard.name,
     game.name,
+    chat.name,
     home.name,
     login.name,
     signup.name,
-    profile.name
+    profile.name,
+    navigation.name
 ]).config(RouteConfig)
 .factory('socket', ['$rootScope', function($rootScope) {
   var socket = io.connect();
@@ -32,6 +37,7 @@ module.exports = angular.module('tanks', [
     }
   };
 }]);
+
 
 RouteConfig.$inject = ['$routeProvider', '$locationProvider'];
 function RouteConfig($routeProvider, $locationProvider) {
