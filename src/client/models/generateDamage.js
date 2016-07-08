@@ -1,6 +1,5 @@
 // const calculateDamageArea = _.memoize((array, damageX, damageY) => {
 const calculateDamageArea = (array, damageX, damageY) => {
-    // TODO change all 'for' loops into 'map' where is possible
     let x1,
         y1,
         x2,
@@ -19,12 +18,12 @@ const calculateDamageArea = (array, damageX, damageY) => {
         numberOfElementsToRemove;
 
     pointsToReplace = findDamageLimits(array, damageX, damageY, damageRadius);
-
-    for (let i = 0; i < pointsToReplace.length; i++) {
-        if (pointsToReplace[i][2] == 'inDamage') {
-            pointsOfIntersect.push(pointsToReplace[i]);
+    
+    pointsToReplace.map((item) => {
+        if (item[2] == 'inDamage') {
+            pointsOfIntersect.push(item);
         }
-    }
+    });
 
     for (let i = 1; i < pointsOfIntersect.length; i++) {
         if (i % 2) {
@@ -56,9 +55,9 @@ const calculateDamageArea = (array, damageX, damageY) => {
 
     // replace damage points in pointsToReplace array with extended damage points
     pointsToReplace.splice(1, pointsToReplace.length-2);
-    for (let i = 0; i < pointRealOnCircle.length; i++) {
-        pointsToReplace.splice((1 + i), 0, pointRealOnCircle[i]);
-    }
+    pointRealOnCircle.map((item, i) => {
+        pointsToReplace.splice((1 + i), 0, item);
+    });
 
     // insert damage points into originalPoints array with extended damage points
     elementToChangeFrom = pointsToReplace[0][2];
@@ -76,7 +75,6 @@ const calculateDamageArea = (array, damageX, damageY) => {
 
     return array;
 };
-// });
 
 const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
     let segmentPairPoints = [],
@@ -86,7 +84,7 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
         distanceFromDamageCenter1,
         distanceFromDamageCenter2;
 
-    pointsOfDamageCenterSegment = findPointOnSegment(array, damageX, damageY, true);
+    pointsOfDamageCenterSegment = findSegmentOfPoint(array, damageX, damageY);
     if (pointsOfDamageCenterSegment == null) {
         console.log('WARNING! Point is out of the ground');
     }
@@ -272,7 +270,7 @@ const rotateFixed = (cx, cy, r, theta) => {
     return [pX, pY];
 };
 
-const findPointOnSegment = (array, segmentX, segmentY, checkDamageCenter = false) => {
+const findSegmentOfPoint = (array, damageX, damageY) => {
     /*returns endpoints of line segment (of battlefield on canvas) of point which belongs to it*/
     let x1,
         y1,
@@ -288,7 +286,7 @@ const findPointOnSegment = (array, segmentX, segmentY, checkDamageCenter = false
         x2 = array[i][0];
         y2 = array[i][1];
 
-        if (checkDamageCenter && (x1 == segmentX && y1 == segmentY)) {
+        if (x1 == damageX && y1 == damageY) {
             if (array[i - 2] != undefined) {
                 point1 = [array[i - 2][0], array[i - 2][1], (i - 2)];
                 point2 = [x2, y2, i];
@@ -301,7 +299,7 @@ const findPointOnSegment = (array, segmentX, segmentY, checkDamageCenter = false
             return [point1, point2];
         }
 
-        ptCoeff = findLineSegmentCoefficient(x1, y1, x2, y2, segmentX, segmentY);
+        ptCoeff = findLineSegmentCoefficient(x1, y1, x2, y2, damageX, damageY);
 
         if ( (0 < ptCoeff && ptCoeff < 1) ) {
             point1 = [x1, y1, (i - 1)];
