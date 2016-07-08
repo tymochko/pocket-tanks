@@ -1,5 +1,4 @@
 // const calculateDamageArea = _.memoize((array, damageX, damageY) => {
-// TODO works only first shot. Every next does not change canvas
 const calculateDamageArea = (array, damageX, damageY) => {
     // TODO change all 'for' loops into 'map' where is possible
     let x1,
@@ -16,7 +15,8 @@ const calculateDamageArea = (array, damageX, damageY) => {
         distanceBetweenDamageSegments = 30,
         damageRadius = 40,
         pointsToReplace,
-        pointsOfIntersect = [];
+        pointsOfIntersect = [],
+        numberOfElementsToRemove;
 
     pointsToReplace = findDamageLimits(array, damageX, damageY, damageRadius);
 
@@ -62,8 +62,9 @@ const calculateDamageArea = (array, damageX, damageY) => {
 
     // insert damage points into originalPoints array with extended damage points
     elementToChangeFrom = pointsToReplace[0][2];
+    numberOfElementsToRemove = (pointsToReplace[pointsToReplace.length - 1][2]) - elementToChangeFrom + 1;
 
-    array.splice(elementToChangeFrom, 2);
+    array.splice(elementToChangeFrom, numberOfElementsToRemove);
     // removing property of '1' from array points
     pointsToReplace[0].pop();
     pointsToReplace[pointsToReplace.length - 1].pop();
@@ -72,10 +73,6 @@ const calculateDamageArea = (array, damageX, damageY) => {
         array.splice(elementToChangeFrom, 0, item);
         elementToChangeFrom++;
     });
-
-    for (let i = 0; i < array.length; i++) {
-        console.log('array[i]', i, array[i]);
-    }
 
     return array;
 };
@@ -136,10 +133,6 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
         segmentPairPoints[segmentPairPoints.length - 1].push(elementOfLast);
     }
 
-    // for (let i = 0; i < segmentPairPoints.length; i++) {
-    //     console.log('segmentPairPoints[i]', i, segmentPairPoints[i]);
-    // }
-
     return segmentPairPoints;
 };
 
@@ -167,8 +160,6 @@ const findDamageLimits = (array, damageX, damageY, damageRadius) => {
         yPrev = segmentPairPoints[i - 1][1];
         xCurr = segmentPairPoints[i][0];
         yCurr = segmentPairPoints[i][1];
-        console.log(xPrev, yPrev, 'xPrev, yPrev');
-        console.log(xCurr, yCurr, 'xCurr, yCurr');
 
         pointsOnDamageLine = findIntersectionCoordinates(xPrev, yPrev, xCurr, yCurr, damageX, damageY, damageRadius);
         intersectPt1 = pointsOnDamageLine[0];
@@ -177,19 +168,11 @@ const findDamageLimits = (array, damageX, damageY, damageRadius) => {
         intersectPt1Y = intersectPt1[1];
         intersectPt2X = intersectPt2[0];
         intersectPt2Y = intersectPt2[1];
-        console.log(intersectPt1, 'intersectPt1');
-        console.log(intersectPt2, 'intersectPt2');
 
         setPointOrder(xPrev, yPrev, xCurr, yCurr, intersectPt1X, intersectPt1Y, intersectPt2X, intersectPt2Y, pointsToReplace);
-
-        console.log(pointsToReplace[pointsToReplace.length - 1], 'pointsToReplace[pointsToReplace.length - 1]');
     }
 
     pointsToReplace.push(segmentPairPoints[segmentPairPoints.length - 1]);
-
-    for (let i = 0; i < pointsToReplace.length; i++) {
-        console.log('pointsToReplace[i]', i, pointsToReplace[i]);
-    }
 
     return pointsToReplace;
 };
