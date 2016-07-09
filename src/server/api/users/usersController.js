@@ -10,6 +10,7 @@ var fsHelper = require('../libs/fsHelper');
 
 const Schema = mongoose.Schema;
 const userScopeName = 'userAvatar';
+const userInfoDir = './src/server/static/usersInfo/';
 const publicScopeName = 'public';
 const userUploadsScopeName = 'userUploads';
 const publicImgURL = "/api/users/profile/getImage/" + publicScopeName + '/';
@@ -78,6 +79,7 @@ const createUser = function (newUser, callback) {
             if (err) {
                 return callback(err);
             }
+
             callback(null, user);
         });
     });
@@ -337,6 +339,8 @@ const uploadImg = function (request, res) {
     var originName;
     var fileNameNew = 'userAvatar' + d.getTime();
     var dir = './src/server/static/usersInfo/' + request.session.user;
+    fsHelper.checkDir(userInfoDir);
+    fsHelper.checkDir(dir);
     fsHelper.rmDir(dir);
     var storage = multer.diskStorage({ //multers disk storage settings
         destination: function (req, file, cb) {
@@ -374,7 +378,11 @@ const getPublicImg = function (req, res) {
 
             var userId = req.session.user;
             const userDir = __dirname + '/../../static/usersInfo/' + userId + '/';
-
+            //todo async?
+            var check = function () {
+                fsHelper.checkDir(userDir);
+            }
+            check();
             fs.readdir(userDir, function (e, files) {
                 console.log(e, files.length > 0);
                 if (!e && files.length > 0)
@@ -403,7 +411,7 @@ const checkUser = function (id, callback) {
     });
 };
 
-
+module.exports.checkUser = checkUser;
 module.exports.getPublicImg = getPublicImg;
 module.exports.uploadImg = uploadImg;
 module.exports.getUserImage = getUserImage;
