@@ -1,4 +1,3 @@
-// const calculateDamageArea = _.memoize((array, damageX, damageY) => {
 const calculateDamageArea = (array, damageX, damageY) => {
     let x1,
         y1,
