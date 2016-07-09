@@ -8,6 +8,7 @@ var dashboard = require('./dashboard');
 var game = require('./game');
 var navigation = require('./navigation');
 var chat = require('./chat');
+paper = require('paper');
 
 module.exports = angular.module('tanks', [
     require('angular-route'),

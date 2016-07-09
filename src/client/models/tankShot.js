@@ -2,9 +2,10 @@
 
 // document.addEventListener("DOMContentLoaded", function(){
     function initGame(){
-
         //      <------initialization------>
         var backCanvas = document.createElement('canvas');
+
+        paper.setup(backCanvas)
         var WIDTH = backCanvas.width  = 800;
         var HEIGHT = backCanvas.height = 500;
         var backCtx = backCanvas.getContext('2d');
@@ -420,25 +421,37 @@
         }
 
         function updateEntities(dt) {
-            for(var i=0; i<bullets.length; i++) {
+            for(var i = 0; i < bullets.length; i++) {
                 bullet = bullets[i];
                 bullet.pos[0] = tankX+45 + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180);
-                bullet.pos[1]=tankY-44-(bullet.bulletSpeed*dt2*Math.sin(bullet.angle*Math.PI/180)-9.8*dt2*dt2/2);
-                dt2+=2*dt;
+                bullet.pos[1] = tankY-44 -(bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180) - 9.8 * dt2 * dt2 / 2);
+                dt2 += 2*dt;
+                    // creating path for bullet and originalPoints
+                var bull = new paper.Path.Rectangle(bullet.pos[0],bullet.pos[1], 45, 7);
+                //check angle for accuracy of point
+                bull.rotate(-bullet.imgInf.currAngle);
 
-                var coords = {x:bullet.pos[0],
-                    y:bullet.pos[1],
-                    width:10,
-                    height:10};
-
-                if (checkCol(coords,originalPoints)){
-                    console.log( 'x:' +  (coords.x + coords.width), 'y:' + (coords.y + coords.height));
+                var groundPath = new paper.Path(
+                    new paper.Point(originalPoints[0][0], originalPoints[0][1])
+                );
+                for(let i = 1; i < originalPoints.length; i++) {
+                    groundPath.add(new paper.Point(originalPoints[i][0], originalPoints[i][1]))
+                }
+                // check if intersect the original points
+                var intersect = bull.getIntersections(groundPath);
+                if(intersect.length > 0 ) {
                     bullets.splice(i, 1);
-                    tick(coords);                                   // <------ Explosion ------>
-                    window.cancelAnimationFrame(requestAnimFrame);
                     i--;
 
-                    originalPoints = calculateDamageArea(originalPoints, (coords.x + coords.width), (coords.y + coords.height));
+                    let crossPoint = {
+                        x: intersect[0]._point.x,
+                        y: intersect[0]._point.y
+                    };
+                    console.log( 'x:' +  crossPoint.x, 'y:' + crossPoint.y );
+                    tick(crossPoint);                                   // <------ Explosion ------>
+                    window.cancelAnimationFrame(requestAnimFrame);
+
+                    originalPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
 
                     // temporary solution for redrawing updated array originalPoints
                     clear();
@@ -501,6 +514,7 @@
                 this.url = url;
                 this.angle=angle;
                 this.v0=v0;
+                this.currAngle = 0;
             };
 
             ImgInf.prototype = {
@@ -511,8 +525,8 @@
 
                     ctx.translate(x,y);
                     var A=this.v0*Math.cos(this.angle*Math.PI/180);
-                    var an=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180)-9.81*dt2)/A);
-                    ctx.rotate(-an);
+                    this.currAngle=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180)-9.81*dt2)/A);
+                    ctx.rotate(-this.currAngle);
                     ctx.drawImage(bulletImg,x, y);
                     ctx.restore();
                 }
