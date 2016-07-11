@@ -49,8 +49,7 @@ module.exports = angular.module('tanks.navigation', [
 
 .directive('navDir', function ($http, routeNavigation, navConstructor, logCheck) {
     return {
-        template: function (/*element, attrs*/) {
-            console.log('navDir ' + logCheck.check());
+        template: function () {
             
             return navConstructor.navBuild(logCheck.check());
 
@@ -81,7 +80,7 @@ module.exports = angular.module('tanks.navigation', [
         let navRight = '<ul class="nav navbar-nav navbar-right"> ';
         if(logged) {
 
-            let href, name, ngClick = "";
+            let href, name, ngClick = "", icon = "";
             let nav = '<ul class="nav navbar-nav"> ',
                 navCenter = '<a href="/game" class="btn btn-danger navbar-center">Start GAME</a>';
             for(let i = 0; i < routeNavigation.routes.length; i++) {
@@ -93,12 +92,16 @@ module.exports = angular.module('tanks.navigation', [
                     ngClick = ' ng-click="' + routeNavigation.routes[i].click + '"';
                 }
 
+                if(routeNavigation.routes[i].icon !== "") {
+                    icon = '<span class="glyphicon ' + routeNavigation.routes[i].icon + '"></span> ';
+                }
+
                 if(routeNavigation.routes[i].log) { //check its working accuracy
 
                     if(routeNavigation.routes[i].pos === 'left') {
                         nav += ' <li><a' + href + ngClick + '>' + name + '</a></li> ';
                     } else if(routeNavigation.routes[i].pos === 'right'){
-                        navRight += ' <li><a' + href + ngClick + '>' + name + '</a></li>';
+                        navRight += ' <li><a' + href + ngClick + '>' + icon + name + '</a></li>';
                     }
 
                 }
@@ -118,8 +121,12 @@ module.exports = angular.module('tanks.navigation', [
                     ngClick = ' ng-click="' + routeNavigation.routes[i].click + '"';
                 }
 
+                if(routeNavigation.routes[i].icon !== "") {
+                    icon = '<span class="glyphicon ' + routeNavigation.routes[i].icon + '"></span> ';
+                }
+
                 if(routeNavigation.routes[i].pos === 'right' && !routeNavigation.routes[i].log) {
-                    navRight += ' <li><a' + href + ngClick + '>' + name + '</a></li>';
+                    navRight += ' <li><a' + href + ngClick + '>' + icon + name + '</a></li>';
                 }
 
             }
@@ -131,13 +138,13 @@ module.exports = angular.module('tanks.navigation', [
 
 .factory('routeNavigation', function($route, $location) {
     var routes = [
-        {template: 'dashboard', name: 'Dashboard', pos: 'left', log: true, click: '' },
-        {template: 'scores', name: 'Scores', pos: 'left', log: true, click: '' },
-        {template: 'about', name: 'About', pos: 'left', log: true, click: '' },
-        {template: 'profile', name: 'Profile', pos: 'right', log: true, click: '' },
-        {template: '', name: 'Log Out', pos: 'right', log: true, click: 'logOutClick()' },
-        {template: 'signup', name: 'Sign Up', pos: 'right', log: false, click: '' },
-        {template: '', name: 'Log In', pos: 'right', log: false, click: 'logInClick()' }
+        {template: 'dashboard', name: 'Dashboard', pos: 'left', icon: '', log: true, click: '' },
+        {template: 'scores', name: 'Scores', pos: 'left', icon: '', log: true, click: '' },
+        {template: 'about', name: 'About', pos: 'left', icon: '', log: true, click: '' },
+        {template: 'profile', name: 'Profile', pos: 'right', icon: 'glyphicon-user', log: true, click: '' },
+        {template: '', name: 'Log Out', pos: 'right', icon: 'glyphicon-log-out', log: true, click: 'logOutClick()' },
+        {template: 'signup', name: 'Sign Up', pos: 'right', icon: 'glyphicon-plus', log: false, click: '' },
+        {template: '', name: 'Log In', pos: 'right', icon: 'glyphicon-log-in', log: false, click: 'logInClick()' }
     ];
 
     return {
