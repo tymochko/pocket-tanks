@@ -11,6 +11,7 @@ var mongoose = require('mongoose');
 
 var users = require('./api/users/usersRoutes');
 var check = require('./middleware/check');
+
 var connectMongo = require('connect-mongo');
 var MongoStore = connectMongo(session);
 
@@ -41,7 +42,7 @@ app.use(session({
 
 app.use('/api/users', users);
 app.use('/game', check);
-
+//app.use('/chat',chat)
 //=======
 app.use('/public', express.static(path.join(__dirname, '..', '..', 'public')));
 app.use('/*', express.static(path.join(__dirname, '..', '..', 'public')));

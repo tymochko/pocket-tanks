@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var path = require('path');
 var usersCollection = require('./usersController');
+var fsHelper = require('../libs/fsHelper');
 var multer = require('multer');
 
 const userScopeName         = 'userAvatar';
@@ -75,6 +76,18 @@ router.post('/logout', (req, res) => {
     });
 });
 
+//check session
+router.get('/logout', (req, res) => {
+    usersCollection.checkUser({_id: req.session.user}, (err, foundUser) => {
+        if (err) {
+            console.log('err  ', err);
+            res.status(401).send();
+        } else {
+            res.status(204).send(foundUser);
+        }
+    });
+});
+
 // add newUser
 router.post('/add', (req, res) => {
     var newUser = new usersCollection();
@@ -92,7 +105,7 @@ router.post('/add', (req, res) => {
             res.status(400);
             res.json({'message': 'This user is already'});
         } else {
-            var dir = './src/server/usersInfo/' + user._id;
+            var dir = './src/server/static/usersInfo/' + user._id;
             fs.mkdirSync(dir);
             console.log(newUser.userEmail);
             usersCollection.handleEmail(newUser.userName, newUser.userEmail);
@@ -136,36 +149,15 @@ router.put('/profile/delete', (req, res) => {
 
 //upload user img
 router.post('/profile/upload', function (request, res) {
-    var d = new Date();
-    var originName;
-    var fileNameNew = 'userAvatar' + d.getTime();
-    var dir = './src/server/usersInfo/' + request.session.user;
-    usersCollection.rmDir(dir);
-    var storage = multer.diskStorage({ //multers disk storage settings
-        destination: function (req, file, cb) {
-            originName = file.originalname;
+    try{
+        usersCollection.uploadImg(request,res);
 
-            cb(null, dir);
-        },
-        filename: function (req, file, cb) {
-            cb(null, fileNameNew + '.' + file.originalname.split('.')[file.originalname.split('.').length - 1]);
-        }
-    });
-    var upload = multer({ //multer settings
-        storage: storage
-    }).single('file');
+    }
+    catch(e) {
+        console.log(e);
+    }
 
-    upload(request, res, function (err) {
-        if (err) {
-
-            res.json({error_code: 1, err_desc: err});
-            return;
-        }
-        var extension = originName.split('.')[originName.split('.').length - 1];
-        res.json({image: userImgURL + fileNameNew + '.' + extension + usersCollection.getSalt(), uploadedImg: true});
-    });
-});
-
+   });
 
 router.get('/profile/getImage/:scope/:imageName?', function  (req, res) {
 
@@ -190,26 +182,12 @@ router.get('/profile/getImage/:scope/:imageName?', function  (req, res) {
 });
 
 router.get('/profile/publicImages', (req, res) => {
-    fs.readdir(__dirname + '/../../images/' + '/', function (e, files) {
-        if (!e && files.length > 0) {
-            var images = [];
-            for (var file in files) {
-                images.push({image: publicImgURL + files[file] + usersCollection.getSalt(), uploadedImg: false});
-            }
-
-            var userId = req.session.user;
-            const userDir = __dirname + '/../../usersInfo/' + userId + '/';
-
-            fs.readdir(userDir, function (e, files) {
-                console.log(e, files.length > 0);
-                if (!e && files.length > 0)
-                    images.push({image: userImgURL + files[0] + usersCollection.getSalt(), uploadedImg: true});
-                res.send(200, images);
-            });
-        }
-        else
-            res.send(404);
-    });
+    try {
+        usersCollection.getPublicImg(req,res);
+    }
+    catch (e) {
+        console.log(e);
+    }
 });
 
 module.exports = router;
