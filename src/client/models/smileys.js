@@ -5,8 +5,8 @@ function str_replace(search, replace, subject) {
 var replaceSmileys=function(text) {
 	function sm(codes, img_name) { 
 		function rsm(from, to) {
-			path = "public/images/smileys/";
-				text = str_replace(from, '<img class="smiley" src="'+path + to + '" />', text);
+			path = "./public/images/smileys/";
+				text = str_replace(from, '<img class="smiley" src="'+path + to + ' alt="GOOG" >jjjjjJ</img>', text);
 		}
 		codes = codes.split(',');
 		for(index in codes) {
