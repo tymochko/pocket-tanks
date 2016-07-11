@@ -338,7 +338,7 @@ const uploadImg = function (request, res) {
     var d = new Date();
     var originName;
     var fileNameNew = 'userAvatar' + d.getTime();
-    var dir = './src/server/static/usersInfo/' + request.session.user;
+    var dir = userInfoDir + request.session.user;
     fsHelper.checkDir(userInfoDir);
     fsHelper.checkDir(dir);
     fsHelper.rmDir(dir);
