@@ -19,7 +19,7 @@ const calculateDamageArea = (array, damageX, damageY) => {
     pointsToReplace = findDamageLimits(array, damageX, damageY, damageRadius);
     
     pointsToReplace.map((item) => {
-        if (item[2] == 'inDamage') {
+        if (item[2] === 'inDamage') {
             pointsOfIntersect.push(item);
         }
     });
@@ -84,7 +84,7 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
         distanceFromDamageCenter2;
 
     pointsOfDamageCenterSegment = findSegmentOfPoint(array, damageX, damageY);
-    if (pointsOfDamageCenterSegment == null) {
+    if (pointsOfDamageCenterSegment === null) {
         console.log('WARNING! Point is out of the ground');
     }
 
@@ -118,7 +118,7 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
 
         // removing duplicated coordinates
         for (let i = 1; i < segmentPairPoints.length; i++) {
-            if (segmentPairPoints[i][2] == segmentPairPoints[i - 1][2]) {
+            if (segmentPairPoints[i][2] === segmentPairPoints[i - 1][2]) {
                 segmentPairPoints.splice(i, 1);
             }
         }
@@ -285,7 +285,7 @@ const findSegmentOfPoint = (array, damageX, damageY) => {
         x2 = array[i][0];
         y2 = array[i][1];
 
-        if (x1 == damageX && y1 == damageY) {
+        if (x1 === damageX && y1 === damageY) {
             if (array[i - 2] != undefined) {
                 point1 = [array[i - 2][0], array[i - 2][1], (i - 2)];
                 point2 = [x2, y2, i];
