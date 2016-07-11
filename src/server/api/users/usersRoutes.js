@@ -76,6 +76,18 @@ router.post('/logout', (req, res) => {
     });
 });
 
+//check session
+router.get('/logout', (req, res) => {
+    usersCollection.checkUser({_id: req.session.user}, (err, foundUser) => {
+        if (err) {
+            console.log('err  ', err);
+            res.status(401).send();
+        } else {
+            res.status(204).send(foundUser);
+        }
+    });
+});
+
 // add newUser
 router.post('/add', (req, res) => {
     var newUser = new usersCollection();
