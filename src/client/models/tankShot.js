@@ -159,7 +159,7 @@
                 ctx.restore();
         }
 
-        function moveWeaponKeyDown(evt) {
+        /*function moveWeaponKeyDown(evt) {
             switch (evt.keyCode) {
                     case 38:    //Up arrow was pressed /
                         if(angleWeaponInc >=  7*angleWeapon10) {return;} 
@@ -181,7 +181,7 @@
             }
         }
 
-        document.addEventListener('keydown',moveWeaponKeyDown,true);
+        document.addEventListener('keydown',moveWeaponKeyDown,true);*/
         // <------Tank Tilt------>
 
         var tiltTank = function(posX) {
@@ -261,11 +261,11 @@
                 } else {
                     tankX--;
                 }
-                angleWeaponInc = 0;
+                angle = parseInt(getId('angle').innerHTML);
                 tankY = findLinePoints(tankX);
                 clear();
                 fillBackground();
-                drawTank(tankX, tankY);
+                drawTank(tankX, tankY,angleWeaponInc);
             }, 1500);
         };
 
@@ -336,14 +336,36 @@
         }
 
         getId('moreAngle').onclick = function (){
-            angle++;
+            
+            getId('angle').innerHTML = angle;
+
+            if(angle >= 80) {return;}
+            angle +=10;
             getId('angle').innerHTML = angle;
             angle = parseInt(getId('angle').innerHTML);
+
+
+            clear();
+            fillBackground();
+            angleWeaponInc = angle*Math.PI/180;
+            drawTank(tankX, tankY,angleWeaponInc);
+            console.log("angle " + angle);
         }
         getId('lessAngle').onclick = function (){
-            angle--;
+           
+            getId('angle').innerHTML = angle;
+            
+            getId('angle').innerHTML = angle;
+            if(angle <= 0) {return;}
+            angle -=10;
             getId('angle').innerHTML = angle;
             angle = parseInt(getId('angle').innerHTML);
+
+             clear();
+            fillBackground();
+            angleWeaponInc = angle*Math.PI/180;
+            drawTank(tankX, tankY,angleWeaponInc);
+            console.log("angle " + angle);
         }
 
         // <------Vika's part - Explosion ------>
