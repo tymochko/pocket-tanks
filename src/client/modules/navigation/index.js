@@ -5,7 +5,7 @@ module.exports = angular.module('tanks.navigation', [
     ngRoute
 ])
 
-.controller('NavigationCtrl', ['$scope', '$http', '$location', '$window', '$uibModal', 'routeNavigation', 'logCheck', 
+.controller('NavigationCtrl', ['$scope', '$http', '$location', '$window', '$uibModal', 'routeNavigation', 'logCheck',
 	function($scope, $http, $location, $window, $uibModal, routeNavigation, logCheck) {
 
 	    $scope.items = [];
@@ -25,7 +25,7 @@ module.exports = angular.module('tanks.navigation', [
 	            $scope.selected = selectedItem;
 	        });
 	    };
-	    
+
 	    $scope.logOutClick = function () {
 	        $http.post('api/users/logout').then(function(response){
 	            $window.location.reload();
@@ -50,7 +50,7 @@ module.exports = angular.module('tanks.navigation', [
 .directive('navDir', function ($http, routeNavigation, navConstructor, logCheck) {
     return {
         template: function () {
-            
+
             return navConstructor.navBuild(logCheck.check());
 
         },
@@ -62,13 +62,16 @@ module.exports = angular.module('tanks.navigation', [
 .service('logCheck', function($http) {
 	this.check = function() {
 
-		$http.get("/api/users/logout/").then(function(res) {
-            console.log('logged in');
-            console.log(res.session._id);
-            return true;
+		$http.get("/api/users/checkSession").then(function(res) {
+            console.log(res.data.status == 'success');
+            if (res.data.status == 'success') {
+                console.log('logged in');
+                return true;
+            } else if (res.data.status == 'error'){
+                console.log('NOT logged in');
+                return false;
+            }
         }, function(res) {
-            console.log('NOT logged in');
-            return false;
         });
 
 	};
@@ -76,7 +79,7 @@ module.exports = angular.module('tanks.navigation', [
 
 .service('navConstructor', function(routeNavigation){
     this.navBuild = function(logged) {
-
+        console.log(logged);
         let navRight = '<ul class="nav navbar-nav navbar-right"> ';
         if(logged) {
 
