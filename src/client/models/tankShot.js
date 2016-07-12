@@ -521,6 +521,21 @@
             window.ImgInf = ImgInf;
         })();
 
+
+        function sendInfo(){
+        	var socket = io.connect();
+        	if(socket){
+        		socket.on('connect',function(){
+                var tankInfo = {xCord : tankX,
+                                   yCord : tankY, 
+                                   weaponAngle : angleWeapon }
+                 console.log(tankInfo);
+
+                console.log("X coordinate : ", tankX, ", Y coordinate : ", tankY);
+            });
+        };
+        };
+
         (function initialization() {
             clear();
             drawSky();
@@ -534,6 +549,7 @@
             angle_weapon = tiltTank(tankX);
             weaponImage.onload = function() {
             	drawTank(tankX, tankY);
+                sendInfo();
             }
         })();
 
