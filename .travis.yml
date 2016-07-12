@@ -6,3 +6,11 @@ install:
 script:
 - npm run build
 - npm run build
+before_deploy: "echo 'ready?'"
+deploy:
+  provider: openshift
+  user: "pibadel@gmail.com"
+  password: "8G0hMzMh1zGnOd8=" # can be encrypted
+  domain: "ssacademy"
+  app: pockettanks
+  deployment_branch: dashboard
