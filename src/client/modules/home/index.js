@@ -26,7 +26,7 @@ function MainCtrl($scope, $uibModal, $log, $location, $http, $window) {
 
     $scope.addSlide = function(imageNum) {
         slides.push({
-            image: 'public/images/home/' + imageNum + '.png',
+            image: 'public/images/home_' + imageNum + '.png',
             id: currIndex++
         });
     };
