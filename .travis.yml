@@ -10,7 +10,7 @@ before_deploy: "echo 'ready?'"
 deploy:
   provider: openshift
   user: "pibadel@gmail.com"
-  password: "8G0hMzMh1zGnOd8=" # can be encrypted
+  password: "oks156" # can be encrypted
   domain: "ssacademy"
   app:
       dashboard: pockettanks
