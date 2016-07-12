@@ -84,7 +84,7 @@
         const drawTankFn = () => {
             
             tankImage.src = './public/images/tankVehicle.png';
-            weaponImage.src = './public/images/tankWeaponStr.png';
+            weaponImage.src = './public/images/tankWeapon.png';
 
 
             return (xCoordinate, yCoordinate, angleW) => {
