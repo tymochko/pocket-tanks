@@ -8,6 +8,9 @@ const inject = require('gulp-inject');
 const sourcemaps = require('gulp-sourcemaps');
 const browserify = require('gulp-browserify');
 const templateCache = require('gulp-angular-templatecache');
+const Server = require('karma').Server;
+
+
 
 gulp.task('es6', () => {
     // gulp.src('src/server/app.js')
@@ -59,13 +62,20 @@ gulp.task('js', () =>  {
         .pipe(gulp.dest('public/'))
 });
 
+gulp.task('test', function (done) {
+    new Server({
+        configFile: __dirname + '/test/karma.conf.js',
+        singleRun: true
+    }, done).start();
+});
+
 gulp.task('js-models', () => {
     gulp.src('src/client/models/*.js')
         .pipe(sourcemaps.init())
         .pipe(concat('main-models.js'))
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('public/'));
-})
+});
 
 gulp.task('build', ['fonts', 'sass', 'images', 'template', 'js-models', 'js'], () => {
     return gulp.src('src/client/index.html')

@@ -1,4 +1,4 @@
-var angular = require('angular');
+/*var angular = require('angular');
 var ngRoute = require('angular-route');
 var $ = require('jquery');
 module.exports = angular.module('tanks.chat', [
@@ -162,4 +162,4 @@ var replaceSmileys=function(text) {
           sm(':|', 'D83DDE10.png');
 
 	return text;
-}
+}*/
