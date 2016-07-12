@@ -1,5 +1,14 @@
-			<input type="text" class="chat-name" ng-model="inputName" placeholder="Enter your name" />
+	<input type="text" class="chat-name" ng-model="inputName" placeholder="Enter your name" />
 
-			<div id="chat" class="chat-messages" ng-bind-html=sce.trustAsHtml(myHTML)></div>
+	<div id="chat" class="chat-messages" scroll-glue>
+		<div class="chat-message" ng-repeat="x in messages">
+			<p class="chat-name-message" ng-model="chat_name_message">
+				{{x.chater_name}} : {{x.chater_message}}
+			</p>
+			<p class="chat-time" ng-model="chat_time">
+				{{x.chater_time}}
+			</p>
+		</div>
+	</div>
 
-			<textarea ng-keyup="$event.keyCode == 13 && sentEventLis($event)" ng-model="inputMessage" placeholder="Type your message"></textarea>
+	<textarea ng-keyup="$event.keyCode == 13 && sentEventListener($event)" ng-model="inputMessage" placeholder="Type your message"></textarea>

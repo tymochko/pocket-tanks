@@ -153,11 +153,24 @@ const logoutUser = function (id, callback) {
                 console.log('error occured ' + err);
                 return res.status(500).send();
             } else {
-                updatedUser.isOnline = false;
-
                 callback(err, updatedUser);
             }
         });
+};
+
+const checkUser = function (id, callback) {
+    console.log('checkUser', id);
+    this.findOne(id, (err, foundUser) => {
+        // if (err) {
+        //     console.log(err);
+        //     return err;
+        // }
+        // if (!foundUser) {
+        //     return err;
+        // }
+
+        callback(err, foundUser);
+    });
 };
 
 const updateUser = function (id, updatedData, callback) {
@@ -396,22 +409,6 @@ const getPublicImg = function (req, res) {
 
 };
 
-const checkUser = function (id, callback) {
-    this.findOne(id, function (err, foundUser) {
-        if (err) {
-            console.log(err);
-            return err;
-        }
-
-        if (!foundUser) {
-            return err;
-        }
-
-        callback(err, foundUser);
-    });
-};
-
-module.exports.checkUser = checkUser;
 module.exports.getPublicImg = getPublicImg;
 module.exports.uploadImg = uploadImg;
 module.exports.getUserImage = getUserImage;
@@ -425,5 +422,4 @@ module.exports.loginUser = loginUser;
 module.exports.logoutUser = logoutUser;
 module.exports.updateUser = updateUser;
 module.exports.deleteUser = deleteUser;
-
-
+module.exports.checkUser = checkUser;
