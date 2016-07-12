@@ -6,7 +6,7 @@ var profile = require('./profile');
 var dashboard = require('./dashboard');
 var game = require('./game');
 var navigation = require('./navigation');
-//var chat = require('./chat');
+var chat = require('./chat');
 paper = require('paper'); //todo
 
 module.exports = angular.module('tanks', [
@@ -18,7 +18,7 @@ module.exports = angular.module('tanks', [
     require('angular-sanitize'),
     dashboard.name,
     game.name,
-  //  chat.name,
+    chat.name,
     home.name,
     login.name,
     signup.name,
