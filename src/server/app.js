@@ -19,13 +19,7 @@ var app = express();
 
 var cons = require('consolidate');
 
-// view engine setup
-app.engine('html', cons.swig);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'html');
-
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -78,5 +72,5 @@ app.use(function(err, req, res, next) {
     });
 });
 
- 
+
 module.exports = app;

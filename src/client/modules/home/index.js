@@ -1,31 +1,37 @@
 var angular = require('angular');
 var ngRoute = require('angular-route');
-var ngAnimate = require('angular-animate');
-var uiBootstrap = require('angular-ui-bootstrap');
 
 module.exports = angular.module('tanks.home', [
-    ngRoute, ngAnimate, uiBootstrap
-]).controller('mainCtrl', ['$scope', '$uibModal', '$log', '$location', '$http', '$window',
-    function($scope, $uibModal, $log, $location, $http, $window) {
+    ngRoute
+]).config(RouteConfig);
 
-        //<------------slider------------->
-        $scope.myInterval = 2000;
-        $scope.noWrapSlides = false;
-        $scope.active = 0;
-        $scope.noPause = true;
+RouteConfig.$inject = ['$routeProvider'];
+function RouteConfig($routeProvider) {
+    $routeProvider.when('/', {
+        controller: MainCtrl,
+        templateUrl: 'home/home.html'
+    });
+};
 
-        var slides = $scope.slides = [];
-        var currIndex = 0;
+function MainCtrl($scope, $uibModal, $log, $location, $http, $window) {
 
-        $scope.addSlide = function(imageNum) {
-            slides.push({
-                image: 'public/images/home/' + imageNum + '.jpg',
-                id: currIndex++
-            });
-        };
+    //<------------slider------------->
+    $scope.myInterval = 2000;
+    $scope.noWrapSlides = false;
+    $scope.active = 0;
+    $scope.noPause = false;
 
-        for (var i = 0; i < 9; i++) {
-            $scope.addSlide("0" + (i + 1));
-        }
+    var slides = $scope.slides = [];
+    var currIndex = 0;
+
+    $scope.addSlide = function(imageNum) {
+        slides.push({
+            image: 'public/images/home_' + imageNum + '.png',
+            id: currIndex++
+        });
+    };
+
+    for (var i = 0; i < 3; i++) {
+        $scope.addSlide("0" + (i + 1));
     }
-]);
+}
