@@ -19,7 +19,6 @@ module.exports = angular.module('tanks.login', [
 
             $http.post('api/users/login', userInfo)
                 .then(function(response) {
-                        alert('success');
                         $uibModalInstance.close($scope.selected.item);
                         $window.location.reload();
                     },

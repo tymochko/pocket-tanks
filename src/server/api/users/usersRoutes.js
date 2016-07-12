@@ -68,22 +68,24 @@ router.post('/logout', (req, res) => {
             console.log('err  ', err);
             res.status(401).send();
         } else {
-            // req.session.destroy(function(){
-            //     res.redirect('/');
-            // });
+            console.log(req.session.user);
+            req.session.destroy();
             res.status(204).send(foundUser);
         }
     });
 });
 
 //check session
-router.get('/logout', (req, res) => {
+router.get('/checkSession', (req, res) => {
+    console.log('checkSession', req.session.user);
     usersCollection.checkUser({_id: req.session.user}, (err, foundUser) => {
+        console.log('result checkSession', err, foundUser);
         if (err) {
-            console.log('err  ', err);
             res.status(401).send();
+        } else if (foundUser != null){
+            res.status(200).json({'status': 'success'});
         } else {
-            res.status(204).send(foundUser);
+            res.status(200).json({'status': 'error'});
         }
     });
 });
@@ -124,7 +126,7 @@ router.put('/profile/updateUser', (req, res) => {
     if(isUserImgPresent) {
         req.body.userImg.image = req.body.userImg.image.split("/").pop().split('?').shift();
     }
-    
+
     usersCollection.updateUser({_id: req.session.user}, req.body, (err, foundUser) => {
         if (err) {
             console.log('err  ', err);
