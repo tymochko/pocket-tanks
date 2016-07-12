@@ -26,7 +26,7 @@ module.exports = function (config) {
             './node_modules/angular/angular.js',
             './node_modules/angular-mocks/angular-mocks.js',
             './src/client/modules/index.js',
-            './test/unit/**/*.js'
+            './test/client/modules/**/*.js'
         ],
 
 
@@ -37,7 +37,7 @@ module.exports = function (config) {
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
             './src/client/modules/index.js': ['browserify'],
-            './unit/**/*.js': ['browserify']
+            './test/client/modules/**/*.js': ['browserify']
         },
 
 
@@ -47,7 +47,7 @@ module.exports = function (config) {
         reporters: ['progress', 'html'],
 
         htmlReporter: {
-            outputFile: 'test-out/units.html',
+            outputFile: './test/units.html',
 
             // Optional
             pageTitle: 'Unit Tests',
