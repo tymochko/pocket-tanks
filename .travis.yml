@@ -12,6 +12,7 @@ deploy:
   user: "pibadel@gmail.com"
   password: "oks156" # can be encrypted
   domain: "ssacademy"
+  skip_cleanup: true
   app:
       dashboard: pockettanks
   on: dashboard
