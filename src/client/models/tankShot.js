@@ -110,7 +110,7 @@ const radius = 40;
  
        // <------Tank Weapon Movement------>
 
-        var moveWeapon = (xCoordinate, yCoordinate, angleW) => {
+        let moveWeapon = (xCoordinate, yCoordinate, angleW) => {
                 ctx.save();
                 ctx.translate(xCoordinate, yCoordinate-weaponHeight);
                 ctx.rotate(-angleWeapon- angle*Math.PI/180); 
@@ -118,7 +118,7 @@ const radius = 40;
                 ctx.restore();
         }
 
-        function moveWeaponKeyDown(evt) {
+        let moveWeaponKeyDown = (evt) => {
             switch (evt.keyCode) {
                     case 38:    //Up arrow was pressed /
                         if(angle >=  80) {return;}
