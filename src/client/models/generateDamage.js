@@ -84,6 +84,8 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
         distanceFromDamageCenter2;
 
     pointsOfDamageCenterSegment = findSegmentOfPoint(array, damageX, damageY);
+    console.log(pointsOfDamageCenterSegment[0], 'pointsOfDamageCenterSegment[0]');
+    console.log(pointsOfDamageCenterSegment[1], 'pointsOfDamageCenterSegment[1]');
     if (pointsOfDamageCenterSegment === null) {
         console.log('WARNING! Point is out of the ground');
     }
@@ -92,6 +94,7 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
     distanceFromDamageCenter2 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[1][0], pointsOfDamageCenterSegment[1][1]);
 
     if (distanceFromDamageCenter1 >= damageRadius && damageRadius <= distanceFromDamageCenter2) {
+        console.log('rare occurance');
         segmentPairPoints.push(pointsOfDamageCenterSegment[0]);
         segmentPairPoints.push(pointsOfDamageCenterSegment[1]);
 
@@ -99,6 +102,9 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
         for (let i = 1; i < array.length; i++) {
             distance = calculateDistance(damageX, damageY, array[i][0], array[i][1]);
             if (distance < damageRadius) {
+                console.log('--- finding original points to replace ---');
+                console.log([array[i - 1][0], array[i - 1][1], (i - 1)], '[array[i - 1][0], array[i - 1][1], (i - 1)]');
+                console.log([array[i][0], array[i][1], i], '[array[i][0], array[i][1], i]');
                 segmentPairPoints.push([array[i - 1][0], array[i - 1][1], (i - 1)]);
                 segmentPairPoints.push([array[i][0], array[i][1], i]);
             }
@@ -130,6 +136,7 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
         segmentPairPoints[segmentPairPoints.length - 1].push(elementOfLast);
     }
 
+    console.log(segmentPairPoints, 'segmentPairPoints');
     return segmentPairPoints;
 };
 
@@ -171,6 +178,7 @@ const findDamageLimits = (array, damageX, damageY, damageRadius) => {
 
     pointsToReplace.push(segmentPairPoints[segmentPairPoints.length - 1]);
 
+    console.log(pointsToReplace, 'pointsToReplace');
     return pointsToReplace;
 };
 
@@ -220,6 +228,10 @@ const findLineSegmentCoefficient = (endpoint1X, endpoint1Y, endpoint2X, endpoint
 
     deltaX = (endpoint2X - endpoint1X);
     deltaY = (endpoint2Y - endpoint1Y);
+    console.log(endpoint1X, endpoint1Y, 'endpoint1X, endpoint1Y');
+    console.log(endpoint2X, endpoint2Y, 'endpoint2X, endpoint2Y');
+    console.log(deltaX, 'deltaX');
+    console.log(deltaY, 'deltaY');
 
     if (deltaX != 0) {
         return ( (damagePointX - endpoint1X) / deltaX );
@@ -299,6 +311,7 @@ const findSegmentOfPoint = (array, damageX, damageY) => {
         }
 
         ptCoeff = findLineSegmentCoefficient(x1, y1, x2, y2, damageX, damageY);
+        console.log(ptCoeff, 'ptCoeff');
 
         if ( (0 < ptCoeff && ptCoeff < 1) ) {
             point1 = [x1, y1, (i - 1)];
