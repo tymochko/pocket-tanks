@@ -6,20 +6,22 @@ install:
 script:
 - npm run build
 - npm run build
+- gulp production
 deploy:
   provider: openshift
-  user: "pibadel@gmail.com"
-  password: "oks156" # can be encrypted
-  domain: "ssacademy"
-  skip_cleanup: true
+  user: pibadel@gmail.com
+  password:
+    secure: uowfSZZQz+Wyz1kkyi2HRzihi/VVU5Zhdllt5EsOuCusnXvXv6YroICA1E6MAXXQ2/DwUnww7fkO8qL852RrGPoj9sQSngdzdb2SR2cqEvrUDKoZzjXHCgKuZ7Y6TpfK8QqQEW7PQU0PO4iUxR4gn1pGDCmH8aY4cF5V3O66zm38jShABuXKzKn8509FpmqOMLS71F76WItX1Zw4nU7NjJpun1eii3cEq72YZupIQWpWT156APvFegvlh6nYMATZPmf+BJyFxW9chlD8OL+C0rgy7mA5YLSuaEmHkD1W5vKPjU8Gg4hwd2+fjPugjx49P4FUfo3RO5xnV7QzzfUFoL5FLEyvAJYPzqa3vR5z6o+tPZPG+Z+Y669mWrjhNUM2DmUq2tGqimbkJz1LHJJUpOXc00kKRIjEYOgWlskbLQFbNIHAVDTUFqRRZ+4UwaQKDZzQXBJed9mifZb5h6MipFzw0oFDdma+vLSW1uQ3aFwEomVP+DLnqBGXRrHNsuB1T/SuFbd2AbpInUh7MnE613yTANJ7ySDKFZQ8YRWb18iOwg8VewJEVkFomSYIY8lIWK7vNoCtv0mpZGoiAcVjro0/hSuXMY3ccR4pvCGOBZH2JUXX9E33PY3b8X+auWAYggrk6plDLPLleq1NofXbotIuDeqieBcnqfzYIP6WIBk=
   app:
-      dashboard: tanks
+    dashboard: tanks
+  domain: ssacademy
+  skip_cleanup: true
   on: dashboard
   deployment_branch: dashboard
 after_sucess:
-  cd target
-  git init
-  git config --global user.email "travis@localhost.localdomain"
-  git config --global user.name "Travis CI"
-  git add target
-  git commit -am "Travis change"
+  - cd target
+  - git init
+  - git config --global user.email "travis@localhost.localdomain"
+  - git config --global user.name "Travis CI"
+  - git add --all
+  - git commit -am "Travis change"
