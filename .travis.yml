@@ -6,8 +6,6 @@ install:
 script:
 - npm run build
 - npm run build
-before_deploy:
-  - rm -rf .sass-cache .tmp client e2e node_modules server styleguide *.*
 deploy:
   provider: openshift
   user: "pibadel@gmail.com"
@@ -18,3 +16,10 @@ deploy:
       dashboard: tanks
   on: dashboard
   deployment_branch: dashboard
+after_sucess:
+  cd target
+  git init
+  git config --global user.email "travis@localhost.localdomain"
+  git config --global user.name "Travis CI"
+  git add target
+  git commit -am "Travis change"
