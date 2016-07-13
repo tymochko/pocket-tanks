@@ -1,0 +1,9 @@
+deploy:
+  provider: openshift
+  user: pibadel@gmail.com
+  password:
+    secure: LvoxA4CR0dwMEc5jXcEqH18MKIdW7JIDrkZtZ9WBY4zDeffvohN2xP7+DvexNRgDlmDkKu9T5/M4ClWpZ8pWj7HqZRy1Hf+roKqAO5K+mbl3zjfHiMss4IJq7Y4gOmEgJa1Mf36Rzfp5lL5ua4ZpA9nC5YCUGqQwkjv2wck/QDcG9Hwiw2Ghaua6ygFp345D3K22g02fQ3wTOk0ML3vYg4yUDNMO9Il3Fu3HMlYYTqUesuLEjkN5lVL/HE62e3c8m+N7Ifd3Vrm8oe+reoaLqSvbremGECcu8F2OSIM2/KBpJyXa2kuCn73j1xp0H9zlO88SATXk0c0NFULG63ilOP532+dVvBvrK2/2R0GlGOOvNraj2ELP7g2S4MoYW+iPpXO7F5skfiU0ys0wCHsDRagzauRBScTtLShNv2qr2GC6o7d22htdfoFTV0t9d6jwsAYlwiArMikCKb5e24N5udFqP3F4WW7J7isZdG3UwsCkFo+TAzk8LIY7XsunnYxv32vD6y5oRnANca1ymG01c0Ib+XqhjHLoZ+qMmSOYy7H0jeDXSTPdOE2P+LmH2Ivu6HYm+fYgF/697I6LFeZIT6Ms3NynjarPqcjnIfeSfisfdXmd5YICJd6yo4cCdL84GIZu7lmW9BdkUJhw60xlbBAJId8cNJ9ty6RRE1DyhB4=
+  app: tankstest
+  domain: ssacademy
+  on:
+    repo: tymochko/pocket-tanks
