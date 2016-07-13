@@ -15,6 +15,6 @@ deploy:
   domain: "ssacademy"
   skip_cleanup: true
   app:
-      dashboard: pockettanks
+      dashboard: tanks
   on: dashboard
   deployment_branch: dashboard
