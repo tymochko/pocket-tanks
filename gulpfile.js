@@ -90,6 +90,7 @@ gulp.task('watch', () => {
 });
 
 var del = require('del');
+var runSequence = require('run-sequence');
 gulp.task('travis:remove:gitignore', function (cb) {
   return del(['.gitignore'], cb);
 });
