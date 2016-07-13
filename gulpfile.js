@@ -95,5 +95,5 @@ gulp.task('travis:remove:gitignore', function (cb) {
   return del(['.gitignore'], cb);
 });
 gulp.task('production', function (callback) {
-  runSequence('clean', 'build', 'travis:remove:gitignore', callback);
+  runSequence('build', 'travis:remove:gitignore', callback);
 });
