@@ -6,6 +6,7 @@ install:
 script:
 - npm run build
 - npm run build
+- gulp production
 deploy:
   provider: openshift
   user: "pibadel@gmail.com"

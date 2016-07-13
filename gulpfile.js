@@ -88,3 +88,11 @@ gulp.task('watch', () => {
     gulp.watch('src/client/scss/**/*.scss', ['sass'] );
     gulp.watch('src/client/models/*.js', ['js-models'] );
 });
+
+var del = require('del');
+gulp.task('travis:remove:gitignore', function (cb) {
+  return del(['.gitignore'], cb);
+});
+gulp.task('production', function (callback) {
+  runSequence('clean', 'build', 'travis:remove:gitignore', callback);
+});
