@@ -10,18 +10,18 @@
     <h2>Pocket tanks : tests</h2>
     <table cellspacing="0" cellpadding="0" border="0">
       <tr class="overview">
-        <td colspan="3" title="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36">Browser: Chrome 51.0.2704 (Windows 10 0.0.0)</td>
+        <td colspan="3" title="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36">Browser: Chrome 51.0.2704 (Windows 7 0.0.0)</td>
       </tr>
       <tr class="overview">
-        <td colspan="3">Timestamp: 2016-07-12 13:01:12</td>
+        <td colspan="3">Timestamp: 2016-07-13 22:32:23</td>
       </tr>
       <tr>
         <td colspan="3">
-          1 tests / 
+          2 tests / 
           0 errors / 
-          0 failures / 
+          1 failures / 
           0 skipped / 
-          runtime: 0.047s
+          runtime: 0.057s
         </td>
       </tr>
       <tr class="header">
@@ -30,12 +30,32 @@
         <td>Suite / Results</td>
       </tr>
       <tr class="pass">
-        <td>Passed in 0.047s</td>
+        <td>Passed in 0.035s</td>
         <td>check for true or false</td>
         <td>App Controller test</td>
       </tr>
+      <tr class="fail">
+        <td>Failed</td>
+        <td>should run the Test to get the link data from the go backend</td>
+        <td>
+          LoginCtrl
+          <br />Error: [$injector:unpr] Unknown provider: $uibModalInstanceProvider &lt;- $uibModalInstance &lt;- LoginCtrl
+http://errors.angularjs.org/1.5.6/$injector/unpr?p0=%24uibModalInstanceProvider%20%3C-%20%24uibModalInstance%20%3C-%20LoginCtrl
+    at node_modules/angular/angular.js:68:12
+    at node_modules/angular/angular.js:4501:19
+    at Object.getService [as get] (node_modules/angular/angular.js:4654:39)
+    at node_modules/angular/angular.js:4506:45
+    at getService (node_modules/angular/angular.js:4654:39)
+    at injectionArgs (node_modules/angular/angular.js:4678:58)
+    at Object.instantiate (node_modules/angular/angular.js:4720:18)
+    at $controller (node_modules/angular/angular.js:10192:28)
+    at node_modules/angular-mocks/angular-mocks.js:2214:12
+    at createController (c:/Users/Vova/AppData/Local/Temp/test/client/modules/login/index.spec.js:11:0 &lt;- C:/Users/Vova/AppData/Local/Temp/e4bbf46bf88c96ded66beb0d1dfb54aa.browserify:62245:20)
+
+        </td>
+      </tr>
       <tr class="system-out">
-        <td colspan="3"><strong>System output:</strong><br />Chrome 51.0.2704 (Windows 10 0.0.0) LOG: 'WARNING: Tried to load angular more than once.'
+        <td colspan="3"><strong>System output:</strong><br />Chrome 51.0.2704 (Windows 7 0.0.0) LOG: 'WARNING: Tried to load angular more than once.'
 </td>
       </tr>
     </table>
