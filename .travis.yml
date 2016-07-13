@@ -6,7 +6,8 @@ install:
 script:
 - npm run build
 - npm run build
-before_deploy: "echo 'ready?'"
+before_deploy:
+  - rm -rf .sass-cache .tmp client e2e node_modules server styleguide *.*
 deploy:
   provider: openshift
   user: "pibadel@gmail.com"
