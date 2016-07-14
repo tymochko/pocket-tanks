@@ -84,17 +84,11 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
         distanceFromDamageCenter2;
 
     pointsOfDamageCenterSegment = findSegmentOfPoint(array, damageX, damageY);
-    console.log(pointsOfDamageCenterSegment[0], 'pointsOfDamageCenterSegment[0]');
-    console.log(pointsOfDamageCenterSegment[1], 'pointsOfDamageCenterSegment[1]');
-    if (pointsOfDamageCenterSegment === null) {
-        console.log('WARNING! Point is out of the ground');
-    }
 
     distanceFromDamageCenter1 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[0][0], pointsOfDamageCenterSegment[0][1]);
     distanceFromDamageCenter2 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[1][0], pointsOfDamageCenterSegment[1][1]);
 
     if (distanceFromDamageCenter1 >= damageRadius && damageRadius <= distanceFromDamageCenter2) {
-        console.log('rare occurance');
         segmentPairPoints.push(pointsOfDamageCenterSegment[0]);
         segmentPairPoints.push(pointsOfDamageCenterSegment[1]);
 
@@ -102,9 +96,6 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
         for (let i = 1; i < array.length; i++) {
             distance = calculateDistance(damageX, damageY, array[i][0], array[i][1]);
             if (distance < damageRadius) {
-                console.log('--- finding original points to replace ---');
-                console.log([array[i - 1][0], array[i - 1][1], (i - 1)], '[array[i - 1][0], array[i - 1][1], (i - 1)]');
-                console.log([array[i][0], array[i][1], i], '[array[i][0], array[i][1], i]');
                 segmentPairPoints.push([array[i - 1][0], array[i - 1][1], (i - 1)]);
                 segmentPairPoints.push([array[i][0], array[i][1], i]);
             }
@@ -136,7 +127,6 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
         segmentPairPoints[segmentPairPoints.length - 1].push(elementOfLast);
     }
 
-    console.log(segmentPairPoints, 'segmentPairPoints');
     return segmentPairPoints;
 };
 
@@ -172,6 +162,8 @@ const findDamageLimits = (array, damageX, damageY, damageRadius) => {
         intersectPt1Y = intersectPt1[1];
         intersectPt2X = intersectPt2[0];
         intersectPt2Y = intersectPt2[1];
+        console.log(intersectPt1X, intersectPt1Y, 'intersectPt1X, intersectPt1Y');
+        console.log(intersectPt2X, intersectPt2Y, 'intersectPt2X, intersectPt2Y');
 
         setPointOrder(xPrev, yPrev, xCurr, yCurr, intersectPt1X, intersectPt1Y, intersectPt2X, intersectPt2Y, pointsToReplace);
     }
@@ -203,19 +195,19 @@ const setPointOrder = (endpoint1X, endpoint1Y, endpoint2X, endpoint2Y, damagePoi
     damagePoint1T = findLineSegmentCoefficient(endpoint1X, endpoint1Y, endpoint2X, endpoint2Y, damagePoint1X, damagePoint1Y);
     damagePoint2T = findLineSegmentCoefficient(endpoint1X, endpoint1Y, endpoint2X, endpoint2Y, damagePoint2X, damagePoint2Y);
 
-    initialCheck1 = (0 <= damagePoint1T && damagePoint1T <= 1);
-    initialCheck2 = (0 <= damagePoint2T && damagePoint2T <= 1);
-    initialCheck3 = (!initialCheck1 && initialCheck2);
-    initialCheck4 = (initialCheck1 && !initialCheck2);
+    initialCheck1 = (damagePoint1X < damagePoint2X);
+    initialCheck2 = (damagePoint1X > damagePoint2X);
+    initialCheck3 = ( (damagePoint1X === damagePoint2X) && (damagePoint1Y > damagePoint2Y) );
+    initialCheck4 = ( (damagePoint1X === damagePoint2X) && (damagePoint1Y < damagePoint2Y) );
 
-    if ( (initialCheck1 && initialCheck2) && damagePoint1T < damagePoint2T ) {
+    if ( (damagePoint1T && damagePoint2T) && (initialCheck1 || initialCheck3) ) {
         markAndPushPoint(damagePoint1, arrayOfOrder);
         markAndPushPoint(damagePoint2, arrayOfOrder);
-    } else if (initialCheck3) {
+    } else if (!damagePoint1T && damagePoint2T) {
         markAndPushPoint(damagePoint2, arrayOfOrder);
-    } else if (initialCheck4) {
+    } else if (damagePoint1T && !damagePoint2T) {
         markAndPushPoint(damagePoint1, arrayOfOrder);
-    } else if ( (initialCheck1 && initialCheck2) && damagePoint1T > damagePoint2T ) {
+    } else if ( (damagePoint1T && damagePoint2T) && (initialCheck2 || initialCheck4) ) {
         markAndPushPoint(damagePoint2, arrayOfOrder);
         markAndPushPoint(damagePoint1, arrayOfOrder);
     }
@@ -224,20 +216,38 @@ const setPointOrder = (endpoint1X, endpoint1Y, endpoint2X, endpoint2Y, damagePoi
 const findLineSegmentCoefficient = (endpoint1X, endpoint1Y, endpoint2X, endpoint2Y, damagePointX, damagePointY) => {
     // find coefficient of point, situated on line segment
     let deltaX,
-        deltaY;
+        deltaY,
+        tX,
+        tY,
+        conditionX,
+        conditionY,
+        conditionEqual;
 
     deltaX = (endpoint2X - endpoint1X);
     deltaY = (endpoint2Y - endpoint1Y);
     console.log(endpoint1X, endpoint1Y, 'endpoint1X, endpoint1Y');
     console.log(endpoint2X, endpoint2Y, 'endpoint2X, endpoint2Y');
+    console.log(damagePointX, damagePointY, 'damagePointX, damagePointY');
     console.log(deltaX, 'deltaX');
     console.log(deltaY, 'deltaY');
 
-    if (deltaX != 0) {
-        return ( (damagePointX - endpoint1X) / deltaX );
-    } else {
-        return ( (damagePointY - endpoint1Y) / deltaY );
-    }
+    tX = ( (damagePointX - endpoint1X) / deltaX );
+    tY = ( (damagePointY - endpoint1Y) / deltaY );
+    console.log(tX, 'tX');
+    console.log(tY, 'tY');
+    tX = Math.ceil(tX * 10) / 10;
+    tY = Math.ceil(tY * 10) / 10;
+    console.log(tX, 'tX');
+    console.log(tY, 'tY');
+
+    conditionX = ( 0 < tX && tX <= 1);
+    conditionY = ( 0 < tY && tY <= 1);
+    conditionEqual = (tX === tY);
+    console.log(conditionX, 'conditionX');
+    console.log(conditionY, 'conditionY');
+    console.log(conditionEqual, 'conditionEqual');
+
+    return (conditionX && conditionY && conditionEqual);
 };
 
 const findIntersectionCoordinates = (x1, y1, x2, y2, cX, cY, r) => {
@@ -310,14 +320,31 @@ const findSegmentOfPoint = (array, damageX, damageY) => {
             return [point1, point2];
         }
 
-        ptCoeff = findLineSegmentCoefficient(x1, y1, x2, y2, damageX, damageY);
-        console.log(ptCoeff, 'ptCoeff');
+        if (x2 >= damageX) {
+            ptCoeff = findLineSegmentCoefficient(x1, y1, x2, y2, damageX, damageY);
+            if (ptCoeff) {
+                point1 = [x1, y1, (i - 1)];
+                point2 = [x2, y2, i];
+                console.log(point1, point2, 'point1, point2');
 
-        if ( (0 < ptCoeff && ptCoeff < 1) ) {
-            point1 = [x1, y1, (i - 1)];
-            point2 = [x2, y2, i];
+                return [point1, point2];
 
-            return [point1, point2];
+            } else {
+                x1 = x2;
+                y1 = y2;
+                x2 = array[i + 1][0];
+                y2 = array[i + 1][1];
+
+                ptCoeff = findLineSegmentCoefficient(x1, y1, x2, y2, damageX, damageY);
+
+                if (ptCoeff) {
+                    point1 = [x1, y1, i];
+                    point2 = [x2, y2, (i + 1)];
+                    console.log(point1, point2, 'point1, point2');
+
+                    return [point1, point2];
+                }
+            }
         }
     }
 
