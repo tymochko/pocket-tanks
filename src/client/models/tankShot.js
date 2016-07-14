@@ -87,7 +87,7 @@ const radius = 40;
         const drawTankFn = () => {
            
             tankImage.src = './public/images/tankVehicle.png';
-            weaponImage.src = './public/images/tankWeaponStr.png';
+            weaponImage.src = './public/images/tankWeapon_straight.png';
 
 
             return (xCoordinate, yCoordinate, angleW) => {
