@@ -18,7 +18,7 @@ deploy:
   skip_cleanup: true
   on: dashboard
   deployment_branch: dashboard
-after_sucess:
+after_success:
   - cd target
   - git init
   - git config --global user.email "travis@localhost.localdomain"
