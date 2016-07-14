@@ -4,24 +4,13 @@ node_js:
 install:
 - npm install
 script:
-- npm run build
-- npm run build
-- gulp production
+  - npm run build
+  - npm run build
+before_deploy:
+  - gulp production
 deploy:
-  provider: openshift
-  user: pibadel@gmail.com
-  password:
-    secure: uowfSZZQz+Wyz1kkyi2HRzihi/VVU5Zhdllt5EsOuCusnXvXv6YroICA1E6MAXXQ2/DwUnww7fkO8qL852RrGPoj9sQSngdzdb2SR2cqEvrUDKoZzjXHCgKuZ7Y6TpfK8QqQEW7PQU0PO4iUxR4gn1pGDCmH8aY4cF5V3O66zm38jShABuXKzKn8509FpmqOMLS71F76WItX1Zw4nU7NjJpun1eii3cEq72YZupIQWpWT156APvFegvlh6nYMATZPmf+BJyFxW9chlD8OL+C0rgy7mA5YLSuaEmHkD1W5vKPjU8Gg4hwd2+fjPugjx49P4FUfo3RO5xnV7QzzfUFoL5FLEyvAJYPzqa3vR5z6o+tPZPG+Z+Y669mWrjhNUM2DmUq2tGqimbkJz1LHJJUpOXc00kKRIjEYOgWlskbLQFbNIHAVDTUFqRRZ+4UwaQKDZzQXBJed9mifZb5h6MipFzw0oFDdma+vLSW1uQ3aFwEomVP+DLnqBGXRrHNsuB1T/SuFbd2AbpInUh7MnE613yTANJ7ySDKFZQ8YRWb18iOwg8VewJEVkFomSYIY8lIWK7vNoCtv0mpZGoiAcVjro0/hSuXMY3ccR4pvCGOBZH2JUXX9E33PY3b8X+auWAYggrk6plDLPLleq1NofXbotIuDeqieBcnqfzYIP6WIBk=
-  app:
-    dashboard: tanks
-  domain: ssacademy
-  skip_cleanup: true
+  api_key:
+    secure: M0u6Z1JZ2x5srfLzh1unhzfvMeDLwJ0WoJjTH0481xHyqHDgbnkcr/wcU6vkPzxHpeyLUBWMfrC4MDfbW8QXIbBQB1o8jdYzLt7CKekFaCPZfyt6fzwkYOCnHBCWvVpSQWQ5KF+Iu8v5QkUn59YdP92hNeWpj5CvDghC7/AMrLMThQhS6Wb4m3d48j6vtWOLOGpZzkUInifAy/wYcGyTpOP1zPbplLsLUNWVXhRemmLmwuybGq9plU7XbMnwv5rvTUfWsqSHxc2TUbddenQerNVSR3NEbEwwq5exWkEF28qOHlg4uRpkKudRlY1qZkYLA1GqbsyndJ1qqaLTp10XTXoph/4p3HLgGOECTPNexTj91H4KrpDyWd41DYpo6KSizUXljmUskeKH+Ic4fgrsAubtNLpUyFk8FmqZFMCO5ixcv7AaEd6NFp4DpP4+sZebj6GcxBdIs+DAu0IT1BAsXiQ5JdJI4Hs0fERmJgGcJoCAFoeQoqnenUXAWfTuukX4m0c/38BjJ67czoT7gUsiWt4sy4a1Wv4jDmv0AjLwtsgnJSmHoK9SrtsUEOIQAg8wOUi7n2G0iETSt5n9zL2A1TXM4XsHCvGI8Pidnh9njXpyR0dLyRH+EwIw3X/P3ZzvU4aGgiD9WAW0y8j7wRVQk+oLGYKbGwJ2Ef327F/uZlE=
+  app: tanks-academy
   on: dashboard
-  deployment_branch: dashboard
-after_success:
-  - cd target
-  - git init
-  - git config --global user.email "travis@localhost.localdomain"
-  - git config --global user.name "Travis CI"
-  - git add --all
-  - git commit -am "Travis change"
+  skip_cleanup: true
