@@ -22,9 +22,7 @@ function ChatController($scope,socket)
 
      if(socket)
      {
-          socket.on('output', function(data){
-              getMessages(data);
-          });
+          socket.on('output', getMessages);
 
           $scope.sentEventListener=function(event){
                var inputMessage = $scope.inputMessage,
