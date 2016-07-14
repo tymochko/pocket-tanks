@@ -27,6 +27,12 @@ module.exports = angular.module('tanks.login', [
 .controller('LoginCtrl', ['$scope', 'sendLog', '$uibModalInstance', 'items', 
  function ($scope, sendLog, $uibModalInstance, items) {
         
+        $scope.minLengthName = 5;
+        $scope.maxLengthName = 15;
+        
+        $scope.minLengthPass = 6;
+        $scope.maxLengthPass = 12;
+
         $scope.login = function(user) {
 
             let userInfo = {
