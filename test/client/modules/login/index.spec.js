@@ -1,15 +1,25 @@
-describe('LoginCtrl', function() {
-    var scope, httpBackend, createController;
+describe('Login controller test', function() {
+    var scope, httpBackend, createController, uibModalInstance, items, $window;
 
     beforeEach(angular.mock.module("tanks.login"));
 
-    beforeEach(inject(function($rootScope, $httpBackend, $controller) {
+    beforeEach(inject(function ($rootScope, $httpBackend, $controller) {
         httpBackend = $httpBackend;
         scope = $rootScope.$new();
+        uibModalInstance = {};
+        uibModalInstance.success = function () {
+
+        };
+        items = [];
+        $window = {};
 
         createController = function() {
             return $controller('LoginCtrl', {
-                '$scope': scope
+                '$scope': scope,
+                '$http': httpBackend,
+                '$uibModalInstance': uibModalInstance,
+                'items': items,
+                '$window': $window
             });
         };
     }));
@@ -19,28 +29,70 @@ describe('LoginCtrl', function() {
         httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('should run the Test to get the link data from the go backend', function() {
+
+     it("success response - empty array from server", function () {
         var controller = createController();
         scope.urlToScrape = 'success.com';
+        var uibModalInstance = {};
+        uibModalInstance.success = function () {
 
-        httpBackend.expect('GET', '/slurp?urlToScrape=http:%2F%2Fsuccess.com')
-            .respond({
-                "success": true,
-                "links": ["http://www.google.com", "http://angularjs.org", "http://amazon.com"]
-            });
+        };
 
-        // have to use $apply to trigger the $digest which will
-        // take care of the HTTP request
-        scope.$apply(function() {
-            scope.runTest();
-        });
-
-        expect(scope.parseOriginalUrlStatus).toEqual('calling');
-
+        httpBackend.expect('POST', 'api/users/login').respond(200);
+        var success;
+        var userInfo = {
+            userName: 'Jack',
+            userPassword: 'Black'
+        }, 
+            items = [], $window = {};
+        // call logOut
+        scope.login(userInfo).then(function () {
+            success = true;
+        });        
         httpBackend.flush();
+        // verification
+        expect(success).toBe(true);
 
-        expect(scope.retrievedUrls).toEqual(["http://www.google.com", "http://angularjs.org", "http://amazon.com"]);
-        expect(scope.parseOriginalUrlStatus).toEqual('waiting');
-        expect(scope.doneScrapingOriginalUrl).toEqual(true);
+
     });
+
 });
+
+
+
+
+
+
+
+
+// describe('Login controller test', function() {
+//     var $controller, httpBackend;
+
+//     beforeEach(angular.mock.module("tanks.login"));
+
+//     beforeEach(inject(function (_$controller_, $httpBackend) {
+//         $controller = _$controller_;
+//         httpBackend = $httpBackend;
+//     }));
+
+//      it("success response - empty array from server", function () {
+//         var $scope = {};
+//         var uibModalInstance = {};
+//         uibModalInstance.success = function () {
+
+//         };
+
+//         httpBackend.expect('POST', 'api/users/login').respond(200);
+//         var success;
+//         var userInfo = {}, items = [], $window = {};
+//         var controller = $controller('LoginCtrl', { $scope: $scope, $http: httpBackend, $uibModalInstance: uibModalInstance, items: items, $window: $window });
+//         // call logOut
+//         controller.login().then(function (userInfo) {
+//             success = true;
+//         });        
+//         httpBackend.flush();
+//         // verification
+//         expect(success).toBe(true);
+//     });
+
+// });
