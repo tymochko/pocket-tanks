@@ -7,11 +7,12 @@ var usersCollection = require('./usersController');
 var fsHelper = require('../libs/fsHelper');
 var multer = require('multer');
 
-const userScopeName         = 'userAvatar';
-const publicScopeName       = 'public';
-const userUploadsScopeName  = 'userUploads';
-const publicImgURL          = "/api/users/profile/getImage/" + publicScopeName + '/';
-const userImgURL            = '/api/users/profile/getImage/' + userUploadsScopeName + '/';
+const userScopeName = 'userAvatar';
+const publicScopeName = 'public';
+const userUploadsScopeName = 'userUploads';
+const publicImgURL = "/api/users/profile/getImage/" + publicScopeName + '/';
+const userImgURL = '/api/users/profile/getImage/' + userUploadsScopeName + '/';
+const userInfoDir = './src/server/static/usersInfo/';
 
 
 // get all users in database, for instance in dashboard
@@ -29,7 +30,7 @@ router.get('/', (req, res) => {
 // get user's info by id, for instance in profile page
 router.get('/profile', (req, res) => {
     usersCollection.showProfile({_id: req.session.user}, (err, foundUser) => {
-            if (err) {
+        if (err) {
             console.log('err  ', err);
             res.status(401).send();
         } else {
@@ -107,8 +108,8 @@ router.post('/add', (req, res) => {
             res.status(400);
             res.json({'message': 'This user is already'});
         } else {
-            var dir = './src/server/static/usersInfo/' + user._id;
-            fs.mkdirSync(dir);
+            fsHelper.checkDir(userInfoDir);
+            fsHelper.checkDir(userInfoDir + user._id);
             console.log(newUser.userEmail);
             usersCollection.handleEmail(newUser.userName, newUser.userEmail);
             req.session.user = user._id;
@@ -123,7 +124,7 @@ router.post('/add', (req, res) => {
 router.put('/profile/updateUser', (req, res) => {
     //TODO add comment
     var isUserImgPresent = req.body.userImg && req.body.userImg.image;
-    if(isUserImgPresent) {
+    if (isUserImgPresent) {
         req.body.userImg.image = req.body.userImg.image.split("/").pop().split('?').shift();
     }
 
@@ -151,17 +152,18 @@ router.put('/profile/delete', (req, res) => {
 
 //upload user img
 router.post('/profile/upload', function (request, res) {
-    try{
-        usersCollection.uploadImg(request,res);
+    try {
+
+        usersCollection.uploadImg(request, res);
 
     }
-    catch(e) {
+    catch (e) {
         console.log(e);
     }
 
-   });
+});
 
-router.get('/profile/getImage/:scope/:imageName?', function  (req, res) {
+router.get('/profile/getImage/:scope/:imageName?', function (req, res) {
 
     var userId = req.session.user;
     try {
@@ -180,12 +182,13 @@ router.get('/profile/getImage/:scope/:imageName?', function  (req, res) {
     }
     catch (e) {
         console.log(e)
-    };
+    }
+    ;
 });
 
 router.get('/profile/publicImages', (req, res) => {
     try {
-        usersCollection.getPublicImg(req,res);
+        usersCollection.getPublicImg(req, res);
     }
     catch (e) {
         console.log(e);

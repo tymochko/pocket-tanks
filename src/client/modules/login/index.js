@@ -10,6 +10,12 @@ module.exports = angular.module('tanks.login', [
             item: $scope.items[0]
         };
 
+        $scope.minLengthName = 5;
+        $scope.maxLengthName = 15;
+        
+        $scope.minLengthPass = 6;
+        $scope.maxLengthPass = 12;
+
         $scope.login = function(user) {
 
             let userInfo = {
