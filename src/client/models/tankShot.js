@@ -377,8 +377,8 @@ const radius = 40;
         function updateEntities(dt) {
             for(var i = 0; i < bullets.length; i++) {
                 bullet = bullets[i];
-                bullet.pos[0] = tankX + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180);
-                bullet.pos[1] = tankY-30 - (bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180) - 9.8 * dt2 * dt2 / 2);
+                bullet.pos[0] = tankX + weaponWidth * Math.cos(angleWeapon + angle*Math.PI/180) + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180 + angleWeapon);
+                bullet.pos[1] = tankY-30 - weaponWidth * Math.sin(angleWeapon + angle*Math.PI/180)- (bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180 + angleWeapon) - 9.8 * dt2 * dt2 / 2);
                 dt2 += 2*dt;
                     // creating path for bullet and originalPoints
                 var bull = new paper.Path.Rectangle(bullet.pos[0],bullet.pos[1], 45, 7);
@@ -478,8 +478,8 @@ const radius = 40;
                     var y = this.pos[1];
  
                     ctx.translate(x,y);
-                    var A=this.v0*Math.cos(this.angle*Math.PI/180);
-                    this.currAngle=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180)-9.81*dt2)/A);
+                    var A=this.v0*Math.cos(this.angle*Math.PI/180 + angleWeapon);
+                    this.currAngle=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180 + angleWeapon)-9.81*dt2)/A);
                     ctx.rotate(-this.currAngle);
                     ctx.drawImage(bulletImg,x, y);
                     ctx.restore();
