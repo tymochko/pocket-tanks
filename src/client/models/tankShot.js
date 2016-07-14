@@ -9,7 +9,8 @@ const radius = 40;
         var backCanvas;
         var WIDTH, HEIGHT, backCtx, canvas;
         var lastTimeTankMoved;
-        var pattern;       
+        var pattern;
+        var inv=1;       
         var originalPoints = [[0, 280],[20, 285],[40, 310],[145, 325],[125, 380],[165, 330],[175, 340],[220, 350],
         [240, 300],[280, 280],[300, 250],[340, 180],[370, 150],[440, 170],[550, 410],[530, 350],[540, 310],
         [575, 290],[630, 320],[685, 320],[690, 335],[700, 320],[750, 280],[755, 285],[795, 250],[800, 250],
@@ -296,7 +297,38 @@ const radius = 40;
             getId('power').innerHTML = power;
             power = parseInt(getId('power').innerHTML);
         }
- 
+
+        getId('chatBtn').onclick = function (){
+            var adiv = document.getElementById('chat-window');
+            var starttime;
+            var maxOpacity=1;
+            var timeDur=1000;
+
+            function moveit(timestamp, el, dist, duration){
+                var timestamp = timestamp || new Date().getTime();
+                var runtime = timestamp - starttime;
+                var progress = runtime / duration;
+
+                progress = Math.min(progress, maxOpacity);
+                el.style.opacity = inv*(dist * progress).toFixed(2);
+                
+                (inv==1) ? el.style.display="initial" : el.style.display="none";
+
+                if (runtime < duration){
+                    requestAnimationFrame(function(timestamp){ 
+                        moveit(timestamp, el, dist, duration);
+                    })
+                }
+                else
+                    inv=-inv;
+            }
+             
+            requestAnimationFrame(function(timestamp){
+                starttime = timestamp || new Date().getTime();
+                moveit(timestamp, adiv, maxOpacity, timeDur);
+            });
+        }
+
         getId('moreAngle').onclick = function (){
             
            getId('angle').innerHTML = angle;
