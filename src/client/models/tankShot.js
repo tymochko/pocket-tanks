@@ -1,20 +1,25 @@
 'use strict';
 
+const radius = 40;
+const WIDTH = 800,
+    HEIGHT = 500;
+
 var ctx;
 var tankX, tankY;
-const radius = 40;
+var angleWeaponInc = 0;
+var originalPoints = [[0, 280],[20, 285],[40, 310],[145, 325],[125, 380],[165, 330],[175, 340],[220, 350],
+    [240, 300],[280, 280],[300, 250],[340, 180],[370, 150],[440, 170],[550, 410],[530, 350],[540, 310],
+    [575, 290],[630, 320],[685, 320],[690, 335],[700, 320],[750, 280],[755, 285],[795, 250],[800, 250],
+    [800, 500],[0, 500],[0, 280]];
 // document.addEventListener("DOMContentLoaded", function(){
     function initGame(){
 
         var backCanvas;
-        var WIDTH, HEIGHT, backCtx, canvas;
+        var backCtx, canvas;
         var lastTimeTankMoved;
         var pattern;
         var inv=1;       
-        var originalPoints = [[0, 280],[20, 285],[40, 310],[145, 325],[125, 380],[165, 330],[175, 340],[220, 350],
-        [240, 300],[280, 280],[300, 250],[340, 180],[370, 150],[440, 170],[550, 410],[530, 350],[540, 310],
-        [575, 290],[630, 320],[685, 320],[690, 335],[700, 320],[750, 280],[755, 285],[795, 250],[800, 250],
-        [800, 500],[0, 500],[0, 280]];
+
         const tankHeight = 30,
             tankWidth = 70,
             weaponHeight = 20,
@@ -22,15 +27,14 @@ const radius = 40;
             tankImage = new Image(),
             weaponImage = new Image();
         let angleWeapon,
-            angleWeaponInc = 0,
             angleWeapon10 = 10*Math.PI/180;
 
         //      <------initialization------>
         backCanvas = document.createElement('canvas');
  
         paper.setup(backCanvas)
-        WIDTH = backCanvas.width  = 800;
-        HEIGHT = backCanvas.height = 500;
+        backCanvas.width  = WIDTH;
+        backCanvas.height = HEIGHT;
         backCtx = backCanvas.getContext('2d');
         canvas = document.getElementById('myCanvas');
         ctx = canvas.getContext('2d');
@@ -164,77 +168,13 @@ const radius = 40;
                 // this.angle += 180;
  
             return this.angle;
-        }
- 
+        };
+
+
         // <------Tank movement------>
- 
-        var findLinePoints = function(posX) {
-            var arr = [];
- 
-            for(var i = originalPoints.length - 1; i > 0; i--) {
-                if(originalPoints[i][0] >= posX && originalPoints[i-1][0] <= posX) {
-                    var x1 = originalPoints[i-1][0],
-                        x2 = originalPoints[i][0],
-                        y1 = originalPoints[i-1][1],
-                        y2 = originalPoints[i][1];
-                    // console.log("Vova: " + x1 + " " + x2 + " " + y1 + " " + y2);
-                    var time = Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
-                    for (var j = 0; j <= time; j++) {
-                        var delta = j/time ;
-                        var a =  delta*(x2 - x1) + x1;
-                        var b =  delta*(y2 - y1) + y1;
-                        arr.push([Math.round(a), Math.round(b)]);
-                    }
-                    for(var i = 0; i < arr.length; i++) {
-                        if(arr[i][0] === posX) return (arr[i][1]);
-                    }
-                }
-            }
-        };
- 
-        var clear = function() {
-            ctx.clearRect(0, 0, WIDTH, HEIGHT);
-        };
- 
-        var fillBackground = function () {
-            ctx.rect(0,0,WIDTH,HEIGHT);
-            ctx.fillStyle = pattern;
-            ctx.fill();
-        };
- 
-        var animate = function(draw, duration) {
-            var start = performance.now();
-            requestAnimFrame(function animate(time) {
-                var timePassed = time - start;
-                if (timePassed > duration) timePassed = duration;
-                draw(timePassed);
-                if(tankX >= WIDTH - 11 || tankX <= 11){
-                    window.cancelAnimationFrame(requestAnimFrame);
-                    console.log('stop!!!');
-                } else if (timePassed < duration) {
-                    requestAnimFrame(animate);
-                }
-            });
-        };
- 
-        var tankMove = function(direction) {
-            animate(function(timePassed) {
-                if(direction === "right") {
-                    tankX++;
-                } else {
-                    tankX--;
-                }
-                angle = parseInt(getId('angle').innerHTML);
-                tankY = findLinePoints(tankX);
-                clear();
-                fillBackground();
-                drawTank(tankX, tankY,angleWeaponInc);
-            }, 1500);
-        };
- 
- 
-        function doKeyDown(evt){
-            var now = new Date().getTime();
+
+        const doKeyDown = (evt) => {
+            let now = new Date().getTime();
             if(now - lastTimeTankMoved > 1500) {
                 switch (evt.keyCode) {
                     case 37:  /* Left arrow was pressed */
@@ -261,10 +201,20 @@ const radius = 40;
                 }
             lastTimeTankMoved = now;
             }
-        }
- 
+        };
         window.addEventListener('keydown',doKeyDown,true);
- 
+
+        const clear = () => {
+            ctx.clearRect(0, 0, WIDTH, HEIGHT);
+        };
+
+        const fillBackground = () => {
+            ctx.rect(0,0,WIDTH,HEIGHT);
+            ctx.fillStyle = pattern;
+            ctx.fill();
+        };
+
+
         function makeShot() {
             dt2=0;
             bullets.push({ pos: [tankX+45, tankY-44],
@@ -540,5 +490,7 @@ const radius = 40;
         window.clear = clear;
         window.fillBackground = fillBackground;
         window.drawTank = drawTank;
+        window.requestAnimFrame = requestAnimFrame;
+        window.getId = getId;
     }
 // });
