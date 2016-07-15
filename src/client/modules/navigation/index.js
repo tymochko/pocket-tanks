@@ -38,10 +38,8 @@ module.exports = angular.module('tanks.navigation', [
                 $http.get("/api/users/checkSession").then((res) => {
                     console.log(res.data.status == 'success');
                     if (res.data.status === 'success') {
-                        console.log('logged in');
                         $scope.logged = true;
                     } else if (res.data.status == 'error'){
-                        console.log('NOT logged in');
                         $scope.logged = false;
                     }
                 }, () => {
@@ -83,21 +81,6 @@ module.exports = angular.module('tanks.navigation', [
             controller: 'NavigationCtrl'
         };
     })
-
-    // .service('logCheck', function($http) {
-    // 	this.check = function($scope) {
-    // 		$http.get("/api/users/checkSession").then(function(res) {
-    //             console.log(res.data.status);
-    //             if (res.data.status === 'success') {
-    //                 console.log('logged in');
-    //             } else if (res.data.status === 'error'){
-    //                 console.log('NOT logged in');
-    //             }
-    //         }, function () {
-    //             console.log('server error');
-    //         });
-    // 	};
-    // })
 
     .service('navConstructor', function(routeNavigation){
         this.navBuild = function(logged) {
