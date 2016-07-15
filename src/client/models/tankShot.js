@@ -5,7 +5,6 @@ var tankX, tankY;
 const radius = 40;
 // document.addEventListener("DOMContentLoaded", function(){
     function initGame(){
-
         var backCanvas;
         var WIDTH, HEIGHT, backCtx, canvas;
         var lastTimeTankMoved;
@@ -540,5 +539,7 @@ const radius = 40;
         window.clear = clear;
         window.fillBackground = fillBackground;
         window.drawTank = drawTank;
+        return{
+            tankMove: tankMove
+        }
     }
-// });
