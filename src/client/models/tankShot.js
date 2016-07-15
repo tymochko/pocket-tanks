@@ -1,13 +1,23 @@
 'use strict';
 
+const radius = 40;
+const WIDTH = 800,
+    HEIGHT = 500;
+
 var ctx;
 var tankX, tankY;
-const radius = 40;
+var angleWeaponInc = 0;
+let angleWeapon,
+    angle,
+    power;
+var originalPoints = [[0, 280],[20, 285],[40, 310],[145, 325],[125, 380],[165, 330],[175, 340],[220, 350],
+    [240, 300],[280, 280],[300, 250],[340, 180],[370, 150],[440, 170],[550, 410],[530, 350],[540, 310],
+    [575, 290],[630, 320],[685, 320],[690, 335],[700, 320],[750, 280],[755, 285],[795, 250],[800, 250],
+    [800, 500],[0, 500],[0, 280]];
 // document.addEventListener("DOMContentLoaded", function(){
     function initGame(){
-
         var backCanvas;
-        var WIDTH, HEIGHT, backCtx, canvas;
+        var backCtx, canvas;
         var lastTimeTankMoved;
         var pattern;       
         var originalPoints = [[0, 280],[200, 350], [350, 150], [500, 250],[800, 250],
@@ -22,19 +32,31 @@ const radius = 40;
             weaponWidth = 35,      
             tankImage = new Image(),
             weaponImage = new Image();
-        let angleWeapon,
-            angleWeaponInc = 0,
-            angleWeapon10 = 10*Math.PI/180;
+        
+        let angleWeapon10 = 10*Math.PI/180;
 
         //      <------initialization------>
         backCanvas = document.createElement('canvas');
  
         paper.setup(backCanvas)
-        WIDTH = backCanvas.width  = 800;
-        HEIGHT = backCanvas.height = 500;
+        backCanvas.width  = WIDTH;
+        backCanvas.height = HEIGHT;
         backCtx = backCanvas.getContext('2d');
         canvas = document.getElementById('myCanvas');
         ctx = canvas.getContext('2d');
+        power =  parseInt(getId('power').innerHTML);
+        angle = parseInt(getId('angle').innerHTML);
+
+        var requestAnimFrame = (function(){
+            return window.requestAnimationFrame   ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame    ||
+                window.oRequestAnimationFrame      ||
+                window.msRequestAnimationFrame     ||
+                function(callback){
+                    window.setTimeout(callback, 1000 / 60);
+                };
+        })();
  
         // <------Ground and sky drawing------>
  
@@ -89,104 +111,63 @@ const radius = 40;
         const drawTankFn = () => {
            
             tankImage.src = './public/images/tankVehicle.png';
-            weaponImage.src = './public/images/tankWeapon.png';
- 
- 
+            weaponImage.src = './public/images/tankWeapon_straight.png';
+
+
             return (xCoordinate, yCoordinate, angleW) => {
- 
-                angleWeapon = -tiltTank(xCoordinate);
-               
+              
+                angleWeapon = -tiltTank(xCoordinate); 
+                
                 ctx.save();
-                ctx.translate(xCoordinate, yCoordinate-30);
-                ctx.translate(tankWidth / 2, tankHeight / 2);
-                ctx.rotate(-angleWeapon);
-                ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
+                ctx.translate(xCoordinate, yCoordinate-weaponHeight);                
+                ctx.rotate(-angleWeapon);               
+                ctx.drawImage(tankImage,-tankWidth/2-weaponWidth/3,-tankHeight/2+weaponHeight/2 , 
+                tankWidth, tankHeight);
                 ctx.restore();
- 
+
                 moveWeapon(xCoordinate, yCoordinate, angleW);
             };
- 
+
         }
  
         const drawTank = drawTankFn();
  
-        // <------Tank Weapon Movement------>
- 
-       /* var angle_weapon_rot = angle_weapon_rot || 0;*/
- 
-       /* var moveWeapon = function (xCoordinate, yCoordinate, angleWeapon) {
-            var tankHeight = 30;
-            var tankWidth = 70;
-            var weaponHeight = 20;
-            var weaponWidth = 35;
- 
-            ctx.save();
-            ctx.translate(xCoordinate+weaponWidth+12, yCoordinate-weaponWidth/2-weaponHeight/4);
-            ctx.rotate(-angle_weapon_rot*Math.PI/180);
-            ctx.drawImage(weaponImage, 0,-weaponHeight-4+weaponHeight/4, weaponWidth,weaponHeight);
-            ctx.restore();
- 
-            ctx.save();
-            ctx.translate(xCoordinate, yCoordinate - 30);
-            ctx.translate(tankWidth / 2, tankHeight / 2);
-            ctx.rotate(angle_second);
-            ctx.drawImage(tankImage, -(tankWidth / 2), -(tankHeight / 2), tankWidth, tankHeight);
-            ctx.restore();
-        }
-*/
- 
-        var moveWeapon = (xCoordinate, yCoordinate, angleW) => {
-               
+       // <------Tank Weapon Movement------>
+
+        let moveWeapon = (xCoordinate, yCoordinate, angleW) => {
                 ctx.save();
- 
-                if (angleWeapon > 0) {
-                    var angle_curr = angleWeapon / Math.PI * 180;
-                    angle_curr = Math.round(angle_curr / 10);
-                    var xCof = angle_curr * 2.45;
-                    var yCof = angle_curr * 0.725;
-                }
-                else {
-                    var angle_curr = -angleWeapon / Math.PI * 180;
-                    angle_curr = Math.round(angle_curr / 10);
-                    var xCof = angle_curr * 0.25;
-                    yCof = -angle_curr * 2.6;
-                }    
- 
-                ctx.translate(xCoordinate-4-xCof, yCoordinate-30-yCof);
-                ctx.translate(tankWidth-weaponWidth/2, tankHeight/2-weaponHeight/2);
- 
-                if (typeof angleW != 'undefined') {
-                    angleWeapon += angleW;                                          
-                }
- 
-                ctx.rotate(-angleWeapon);        
-                ctx.drawImage(weaponImage, -weaponWidth/2+weaponWidth/2,  -weaponHeight+weaponHeight/2, weaponWidth, weaponHeight);
+                ctx.translate(xCoordinate, yCoordinate-weaponHeight);
+                ctx.rotate(-angleWeapon- angle*Math.PI/180); 
+                ctx.drawImage(weaponImage, 0,  -weaponHeight/2, weaponWidth, weaponHeight);
                 ctx.restore();
         }
- 
-        /*function moveWeaponKeyDown(evt) {
+
+        let moveWeaponKeyDown = (evt) => {
             switch (evt.keyCode) {
                     case 38:    //Up arrow was pressed /
-                        if(angleWeaponInc >=  7*angleWeapon10) {return;}
+                        if(angle >=  80) {return;}
+                        angle +=5; 
                         clear();
                         fillBackground();
-                        angleWeaponInc += angleWeapon10;
+                        angleWeaponInc = angle*Math.PI/180;
                         drawTank(tankX, tankY,angleWeaponInc);
-                        //console.log('case 38 - ' + angleWeaponInc);
+                        getId('angle').innerHTML = angle;
                         break;
- 
+
                     case 40:   //Down arrow was pressed /
-                        if(angleWeaponInc <= - angleWeapon10) {return;}
+                      if(angle <=  0) {return;}
+                       angle -=5;
                         clear();
                         fillBackground();
-                        angleWeaponInc -= angleWeapon10;
+                        angleWeaponInc = angle*Math.PI/180;
                         drawTank(tankX, tankY,angleWeaponInc);
-                        //console.log('case 40 - ' + angleWeaponInc);
+                        getId('angle').innerHTML = angle;
                         break;
             }
         }
- 
-        document.addEventListener('keydown',moveWeaponKeyDown,true);*/
+
+        document.addEventListener('keydown',moveWeaponKeyDown,true);
+
         // <------Tank Tilt------>
  
         var tiltTank = function(posX) {
@@ -206,77 +187,13 @@ const radius = 40;
                 // this.angle += 180;
  
             return this.angle;
-        }
- 
+        };
+
+
         // <------Tank movement------>
- 
-        var findLinePoints = function(posX) {
-            var arr = [];
- 
-            for(var i = originalPoints.length - 1; i > 0; i--) {
-                if(originalPoints[i][0] >= posX && originalPoints[i-1][0] <= posX) {
-                    var x1 = originalPoints[i-1][0],
-                        x2 = originalPoints[i][0],
-                        y1 = originalPoints[i-1][1],
-                        y2 = originalPoints[i][1];
-                    // console.log("Vova: " + x1 + " " + x2 + " " + y1 + " " + y2);
-                    var time = Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
-                    for (var j = 0; j <= time; j++) {
-                        var delta = j/time ;
-                        var a =  delta*(x2 - x1) + x1;
-                        var b =  delta*(y2 - y1) + y1;
-                        arr.push([Math.round(a), Math.round(b)]);
-                    }
-                    for(var i = 0; i < arr.length; i++) {
-                        if(arr[i][0] === posX) return (arr[i][1]);
-                    }
-                }
-            }
-        };
- 
-        var clear = function() {
-            ctx.clearRect(0, 0, WIDTH, HEIGHT);
-        };
- 
-        var fillBackground = function () {
-            ctx.rect(0,0,WIDTH,HEIGHT);
-            ctx.fillStyle = pattern;
-            ctx.fill();
-        };
- 
-        var animate = function(draw, duration) {
-            var start = performance.now();
-            requestAnimFrame(function animate(time) {
-                var timePassed = time - start;
-                if (timePassed > duration) timePassed = duration;
-                draw(timePassed);
-                if(tankX >= WIDTH - 11 || tankX <= 11){
-                    window.cancelAnimationFrame(requestAnimFrame);
-                    console.log('stop!!!');
-                } else if (timePassed < duration) {
-                    requestAnimFrame(animate);
-                }
-            });
-        };
- 
-        var tankMove = function(direction) {
-            animate(function(timePassed) {
-                if(direction === "right") {
-                    tankX++;
-                } else {
-                    tankX--;
-                }
-                angle = parseInt(getId('angle').innerHTML);
-                tankY = findLinePoints(tankX);
-                clear();
-                fillBackground();
-                drawTank(tankX, tankY,angleWeaponInc);
-            }, 1500);
-        };
- 
- 
-        function doKeyDown(evt){
-            var now = new Date().getTime();
+
+        const doKeyDown = (evt) => {
+            let now = new Date().getTime();
             if(now - lastTimeTankMoved > 1500) {
                 switch (evt.keyCode) {
                     case 37:  /* Left arrow was pressed */
@@ -285,17 +202,6 @@ const radius = 40;
                     case 39:  /* Right arrow was pressed */
                         tankMove('right');
                         break;
- 
-                    case 32: /*SPACE*/
-                        dt2=0;
-                        bullets.push({ pos: [tankX, tankY],
-                            imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
-                            angle: angle,
-                            bulletSpeed: power
-                        });
-                        lastFire = Date.now();
-                        shotStart();
-                        break;
                     case 13: /*ENTER*/
                         makeShot();
                     break;
@@ -303,22 +209,20 @@ const radius = 40;
                 }
             lastTimeTankMoved = now;
             }
-        }
- 
+        };
         window.addEventListener('keydown',doKeyDown,true);
- 
-        function makeShot() {
-            dt2=0;
-            bullets.push({ pos: [tankX+45, tankY-44],
-                imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
-                angle: angle,
-                bulletSpeed: power
-            });
-            lastFire = Date.now();
-            shotStart();
-        }
- 
- 
+
+        const clear = () => {
+            ctx.clearRect(0, 0, WIDTH, HEIGHT);
+        };
+
+        const fillBackground = () => {
+            ctx.rect(0,0,WIDTH,HEIGHT);
+            ctx.fillStyle = pattern;
+            ctx.fill();
+        };
+
+
 // <------Vika's part - Navigation ------>
  
         function getId(id) {
@@ -339,203 +243,38 @@ const radius = 40;
             getId('power').innerHTML = power;
             power = parseInt(getId('power').innerHTML);
         }
- 
+        
         getId('moreAngle').onclick = function (){
             
-            getId('angle').innerHTML = angle;
+           getId('angle').innerHTML = angle;
 
             if(angle >= 80) {return;}
-            angle +=10;
+            angle +=5;
             getId('angle').innerHTML = angle;
             angle = parseInt(getId('angle').innerHTML);
-
-
+ 
             clear();
-            fillBackground();
+            fillBackground();            
             angleWeaponInc = angle*Math.PI/180;
             drawTank(tankX, tankY,angleWeaponInc);
-            console.log("angle " + angle);
         }
         getId('lessAngle').onclick = function (){
            
             getId('angle').innerHTML = angle;
-           
-            getId('angle').innerHTML = angle;
+
             if(angle <= 0) {return;}
-            angle -=10;
+            angle -=5;
             getId('angle').innerHTML = angle;
             angle = parseInt(getId('angle').innerHTML);
- 
-             clear();
+
+            clear();
             fillBackground();
             angleWeaponInc = angle*Math.PI/180;
             drawTank(tankX, tankY,angleWeaponInc);
-            console.log("angle " + angle);
         }
- 
- 
-        //<------Maks's part-------->
- 
- 
-        var requestAnimFrame = (function(){
-            return window.requestAnimationFrame   ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame    ||
-            window.oRequestAnimationFrame      ||
-            window.msRequestAnimationFrame     ||
-            function(callback){
-                window.setTimeout(callback, 1000 / 60);
-            };
-        })();
-        var power =  parseInt(getId('power').innerHTML);
-        var angle = parseInt(getId('angle').innerHTML);;
-        var lastTime;
-        var dt2=0;
-        var bullets = [];
-        var bullet;
-        var lastFire = Date.now();
-        var gameTime = 0;
-        var bulletImg=new Image();
-        bulletImg.src='./public/images/bullet2.png';
- 
-        function drawBullet() {
-            clear();
- 
-            fillBackground();
-            drawTank(tankX,tankY);
- 
-            var now = Date.now();
-            var dt = (now - lastTime) / 1000.0;
-            update(dt);
-            render();
-            lastTime = now;
-        }
- 
-        function shotStart() {
-            lastTime = Date.now();
-            drawBullet();
-        }
- 
-        function update(dt) {
-            gameTime += dt;
-            updateEntities(dt);
-        }
- 
-        function updateEntities(dt) {
-            for(var i = 0; i < bullets.length; i++) {
-                bullet = bullets[i];
-                bullet.pos[0] = tankX+45 + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180);
-                bullet.pos[1] = tankY-44 -(bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180) - 9.8 * dt2 * dt2 / 2);
-                dt2 += 2*dt;
-                    // creating path for bullet and originalPoints
-                var bull = new paper.Path.Rectangle(bullet.pos[0],bullet.pos[1], 45, 7);
-                //check angle for accuracy of point
-                bull.rotate(-bullet.imgInf.currAngle);
- 
-                var groundPath = new paper.Path(
-                    new paper.Point(originalPoints[0][0], originalPoints[0][1])
-                );
-                for(let i = 1; i < originalPoints.length; i++) {
-                    groundPath.add(new paper.Point(originalPoints[i][0], originalPoints[i][1]))
-                }
-                // check if intersect the original points
-                var intersect = bull.getIntersections(groundPath);
-                if(intersect.length > 0 ) {
-                    bullets.splice(i, 1);
-                    i--;
- 
-                    let crossPoint = {
-                        x: intersect[0]._point.x,
-                        y: intersect[0]._point.y
-                    };
-                    console.log( 'x:' +  crossPoint.x, 'y:' + crossPoint.y );
-                    tick(crossPoint);                                   // <------ Explosion ------>
-                    window.cancelAnimationFrame(requestAnimFrame);
- 
-                    originalPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
- 
-                    // temporary solution for redrawing updated array originalPoints
-                    clear();
-                    drawSky();
-                    drawGround();
- 
-                    pattern = ctx.createPattern(backCanvas, "no-repeat");
-                    tankY = findLinePoints(tankX);
- 
-                    fillBackground();
-                    drawTank(tankX, tankY);
-                }
-                else if(bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT)
-                {
-                    bullets.splice(i, 1);
-                    window.cancelAnimationFrame(requestAnimFrame);
-                    i--;
-                    clear();
-                    drawSky();
-                    drawGround();
- 
-                    pattern = ctx.createPattern(backCanvas, "no-repeat");
-                    tankY = findLinePoints(tankX);
- 
-                    fillBackground();
-                    drawTank(tankX, tankY);
-                }
-                else
-                {
-                    requestAnimFrame(drawBullet);
-                }
-            }
-        }
- 
-        function render() {
-            renderEntities(bullets);
-        };
- 
-        function renderEntities(list) {
-            for(var i=0; i<list.length; i++) {
-                renderEntity(list[i]);
-            }
-        }
- 
-        function renderEntity(entity) {
-            ctx.save();
-            ctx.translate(entity.pos[0], entity.pos[1]);
-            entity.imgInf.render(ctx,dt2);
-            ctx.restore();
-        }
- 
-        function reset() {
-            gameTime = 0;
-            bullets = [];
-        };
- 
-        (function() {
-            function ImgInf(url, pos, angle, v0) {
-                this.pos = pos;
-                this.url = url;
-                this.angle=angle;
-                this.v0=v0;
-                this.currAngle = 0;
-            };
- 
-            ImgInf.prototype = {
- 
-                render: function(ctx, dt2) {
-                    var x = this.pos[0];
-                    var y = this.pos[1];
- 
-                    ctx.translate(x,y);
-                    var A=this.v0*Math.cos(this.angle*Math.PI/180);
-                    this.currAngle=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180)-9.81*dt2)/A);
-                    ctx.rotate(-this.currAngle);
-                    ctx.drawImage(bulletImg,x, y);
-                    ctx.restore();
-                }
-            };
- 
-            window.ImgInf = ImgInf;
-        })();
- 
+
+        getId('chatBtn').onclick = showChatWindow;
+     
         (function initialization() {
             clear();
             drawSky();
@@ -555,5 +294,10 @@ const radius = 40;
         window.clear = clear;
         window.fillBackground = fillBackground;
         window.drawTank = drawTank;
+        window.requestAnimFrame = requestAnimFrame;
+        window.getId = getId;
+        window.weaponWidth=weaponWidth;
+        window.drawSky=drawSky;
+        window.drawGround=drawGround;
+        window.backCanvas=backCanvas;
     }
-// });
