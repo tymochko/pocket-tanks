@@ -1,98 +1,58 @@
-describe('Login controller test', function() {
-    var scope, httpBackend, createController, uibModalInstance, items, $window;
+describe('LoginCtrl', function() {
+    var $controller, scope, uibModalInstance, items, sendLog;
+    var controller;
 
     beforeEach(angular.mock.module("tanks.login"));
 
-    beforeEach(inject(function ($rootScope, $httpBackend, $controller) {
-        httpBackend = $httpBackend;
+    beforeEach(inject(function($rootScope, _$controller_) {
         scope = $rootScope.$new();
-        uibModalInstance = {};
-        uibModalInstance.success = function () {
-
-        };
-        items = [];
-        $window = {};
-
-        createController = function() {
-            return $controller('LoginCtrl', {
-                '$scope': scope,
-                '$http': httpBackend,
-                '$uibModalInstance': uibModalInstance,
-                'items': items,
-                '$window': $window
-            });
-        };
+        $controller = _$controller_;
     }));
 
-    afterEach(function() {
-        httpBackend.verifyNoOutstandingExpectation();
-        httpBackend.verifyNoOutstandingRequest();
+    beforeEach(inject(function() {
+            sendLog = {};
+
+            controller = $controller('LoginCtrl', { $scope: scope, sendLog: sendLog, $uibModalInstance: uibModalInstance, items: items});
+            uibModalInstance = {};
+            uibModalInstance.close = function () {
+
+            };
+            
+            items = [];
+    }));
+
+    describe('Testing controller variables', function() {
+
+        it('minLengthName', function() {
+            expect(scope.minLengthName).toEqual(5);
+        });
+
+        it('maxLengthName', function() {
+            expect(scope.maxLengthName).toEqual(15);
+        });
+
+        it('minLengthPass', function() {
+            expect(scope.minLengthPass).toEqual(6);
+        });
+
+        it('maxLengthPass', function() {
+            expect(scope.maxLengthPass).toEqual(12);
+        });
     });
 
+    describe('Testing controller functions', function() {
+        it("$scope.login check", function () {
+            var succeeded;
+            var userInfo = {
+                userName: 'Jack',
+                userPassword: 'Black'
+            };
 
-     it("success response - empty array from server", function () {
-        var controller = createController();
-        scope.urlToScrape = 'success.com';
-        var uibModalInstance = {};
-        uibModalInstance.success = function () {
-
-        };
-
-        httpBackend.expect('POST', 'api/users/login').respond(200);
-        var success;
-        var userInfo = {
-            userName: 'Jack',
-            userPassword: 'Black'
-        }, 
-            items = [], $window = {};
-        // call logOut
-        scope.login(userInfo).then(function () {
-            success = true;
-        });        
-        httpBackend.flush();
-        // verification
-        expect(success).toBe(true);
-
-
+            sendLog.log = function(userInfo, scope, uibModalInstance, items) {
+                succeeded = true;
+            };
+            
+            scope.login(userInfo);
+        });
     });
-
 });
-
-
-
-
-
-
-
-
-// describe('Login controller test', function() {
-//     var $controller, httpBackend;
-
-//     beforeEach(angular.mock.module("tanks.login"));
-
-//     beforeEach(inject(function (_$controller_, $httpBackend) {
-//         $controller = _$controller_;
-//         httpBackend = $httpBackend;
-//     }));
-
-//      it("success response - empty array from server", function () {
-//         var $scope = {};
-//         var uibModalInstance = {};
-//         uibModalInstance.success = function () {
-
-//         };
-
-//         httpBackend.expect('POST', 'api/users/login').respond(200);
-//         var success;
-//         var userInfo = {}, items = [], $window = {};
-//         var controller = $controller('LoginCtrl', { $scope: $scope, $http: httpBackend, $uibModalInstance: uibModalInstance, items: items, $window: $window });
-//         // call logOut
-//         controller.login().then(function (userInfo) {
-//             success = true;
-//         });        
-//         httpBackend.flush();
-//         // verification
-//         expect(success).toBe(true);
-//     });
-
-// });

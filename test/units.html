@@ -13,15 +13,15 @@
         <td colspan="3" title="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36">Browser: Chrome 51.0.2704 (Windows 7 0.0.0)</td>
       </tr>
       <tr class="overview">
-        <td colspan="3">Timestamp: 2016-07-14 11:43:06</td>
+        <td colspan="3">Timestamp: 2016-07-17 22:33:00</td>
       </tr>
       <tr>
         <td colspan="3">
-          1 tests / 
-          1 errors / 
-          1 failures / 
+          5 tests / 
+          0 errors / 
+          0 failures / 
           0 skipped / 
-          runtime: 0.038s
+          runtime: 0.051s
         </td>
       </tr>
       <tr class="header">
@@ -29,20 +29,30 @@
         <td>Spec</td>
         <td>Suite / Results</td>
       </tr>
-      <tr class="fail">
-        <td>Failed</td>
-        <td>success response - empty array from server</td>
-        <td>
-          Login controller test
-          <br />TypeError: $http.post is not a function
-    at Scope.$scope.login (c:/Users/Vova/AppData/Local/Temp/src/client/modules/login/index.js:20:0 &lt;- C:/Users/Vova/AppData/Local/Temp/2d78fc99a5dcb353db9d1b9a102fc541.browserify:61727:19)
-    at Object.&lt;anonymous&gt; (c:/Users/Vova/AppData/Local/Temp/test/client/modules/login/index.spec.js:49:0 &lt;- C:/Users/Vova/AppData/Local/Temp/2d78fc99a5dcb353db9d1b9a102fc541.browserify:62267:15)
-
-          <br />Error: Unsatisfied requests: POST api/users/login
-    at Function.$httpBackend.verifyNoOutstandingExpectation (node_modules/angular-mocks/angular-mocks.js:1825:13)
-    at Object.&lt;anonymous&gt; (c:/Users/Vova/AppData/Local/Temp/test/client/modules/login/index.spec.js:28:0 &lt;- C:/Users/Vova/AppData/Local/Temp/2d78fc99a5dcb353db9d1b9a102fc541.browserify:62246:21)
-
-        </td>
+      <tr class="pass">
+        <td>Passed in 0.034s</td>
+        <td>minLengthName</td>
+        <td>LoginCtrl &raquo; Testing controller variables</td>
+      </tr>
+      <tr class="pass">
+        <td>Passed in 0.006s</td>
+        <td>maxLengthName</td>
+        <td>LoginCtrl &raquo; Testing controller variables</td>
+      </tr>
+      <tr class="pass">
+        <td>Passed in 0.002s</td>
+        <td>minLengthPass</td>
+        <td>LoginCtrl &raquo; Testing controller variables</td>
+      </tr>
+      <tr class="pass">
+        <td>Passed in 0.005s</td>
+        <td>maxLengthPass</td>
+        <td>LoginCtrl &raquo; Testing controller variables</td>
+      </tr>
+      <tr class="pass">
+        <td>Passed in 0.004s</td>
+        <td>$scope.login check</td>
+        <td>LoginCtrl &raquo; Testing controller functions</td>
       </tr>
       <tr class="system-out">
         <td colspan="3"><strong>System output:</strong><br />Chrome 51.0.2704 (Windows 7 0.0.0) LOG: 'WARNING: Tried to load angular more than once.'
