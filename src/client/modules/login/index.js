@@ -8,24 +8,32 @@ module.exports = angular.module('tanks.login', [
 .service('sendLog',['$http', '$window', 
     function($http, $window){
         
-        this.log = function(userInfo, $scope, $uibModalInstance, items){
+        this.log = (userInfo, $scope, $uibModalInstance, items, loginResult) => {
             $scope.items = items;
             $scope.selected = {
                 item: $scope.items[0]
             };
             return $http.post('/api/users/login', userInfo)
-                    .then(function(response) {
+                    .then((response) => {
+                        loginResult.result = true;
                         $uibModalInstance.close($scope.selected.item);
                         $window.location.reload();
                     },
-                    function(response) {
+                    (response) => {
+                        loginResult.result = false;
                         console.log('failed to login');
                     });
         };
 }])
 
-.controller('LoginCtrl', ['$scope', 'sendLog', '$uibModalInstance', 'items', 
- function ($scope, sendLog, $uibModalInstance, items) {
+.factory('loginResult', () => {
+    return {
+        result: false
+    };
+})
+
+.controller('LoginCtrl', ['$scope', 'sendLog', '$uibModalInstance', 'items', 'loginResult', 
+function($scope, sendLog, $uibModalInstance, items, loginResult) {
         
         $scope.minLengthName = 5;
         $scope.maxLengthName = 15;
@@ -33,14 +41,15 @@ module.exports = angular.module('tanks.login', [
         $scope.minLengthPass = 6;
         $scope.maxLengthPass = 12;
 
-        $scope.login = function(user) {
+        $scope.login = (user) => {
 
             let userInfo = {
                 userName: user.name,
                 userPassword: user.password
             };
 
-            sendLog.log(userInfo, $scope, $uibModalInstance, items);
+            sendLog.log(userInfo, $scope, $uibModalInstance, items, loginResult);
+            // alert(loginResult.result);
         }
     }
 ]);
