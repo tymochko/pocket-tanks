@@ -3,12 +3,35 @@ var ngRoute = require('angular-route');
 
 module.exports = angular.module('tanks.login', [
     ngRoute
-]).controller('LoginCtrl', ['$scope', '$http', '$uibModalInstance', 'items', '$window',
-    function ($scope, $http, $uibModalInstance, items, $window) {
-        $scope.items = items;
-        $scope.selected = {
-            item: $scope.items[0]
+])
+
+.service('sendLog',['$http', '$window', 
+    function($http, $window){
+        
+        this.log = function(userInfo, $scope, $uibModalInstance, items){
+            $scope.items = items;
+            $scope.selected = {
+                item: $scope.items[0]
+            };
+            return $http.post('/api/users/login', userInfo)
+                    .then(function(response) {
+                        $uibModalInstance.close($scope.selected.item);
+                        $window.location.reload();
+                    },
+                    function(response) {
+                        console.log('failed to login');
+                    });
         };
+}])
+
+.controller('LoginCtrl', ['$scope', 'sendLog', '$uibModalInstance', 'items', 
+ function ($scope, sendLog, $uibModalInstance, items) {
+        
+        $scope.minLengthName = 5;
+        $scope.maxLengthName = 15;
+        
+        $scope.minLengthPass = 6;
+        $scope.maxLengthPass = 12;
 
         $scope.login = function(user) {
 
@@ -17,39 +40,7 @@ module.exports = angular.module('tanks.login', [
                 userPassword: user.password
             };
 
-            $http.post('api/users/login', userInfo)
-                .then(function(response) {
-                        $uibModalInstance.close($scope.selected.item);
-                        $window.location.reload();
-                    },
-                    function(response) {
-                        console.log('failed to login');
-                    }
-                );
+            sendLog.log(userInfo, $scope, $uibModalInstance, items);
         }
     }
 ]);
-
-// function LoginCtrl($scope, $http, $uibModalInstance, items) {
-//     $scope.items = items;
-//     $scope.selected = {
-//         item: $scope.items[0]
-//     };
-
-//     $scope.login = function(user) {
-
-//         let userInfo = {
-//             userName: user.name,
-//             userPassword: user.password
-//         };
-
-//         $http.post('api/users/login', userInfo)
-//             .then(function(response) {
-//                     $uibModalInstance.close($scope.selected.item);
-//                 },
-//                 function(response) {
-//                     console.log('failed');
-//                 }
-//             );
-//     }
-// }

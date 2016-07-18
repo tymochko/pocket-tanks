@@ -23,6 +23,9 @@ module.exports = angular.module('tanks.profile', [
         }
     }])
     .controller('uploadController', ['$http', 'Upload', '$scope', '$uibModalInstance', function ($http, Upload, $scope, $uibModalInstance) {
+
+
+
         $scope.submit = () => {
             let uploadedImg;
             if ($scope.upload_form.file.$valid && $scope.file) {
@@ -35,7 +38,7 @@ module.exports = angular.module('tanks.profile', [
                 url: 'api/users/profile/upload',
                 data: {file: file}
             }).then((resp) => {
-                uploadedImg = resp.data;
+                uploadedImg = resp.data; // TODO delete 'uploadImg' and send directly resp.data
                 $uibModalInstance.close(uploadedImg);
             });
         };
@@ -44,7 +47,18 @@ module.exports = angular.module('tanks.profile', [
         };
 
     }])
+    .controller('testCtrl',['$scope',function ($scope){
+        $scope.mass = false;
+        
+        $scope.set = function (a) {
+            $scope.mass = a
+        }
+
+    }])
     .controller('deleteUserController', ['$scope', '$uibModalInstance', ($scope, $uibModalInstance) => {
+
+        $scope.test1 = false;
+
         $scope.ok = () => {
             $uibModalInstance.close();
         };
@@ -89,10 +103,10 @@ module.exports = angular.module('tanks.profile', [
 
         };
 
-    }]),
+    }]);
 
 
-    RouteConfig.$inject = ['$routeProvider'];
+RouteConfig.$inject = ['$routeProvider'];
 function RouteConfig($routeProvider) {
     $routeProvider.when('/profile', {
         controller: manageProfileController,
@@ -118,6 +132,8 @@ function manageProfileController($scope, $uibModal, profileService, toastr, $loc
         confirmNewPassword: "",
         userAge: ""
     };
+
+
 
     function getSalt() {
         return "?salt=" + new Date().getTime();
