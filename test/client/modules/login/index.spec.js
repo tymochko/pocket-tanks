@@ -30,17 +30,17 @@ describe('LoginCtrl', function() {
     }));
 
     beforeEach(inject(function() {
-            //sendLog = {};
+        //sendLog = {};
 
-            controller = $controller('LoginCtrl', { $scope: scope, sendLog: sendLog, $uibModalInstance: uibModalInstance, items: items, loginResult: loginResult});
-            uibModalInstance = {};
-            uibModalInstance.close = function () {
+        controller = $controller('LoginCtrl', { $scope: scope, sendLog: sendLog, $uibModalInstance: uibModalInstance, items: items, loginResult: loginResult});
+        uibModalInstance = {};
+        uibModalInstance.close = function () {
 
-            };
-            
-            items = [];
+        };
+
+        items = [];
     }));
-    
+
 
     describe('Testing controller variables', function() {
 
@@ -77,11 +77,11 @@ describe('LoginCtrl', function() {
             };
 
             // sendLog.log = function(userInfo, scope, uibModalInstance, items, loginResult) {
-                
+
             // };
 
             // httpBackend.whenRoute('POST', 'api/users/login/');
-              
+
             sendLog.log.success = function() {
                 console.log('SUCCESS');
             };
@@ -91,8 +91,8 @@ describe('LoginCtrl', function() {
                 console.log('ERROR');
             };
             sendLog.log.error = jasmine.createSpy('sendLog.log.error() spy');
-            
-            
+
+
             scope.login(userInfo);
             // expect(succeeded).toBe(true);
             expect(sendLog.log).toHaveBeenCalled();
