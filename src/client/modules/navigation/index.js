@@ -38,12 +38,12 @@ module.exports = angular.module('tanks.navigation', [
                 $http.get("/api/users/checkSession").then((res) => {
                     if (res.data.status === 'success') {
                         $scope.logged = true;
-                    } else if (res.data.status == 'error'){
+                    } else {
                         $scope.logged = false;
                     }
                 }, () => {
-                    console.log('server error');
-                });
+                    alert('server error');           //-------------> will be OK?
+                }); 
             };
 
             $scope.checkSessionFunc();

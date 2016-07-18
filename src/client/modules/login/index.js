@@ -49,7 +49,6 @@ function($scope, sendLog, $uibModalInstance, items, loginResult) {
             };
 
             sendLog.log(userInfo, $scope, $uibModalInstance, items, loginResult);
-            // alert(loginResult.result);
         }
     }
 ]);

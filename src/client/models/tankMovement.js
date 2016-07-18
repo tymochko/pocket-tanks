@@ -18,36 +18,55 @@ const findLinePoints = (posX) => {
             for(let i = 0; i < arr.length; i++) {
                 if(arr[i][0] === posX) return (arr[i][1]);
             }
+        } else {
+            return -1;
         }
     }
 };
 
 const animate = (draw, duration) => {
+
     let start = performance.now();
     requestAnimFrame(function animate(time) {
+
         let timePassed = time - start;
-        if (timePassed > duration) timePassed = duration;
+
+        if (timePassed > duration) {
+            timePassed = duration;
+        }
+
         draw(timePassed);
+
         if(tankX >= WIDTH - 11 || tankX <= 11){
             window.cancelAnimationFrame(requestAnimFrame);
-            // console.log('stop!!!');
         } else if (timePassed < duration) {
             requestAnimFrame(animate);
         }
+
     });
 };
 
 const tankMove = (direction) => {
+
     animate((timePassed) => {
+
         if(direction === "right") {
             tankX++;
         } else {
             tankX--;
         }
+
         angle = parseInt(getId('angle').innerHTML);
         tankY = findLinePoints(tankX);
+
         clear();
         fillBackground();
-        drawTank(tankX, tankY, angleWeaponInc);
+        
+        if(tankY !== -1) {
+            drawTank(tankX, tankY, angleWeaponInc);
+        } else {
+            alert('ERROR: tank out of the map!');
+        }
+
     }, 1500);
 };
