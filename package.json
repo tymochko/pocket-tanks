@@ -6,7 +6,8 @@
   "scripts": {
     "build": "gulp",
     "start": "node src/server/bin/www",
-    "test" : "node_modules/karma/bin/karma start karma.conf.js "
+    "test-start": "node node_modules/karma/bin/karma start karma.conf.js",
+    "test-run": "node node_modules/karma/bin/karma run karma.conf.js"
   },
   "repository": {
     "type": "git",
