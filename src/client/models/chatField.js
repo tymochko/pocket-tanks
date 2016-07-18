@@ -13,18 +13,18 @@ function showChatWindow(){
 
         progress = Math.min(progress, maxOpacity);
         el.style.opacity = inv*(dist * progress).toFixed(2);
-        
+
         (inv==1) ? el.style.display="initial" : el.style.display="none";
 
         if (runtime < duration){
-            requestAnimationFrame(function(timestamp){ 
+            requestAnimationFrame(function(timestamp){
                 moveit(timestamp, el, dist, duration);
             })
         }
         else
             inv=-inv;
     }
-     
+
     requestAnimationFrame(function(timestamp){
         starttime = timestamp || new Date().getTime();
         moveit(timestamp, adiv, maxOpacity, timeDur);
