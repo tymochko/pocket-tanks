@@ -62,13 +62,6 @@ gulp.task('js', () =>  {
         .pipe(gulp.dest('public/'))
 });
 
-gulp.task('test', function (done) {
-    new Server({
-        configFile:__dirname + '/karma.conf.js',
-        singleRun: true
-    }, done).start();
-});
-
 gulp.task('js-models', () => {
     gulp.src('src/client/models/*.js')
         .pipe(sourcemaps.init())
