@@ -3,17 +3,18 @@ const ngRoute = require('angular-route');
 module.exports = angular.module('tanks.profile', [
     ngRoute
 ])
-    // .config(RouteConfig)
-
     .service('profileService', ['$http', function ($http) {
         let userId = '';
         const profileURL = 'api/users/profile';
+
         this.getProfile = () => {
             return $http.get(profileURL);
         };
+
         this.getPublicImages = () => {
             return $http.get(profileURL + '/publicImages');
         };
+
         this.deleteAccount = () => {
             return $http.put(profileURL + '/delete/', {id: userId});
         };
@@ -24,11 +25,7 @@ module.exports = angular.module('tanks.profile', [
         }
     }])
     .controller('uploadController', ['$http', 'Upload', '$scope', '$uibModalInstance', function ($http, Upload, $scope, $uibModalInstance) {
-
-
-
         $scope.submit = () => {
-            let uploadedImg;
             if ($scope.upload_form.file.$valid && $scope.file) {
                 //check if from is valid
                 $scope.upload($scope.file);
@@ -39,8 +36,7 @@ module.exports = angular.module('tanks.profile', [
                 url: 'api/users/profile/upload',
                 data: {file: file}
             }).then((resp) => {
-                uploadedImg = resp.data; // TODO delete 'uploadImg' and send directly resp.data
-                $uibModalInstance.close(uploadedImg);
+                $uibModalInstance.close(resp.data);
             });
         };
         $scope.cancel = () => {
@@ -54,7 +50,6 @@ module.exports = angular.module('tanks.profile', [
         $scope.set = function (a) {
             $scope.mass = a
         }
-
     }])
     .controller('deleteUserController', ['$scope', '$uibModalInstance', ($scope, $uibModalInstance) => {
 
@@ -103,17 +98,13 @@ module.exports = angular.module('tanks.profile', [
         };
 
     }])
-    .controller('manageProfileController', ['$scope'
-        // , '$uibModal', 'profileService', 'toastr', '$location'
-        , function($scope
-            // , $uibModal, profileService, toastr, $location
-        ) {
+    .controller('manageProfileController', ['$scope', '$uibModal', 'profileService', 'toastr', '$location', function($scope, $uibModal, profileService, toastr, $location) {
         $scope.emailStatus = true;
         $scope.nameMinLength = 5;
         $scope.nameMaxLength = 15;
         $scope.passMinLength = 6;
         $scope.passMaxLength = 12;
-        $scope.selectedImg = "api/users/profile/getImage/userAvatar" + getSalt();
+        $scope.selectedImg = "api/users/profile/getImage/userAvatar";
 
         $scope.user = {
             userName: "",
@@ -126,9 +117,8 @@ module.exports = angular.module('tanks.profile', [
             userAge: ""
         };
 
-
-        function getSalt() {
-            return "?salt=" + new Date().getTime();
+        $scope.getSalt = () => {
+            return $scope.selectedImg + "?salt=" + new Date().getTime();
         };
 
         function savingMsg() {
@@ -136,41 +126,39 @@ module.exports = angular.module('tanks.profile', [
                 closeButton: true,
                 closeHtml: '<button>&times;</button>'
             });
-        };
+        }
+
         function avatarMsg() {
             toastr.warning('Do not forget to save changes!!', 'Message', {
                 closeButton: true,
                 closeHtml: '<button>&times;</button>'
             });
-        };
+        }
 
         // let init = () => {
         //     profileService.getProfile().then((resp) => {
         //         $scope.user = resp.data;
         //     });
         // };
-
+        //
         // init();
 
         $scope.saveChanges = (user) => {
-            let userInfo = {};
-            userInfo = {
+            let userInfo = {
                 userName: user.userName,
                 userAge: user.userAge,
                 userEmail: user.userEmail,
                 userImg: user.userImg
             };
-            if (user.oldPassword) {
 
+            if (user.oldPassword) {
                 userInfo.userOldPassword = user.oldPassword;
                 userInfo.userNewPassword = user.newPassword;
                 userInfo.userConfPassword = user.newPassword;
-
             }
-            ;
+
             profileService.update(userInfo);
             savingMsg();
-
         };
 
 // Delete popup window;
@@ -205,7 +193,6 @@ module.exports = angular.module('tanks.profile', [
                 $scope.user.userImg = $scope.avatar;
                 $scope.selectedImg = img.image;
             })
-
         }
     }])
     .config(function ($routeProvider) {
@@ -215,116 +202,3 @@ module.exports = angular.module('tanks.profile', [
             controller: 'manageProfileController'
         });
     });
-
-
-// RouteConfig.$inject = ['$routeProvider'];
-// function RouteConfig($routeProvider) {
-//     var val1 = 7;
-//
-//     $routeProvider.when('/profile', {
-//         controller: manageProfileController,
-//         templateUrl: 'profile/manageProfile.html'
-//     });
-// };
-
-// function manageProfileController($scope, $uibModal, profileService, toastr, $location) {
-//     $scope.emailStatus = true;
-//     $scope.nameMinLength = 5;
-//     $scope.nameMaxLength = 15;
-//     $scope.passMinLength = 6;
-//     $scope.passMaxLength = 12;
-//     $scope.selectedImg = "api/users/profile/getImage/userAvatar" + getSalt();
-//
-//     $scope.user = {
-//         userName: "",
-//         userImg: {},
-//         userEmail: "",
-//         userPassword: "",
-//         oldPassword: "",
-//         newPassword: "",
-//         confirmNewPassword: "",
-//         userAge: ""
-//     };
-//
-//
-//
-//     function getSalt() {
-//         return "?salt=" + new Date().getTime();
-//     };
-//
-//     function savingMsg() {
-//         toastr.success('Your changes are saved!', 'Message', {
-//             closeButton: true,
-//             closeHtml: '<button>&times;</button>'
-//         });
-//     };
-//     function avatarMsg() {
-//         toastr.warning('Do not forget to save changes!!', 'Message', {
-//             closeButton: true,
-//             closeHtml: '<button>&times;</button>'
-//         });
-//     };
-//
-//     let init = () => {
-//         profileService.getProfile().then( (resp) => {
-//             $scope.user = resp.data;
-//         });
-//     };
-//
-//     init();
-//
-//     $scope.saveChanges = (user) => {
-//         let userInfo = {};
-//         userInfo = {
-//             userName: user.userName,
-//             userAge: user.userAge,
-//             userEmail: user.userEmail,
-//             userImg: user.userImg
-//         };
-//         if (user.oldPassword) {
-//
-//             userInfo.userOldPassword = user.oldPassword;
-//             userInfo.userNewPassword = user.newPassword;
-//             userInfo.userConfPassword = user.newPassword;
-//
-//         };
-//         profileService.update(userInfo);
-//         savingMsg();
-//
-//     };
-//
-// // Delete popup window;
-//     $scope.deleteUser = () => {
-//
-//         const deleteInstance = $uibModal.open({
-//             animation: true,
-//             templateUrl: 'profile/DeleteContent.html',
-//             controller: 'deleteUserController'
-//         });
-//         deleteInstance.result.then( () => {
-//             profileService.deleteAccount();
-//             $scope.logOut($scope.user._id);
-//             $location.path('/');
-//         });
-//     };
-// // change avatar Popup window
-//     $scope.changeAvatar =  () => {
-//         changeImgWindow();
-//     };
-//
-//     function changeImgWindow() {
-//
-//         const changeInstance = $uibModal.open({
-//             animation: true,
-//             templateUrl: 'profile/avatarContent.html',
-//             controller: 'avatarController'
-//         });
-//         changeInstance.result.then( (img) => {
-//             avatarMsg();
-//             $scope.avatar = img;
-//             $scope.user.userImg = $scope.avatar;
-//             $scope.selectedImg = img.image;
-//         })
-//
-//     }
-// };
