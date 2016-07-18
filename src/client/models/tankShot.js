@@ -10,14 +10,24 @@ var angleWeaponInc = 0;
 let angleWeapon,
     angle,
     power;
+var requestAnimFrame = (function(){
+    return window.requestAnimationFrame   ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame    ||
+        window.oRequestAnimationFrame      ||
+        window.msRequestAnimationFrame     ||
+        function(callback){
+            window.setTimeout(callback, 1000 / 60);
+        };
+})();
 var originalPoints = [[0, 280],[20, 285],[40, 310],[145, 325],[125, 380],[165, 330],[175, 340],[220, 350],
     [240, 300],[280, 280],[300, 250],[340, 180],[370, 150],[440, 170],[550, 410],[530, 350],[540, 310],
     [575, 290],[630, 320],[685, 320],[690, 335],[700, 320],[750, 280],[755, 285],[795, 250],[800, 250],
     [800, 500],[0, 500],[0, 280]];
+
 // document.addEventListener("DOMContentLoaded", function(){
     function initGame(){
-        var backCanvas;
-        var backCtx, canvas;
+        
         var lastTimeTankMoved;
         var pattern;
 
@@ -29,6 +39,8 @@ var originalPoints = [[0, 280],[20, 285],[40, 310],[145, 325],[125, 380],[165, 3
             weaponImage = new Image();
         
         let angleWeapon10 = 10*Math.PI/180;
+        var backCanvas;
+        var backCtx, canvas;
 
         //      <------initialization------>
         backCanvas = document.createElement('canvas');
@@ -37,21 +49,14 @@ var originalPoints = [[0, 280],[20, 285],[40, 310],[145, 325],[125, 380],[165, 3
         backCanvas.width  = WIDTH;
         backCanvas.height = HEIGHT;
         backCtx = backCanvas.getContext('2d');
+            
         canvas = document.getElementById('myCanvas');
         ctx = canvas.getContext('2d');
+        
         power =  parseInt(getId('power').innerHTML);
         angle = parseInt(getId('angle').innerHTML);
 
-        var requestAnimFrame = (function(){
-            return window.requestAnimationFrame   ||
-                window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame    ||
-                window.oRequestAnimationFrame      ||
-                window.msRequestAnimationFrame     ||
-                function(callback){
-                    window.setTimeout(callback, 1000 / 60);
-                };
-        })();
+
  
         // <------Ground and sky drawing------>
  
@@ -289,7 +294,6 @@ var originalPoints = [[0, 280],[20, 285],[40, 310],[145, 325],[125, 380],[165, 3
         window.clear = clear;
         window.fillBackground = fillBackground;
         window.drawTank = drawTank;
-        window.requestAnimFrame = requestAnimFrame;
         window.getId = getId;
         window.weaponWidth=weaponWidth;
         window.drawSky=drawSky;
