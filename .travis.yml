@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+- '5'
+before_deploy:
+- npm run build
+- npm run build
+deploy:
+  app: tanks-server
+  provider: heroku
+  skip_cleanup: true
+  api_key:
+    secure: maFD0HWtHsuU41n3sDV2c5tonADksM9Dh1tl9O8N2uVhroSeUTssiayP4P5ybUdT2nxgkvg4NFO+Em96ld8am/TbiR6MwGtAbQVErYS1mxYD/xNP0i6CrwMUlkPn4Q3STJOcZgK+9XaK8trrnn6NncKzddei4vBt9pwW61pBSth6Hji6WVGnCURjP+L0wDDkQ4ULjljkaT49Vss+1q9rpG0/YlAoVhB+OL8O0viUUu+ZuBPMeK5ZMobEBEUckVl4MF0nM3ovnTUW5MQWH+g6Ntxsm6y0Toe7YyaZTXwEYx+iQ3//ntzBPYSaIiT9Ej7HSTGEDYjAm0z20/VmRtRnAHaY4sNJELasW2x4gbKVsuaS5lN7ZSuGPoFl0S/x8I1VnHHsXGWMFcLKVSf+7BRm8o6/tuQeKqbX5Gq9aVXJ90/Yha9bHivDqZPpsJd/8ORSGXGES/FQuWEK/lAquTfTM42jOjJmyuPR+gnbHuyt04Jj6dStlPrvknr+KQYMPzoJI2kn6RkUhVqvYZ8wXmsYt4tS32J7HQOvd7MSTeaKslDLTdPdUcr9mysdMjLb5/H+binwYFOkClOjZCnrpReMWk3PY7xEIhYtRsFTu87mDtyUdoZhTF1lCheUVimgfWvRhEYJ74B3Ta3CU8+NTiQIBXtwt60bmaoALdoHWN9LcvA=
+  on: prepullrequest

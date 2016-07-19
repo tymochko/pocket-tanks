@@ -30,6 +30,8 @@ module.exports = function (config) {
             './node_modules/babelify/node_modules/babel-core/browser-polyfill.js',
             './src/client/modules/index.js',
             './src/client/modules/jj/*.js',
+            './src/client/models/tankShot.js',
+            './src/client/models/tankMovement.js',
             './test/client/modules/**/*.js'
         ],
 
@@ -93,7 +95,10 @@ module.exports = function (config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+
         browsers: ['PhantomJS'],//
+        // browsers: ['Chrome'],
+
 
 
         // Continuous Integration mode

@@ -36,14 +36,11 @@ module.exports = angular.module('tanks.navigation', [
 
             $scope.checkSessionFunc = () => {
                 $http.get("/api/users/checkSession").then((res) => {
-                    console.log(res.data.status == 'success');
                     if (res.data.status === 'success') {
-                        console.log('logged in');
                         $scope.logged = true;
-                    } else if (res.data.status == 'error'){
-                        console.log('NOT logged in');
-                        $scope.logged = false;
+                        return;
                     }
+                    $scope.logged = false;
                 }, () => {
                     console.log('server error');
                 });
@@ -54,53 +51,38 @@ module.exports = angular.module('tanks.navigation', [
     }])
 
 
-    .directive('navigation', function (routeNavigation) {
+    .directive('navigation', (routeNavigation) => {
         return {
             restrict: "E",
             replace: true,
             templateUrl: "navigation/navigation.html",
-            controller: function ($scope) {
+            controller: ($scope) => {
                 $scope.routes = routeNavigation.routes;
                 $scope.activeRoute = routeNavigation.activeRoute;
             }
         };
     })
 
-    .directive('navLog', function ($http, routeNavigation, navConstructor) {
+    .directive('navLog', ($http, routeNavigation, navConstructor) => {
         return {
-            template: function () {
+            template: () => {
                 return navConstructor.navBuild(true);
             },
             controller: 'NavigationCtrl'
         };
     })
 
-    .directive('navNoLog', function ($http, routeNavigation, navConstructor) {
+    .directive('navNoLog', ($http, routeNavigation, navConstructor) => {
         return {
-            template: function () {
+            template: () => {
                 return navConstructor.navBuild(false);
             },
             controller: 'NavigationCtrl'
         };
     })
 
-    // .service('logCheck', function($http) {
-    // 	this.check = function($scope) {
-    // 		$http.get("/api/users/checkSession").then(function(res) {
-    //             console.log(res.data.status);
-    //             if (res.data.status === 'success') {
-    //                 console.log('logged in');
-    //             } else if (res.data.status === 'error'){
-    //                 console.log('NOT logged in');
-    //             }
-    //         }, function () {
-    //             console.log('server error');
-    //         });
-    // 	};
-    // })
-
-    .service('navConstructor', function(routeNavigation){
-        this.navBuild = function(logged) {
+    .service('navConstructor', function (routeNavigation) {
+        this.navBuild = (logged) => {
 
             let href, name, ngClick = "", icon = "";
             let nav = '<ul class="nav navbar-nav"> ',
@@ -154,7 +136,7 @@ module.exports = angular.module('tanks.navigation', [
     })
 
 
-    .factory('routeNavigation', function($route, $location) {
+    .factory('routeNavigation', ($route, $location) => {
         var routes = [
             {template: 'dashboard', name: 'Dashboard', pos: 'left', icon: '', log: true, click: '' },
             {template: 'scores', name: 'Scores', pos: 'left', icon: '', log: true, click: '' },
@@ -167,7 +149,7 @@ module.exports = angular.module('tanks.navigation', [
 
         return {
             routes: routes,
-            activeRoute: function (route) {
+            activeRoute: (route) => {
                 return route.path === $location.path();
             }
         };
