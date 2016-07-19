@@ -1,4 +1,4 @@
-let inv=1;
+var inv=1;
 
 module.exports = function(){
     var adiv = document.getElementById('chat-window');

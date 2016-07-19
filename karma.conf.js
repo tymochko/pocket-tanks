@@ -10,13 +10,14 @@ module.exports = function (config) {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['browserify', 'jasmine'],
+        frameworks: ['browserify', 'jasmine','es6-shim'],
 
 
         plugins: [
-        	'karma-phantomjs-launcher',
             'karma-jasmine',
             'karma-browserify',
+            'karma-es6-shim',
+            'karma-phantomjs-launcher',
             'karma-chrome-launcher',
             'karma-coverage',
             'karma-htmlfile-reporter'
@@ -28,10 +29,8 @@ module.exports = function (config) {
             './node_modules/angular/angular.js',
             './node_modules/angular-mocks/angular-mocks.js',
             './node_modules/babelify/node_modules/babel-core/browser-polyfill.js',
+            './public/main.js',
             './src/client/modules/index.js',
-            './src/client/modules/jj/*.js',
-            './src/client/models/tankShot.js',
-            './src/client/models/tankMovement.js',
             './test/client/modules/**/*.js'
         ],
 
@@ -42,9 +41,9 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
+             './src/client/modules/index.js': ['browserify'],
             // 'src/client/modules/**/*.js': 'coverage',
-            './src/client/modules/**/*.js': 'coverage',
-            './src/client/modules/index.js': ['browserify'],
+            './public/main.js': ['coverage'],
             './test/client/modules/**/*.js': ['browserify']
         },
 

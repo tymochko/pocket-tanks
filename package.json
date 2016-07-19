@@ -6,7 +6,7 @@
   "scripts": {
     "build": "gulp",
     "start": "node src/server/bin/www",
-    "test" : "node_modules/karma/bin/karma start karma.conf.js "
+    "test": "node node_modules/karma/bin/karma start karma.conf.js "
   },
   "repository": {
     "type": "git",
@@ -46,7 +46,6 @@
     "express": "^4.13.4",
     "express-session": "^1.14.0",
     "fs": "0.0.2",
-    "karma-es6-shim": "^1.0.0",
     "mongodb": "^2.1.18",
     "mongoose": "^4.5.0",
     "morgan": "~1.6.1",
@@ -79,10 +78,10 @@
     "karma-browserify": "^5.0.5",
     "karma-chrome-launcher": "^1.0.1",
     "karma-coverage": "^1.1.0",
+    "karma-es6-shim": "^1.0.0",
     "karma-htmlfile-reporter": "^0.3.4",
     "karma-jasmine": "^1.0.2",
     "karma-phantomjs-launcher": "^1.0.1",
-    "karma-slimerjs-launcher": "^1.1.0",
     "swig": "^1.4.2",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
