@@ -117,9 +117,9 @@ module.exports = angular.module('tanks.profile', [
             userAge: ""
         };
 
-        $scope.getSalt = () => {
+        $scope.getSalt = (() => {
             return $scope.selectedImg + "?salt=" + new Date().getTime();
-        };
+        })();
 
         function savingMsg() {
             toastr.success('Your changes are saved!', 'Message', {
@@ -135,13 +135,11 @@ module.exports = angular.module('tanks.profile', [
             });
         }
 
-        // let init = () => {
-        //     profileService.getProfile().then((resp) => {
-        //         $scope.user = resp.data;
-        //     });
-        // };
-        //
-        // init();
+        $scope.init = (() => {
+            profileService.getProfile().then((resp) => {
+                $scope.user = resp.data;
+            });
+        })();
 
         $scope.saveChanges = (user) => {
             let userInfo = {
