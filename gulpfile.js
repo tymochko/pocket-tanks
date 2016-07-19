@@ -5,8 +5,9 @@ const babel = require('gulp-babel');
 const buffer = require('vinyl-buffer');
 const rename = require('gulp-rename');
 const inject = require('gulp-inject');
-const babelify = require('babelify');
+const concat = require('gulp-concat');
 const source = require('vinyl-source-stream');
+const babelify = require('babelify');
 const sourcemaps = require('gulp-sourcemaps');
 const browserify = require('browserify');
 const templateCache = require('gulp-angular-templatecache');
@@ -30,7 +31,7 @@ gulp.task('es6', () => {
 
 gulp.task('fonts', () => {
   return gulp.src( pathClient + 'fonts/*')
-    .pipe(gulp.dest( pathDir + 'fonts'));
+    .pipe(gulp.dest( pathDist + 'fonts'));
 });
 
 gulp.task( 'sass', () => {
@@ -41,7 +42,7 @@ gulp.task( 'sass', () => {
 
 gulp.task('images', () => {
      return gulp.src( pathClient + 'images/*')
-         .pipe(gulp.dest( pathDir + 'images'));
+         .pipe(gulp.dest( pathDist + 'images'));
 });
 
 gulp.task('template', () => {
@@ -56,7 +57,7 @@ gulp.task('template', () => {
 });
 
 gulp.task('js', () => {
-    return browserify({ entries: __dirname +  pathClient + 'app.js', debug: true }).
+    return browserify({ entries: __dirname + '/' + pathClient + 'app.js', debug: true }).
         // transform(babelify, { presets: ['es2015'] }).
         bundle().
         pipe(source('main.js')).
@@ -78,13 +79,6 @@ gulp.task('build', ['fonts', 'sass', 'images', 'template', 'js'], () => {
         .pipe(gulp.dest(pathDist));
 });
 
-gulp.task('test', function (done) {
-    new Server({
-        configFile: __dirname + '/karma.conf.js',
-        singleRun: true
-    }, done).start();
-});
-
 gulp.task('default', ['es6', 'build']);
 
 gulp.task('watch', () => {
@@ -92,6 +86,5 @@ gulp.task('watch', () => {
     gulp.watch( pathClient + 'modules/**/*.js', ['js']);
     gulp.watch( pathClient + 'modules/**/*.html', ['template'] );
     gulp.watch( pathClient + 'scss/**/*.scss', ['sass'] );
-    // gulp.watch( pathClient + 'models/*.js', ['js-models'] );
     gulp.watch( pathClient + 'models/*.js', ['js'] );
 });
