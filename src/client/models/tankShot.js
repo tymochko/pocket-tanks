@@ -206,6 +206,7 @@ module.exports.initGame = function (){
                 break;
 
             }
+<<<<<<< HEAD
         lastTimeTankMoved = now;
         }
     };
@@ -226,6 +227,17 @@ module.exports.initGame = function (){
 
     function getId(id) {
         return document.getElementById(id);
+=======
+        })();
+
+        window.clear = clear;
+        window.fillBackground = fillBackground;
+        window.drawTank = drawTank;
+        window.getId = getId;
+        window.weaponWidth=weaponWidth;
+        window.drawSky=drawSky;
+        window.drawGround=drawGround;
+        window.backCanvas=backCanvas;
     }
 
     getId('fire').onclick = function() {

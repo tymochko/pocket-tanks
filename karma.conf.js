@@ -27,6 +27,7 @@ module.exports = function (config) {
             './node_modules/angular-mocks/angular-mocks.js',
             './src/client/modules/index.js',
             './src/client/models/tankShot.js',
+            './src/client/models/tankMovement.js',
             './test/client/modules/**/*.js'
         ],
 
