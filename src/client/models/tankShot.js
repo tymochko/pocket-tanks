@@ -11,20 +11,27 @@ const radius = 40;
 const WIDTH = 800,
     HEIGHT = 500;
 
+var ctx;
 var tankX, tankY;
 var angleWeaponInc = 0;
 
 let angleWeapon,
     angle,
     power;
+var requestAnimFrame = (function(){
+    return window.requestAnimationFrame   ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame    ||
+        window.oRequestAnimationFrame      ||
+        window.msRequestAnimationFrame     ||
+        function(callback){
+            window.setTimeout(callback, 1000 / 60);
+        };
+})();
 
 module.exports.initGame = function (){
-    var backCanvas;
-    var backCtx, canvas;
     var lastTimeTankMoved;
     var pattern;
-    var ctx;
-
     const tankHeight = 30,
         tankWidth = 70,
         weaponHeight = 20,
@@ -32,7 +39,9 @@ module.exports.initGame = function (){
         tankImage = new Image(),
         weaponImage = new Image();
 
-    let angleWeapon = 10*Math.PI/180;
+    let angleWeapon10 = 10*Math.PI/180;
+    var backCanvas;
+    var backCtx, canvas;
 
 /* ====== initialization ======== */
     backCanvas = document.createElement('canvas');
@@ -41,21 +50,12 @@ module.exports.initGame = function (){
     backCanvas.width  = WIDTH;
     backCanvas.height = HEIGHT;
     backCtx = backCanvas.getContext('2d');
+
     canvas = document.getElementById('myCanvas');
     ctx = canvas.getContext('2d');
+
     power =  parseInt(getId('power').innerHTML);
     angle = parseInt(getId('angle').innerHTML);
-
-    var requestAnimFrame = (function(){
-        return window.requestAnimationFrame   ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame    ||
-            window.oRequestAnimationFrame      ||
-            window.msRequestAnimationFrame     ||
-            function(callback){
-                window.setTimeout(callback, 1000 / 60);
-            };
-    })();
 
 /* ====== Ground and sky drawing ======== */
 
@@ -170,7 +170,8 @@ module.exports.initGame = function (){
 /* ====== Tank Tilt ======== */
 
     var tiltTank = function(posX) {
-        for(var i = originalPoints.length - 1; i > 0; i--) {
+        let angle = 0;
+        for(let i = originalPoints.length - 1; i > 0; i--) {
             if(originalPoints[i][0] >= posX && originalPoints[i-1][0] <= posX) {
                 var x1 = originalPoints[i-1][0],
                 x2 = originalPoints[i][0],
@@ -178,14 +179,11 @@ module.exports.initGame = function (){
                 y2 = originalPoints[i][1];
             }
         }
-        var tan = (y1 > y2) ? (y1 - y2) / (x1 - x2) : (y2 - y1) / (x2 - x1);
+        let tan = (y1 > y2) ? (y1 - y2) / (x1 - x2) : (y2 - y1) / (x2 - x1);
 
-        this.angle = Math.atan(tan);
+        angle = Math.atan(tan);
 
-        // if (tan < 0)
-            // this.angle += 180;
-
-        return this.angle;
+        return angle;
     };
 
 
@@ -206,7 +204,6 @@ module.exports.initGame = function (){
                 break;
 
             }
-<<<<<<< HEAD
         lastTimeTankMoved = now;
         }
     };
@@ -227,17 +224,6 @@ module.exports.initGame = function (){
 
     function getId(id) {
         return document.getElementById(id);
-=======
-        })();
-
-        window.clear = clear;
-        window.fillBackground = fillBackground;
-        window.drawTank = drawTank;
-        window.getId = getId;
-        window.weaponWidth=weaponWidth;
-        window.drawSky=drawSky;
-        window.drawGround=drawGround;
-        window.backCanvas=backCanvas;
     }
 
     getId('fire').onclick = function() {
@@ -249,6 +235,7 @@ module.exports.initGame = function (){
         getId('power').innerHTML = power;
         power = parseInt(getId('power').innerHTML);
     }
+
     getId('lessPower').onclick = function (){
         power--;
         getId('power').innerHTML = power;
@@ -269,6 +256,7 @@ module.exports.initGame = function (){
         angleWeaponInc = angle*Math.PI/180;
         drawTank(tankX, tankY,angleWeaponInc);
     }
+
     getId('lessAngle').onclick = function (){
 
         getId('angle').innerHTML = angle;
