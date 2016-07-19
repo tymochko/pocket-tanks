@@ -16,19 +16,6 @@ const Server = require('karma').Server;
 const pathDist = 'public/';
 const pathClient = 'src/client/';
 
-gulp.task('es6', () => {
-    // gulp.src('src/server/app.js')
-    //     .pipe(babel({
-    //         presets: ['es2015']
-    //     }))
-    //     .pipe(gulp.dest('dist'));
-    // gulp.src('src/client/models/*.js')
-    //     .pipe(babel({
-    //         presets: ['es2015']
-    //     }))
-    //     .pipe(gulp.dest('public/scripts'));
-});
-
 gulp.task('fonts', () => {
   return gulp.src( pathClient + 'fonts/*')
     .pipe(gulp.dest( pathDist + 'fonts'));
@@ -57,17 +44,17 @@ gulp.task('template', () => {
 });
 
 gulp.task('js', () => {
-    return browserify({ entries: __dirname + '/' + pathClient + 'app.js', debug: true }).
-        // transform(babelify, { presets: ['es2015'] }).
-        bundle().
-        pipe(source('main.js')).
-        pipe(buffer()).
-        pipe(sourcemaps.init({ loadMaps: true })).
-        pipe(sourcemaps.write()).
-        pipe(gulp.dest(__dirname + '/public/'))
+    return browserify({ entries: __dirname + '/' + pathClient + 'app.js', debug: true })
+        .transform(babelify, { presets: ['es2015'] })
+        .bundle()
+        .pipe(source('main.js'))
+        .pipe(buffer())
+        .pipe(sourcemaps.init({ loadMaps: true }))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(__dirname + '/public/'))
 });
 
-gulp.task('build', ['fonts', 'sass', 'images', 'template', 'js'], () => {
+gulp.task('build', ['js', 'fonts', 'sass', 'images', 'template'], () => {
     return gulp.src(__dirname + '/src/client/index.html')
         .pipe(inject(
             gulp.src(['main.js', 'main-partials.js', 'main.css'], { read: false, cwd: pathDist }), {
@@ -79,10 +66,9 @@ gulp.task('build', ['fonts', 'sass', 'images', 'template', 'js'], () => {
         .pipe(gulp.dest(pathDist));
 });
 
-gulp.task('default', ['es6', 'build']);
+gulp.task('default', ['build']);
 
 gulp.task('watch', () => {
-    gulp.watch('src/server/app.js', ['es6']);
     gulp.watch( pathClient + 'modules/**/*.js', ['js']);
     gulp.watch( pathClient + 'modules/**/*.html', ['template'] );
     gulp.watch( pathClient + 'scss/**/*.scss', ['sass'] );
