@@ -1,6 +1,6 @@
-var angular = require('angular');
-var ngRoute = require('angular-route');
-var scroll_glue = require('angularjs-scroll-glue');
+import angular from 'angular';
+import ngRoute from 'angular-route';
+import scroll_glue from 'angularjs-scroll-glue';
 
 module.exports = angular.module('tanks.chat', [ ngRoute, 'luegg.directives'])
 
