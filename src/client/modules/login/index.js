@@ -12,7 +12,7 @@ module.exports = angular.module('tanks.login', [
 
         $scope.login = function(user) {
 
-            let userInfo = {
+            var userInfo = {
                 userName: user.name,
                 userPassword: user.password
             };

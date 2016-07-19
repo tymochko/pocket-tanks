@@ -52,6 +52,7 @@ module.exports = angular.module('tanks.profile', [
 
         $scope.set = function (a) {
             $scope.mass = a
+   
         }
 
     }])
