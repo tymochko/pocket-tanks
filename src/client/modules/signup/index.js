@@ -1,22 +1,23 @@
 var angular = require('angular');
 var ngRoute = require('angular-route');
+var toastr = require('angular-toastr');
 
 
 module.exports = angular.module('tanks.signup', [
     ngRoute
 ])
     .config(RouteConfig)
-  /*  .config(function (toastrConfig) {
-        angular.extend(toastrConfig, {
-            autoDismiss: false,
-            positionClass: 'toast-top-center',
-        });
-    })*/
+    // .config(function (toastrConfig) {
+    //     angular.extend(toastrConfig, {
+    //         autoDismiss: false,
+    //         positionClass: 'toast-top-center',
+    //     });
+    // })
     .controller('testCtrl2', ['$scope', function ($scope) {
 
 
         $scope.set = function (a) {
-            $scope.mass = a
+            $scope.mass = a;
         }
 
     }])
@@ -71,38 +72,3 @@ function RouteConfig($routeProvider) {
     });
 };
 
-/*
- function SignupCtrl($scope, sendReg, toastr) {
-
- $scope.maass = false;
-
-
- $scope.maxname = 15;
- $scope.minname = 5;
- $scope.maxpassword = 12;
- $scope.minpassword = 6;
- $scope.maxage = 100;
- $scope.minage = 18;
-
- $scope.user = {
- name: "",
- age: "",
- email: "",
- password: ""
- };
-
- $scope.register = function (user) {
- let userInfo = {
- userName: user.name,
- userAge: user.age,
- userEmail: user.email,
- userPassword: user.password
- };
- toastr.success('You registered successfully \n and can now log in.', 'Congratulations!', {
- closeButton: true,
- closeHtml: '<button>&times;</button>'
- })
- sendReg.add(userInfo);
- };
- };
- */

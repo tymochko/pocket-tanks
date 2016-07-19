@@ -5,7 +5,7 @@ module.exports = function (config) {
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: '',
+        basePath: './',
 
 
         // frameworks to use
@@ -29,6 +29,7 @@ module.exports = function (config) {
             './node_modules/angular-mocks/angular-mocks.js',
             './node_modules/babelify/node_modules/babel-core/browser-polyfill.js',
             './src/client/modules/index.js',
+            './src/client/modules/jj/*.js',
             './test/client/modules/**/*.js'
         ],
 
@@ -39,7 +40,8 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            './src/client/modules/**/*.js': ['coverage'],
+            // 'src/client/modules/**/*.js': 'coverage',
+            './src/client/modules/**/*.js': 'coverage',
             './src/client/modules/index.js': ['browserify'],
             './test/client/modules/**/*.js': ['browserify']
         },
