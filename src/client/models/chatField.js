@@ -1,6 +1,6 @@
 let inv=1;
 
-function showChatWindow(){
+module.exports = function(){
     var adiv = document.getElementById('chat-window');
     var starttime;
     var maxOpacity=1;

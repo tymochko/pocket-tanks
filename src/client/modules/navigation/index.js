@@ -38,9 +38,9 @@ module.exports = angular.module('tanks.navigation', [
                 $http.get("/api/users/checkSession").then((res) => {
                     if (res.data.status === 'success') {
                         $scope.logged = true;
-                    } else if (res.data.status == 'error'){
-                        $scope.logged = false;
+                        return;
                     }
+                    $scope.logged = false;
                 }, () => {
                     console.log('server error');
                 });

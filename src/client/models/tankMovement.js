@@ -1,4 +1,7 @@
-const findLinePoints = (posX) => {
+var constans = require('./constans');
+var originalPoints = constans.originalPoints;
+
+module.exports.findLinePoints = function(posX) {
     let arr = [];
 
     for(let i = originalPoints.length - 1; i > 0; i--) {
@@ -20,7 +23,7 @@ const findLinePoints = (posX) => {
             }
         }
     }
-};
+}
 
 const animate = (draw, duration) => {
     let start = performance.now();
