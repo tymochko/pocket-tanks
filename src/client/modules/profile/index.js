@@ -1,5 +1,5 @@
-const angular = require('angular');
-const ngRoute = require('angular-route');
+import angular from 'angular';
+import ngRoute from 'angular-route';
 module.exports = angular.module('tanks.profile', [
     ngRoute
 ])
@@ -46,7 +46,7 @@ module.exports = angular.module('tanks.profile', [
     }])
     .controller('testCtrl',['$scope',function ($scope){
         $scope.mass = false;
-        
+
         $scope.set = function (a) {
             $scope.mass = a
    

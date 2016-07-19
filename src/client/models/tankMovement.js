@@ -1,4 +1,4 @@
-var constans = require('./constans');
+import constans from './constans';
 var originalPoints = constans.originalPoints;
 
 module.exports.findLinePoints = function(posX) {

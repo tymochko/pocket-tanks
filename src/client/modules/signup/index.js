@@ -1,5 +1,6 @@
-var angular = require('angular');
-var ngRoute = require('angular-route');
+
+import angular from 'angular';
+import ngRoute from 'angular-route';
 var toastr = require('angular-toastr');
 
 

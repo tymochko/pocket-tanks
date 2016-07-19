@@ -1,8 +1,8 @@
 'use strict';
-var paper = require('paper');
-var constans = require('./constans');
-var showChatWindow = require('./chatField');
-var tankMovement = require('./tankMovement');
+import paper from 'paper';
+import constans from './constans';
+import showChatWindow from './chatField';
+import tankMovement from './tankMovement';
 
 var findLinePoints = tankMovement.findLinePoints;
 var originalPoints = constans.originalPoints;
