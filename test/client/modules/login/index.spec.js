@@ -1,98 +1,105 @@
-describe('Login controller test', function() {
-    var scope, httpBackend, createController, uibModalInstance, items, $window;
+describe('LoginCtrl', function() {
+
+    var $controller, scope, uibModalInstance, items, sendLog, loginResult, httpBackend;
+    var controller;
 
     beforeEach(angular.mock.module("tanks.login"));
 
-    beforeEach(inject(function ($rootScope, $httpBackend, $controller) {
-        httpBackend = $httpBackend;
+    // describe('Testing sendLog service', function() {
+    //     var httpBackend;
+
+    //     beforeEach(inject(function(_sendLog_, _$httpBackend_) {
+    //         sendLog = _sendLog_;
+    //         httpBackend = _$httpBackend_;
+    //     }));
+
+    //     fit('sendLog.log should be defined', function() {
+    //         httpBackend.whenRoute('POST', 'api/users/login/');
+    //         expect(sendLog.log).toBeDefined();
+    //     });
+
+    // });
+
+
+    beforeEach(inject(function($rootScope, _$controller_, _loginResult_, _$httpBackend_, _sendLog_) {
         scope = $rootScope.$new();
-        uibModalInstance = {};
-        uibModalInstance.success = function () {
-
-        };
-        items = [];
-        $window = {};
-
-        createController = function() {
-            return $controller('LoginCtrl', {
-                '$scope': scope,
-                '$http': httpBackend,
-                '$uibModalInstance': uibModalInstance,
-                'items': items,
-                '$window': $window
-            });
-        };
+        $controller = _$controller_;
+        loginResult = _loginResult_;
+        httpBackend = _$httpBackend_;
+        sendLog = _sendLog_;
     }));
 
-    afterEach(function() {
-        httpBackend.verifyNoOutstandingExpectation();
-        httpBackend.verifyNoOutstandingRequest();
+    beforeEach(inject(function() {
+            //sendLog = {};
+
+            controller = $controller('LoginCtrl', { $scope: scope, sendLog: sendLog, $uibModalInstance: uibModalInstance, items: items, loginResult: loginResult});
+            uibModalInstance = {};
+            uibModalInstance.close = function () {
+
+            };
+            
+            items = [];
+    }));
+    
+
+    describe('Testing controller variables', function() {
+
+        fit('minLengthName', function() {
+            expect(scope.minLengthName).toEqual(5);
+            expect(scope.minLengthName).not.toEqual(6);
+        });
+
+        fit('maxLengthName', function() {
+            expect(scope.maxLengthName).toEqual(15);
+            expect(scope.maxLengthName).not.toEqual(12);
+        });
+
+        fit('minLengthPass', function() {
+            expect(scope.minLengthPass).toEqual(6);
+            expect(scope.minLengthPass).not.toEqual(5);
+        });
+
+        fit('maxLengthPass', function() {
+            expect(scope.maxLengthPass).toEqual(12);
+            expect(scope.maxLengthPass).not.toEqual(15);
+        });
+
     });
 
 
-     it("success response - empty array from server", function () {
-        var controller = createController();
-        scope.urlToScrape = 'success.com';
-        var uibModalInstance = {};
-        uibModalInstance.success = function () {
+    describe('Testing controller functions', function() {
 
-        };
+        fit("$scope.login check", function () {
+            // var succeeded;
+            var userInfo = {
+                userName: 'Jack',
+                userPassword: 'Black'
+            };
 
-        httpBackend.expect('POST', 'api/users/login').respond(200);
-        var success;
-        var userInfo = {
-            userName: 'Jack',
-            userPassword: 'Black'
-        }, 
-            items = [], $window = {};
-        // call logOut
-        scope.login(userInfo).then(function () {
-            success = true;
-        });        
-        httpBackend.flush();
-        // verification
-        expect(success).toBe(true);
+            // sendLog.log = function(userInfo, scope, uibModalInstance, items, loginResult) {
+                
+            // };
 
+            // httpBackend.whenRoute('POST', 'api/users/login/');
+              
+            sendLog.log.success = function() {
+                console.log('SUCCESS');
+            };
+            sendLog.log = jasmine.createSpy('sendLog.log.success() spy');
+
+            sendLog.log.error = function() {
+                console.log('ERROR');
+            };
+            sendLog.log.error = jasmine.createSpy('sendLog.log.error() spy');
+            
+            
+            scope.login(userInfo);
+            // expect(succeeded).toBe(true);
+            expect(sendLog.log).toHaveBeenCalled();
+            // expect(sendlog.log.success).toHaveBeenCalled();
+            // expect(sendlog.log.error).toHaveBeenCalled();
+        });
 
     });
 
 });
-
-
-
-
-
-
-
-
-// describe('Login controller test', function() {
-//     var $controller, httpBackend;
-
-//     beforeEach(angular.mock.module("tanks.login"));
-
-//     beforeEach(inject(function (_$controller_, $httpBackend) {
-//         $controller = _$controller_;
-//         httpBackend = $httpBackend;
-//     }));
-
-//      it("success response - empty array from server", function () {
-//         var $scope = {};
-//         var uibModalInstance = {};
-//         uibModalInstance.success = function () {
-
-//         };
-
-//         httpBackend.expect('POST', 'api/users/login').respond(200);
-//         var success;
-//         var userInfo = {}, items = [], $window = {};
-//         var controller = $controller('LoginCtrl', { $scope: $scope, $http: httpBackend, $uibModalInstance: uibModalInstance, items: items, $window: $window });
-//         // call logOut
-//         controller.login().then(function (userInfo) {
-//             success = true;
-//         });        
-//         httpBackend.flush();
-//         // verification
-//         expect(success).toBe(true);
-//     });
-
-// });

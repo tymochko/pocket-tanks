@@ -1,10 +1,11 @@
-describe("Point analysis", function () {
+describe ("Point analysis", function () {
 		let shotBullet,
 			bulletPath,
             groundPointPath,
         	intersect,
         	intersectionPoint,
             canvas=document.createElement("canvas");
+
         beforeEach( function() {
         	paper.setup(canvas);
 
@@ -37,11 +38,11 @@ describe("Point analysis", function () {
 	    	intersect = bulletPath.getIntersections(groundPath);
         });
 		
-	    fit("should be equal X coord",function(){
-	        expect(intersect[0]._point.x).toEqual(intersectionPoint.x);
+	    fit ("should be equal X coord", function(){
+	        expect (intersect[0]._point.x).toEqual(intersectionPoint.x);
 	    });
 
-	    fit("should be equal Y coord",function(){
-	        expect(intersect[0]._point.y).toEqual(intersectionPoint.y);
+	    fit ("should be equal Y coord", function(){
+	        expect (intersect[0]._point.y).toEqual(intersectionPoint.y);
 	    });
 });  
