@@ -13,15 +13,15 @@
         <td colspan="3" title="Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1">Browser: PhantomJS 2.1.1 (Windows 8 0.0.0)</td>
       </tr>
       <tr class="overview">
-        <td colspan="3">Timestamp: 2016-07-19 18:45:15</td>
+        <td colspan="3">Timestamp: 2016-07-19 20:18:45</td>
       </tr>
       <tr>
         <td colspan="3">
-          0 tests / 
-          1 errors / 
-          0 failures / 
-          0 skipped / 
-          runtime: 0s
+          19 tests / 
+          0 errors / 
+          8 failures / 
+          6 skipped / 
+          runtime: 0.073s
         </td>
       </tr>
       <tr class="header">
@@ -29,9 +29,163 @@
         <td>Spec</td>
         <td>Suite / Results</td>
       </tr>
-      <tr class="system-errors">
-        <td colspan="3"><strong>Errors:</strong><br />SyntaxError: Expected an identifier but found 'arr' instead
-at public/main.js:9
+      <tr class="pass">
+        <td>Passed in 0.044s</td>
+        <td>minLengthName</td>
+        <td>LoginCtrl &raquo; Testing controller variables</td>
+      </tr>
+      <tr class="pass">
+        <td>Passed in 0.005s</td>
+        <td>maxLengthName</td>
+        <td>LoginCtrl &raquo; Testing controller variables</td>
+      </tr>
+      <tr class="pass">
+        <td>Passed in 0.004s</td>
+        <td>minLengthPass</td>
+        <td>LoginCtrl &raquo; Testing controller variables</td>
+      </tr>
+      <tr class="pass">
+        <td>Passed in 0.004s</td>
+        <td>maxLengthPass</td>
+        <td>LoginCtrl &raquo; Testing controller variables</td>
+      </tr>
+      <tr class="pass">
+        <td>Passed in 0.007s</td>
+        <td>$scope.login check</td>
+        <td>LoginCtrl &raquo; Testing controller functions</td>
+      </tr>
+      <tr class="fail">
+        <td>Failed</td>
+        <td>should be equal X coord</td>
+        <td>
+          Point analysis
+          <br />ReferenceError: Can't find variable: paper in C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify (line 158)
+c:/Users/Misha/AppData/Local/Temp/test/client/modules/point_analysis/index2.spec.js:10:15 &lt;- C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify:158:8
+loaded@http://localhost:9876/context.js:151:17
+
+          <br />TypeError: undefined is not an object (evaluating 'intersect[0]') in C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify (line 186)
+c:/Users/Misha/AppData/Local/Temp/test/client/modules/point_analysis/index2.spec.js:42:27 &lt;- C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify:186:19
+loaded@http://localhost:9876/context.js:151:17
+
+        </td>
+      </tr>
+      <tr class="fail">
+        <td>Failed</td>
+        <td>should be equal Y coord</td>
+        <td>
+          Point analysis
+          <br />ReferenceError: Can't find variable: paper in C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify (line 158)
+c:/Users/Misha/AppData/Local/Temp/test/client/modules/point_analysis/index2.spec.js:10:15 &lt;- C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify:158:8
+loaded@http://localhost:9876/context.js:151:17
+
+          <br />TypeError: undefined is not an object (evaluating 'intersect[0]') in C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify (line 190)
+c:/Users/Misha/AppData/Local/Temp/test/client/modules/point_analysis/index2.spec.js:46:27 &lt;- C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify:190:19
+loaded@http://localhost:9876/context.js:151:17
+
+        </td>
+      </tr>
+      <tr class="fail">
+        <td>Failed</td>
+        <td>should be defined</td>
+        <td>
+          Test tank's movement &raquo; Test Y coordinate
+          <br />ReferenceError: Can't find variable: findLinePoints in C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify (line 310)
+c:/Users/Misha/AppData/Local/Temp/test/client/modules/tank%27s_movement/index.spec.js:12:25 &lt;- C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify:310:25
+loaded@http://localhost:9876/context.js:151:17
+
+        </td>
+      </tr>
+      <tr class="fail">
+        <td>Failed</td>
+        <td>should be equal in the beginning</td>
+        <td>
+          Test tank's movement &raquo; Test Y coordinate
+          <br />ReferenceError: Can't find variable: findLinePoints in C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify (line 317)
+c:/Users/Misha/AppData/Local/Temp/test/client/modules/tank%27s_movement/index.spec.js:19:31 &lt;- C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify:317:25
+loaded@http://localhost:9876/context.js:151:17
+
+        </td>
+      </tr>
+      <tr class="fail">
+        <td>Failed</td>
+        <td>should be equal in the middle</td>
+        <td>
+          Test tank's movement &raquo; Test Y coordinate
+          <br />ReferenceError: Can't find variable: findLinePoints in C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify (line 324)
+c:/Users/Misha/AppData/Local/Temp/test/client/modules/tank%27s_movement/index.spec.js:26:31 &lt;- C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify:324:25
+loaded@http://localhost:9876/context.js:151:17
+
+        </td>
+      </tr>
+      <tr class="fail">
+        <td>Failed</td>
+        <td>should be equal in the end</td>
+        <td>
+          Test tank's movement &raquo; Test Y coordinate
+          <br />ReferenceError: Can't find variable: findLinePoints in C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify (line 331)
+c:/Users/Misha/AppData/Local/Temp/test/client/modules/tank%27s_movement/index.spec.js:33:32 &lt;- C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify:331:25
+loaded@http://localhost:9876/context.js:151:17
+
+        </td>
+      </tr>
+      <tr class="fail">
+        <td>Failed</td>
+        <td>should be equal in the move right</td>
+        <td>
+          Test tank's movement &raquo; Test tank's move
+          <br />ReferenceError: Strict mode forbids implicit creation of global property 'tankX' in C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify (line 343)
+c:/Users/Misha/AppData/Local/Temp/test/client/modules/tank%27s_movement/index.spec.js:45:14 &lt;- C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify:343:11
+loaded@http://localhost:9876/context.js:151:17
+
+          <br />ReferenceError: Can't find variable: draw in C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify (line 348)
+c:/Users/Misha/AppData/Local/Temp/test/client/modules/tank%27s_movement/index.spec.js:50:8 &lt;- C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify:348:8
+loaded@http://localhost:9876/context.js:151:17
+
+        </td>
+      </tr>
+      <tr class="fail">
+        <td>Failed</td>
+        <td>should be equal in the move left</td>
+        <td>
+          Test tank's movement &raquo; Test tank's move
+          <br />ReferenceError: Can't find variable: draw in C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify (line 353)
+c:/Users/Misha/AppData/Local/Temp/test/client/modules/tank%27s_movement/index.spec.js:55:14 &lt;- C:/Users/Misha/AppData/Local/Temp/ae680c4467e438bb6f3fa8e6f43bb1cf.browserify:353:8
+loaded@http://localhost:9876/context.js:151:17
+
+        </td>
+      </tr>
+      <tr class="skip">
+        <td>Skipped</td>
+        <td>check for true or false</td>
+        <td>App Controller test</td>
+      </tr>
+      <tr class="skip">
+        <td>Skipped</td>
+        <td>should have predefined values</td>
+        <td>Profile page</td>
+      </tr>
+      <tr class="skip">
+        <td>Skipped</td>
+        <td>should be empty at the beginning</td>
+        <td>Profile page &raquo; Save changes to user's profile</td>
+      </tr>
+      <tr class="skip">
+        <td>Skipped</td>
+        <td>should fill up with data</td>
+        <td>Profile page &raquo; Save changes to user's profile</td>
+      </tr>
+      <tr class="skip">
+        <td>Skipped</td>
+        <td>mocks the Date object and sets it to a given time</td>
+        <td>Profile page &raquo; Mocking the Date object</td>
+      </tr>
+      <tr class="skip">
+        <td>Skipped</td>
+        <td>Check for max length of UserName</td>
+        <td>App Controller test</td>
+      </tr>
+      <tr class="system-out">
+        <td colspan="3"><strong>System output:</strong><br />PhantomJS 2.1.1 (Windows 8 0.0.0) LOG: 'WARNING: Tried to load angular more than once.'
 </td>
       </tr>
     </table>

@@ -10,13 +10,12 @@ module.exports = function (config) {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['browserify', 'jasmine','es6-shim'],
+        frameworks: ['browserify','jasmine'],
 
 
         plugins: [
             'karma-jasmine',
-            'karma-browserify',
-            'karma-es6-shim',
+          'karma-browserify',
             'karma-phantomjs-launcher',
             'karma-chrome-launcher',
             'karma-coverage',
@@ -28,9 +27,7 @@ module.exports = function (config) {
         files: [
             './node_modules/angular/angular.js',
             './node_modules/angular-mocks/angular-mocks.js',
-            './node_modules/babelify/node_modules/babel-core/browser-polyfill.js',
             './public/main.js',
-            './src/client/modules/index.js',
             './test/client/modules/**/*.js'
         ],
 
@@ -41,10 +38,8 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-             './src/client/modules/index.js': ['browserify'],
-            // 'src/client/modules/**/*.js': 'coverage',
-            './public/main.js': ['coverage'],
-            './test/client/modules/**/*.js': ['browserify']
+            './test/client/modules/**/*.js':['browserify'],
+            './public/main.js': ['coverage']
         },
 
 
@@ -108,6 +103,8 @@ module.exports = function (config) {
         // how many browser should be started simultaneous
         concurrency: Infinity,
 
+
+        browserNoActivityTimeout: 300000,  //5 minute for running tests
 
           phantomjsLauncher: {
       // Have phantomjs exit if a ResourceError is encountered (useful if karma exits without killing phantom)

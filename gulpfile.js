@@ -43,6 +43,14 @@ gulp.task('template', () => {
         .pipe(gulp.dest(pathDist));
 });
 
+gulp.task('test',['js'], function (done) {
+    new Server({
+        configFile:__dirname + '/karma.conf.js',
+        singleRun: true
+    }, done).start();
+});
+
+
 gulp.task('js', () => {
     return browserify({ entries: __dirname + '/' + pathClient + 'app.js', debug: true })
         .transform(babelify, { presets: ['es2015'] })
