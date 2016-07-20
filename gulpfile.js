@@ -11,6 +11,7 @@ const babelify = require('babelify');
 const sourcemaps = require('gulp-sourcemaps');
 const browserify = require('browserify');
 const templateCache = require('gulp-angular-templatecache');
+const lint = require('gulp-eslint');
 const Server = require('karma').Server;
 
 const pathDist = 'public/';
@@ -41,6 +42,12 @@ gulp.task('template', () => {
         }))
         .pipe(rename('main-partials.js'))
         .pipe(gulp.dest(pathDist));
+});
+
+gulp.task('lintJS', function () {
+    return gulp.src( './src/client/**/*.js')
+        .pipe(lint({config: 'eslint.config.json'}))
+        .pipe(lint.format());
 });
 
 gulp.task('test',['js'], function (done) {
