@@ -4,11 +4,6 @@ import externalVariables from './externalVariables';
 import externalFunctions from './externalFunctions';
 import showChatWindow from './chatField';
 import tankMovement from './tankMovement';
-import serviceSendData from '../modules/serviceSendData/index';
-
-console.log(serviceSendData, 'serviceSendData');
-console.log(serviceSendData.DataService.getData(), 'serviceSendData.getService');
-// console.log(serviceSendData.DataService({name: 'Yuri'}), 'serviceSendData.getService');
 
 const findLinePoints = tankMovement.findLinePoints,
     tankMove = tankMovement.tankMove,
