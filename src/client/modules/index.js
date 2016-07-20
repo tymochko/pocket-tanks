@@ -1,13 +1,12 @@
-require('angular');
-var home = require('./home');
-var login = require('./login');
-var signup = require('./signup');
-var profile = require('./profile');
-var dashboard = require('./dashboard');
-var game = require('./game');
-var navigation = require('./navigation');
-var chat = require('./chat');
-paper = require('paper'); //todo
+import 'angular';
+import home from './home';
+import game from './game';
+import chat from './chat';
+import login from './login';
+import signup from './signup';
+import profile from './profile';
+import dashboard from './dashboard';
+import navigation from './navigation';
 
 module.exports = angular.module('tanks', [
     require('angular-route'),

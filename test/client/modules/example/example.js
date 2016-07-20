@@ -1,6 +1,7 @@
 describe("App Controller test", function () {
     var $controller;
 
+
     beforeEach(angular.mock.module("tanks.profile"));
 
     beforeEach(inject(function (_$controller_) {
@@ -14,4 +15,6 @@ describe("App Controller test", function () {
         $scope.set(true);
         expect($scope.mass).toEqual(true);
     })
+
+    
 });
