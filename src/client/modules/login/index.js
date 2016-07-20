@@ -1,13 +1,13 @@
-var angular = require('angular');
-var ngRoute = require('angular-route');
+import angular from 'angular';
+import ngRoute from 'angular-route';
 
 module.exports = angular.module('tanks.login', [
     ngRoute
 ])
 
-.service('sendLog',['$http', '$window', 
+.service('sendLog',['$http', '$window',
     function($http, $window){
-        
+
         this.log = (userInfo, $scope, $uibModalInstance, items, loginResult) => {
             $scope.items = items;
             $scope.selected = {
@@ -32,18 +32,18 @@ module.exports = angular.module('tanks.login', [
     };
 })
 
-.controller('LoginCtrl', ['$scope', 'sendLog', '$uibModalInstance', 'items', 'loginResult', 
+.controller('LoginCtrl', ['$scope', 'sendLog', '$uibModalInstance', 'items', 'loginResult',
 function($scope, sendLog, $uibModalInstance, items, loginResult) {
-        
+
         $scope.minLengthName = 5;
         $scope.maxLengthName = 15;
-        
+
         $scope.minLengthPass = 6;
         $scope.maxLengthPass = 12;
 
         $scope.login = (user) => {
 
-            let userInfo = {
+            var userInfo = {
                 userName: user.name,
                 userPassword: user.password
             };

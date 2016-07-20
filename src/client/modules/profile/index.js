@@ -1,5 +1,5 @@
-const angular = require('angular');
-const ngRoute = require('angular-route');
+import angular from 'angular';
+import ngRoute from 'angular-route';
 module.exports = angular.module('tanks.profile', [
     ngRoute
 ])
@@ -46,9 +46,10 @@ module.exports = angular.module('tanks.profile', [
     }])
     .controller('testCtrl',['$scope',function ($scope){
         $scope.mass = false;
-        
+
         $scope.set = function (a) {
             $scope.mass = a
+   
         }
     }])
     .controller('deleteUserController', ['$scope', '$uibModalInstance', ($scope, $uibModalInstance) => {
@@ -104,7 +105,6 @@ module.exports = angular.module('tanks.profile', [
         $scope.nameMaxLength = 15;
         $scope.passMinLength = 6;
         $scope.passMaxLength = 12;
-        $scope.selectedImg = "api/users/profile/getImage/userAvatar";
 
         $scope.user = {
             userName: "",
@@ -117,9 +117,11 @@ module.exports = angular.module('tanks.profile', [
             userAge: ""
         };
 
-        $scope.getSalt = (() => {
-            return $scope.selectedImg + "?salt=" + new Date().getTime();
-        })();
+        $scope.getSalt = () => {
+            return "?salt=" + new Date().getTime();
+        };
+
+        $scope.selectedImg = "api/users/profile/getImage/userAvatar" + ($scope.getSalt)();
 
         function savingMsg() {
             toastr.success('Your changes are saved!', 'Message', {

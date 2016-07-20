@@ -1,5 +1,5 @@
-var angular = require('angular');
-var ngRoute = require('angular-route');
+import angular from 'angular';
+import ngRoute from 'angular-route';
 
 module.exports = angular.module('tanks.dashboard', [
     ngRoute
@@ -31,5 +31,3 @@ function DashboardCtrl($scope, $http){
     }
     console.log("required dashboard!");
 }
-
-

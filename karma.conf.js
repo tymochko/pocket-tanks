@@ -5,18 +5,20 @@ module.exports = function (config) {
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: '',
+        basePath: './',
 
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['browserify', 'jasmine'],
+        frameworks: ['browserify','jasmine'],
 
 
         plugins: [
             'karma-jasmine',
-            'karma-browserify',
+          'karma-browserify',
+            'karma-phantomjs-launcher',
             'karma-chrome-launcher',
+            'karma-coverage',
             'karma-htmlfile-reporter'
         ],
 
@@ -25,8 +27,7 @@ module.exports = function (config) {
         files: [
             './node_modules/angular/angular.js',
             './node_modules/angular-mocks/angular-mocks.js',
-            './src/client/modules/index.js',
-            './src/client/models/tankShot.js',
+            './public/main.js',
             './test/client/modules/**/*.js'
         ],
 
@@ -37,15 +38,19 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            './src/client/modules/index.js': ['browserify'],
-            './test/client/modules/**/*.js': ['browserify']
+            './test/client/modules/**/*.js':['browserify'],
+            './public/main.js': ['coverage']
         },
 
 
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress', 'html'],
+        reporters: ['progress', 'html','coverage'],
+
+        coverageReporter : {
+  			type : 'text',
+			},
 
         htmlReporter: {
             outputFile: './test/units.html',
@@ -60,7 +65,8 @@ module.exports = function (config) {
 
 
         browserify: {
-            debug: true
+            debug: true,
+            transform: [ 'babelify' ]
         },
 
 
@@ -83,7 +89,10 @@ module.exports = function (config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome'],
+
+        browsers: ['PhantomJS'],//
+        // browsers: ['Chrome'],
+
 
 
         // Continuous Integration mode
@@ -92,6 +101,14 @@ module.exports = function (config) {
 
         // Concurrency level
         // how many browser should be started simultaneous
-        concurrency: Infinity
+        concurrency: Infinity,
+
+
+        browserNoActivityTimeout: 300000,  //5 minute for running tests
+
+          phantomjsLauncher: {
+      // Have phantomjs exit if a ResourceError is encountered (useful if karma exits without killing phantom)
+      exitOnResourceError: true
+    }
     })
 };
