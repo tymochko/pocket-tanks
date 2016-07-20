@@ -1,3 +1,11 @@
+import externalVariables from './externalVariables';
+let originalPoints = externalVariables.originalPoints,
+    tankX = externalVariables.tankObj.tankX,
+    tankY = externalVariables.tankObj.tankY,
+    angleWeapon = externalVariables.tankObj.angleWeapon;
+
+const WIDTH = externalVariables.WIDTH;
+
 const findLinePoints = (posX) => {
     let arr = [];
 
@@ -20,34 +28,50 @@ const findLinePoints = (posX) => {
             }
         }
     }
+}
+
+const animate = (time) => {
+    const duration = 1500;
+    let timePassed = time - start;
+
+    if (timePassed > duration) {
+        timePassed = duration;
+    }
+    draw(direct, timePassed);
+
+    if(tankX >= WIDTH - 11 || tankX <= 11){
+        window.cancelAnimationFrame(requestAnimFrame);
+         console.log('stop!!!');
+    } else if (timePassed < duration) {
+        requestAnimFrame(animate);
+    }
 };
 
-const animate = (draw, duration) => {
-    let start = performance.now();
-    requestAnimFrame(function animate(time) {
-        let timePassed = time - start;
-        if (timePassed > duration) timePassed = duration;
-        draw(timePassed);
-        if(tankX >= WIDTH - 11 || tankX <= 11){
-            window.cancelAnimationFrame(requestAnimFrame);
-            // console.log('stop!!!');
-        } else if (timePassed < duration) {
-            requestAnimFrame(animate);
-        }
-    });
+let start = performance.now(), direct;
+
+const animateStart = (draw, duration) => {
+    start = performance.now();
+    requestAnimFrame(animate);
 };
 
-const tankMove = (direction) => {
-    animate((timePassed) => {
-        if(direction === "right") {
-            tankX++;
-        } else {
-            tankX--;
-        }
-        angle = parseInt(getId('angle').innerHTML);
+const draw = (direction, timePassed, checkTank = true) => {
+    if(direction == "right") {
+        tankX++;
+    } else {
+        tankX--;
+    }
+
+    if (checkTank) {
         tankY = findLinePoints(tankX);
         clear();
         fillBackground();
-        drawTank(tankX, tankY, angleWeaponInc);
-    }, 1500);
+        drawTank(tankX, tankY, angleWeapon);
+    }
 };
+
+module.exports.findLinePoints = findLinePoints;
+module.exports.tankMove = (direction) => {
+    direct = direction;
+    let timePassed;
+    animateStart(draw, 1500);
+}

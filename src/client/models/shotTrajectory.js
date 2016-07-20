@@ -1,53 +1,50 @@
-//<------Maks's part-------->
+//<------Maks' part-------->
 
 
-    var lastTime;
-    var dt2=0;
-    var bullets = [];
-    var bullet;
-    var lastFire = Date.now();
-    var gameTime = 0;
+    let lastTime,
+        dt2=0,
+        bullet,
+        lastFire = Date.now(),
+        gameTime = 0,
+        bulletImg=new Image();
     const g = 9.81;
-    var bulletImg=new Image();
+
     bulletImg.src='./public/images/bullet2.png';
 
-    function makeShot() {
+    const makeShot = () => {
         dt2=0;
-        bullets.push({ pos: [tankX+45, tankY-44],
-            imgInf: new ImgInf(bulletImg.src,[0,0],angle,power),
+        bullet = { pos: [tankX, tankY],
+            imgInf: new ImgInf(bulletImg.src, [0,0], angle, power),
             angle: angle,
             bulletSpeed: power
-        });
+        };
         lastFire = Date.now();
         shotStart();
     }
 
-    function drawBullet() {
-        clear();
-
-        fillBackground();
-        drawTank(tankX,tankY);
-
-        var now = Date.now();
-        var dt = (now - lastTime) / 1000.0;
-        update(dt);
-        render();
-        lastTime = now;
-    }
-
-    function shotStart() {
+    const shotStart = () => {
         lastTime = Date.now();
-        drawBullet();
+
+        (drawBullet = () => {
+            clear();
+
+            fillBackground();
+            drawTank(tankX,tankY);
+
+            var now = Date.now();
+            var dt = (now - lastTime) / 1000.0;
+
+            (update = () => {
+                gameTime += dt;
+                generateExplosion(dt);
+            })();
+
+            renderEntity(bullet);
+            lastTime = now;
+        })();
     }
 
-    function update(dt) {
-        gameTime += dt;
-        updateEntities(dt);
-    }
-
-    function updateEntities(dt) {
-        for(var i = 0; i < bullets.length; i++) {
-            bullet = bullets[i];
+    const generateExplosion = (dt) => {
             bullet.pos[0] = tankX + weaponWidth * Math.cos(angleWeapon + angle*Math.PI/180) + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180 + angleWeapon);
             bullet.pos[1] = tankY-30 - weaponWidth * Math.sin(angleWeapon + angle*Math.PI/180)- (bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180 + angleWeapon) - g * dt2 * dt2 / 2);
             dt2 += 4*dt;
@@ -65,8 +62,7 @@
             // check if intersect the original points
             var intersect = bull.getIntersections(groundPath);
             if(intersect.length > 0 ) {
-                bullets.splice(i, 1);
-                i--;
+                bullet = null;
 
                 let crossPoint = {
                     x: intersect[0]._point.x,
@@ -91,9 +87,9 @@
             }
             else if(bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT)
             {
-                bullets.splice(i, 1);
+                bullet = null;
                 window.cancelAnimationFrame(requestAnimFrame);
-                i--;
+
                 clear();
                 drawSky();
                 drawGround();
@@ -108,30 +104,16 @@
             {
                 requestAnimFrame(drawBullet);
             }
+    }
+
+    const renderEntity = (entity) => {
+        if(entity){
+            ctx.save();
+            ctx.translate(entity.pos[0], entity.pos[1]);
+            entity.imgInf.render(ctx,dt2);
+            ctx.restore();
         }
     }
-
-    function render() {
-        renderEntities(bullets);
-    };
-
-    function renderEntities(list) {
-        for(var i=0; i<list.length; i++) {
-            renderEntity(list[i]);
-        }
-    }
-
-    function renderEntity(entity) {
-        ctx.save();
-        ctx.translate(entity.pos[0], entity.pos[1]);
-        entity.imgInf.render(ctx,dt2);
-        ctx.restore();
-    }
-
-    function reset() {
-        gameTime = 0;
-        bullets = [];
-    };
 
     (function() {
         function ImgInf(url, pos, angle, v0) {
