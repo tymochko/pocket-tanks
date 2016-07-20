@@ -1,103 +1,101 @@
 describe('LoginCtrl', function() {
 
-    var $controller, scope, uibModalInstance, items, sendLog, loginResult, httpBackend;
-    var controller;
+    let $scope, $controller, $httpBackend, sendLog, createController;
+    let controller;
+
+    const $uibModalInstance = {},
+    		item = {};
+    const userInfo = {
+		userName: "Jack",
+		userPassword: "Black"
+	};
+
 
     beforeEach(angular.mock.module("tanks.login"));
 
-    // describe('Testing sendLog service', function() {
-    //     var httpBackend;
-
-    //     beforeEach(inject(function(_sendLog_, _$httpBackend_) {
-    //         sendLog = _sendLog_;
-    //         httpBackend = _$httpBackend_;
-    //     }));
-
-    //     fit('sendLog.log should be defined', function() {
-    //         httpBackend.whenRoute('POST', 'api/users/login/');
-    //         expect(sendLog.log).toBeDefined();
-    //     });
-
-    // });
-
-
-    beforeEach(inject(function($rootScope, _$controller_, _loginResult_, _$httpBackend_, _sendLog_) {
-        scope = $rootScope.$new();
-        $controller = _$controller_;
-        loginResult = _loginResult_;
-        httpBackend = _$httpBackend_;
+    beforeEach(inject((_$controller_, _sendLog_) => {
+    	$scope = {};
+    	$controller = _$controller_;
         sendLog = _sendLog_;
     }));
 
-    beforeEach(inject(function() {
-            //sendLog = {};
+    beforeEach(inject(() => {
+        $uibModalInstance.close = () => {
 
-            controller = $controller('LoginCtrl', { $scope: scope, sendLog: sendLog, $uibModalInstance: uibModalInstance, items: items, loginResult: loginResult});
-            uibModalInstance = {};
-            uibModalInstance.close = function () {
+        };
 
-            };
-            
-            items = [];
+        createController = () => {
+	       return $controller('LoginCtrl', {'$scope': $scope, 'sendLog': sendLog, '$uibModalInstance': $uibModalInstance, 'item': item});
+	    };
     }));
-    
 
-    describe('Testing controller variables', function() {
 
-        fit('minLengthName', function() {
-            expect(scope.minLengthName).toEqual(5);
-            expect(scope.minLengthName).not.toEqual(6);
-        });
+    describe('Testing sendLog service', () => {
 
-        fit('maxLengthName', function() {
-            expect(scope.maxLengthName).toEqual(15);
-            expect(scope.maxLengthName).not.toEqual(12);
-        });
+		beforeEach(inject((_$httpBackend_) => {
+	        $httpBackend = _$httpBackend_;
+	    }));        
 
-        fit('minLengthPass', function() {
-            expect(scope.minLengthPass).toEqual(6);
-            expect(scope.minLengthPass).not.toEqual(5);
-        });
+        afterEach(() => {
+		     $httpBackend.verifyNoOutstandingExpectation();
+		     $httpBackend.verifyNoOutstandingRequest();
+	   	});
 
-        fit('maxLengthPass', function() {
-            expect(scope.maxLengthPass).toEqual(12);
-            expect(scope.maxLengthPass).not.toEqual(15);
+	   	it('$scope.status should be false', () => {
+	   		controller = createController();
+	   		expect($scope.status).toBe(false);
+	   	});
+
+        it('$scope.status should be true', () => {
+        	controller = createController();
+            
+            $httpBackend.expectPOST('/api/users/login').respond(200, {});
+            sendLog.log(userInfo, $scope, $uibModalInstance, item);
+            $httpBackend.flush();
+
+            expect($scope.status).toBe(true);
         });
 
     });
 
 
-    describe('Testing controller functions', function() {
+    describe('Testing controller', () => {
 
-        fit("$scope.login check", function () {
-            // var succeeded;
-            var userInfo = {
-                userName: 'Jack',
-                userPassword: 'Black'
-            };
+        it('minLengthName', () => {
+        	controller = createController();
 
-            // sendLog.log = function(userInfo, scope, uibModalInstance, items, loginResult) {
-                
-            // };
+            expect($scope.minLengthName).toEqual(5);
+            expect($scope.minLengthName).not.toEqual(6);
+        });
 
-            // httpBackend.whenRoute('POST', 'api/users/login/');
-              
-            sendLog.log.success = function() {
-                console.log('SUCCESS');
-            };
-            sendLog.log = jasmine.createSpy('sendLog.log.success() spy');
+        it('maxLengthName', () => {
+        	controller = createController();
 
-            sendLog.log.error = function() {
-                console.log('ERROR');
-            };
-            sendLog.log.error = jasmine.createSpy('sendLog.log.error() spy');
-            
-            
-            scope.login(userInfo);
-            // expect(succeeded).toBe(true);
+            expect($scope.maxLengthName).toEqual(15);
+            expect($scope.maxLengthName).not.toEqual(12);
+        });
+
+        it('minLengthPass', () => {
+        	controller = createController();
+
+            expect($scope.minLengthPass).toEqual(6);
+            expect($scope.minLengthPass).not.toEqual(5);
+        });
+
+        it('maxLengthPass', () => {
+        	controller = createController();
+
+            expect($scope.maxLengthPass).toEqual(12);
+            expect($scope.maxLengthPass).not.toEqual(15);
+        });
+
+        it("$scope.login should call sendLog.log", () => {
+        	controller = createController();
+			sendLog.log = jasmine.createSpy('sendLog.log spy');
+
+            $scope.login(userInfo);
+
             expect(sendLog.log).toHaveBeenCalled();
-            // expect(sendlog.log.success).toHaveBeenCalled();
-            // expect(sendlog.log.error).toHaveBeenCalled();
         });
 
     });
