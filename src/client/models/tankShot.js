@@ -272,6 +272,7 @@ module.exports.initGame = function () {
 
     getId('chatBtn').onclick = showChatWindow;
 
+
     (function initialization() {
         clear();
         drawSky();
@@ -286,74 +287,6 @@ module.exports.initGame = function () {
         weaponImage.onload = function() {
             drawTank(tankX, tankY, angleWeapon);
         }
-<<<<<<< HEAD
-
-        function reset() {
-            gameTime = 0;
-            bullets = [];
-        };
-
-        (function() {
-            function ImgInf(url, pos, angle, v0) {
-                this.pos = pos;
-                this.url = url;
-                this.angle=angle;
-                this.v0=v0;
-            };
-
-            ImgInf.prototype = {
-
-                render: function(ctx, dt2) {
-                    var x = this.pos[0];
-                    var y = this.pos[1];
-
-                    ctx.translate(x,y);
-                    var A=this.v0*Math.cos(this.angle*Math.PI/180);
-                    var an=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180)-9.81*dt2)/A);
-                    ctx.rotate(-an);
-                    ctx.drawImage(bulletImg,x, y);
-                    ctx.restore();
-                }
-            };
-
-            window.ImgInf = ImgInf;
-        })();
-
-
-        function sendInfo(){
-        	var socket = io.connect();
-        	if(socket){
-        		socket.on('connect',function(){
-                var tankInfo = {xCord : tankX,
-                                   yCord : tankY, 
-                                   weaponAngle : angleWeapon }
-                 console.log(tankInfo);
-
-                console.log("X coordinate : ", tankX, ", Y coordinate : ", tankY);
-            });
-        };
-        };
-
-        (function initialization() {
-            clear();
-            drawSky();
-            drawGround();
-
-            pattern = ctx.createPattern(backCanvas, "no-repeat");
-            tankX = Math.floor((Math.random() * 330) + 30);
-            tankY = findLinePoints(tankX);
-            lastTimeTankMoved = 0;
-            fillBackground();
-            angle_weapon = tiltTank(tankX);
-            weaponImage.onload = function() {
-            	drawTank(tankX, tankY);
-                sendInfo();
-            }
-        })();
-
-    }
-// });
-=======
     })();
 
     window.clear = clear;
@@ -363,7 +296,24 @@ module.exports.initGame = function () {
     window.getId = getId;
     window.weaponWidth=weaponWidth;
     window.drawSky=drawSky;
-    window.drawGround=drawGround;
-    window.backCanvas=backCanvas;
+    window.drawGround= drawGround;
+    window.backCanvas = backCanvas;
 };
->>>>>>> prepullrequest
+
+
+//<-------Sending tank coordinates to server-------->
+function sendInfo(){
+    var socket = io.connect();
+        	if(socket){
+        		socket.on('connect',function(){
+                var tankInfo = {xCord : tankX,
+                                   yCord : tankY, 
+                                   weaponAngle : angleWeapon }
+                 console.log(tankInfo);
+
+                console.log("X coordinate : ", tankX, ", Y coordinate : ", tankY);
+            });
+        	};
+};
+
+        
