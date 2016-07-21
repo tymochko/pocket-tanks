@@ -1,21 +1,57 @@
+// import gameService from './DataTravel';
+// import GameCtrl from './GameCtrl';
 import angular from 'angular';
 import ngRoute from 'angular-route';
-import tankShot from '../../models/tankShot';
+import { initGame } from '../../models/tankShot';
 
 module.exports = angular.module('tanks.game', [
     ngRoute,
     'tanks.chat'
 ])
-.config(RouteConfig)
+    // .controller('GameCtrl', GameCtrl)
+    .controller('gameCtrl', ['gameService', function (gameService) {
+        gameService.getGameData(initGame());
+        gameService.putGameData(126);
+    }])
+    .config(RouteConfig)
+    .factory('gameService', ['$http', function($http) {
+        let gameData = {};
+
+        return {
+            getGameData: (msg) => {
+                gameData = msg;
+                console.log(gameData, 'gameData');
+            },
+            
+            putGameData: (paramX) => {
+                return initGame(paramX);
+            }
+
+            // gameData = msg;
+            // console.log(gameData, 'gameData');
+            //
+            // $http({
+            //     method: 'GET',
+            //     url: 'api/users/profile'
+            // }).then(function successCallback(response) {
+            //     console.log(response.data, 'response.data');
+            //     console.log('success');
+            //     // this callback will be called asynchronously
+            //     // when the response is available
+            // }, function errorCallback(response) {
+            //     console.log(response.data, 'response.data');
+            //     console.log('error');
+            //     // called asynchronously if an error occurs
+            //     // or server returns response with an error status.
+            // });
+        };
+    }])
+;
 
 RouteConfig.$inject = ['$routeProvider'];
 function RouteConfig($routeProvider) {
     $routeProvider.when('/game', {
         templateUrl: 'game/game.html',
-        controller: gameCtrl
-    });
-};
-
-function gameCtrl(){
-    tankShot.initGame();
+        controller: 'gameCtrl'
+    })
 }

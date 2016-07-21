@@ -32,7 +32,15 @@ var ctx;
 let angle,
     power;
 
-module.exports.initGame = function () {
+const mySuperVariable = {
+    tankX: 184,
+    tankY: 205,
+    tankAngle: 2,
+    points: [1, 2, 3, 4, 5]
+};
+
+export const initGame = (paramX) => {
+    console.log(paramX, 'paramX');
     var lastTimeTankMoved;
     var pattern;
     const tankHeight = 30,
@@ -45,6 +53,10 @@ module.exports.initGame = function () {
     // let angleWeapon10 = 10*Math.PI/180;
     var backCanvas;
     var backCtx, canvas;
+
+
+    // console.log(DataService, 'DataService');
+    // console.log(DataService('new'), 'DataService.greet');
 
 /* ====== initialization ======== */
     backCanvas = document.createElement('canvas');
@@ -297,4 +309,7 @@ module.exports.initGame = function () {
     window.drawSky=drawSky;
     window.drawGround=drawGround;
     window.backCanvas=backCanvas;
+
+    // WARNING! Hardcoded data
+    return mySuperVariable;
 };

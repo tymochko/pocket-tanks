@@ -7,7 +7,6 @@ import signup from './signup';
 import profile from './profile';
 import dashboard from './dashboard';
 import navigation from './navigation';
-import service from './serviceSendData';
 
 module.exports = angular.module('tanks', [
     require('angular-route'),
@@ -23,21 +22,22 @@ module.exports = angular.module('tanks', [
     login.name,
     signup.name,
     profile.name,
-    navigation.name,
-    service.name
-]).config(RouteConfig)
-.factory('socket', ['$rootScope', function($rootScope) {
-  var socket = io.connect();
+    navigation.name
+])
+    .config(RouteConfig)
+    .factory('socket',
+        () => {
+            let socket = io.connect();
 
-  return {
-    on: function(eventName, callback){
-      socket.on(eventName, callback);
-    },
-    emit: function(eventName, data) {
-      socket.emit(eventName, data);
-    }
-  };
-}]);
+            return {
+                on: (eventName, callback) => {
+                    socket.on(eventName, callback);
+                },
+                emit: (eventName, data) => {
+                    socket.emit(eventName, data);
+                }
+            };
+        });
 
 
 RouteConfig.$inject = ['$routeProvider', '$locationProvider'];
