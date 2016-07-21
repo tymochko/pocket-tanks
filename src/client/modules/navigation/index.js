@@ -23,14 +23,18 @@ module.exports = angular.module('tanks.navigation', [
                         }
                     }
                 });
+                console.log(modalInstance.result);
                 modalInstance.result.then((selectedItem) => {
                     $scope.selected = selectedItem;
                 });
             };
 
             $scope.logOutClick = () => {
-                $http.post('api/users/logout').then((response) => {
-                    $window.location.reload();
+                $http.post('/api/users/logout').then((response) => {
+                    if (response.data.status === 'success') {
+                        return $window.location.reload();
+                    }
+                    console.log('server error');
                 });
             };
 

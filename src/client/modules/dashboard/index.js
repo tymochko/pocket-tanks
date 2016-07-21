@@ -21,8 +21,8 @@ module.exports = angular.module('tanks.dashboard', [
 
     $scope.sendInvite = function(id){
         console.log(id);
-    }
-    console.log("required dashboard!");
+    };
+
 }])
 .config(RouteConfig);
 
@@ -34,4 +34,4 @@ function RouteConfig($routeProvider) {
         controller: 'DashboardCtrl',
         templateUrl: 'dashboard/dashboard.html'
     });
-};
+}

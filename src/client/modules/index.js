@@ -1,4 +1,4 @@
-import 'angular';
+import angular from 'angular';
 import home from './home';
 import game from './game';
 import chat from './chat';
@@ -25,16 +25,16 @@ module.exports = angular.module('tanks', [
     navigation.name
 ]).config(RouteConfig)
 .factory('socket', ['$rootScope', function($rootScope) {
-  var socket = io.connect();
+    var socket = io.connect();
 
-  return {
-    on: function(eventName, callback){
-      socket.on(eventName, callback);
-    },
-    emit: function(eventName, data) {
-      socket.emit(eventName, data);
-    }
-  };
+    return {
+        on: function(eventName, callback){
+            socket.on(eventName, callback);
+        },
+        emit: function(eventName, data) {
+            socket.emit(eventName, data);
+        }
+    };
 }]);
 
 

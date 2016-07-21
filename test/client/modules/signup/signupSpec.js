@@ -13,12 +13,12 @@ describe("App Controller test", function () {
         toastr.success = function () {
 
         };
-        
+
         var sendReg = {};
         sendReg.add = function (user) {
-                actualResult = user;
-
-            }
+            actualResult = user;
+        }
+        
         var ctrl = $controller('SignupCtrl', { $scope: $scope, sendReg:sendReg, toastr:toastr  });
         expect($scope.maxname).toEqual(15);
 

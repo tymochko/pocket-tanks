@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-describe("Test tank's movement", function () {
-    // fit("should be true",function(){
-    //     //var k=tankMove(30);
-    //     var f = initGame();
-    //     var k = f.tankMove(30);
-    //     expect(k).toBeDefined();
-    // })
-});
-=======
 // describe ("Test tank's movement", function () {
 // 	describe ("Test Y coordinate", function () {
 // 		let coord;
@@ -67,4 +57,3 @@ describe("Test tank's movement", function () {
 // 	    });
 // 	});
 // });
->>>>>>> be3eff5aacba455268714c129cb15a373d768fcc

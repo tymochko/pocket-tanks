@@ -44,22 +44,22 @@ describe('LoginCtrl', function() {
 
     describe('Testing controller variables', function() {
 
-        fit('minLengthName', function() {
+        it('minLengthName', function() {
             expect(scope.minLengthName).toEqual(5);
             expect(scope.minLengthName).not.toEqual(6);
         });
 
-        fit('maxLengthName', function() {
+        it('maxLengthName', function() {
             expect(scope.maxLengthName).toEqual(15);
             expect(scope.maxLengthName).not.toEqual(12);
         });
 
-        fit('minLengthPass', function() {
+        it('minLengthPass', function() {
             expect(scope.minLengthPass).toEqual(6);
             expect(scope.minLengthPass).not.toEqual(5);
         });
 
-        fit('maxLengthPass', function() {
+        it('maxLengthPass', function() {
             expect(scope.maxLengthPass).toEqual(12);
             expect(scope.maxLengthPass).not.toEqual(15);
         });
@@ -69,7 +69,7 @@ describe('LoginCtrl', function() {
 
     describe('Testing controller functions', function() {
 
-        fit("$scope.login check", function () {
+        it("$scope.login check", function () {
             // var succeeded;
             var userInfo = {
                 userName: 'Jack',

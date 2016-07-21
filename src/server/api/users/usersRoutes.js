@@ -69,9 +69,8 @@ router.post('/logout', (req, res) => {
             console.log('err  ', err);
             res.status(401).send();
         } else {
-            console.log(req.session.user);
             req.session.destroy();
-            res.status(204).send(foundUser);
+            res.status(200).json({'status': 'success'});
         }
     });
 });
