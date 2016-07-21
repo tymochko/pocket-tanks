@@ -12,4 +12,4 @@ module.exports.tankObj = {
     tankX: 0,
     tankY: 0,
     angleWeapon: 0
-}
+};

@@ -22,7 +22,7 @@ const WIDTH = externalVariables.WIDTH,
     WEAPONWIDTH = externalVariables.WEAPONWIDTH,
     WEAPONHEIGHT = externalVariables.WEAPONHEIGHT;
 
-const radius = 40;
+// const radius = 40; // TODO remove
 
 var ctx;
 // var tankX, tankY;
@@ -49,7 +49,7 @@ module.exports.initGame = function () {
 /* ====== initialization ======== */
     backCanvas = document.createElement('canvas');
 
-    paper.setup(backCanvas)
+    paper.setup(backCanvas);
     backCanvas.width  = WIDTH;
     backCanvas.height = HEIGHT;
     backCtx = backCanvas.getContext('2d');
@@ -129,7 +129,7 @@ module.exports.initGame = function () {
             moveWeapon(xCoordinate, yCoordinate, angle);
         };
 
-    }
+    };
 
     const drawTank = drawTankFn();
 
@@ -141,7 +141,7 @@ module.exports.initGame = function () {
             ctx.rotate(-angle- angle*Math.PI/180);
             ctx.drawImage(weaponImage, 0,  -weaponHeight/2, weaponWidth, weaponHeight);
             ctx.restore();
-    }
+    };
 
     let moveWeaponKeyDown = (evt) => {
         switch (evt.keyCode) {
@@ -165,7 +165,7 @@ module.exports.initGame = function () {
                     getId('angle').innerHTML = angle;
                     break;
         }
-    }
+    };
 
     document.addEventListener('keydown',moveWeaponKeyDown,true);
 
@@ -226,19 +226,19 @@ module.exports.initGame = function () {
 
     getId('fire').onclick = function() {
         makeShot();
-    }
+    };
 
     getId('morePower').onclick = function (){
         power++;
         getId('power').innerHTML = power;
         power = parseInt(getId('power').innerHTML);
-    }
+    };
 
     getId('lessPower').onclick = function (){
         power--;
         getId('power').innerHTML = power;
         power = parseInt(getId('power').innerHTML);
-    }
+    };
 
     getId('moreAngle').onclick = function (){
 
@@ -253,7 +253,7 @@ module.exports.initGame = function () {
         fillBackground();
         angleWeapon = angle*Math.PI/180;
         drawTank(tankX, tankY, angleWeapon);
-    }
+    };
 
     getId('lessAngle').onclick = function (){
 
@@ -268,7 +268,7 @@ module.exports.initGame = function () {
         fillBackground();
         angleWeapon = angle*Math.PI/180;
         drawTank(tankX, tankY, angleWeapon);
-    }
+    };
 
     getId('chatBtn').onclick = showChatWindow;
 
@@ -297,4 +297,4 @@ module.exports.initGame = function () {
     window.drawSky=drawSky;
     window.drawGround=drawGround;
     window.backCanvas=backCanvas;
-}
+};
