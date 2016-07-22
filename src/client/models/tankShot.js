@@ -8,10 +8,9 @@ import { navPanel } from './navPanel';
 import shotTrajectory from './shotTrajectory';
 import { getId } from './externalFunctions';
 import { requestAnimFrame } from './externalFunctions';
+import { tank } from './tankModel';
 
 let originalPoints = externalVariables.originalPoints;
-    // tankX = externalVariables.tankObj.tankX,
-    // tankY = externalVariables.tankObj.tankY,
     // angleWeapon = externalVariables.tankObj.angleWeapon;
 
 const WIDTH = externalVariables.WIDTH,
@@ -27,12 +26,12 @@ const WIDTH = externalVariables.WIDTH,
 // var tankX, tankY;
 // var angleWeaponInc = 0;
 
-let angleWeapon,
-    angle,
-    tankX,
+let tankX,
     tankY,
+    angleWeapon,
+    angle,
     power;
-var pattern;
+let pattern;
 
 const findLinePoints = tankMovement.findLinePoints,
     tankMove = tankMovement.tankMove,
@@ -40,12 +39,12 @@ const findLinePoints = tankMovement.findLinePoints,
 
 module.exports.initGame = function (ctx, backCanvas, backCtx) {
 
-    var lastTimeTankMoved;
+    let lastTimeTankMoved;
 
-    const tankHeight = 30,
-        tankWidth = 70,
-        weaponHeight = 20,
-        weaponWidth = 35,
+    const tankHeight = tank.getVehicleHeight(),
+        tankWidth = tank.getVehicleWidth(),
+        weaponHeight = tank.getWeaponHeight(),
+        weaponWidth = tank.getWeaponWidth(),
         tankImage = new Image(),
         weaponImage = new Image();
 
@@ -236,10 +235,12 @@ module.exports.initGame = function (ctx, backCanvas, backCtx) {
         clear();
         drawSky();
         drawGround();
-
-        pattern = ctx.createPattern(backCanvas, "no-repeat");
         tankX = Math.floor((Math.random() * 330) + 30);
         tankY = findLinePoints(tankX);
+        angleWeapon = tank.getWeaponAngle();
+        tank.setCoord(tankX, tankY);
+        pattern = ctx.createPattern(backCanvas, "no-repeat");
+        // tank.setCoord(tankX, tankY);
         lastTimeTankMoved = 0;
         fillBackground();
         angleWeapon = -tiltTank(tankX, tankY);
