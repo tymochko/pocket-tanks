@@ -1,13 +1,12 @@
 import externalVariables from './externalVariables';
 import externalFunctions from './externalFunctions';
+import { requestAnimFrame } from './externalFunctions';
 let originalPoints = externalVariables.originalPoints,
-    // tankX = externalVariables.tankObj.tankX,
-    // tankY = externalVariables.tankObj.tankY,
-    tankFunc = externalFunctions.tankFunc,
-    angleWeapon = externalVariables.tankObj.angleWeapon;
+    tankFunc = externalFunctions.tankFunc;
 
 let tankX = tankFunc().tankX,
     tankY = tankFunc().tankY;
+    // angleWeapon = externalVariables.tankObj.angleWeapon;
 
 const WIDTH = externalVariables.WIDTH;
 
@@ -75,6 +74,8 @@ const draw = (direction, timePassed, checkTank = true) => {
         fillBackground();
         drawTank(tankX, tankY, angleWeapon);
     }
+
+    return tankX;
 };
 
 module.exports.findLinePoints = findLinePoints;
@@ -83,3 +84,4 @@ module.exports.tankMove = (direction) => {
     let timePassed;
     animateStart(draw, 1500);
 };
+module.exports.draw = draw;

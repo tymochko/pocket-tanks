@@ -1,10 +1,29 @@
+import { radius } from './externalVariables';
+
 var xSprite = 0;
 var sprite = new Image();
 sprite.src = './public/images/explosion_sheet.png';
+let explosionX,
+    explosionY,
+    tankX,
+    tankY,
+    ctx,
+    firstTimeRun = true;
 
-function tick(coords){
-    var xExplosion = coords.x - radius;
-    var yExplosion = coords.y - radius;
+export function tick(coords, tankCoordsX, tankCoordsY, ctx2){
+
+    if(firstTimeRun) {
+        explosionX = coords.x;
+        explosionY = coords.y;
+        tankX = tankCoordsX;
+        tankY = tankCoordsY;
+        ctx = ctx2;
+    }
+
+    firstTimeRun = false;
+
+    var xExplosion = explosionX - radius;
+    var yExplosion = explosionY - radius;
 
     clear(); 
     fillBackground(); 
@@ -13,7 +32,7 @@ function tick(coords){
 
     if (xSprite < 1608) {
         xSprite = xSprite + 134;
-        window.setTimeout(tick, 70, coords);
+        window.setTimeout(tick, 70);
     } else {
         xSprite = 0;
     }

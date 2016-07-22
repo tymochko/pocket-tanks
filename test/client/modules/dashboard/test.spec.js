@@ -1,23 +1,24 @@
-describe("Testing dashboard", function () {
-    var injector, $httpBackend, $controller;
+// describe("Testing dashboard", function () {
+//     var injector, $httpBackend, $controller;
 
-    beforeEach(angular.mock.module("tanks.dashboard"));
+//     beforeEach(angular.mock.module("tanks.dashboard"));
 
-    beforeEach(() => {
-        inject(($injector, _$controller_, _$httpBackend_) => {
-            injector = $injector;
-            // $httpBackend = $injector.get('$httpBackend');
-            $controller = _$controller_;
-            $httpBackend = _$httpBackend_;
-            $httpBackend.when('GET', 'api/users').respond({users: []});
-        });
-    });
+//     beforeEach(() => {
+//         inject(($injector, _$controller_, _$httpBackend_) => {
+//             injector = $injector;
+//             // $httpBackend = $injector.get('$httpBackend');
+//             $controller = _$controller_;
+//             $httpBackend = _$httpBackend_;
+//             $httpBackend.when('GET', 'api/users').respond({users: []});
+//         });
+//     });
 
-    afterEach(() => {
-        $httpBackend.verifyNoOutstandingExpectation();
-        $httpBackend.verifyNoOutstandingRequest();
-    });
+//     afterEach(() => {
+//         $httpBackend.verifyNoOutstandingExpectation();
+//         $httpBackend.verifyNoOutstandingRequest();
+//     });
 
+<<<<<<< HEAD
     it("calls api/places", inject(($http) => {
         var $scope = {};
         $httpBackend.expectGET('api/users');
@@ -26,3 +27,13 @@ describe("Testing dashboard", function () {
         $httpBackend.flush();
     }));
 });
+=======
+//     fit("calls api/places", inject(($http) => {
+//         var $scope = {};
+//         $httpBackend.expectGET('api/users');
+//         var controller = $controller('DashboardCtrl', { $scope: $scope, $http: $http });
+//         expect($scope.var1).toEqual(5);
+//         $httpBackend.flush();
+//     }));
+// });
+>>>>>>> second_tank

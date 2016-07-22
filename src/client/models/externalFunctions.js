@@ -9,11 +9,11 @@ module.exports.requestAnimFrame = (function(){
     };
 })();
 
-module.exports.getId = function(id) {
+export function getId (id) {
     return document.getElementById(id);
 };
 
-module.exports.tankFunc = function() {
+export function tankFunc() {
     var tankX = 100,
         tankY = 100;
     
@@ -29,3 +29,4 @@ module.exports.tankFunc = function() {
         tankY: tankY
     };
 };
+
