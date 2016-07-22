@@ -1,14 +1,16 @@
 'use strict';
 import paper from 'paper';
 import externalVariables from './externalVariables';
-import externalFunctions from './externalFunctions';
+import { getId } from './externalFunctions';
+import { requestAnimFrame } from './externalFunctions';
 import showChatWindow from './chatField';
 import tankMovement from './tankMovement';
+import { navPanel } from './navPanel';
 
 const findLinePoints = tankMovement.findLinePoints,
-    tankMove = tankMovement.tankMove,
-    getId = externalFunctions.getId,
-    requestAnimFrame = externalFunctions.requestAnimFrame;
+    tankMove = tankMovement.tankMove;
+    // getId = getId(),
+    // requestAnimFrame = requestAnimFrame();
 
 let originalPoints = externalVariables.originalPoints,
     tankX = externalVariables.tankObj.tankX,
@@ -233,54 +235,9 @@ export const initGame = (paramX) => {
         ctx.fill();
     };
 
-
-/* ======  Vika's part - Navigation ======== */
-
-    getId('fire').onclick = function() {
-        makeShot();
-    };
-
-    getId('morePower').onclick = function (){
-        power++;
-        getId('power').innerHTML = power;
-        power = parseInt(getId('power').innerHTML);
-    };
-
-    getId('lessPower').onclick = function (){
-        power--;
-        getId('power').innerHTML = power;
-        power = parseInt(getId('power').innerHTML);
-    };
-
-    getId('moreAngle').onclick = function (){
-
-        getId('angle').innerHTML = angle;
-
-        if(angle >= 80) {return;}
-        angle +=5;
-        getId('angle').innerHTML = angle;
-        angle = parseInt(getId('angle').innerHTML);
-
-        clear();
-        fillBackground();
-        angleWeapon = angle*Math.PI/180;
-        drawTank(tankX, tankY, angleWeapon);
-    };
-
-    getId('lessAngle').onclick = function (){
-
-        getId('angle').innerHTML = angle;
-
-        if(angle <= 0) {return;}
-        angle -=5;
-        getId('angle').innerHTML = angle;
-        angle = parseInt(getId('angle').innerHTML);
-
-        clear();
-        fillBackground();
-        angleWeapon = angle*Math.PI/180;
-        drawTank(tankX, tankY, angleWeapon);
-    };
+/* ======  Navigation ======== */
+    
+    navPanel(angle, tankX, tankY, angleWeapon);
 
     getId('chatBtn').onclick = showChatWindow;
 
