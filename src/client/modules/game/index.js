@@ -1,5 +1,5 @@
 // import gameService from './DataTravel';
-// import GameCtrl from './GameCtrl';
+import { transportData } from './GameCtrl';
 import angular from 'angular';
 import ngRoute from 'angular-route';
 import { initGame } from '../../models/tankShot';
@@ -9,12 +9,9 @@ module.exports = angular.module('tanks.game', [
     'tanks.chat'
 ])
     // .controller('GameCtrl', GameCtrl)
-    .controller('gameCtrl', ['gameService', function (gameService) {
-        gameService.getGameData(initGame());
-        gameService.putGameData(126);
-    }])
+    .controller('gameCtrl', ['gameService', transportData])
     .config(RouteConfig)
-    .factory('gameService', ['$http', function($http) {
+    .factory('gameService', ['$http', ($http) => {
         let gameData = {};
 
         return {
