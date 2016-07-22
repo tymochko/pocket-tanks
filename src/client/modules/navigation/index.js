@@ -41,6 +41,8 @@ module.exports = angular.module('tanks.navigation', [
                         return;
                     }
                     $scope.logged = false;
+                    window.localStorage.user = null;
+                    window.localStorage.username = null;
                 }, () => {
                     console.log('server error');
                 });

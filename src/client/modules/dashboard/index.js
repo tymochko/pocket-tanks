@@ -4,7 +4,7 @@ import ngRoute from 'angular-route';
 module.exports = angular.module('tanks.dashboard', [
     ngRoute
 ])
-.controller('DashboardCtrl', ['$scope', '$http', function($scope, $http) {
+.controller('DashboardCtrl', ['$scope', '$http', 'socket', 'loginResult', function($scope, $http, socket, loginResult) {
     $scope.var1 = 5;
 
     $http.get('api/users').then(function(response){
@@ -20,7 +20,8 @@ module.exports = angular.module('tanks.dashboard', [
     });
 
     $scope.sendInvite = function(id){
-        console.log(id);
+        // console.log('INVITE ID:', id);
+        socket.emit('invite', { target_user: id });
     }
     console.log("required dashboard!");
 }])

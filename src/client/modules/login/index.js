@@ -16,11 +16,15 @@ module.exports = angular.module('tanks.login', [
             return $http.post('/api/users/login', userInfo)
                     .then((response) => {
                         loginResult.result = true;
+                        window.localStorage.user = response.data.user;
+                        window.localStorage.username = response.data.username;
                         $uibModalInstance.close($scope.selected.item);
                         $window.location.reload();
                     },
                     (response) => {
                         loginResult.result = false;
+                        window.localStorage.user = null;
+                        window.localStorage.username = null;
                         console.log('failed to login');
                     });
         };
@@ -28,7 +32,7 @@ module.exports = angular.module('tanks.login', [
 
 .factory('loginResult', () => {
     return {
-        result: false
+        result: false,
     };
 })
 
