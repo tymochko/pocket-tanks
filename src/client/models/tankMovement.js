@@ -1,10 +1,17 @@
 import externalVariables from './externalVariables';
+import externalFunctions from './externalFunctions';
 let originalPoints = externalVariables.originalPoints,
-    tankX = externalVariables.tankObj.tankX,
-    tankY = externalVariables.tankObj.tankY,
+    // tankX = externalVariables.tankObj.tankX,
+    // tankY = externalVariables.tankObj.tankY,
+    tankFunc = externalFunctions.tankFunc,
     angleWeapon = externalVariables.tankObj.angleWeapon;
 
+let tankX = tankFunc().tankX,
+    tankY = tankFunc().tankY;
+
 const WIDTH = externalVariables.WIDTH;
+
+console.log('tankMovement beginning: ' + tankX);
 
 const findLinePoints = (posX) => {
     let arr = [];
@@ -63,6 +70,7 @@ const draw = (direction, timePassed, checkTank = true) => {
 
     if (checkTank) {
         tankY = findLinePoints(tankX);
+        externalFunctions.tankFunc(tankX, tankY);
         clear();
         fillBackground();
         drawTank(tankX, tankY, angleWeapon);

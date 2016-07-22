@@ -92,7 +92,7 @@ router.get('/checkSession', (req, res) => {
 
 // add newUser
 router.post('/add', (req, res) => {
-    let newUser = new usersCollection();
+    var newUser = new usersCollection();
 
     newUser.userName = req.body.userName;
     newUser.userAge = req.body.userAge;
