@@ -4,12 +4,14 @@ import externalVariables from './externalVariables';
 import externalFunctions from './externalFunctions';
 import showChatWindow from './chatField';
 import tankMovement from './tankMovement';
+import shotTrajectory from './shotTrajectory';
 
 const findLinePoints = tankMovement.findLinePoints,
     tankMove = tankMovement.tankMove,
     getId = externalFunctions.getId,
-    requestAnimFrame = externalFunctions.requestAnimFrame;
-
+    requestAnimFrame = externalFunctions.requestAnimFrame,
+    makeShot = shotTrajectory.makeShot;
+   // canvas = externalVariables.canvas,
 let originalPoints = externalVariables.originalPoints,
     tankX = externalVariables.tankObj.tankX,
     tankY = externalVariables.tankObj.tankY,
@@ -24,17 +26,20 @@ const WIDTH = externalVariables.WIDTH,
 
 // const radius = 40; // TODO remove
 
-var ctx;
+//var ctx;
 // var tankX, tankY;
 // var angleWeaponInc = 0;
 
 // let angleWeapon,
 let angle,
     power;
+var pattern;
 
-module.exports.initGame = function () {
+module.exports.initGame = function (ctx, backCanvas, backCtx) {
+
+
     var lastTimeTankMoved;
-    var pattern;
+
     const tankHeight = 30,
         tankWidth = 70,
         weaponHeight = 20,
@@ -43,20 +48,19 @@ module.exports.initGame = function () {
         weaponImage = new Image();
 
     // let angleWeapon10 = 10*Math.PI/180;
-    var backCanvas;
-    var backCtx, canvas;
+    //var backCanvas;
+    //var backCtx, canvas;
 
 /* ====== initialization ======== */
-    backCanvas = document.createElement('canvas');
 
     paper.setup(backCanvas);
-    backCanvas.width  = WIDTH;
-    backCanvas.height = HEIGHT;
-    backCtx = backCanvas.getContext('2d');
 
-    canvas = document.getElementById('myCanvas');
-    ctx = canvas.getContext('2d');
-
+//     canvas = document.getElementById('myCanvas');
+// //console.log(canvas);
+// ctx = canvas.getContext('2d');
+    
+    //module.exports.ctx;
+    console.log(ctx);
     power =  parseInt(getId('power').innerHTML);
     angle = parseInt(getId('angle').innerHTML);
 
@@ -202,7 +206,7 @@ module.exports.initGame = function () {
                     tankMove('right');
                     break;
                 case 13: /*ENTER*/
-                    makeShot();
+                    makeShot(ctx, backCanvas, backCtx, pattern);
                 break;
 
             }
@@ -287,6 +291,7 @@ module.exports.initGame = function () {
             drawTank(tankX, tankY, angleWeapon);
         }
     })();
+
 
     window.clear = clear;
     window.fillBackground = fillBackground;

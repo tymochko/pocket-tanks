@@ -1,6 +1,7 @@
 import angular from 'angular';
 import ngRoute from 'angular-route';
 import tankShot from '../../models/tankShot';
+import externalVariables from '../../models/externalVariables';
 
 module.exports = angular.module('tanks.game', [
     ngRoute,
@@ -17,5 +18,6 @@ function RouteConfig($routeProvider) {
 };
 
 function gameCtrl(){
-    tankShot.initGame();
+	let canvasCont = externalVariables.initCanvas();
+    tankShot.initGame(canvasCont.ctx, canvasCont.backCanvas, canvasCont.backCtx);
 }

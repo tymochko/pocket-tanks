@@ -1,17 +1,37 @@
 //<------Maks' part-------->
+import externalVariables from './externalVariables';
+import tankShot from './tankShot';
+import paper from 'paper';
+import tankMovement from './tankMovement';
 
+const findLinePoints = tankMovement.findLinePoints;
+
+let originalPoints = externalVariables.originalPoints, 
+   // tankX = externalVariables.tankObj.tankX,
+   // tankY = externalVariables.tankObj.tankY,
+    WIDTH = externalVariables.WIDTH,
+    HEIGHT = externalVariables.HEIGHT,
+    angleWeapon = externalVariables.tankObj.angleWeapon,
+    weaponWidth = externalVariables.WEAPONWIDTH;
 
     let lastTime,
-        dt2=0,
+        dt2 = 0,
         bullet,
         lastFire = Date.now(),
         gameTime = 0,
-        bulletImg=new Image();
+        power = 60,
+        angle = 60,
+        bulletImg = new Image();
     const g = 9.81;
 
     bulletImg.src='./public/images/bullet2.png';
+    var ctx2, tankX = 50, tankY = 50, newBackCtx, newBackCanvas, newPattern;
 
-    const makeShot = () => {
+    const makeShot = (ctx, backCanvas, backCtx, pattern) => {
+        ctx2 = ctx;
+        newBackCanvas = backCanvas;
+        newBackCtx = backCtx;
+        newPattern = pattern;
         dt2=0;
         bullet = { pos: [tankX, tankY],
             imgInf: new ImgInf(bulletImg.src, [0,0], angle, power),
@@ -19,13 +39,19 @@
             bulletSpeed: power
         };
         lastFire = Date.now();
-        shotStart();
+        shotStart(ctx2);
+        console.log(bullet.pos[0], bullet.pos[1]);
+
+    }
+    module.exports.makeShot = makeShot;
+    const shotStart = (ctx) => {
+
+        lastTime = Date.now();
+        drawBullet(lastTime);
     }
 
-    const shotStart = () => {
-        lastTime = Date.now();
+    const drawBullet = (lastTime) => {
 
-        (drawBullet = () => {
             clear();
 
             fillBackground();
@@ -33,21 +59,23 @@
 
             var now = Date.now();
             var dt = (now - lastTime) / 1000.0;
-
-            (update = () => {
-                gameTime += dt;
-                generateExplosion(dt);
-            })();
-
+            update(dt);
             renderEntity(bullet);
             lastTime = now;
-        })();
+                    console.log(tankX, tankY);
+
+    }
+
+    const update = (dt) => {
+            gameTime += dt;
+            generateExplosion(dt);
     }
 
     const generateExplosion = (dt) => {
             bullet.pos[0] = tankX + weaponWidth * Math.cos(angleWeapon + angle*Math.PI/180) + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180 + angleWeapon);
             bullet.pos[1] = tankY-30 - weaponWidth * Math.sin(angleWeapon + angle*Math.PI/180)- (bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180 + angleWeapon) - g * dt2 * dt2 / 2);
             dt2 += 4*dt;
+            console.log(bullet.pos[0],weaponWidth,angleWeapon);
                 // creating path for bullet and originalPoints
                 var bull = new paper.Path.Rectangle(bullet.pos[0],bullet.pos[1], 45, 7);
             //check angle for accuracy of point
@@ -79,7 +107,7 @@
                 drawSky();
                 drawGround();
 
-                pattern = ctx.createPattern(backCanvas, "no-repeat");
+                newPattern = ctx2.createPattern(backCanvas, "no-repeat");
                 tankY = findLinePoints(tankX);
 
                 fillBackground();
@@ -93,8 +121,8 @@
                 clear();
                 drawSky();
                 drawGround();
-
-                pattern = ctx.createPattern(backCanvas, "no-repeat");
+                console.log(ctx2);
+                newPattern = ctx2.createPattern(backCanvas, "no-repeat");
                 tankY = findLinePoints(tankX);
 
                 fillBackground();
@@ -108,10 +136,10 @@
 
     const renderEntity = (entity) => {
         if(entity){
-            ctx.save();
-            ctx.translate(entity.pos[0], entity.pos[1]);
-            entity.imgInf.render(ctx,dt2);
-            ctx.restore();
+            ctx2.save();
+            ctx2.translate(entity.pos[0], entity.pos[1]);
+            entity.imgInf.render(ctx2,dt2);
+            ctx2.restore();
         }
     }
 

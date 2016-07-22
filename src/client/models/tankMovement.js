@@ -67,6 +67,8 @@ const draw = (direction, timePassed, checkTank = true) => {
         fillBackground();
         drawTank(tankX, tankY, angleWeapon);
     }
+
+    return tankX;
 };
 
 module.exports.findLinePoints = findLinePoints;
@@ -75,3 +77,4 @@ module.exports.tankMove = (direction) => {
     let timePassed;
     animateStart(draw, 1500);
 };
+module.exports.draw = draw;
