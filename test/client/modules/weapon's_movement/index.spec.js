@@ -1,38 +1,18 @@
-//import { moveWeapon } from "tankShot"; 
-// import {findLinePoints} from "./src/client/models/tankMovement";
+/*import moveWeapon from '/home/olga/Desktop/project/pocket-tanks/src/client/models/tankShot'; 
+import externalVariables from '/home/olga/Desktop/project/pocket-tanks/src/client/models/externalVariables';
 describe ("Test weapon's movement", function () {
-	console.log('findLinePoints TEST');
-/*
-		let coord;
-		beforeEach (function(){
-			coord = {
-				"x": 0,
-				"y": 0
-			}
-		})
 
-		fit ("should be defined", function(){
-			expect(findLinePoints(coord.x)).toBeDefined();
-		})
-	    fit ("should be equal in the beginning", function(){
-	    	coord = {
-				"x": 0,
-				"y": 500
-			}
-	        expect(findLinePoints(coord.x)).toEqual(coord.y);
-	    })
-*/
-
-	/*let angle;
-
+    let angle, tankX, tankY;
 
 	beforeEach(function(){
-		angle = 0;
+
 	})
 
+    
 
     fit ("Initial state of weapon", function(){
-		expect(tankX.toEqual(myx));
+
+		expect(moveWeaponKeyDown.toEqual(myx));
     });
 
     fit ("Increase angle", function(){
@@ -61,6 +41,5 @@ describe ("Test weapon's movement", function () {
     	getId('lessAngle').onclick;
     	expect(angle.toEqual(0));
 		expect(angleWeapon.toEqual(0));
-    });*/
-
-});
+    });
+});*/

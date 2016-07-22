@@ -32,13 +32,7 @@ var ctx;
 let angle,
     power;
 
-export const moveWeapon = (ctx, xCoordinate, yCoordinate, angle) => {
-            ctx.save();
-            ctx.translate(xCoordinate, yCoordinate-weaponHeight);
-            ctx.rotate(-angle- angle*Math.PI/180);
-            ctx.drawImage(weaponImage, 0,  -weaponHeight/2, weaponWidth, weaponHeight);
-            ctx.restore();
-    };    
+
 
 module.exports.initGame = function () {
     var lastTimeTankMoved;
@@ -143,9 +137,15 @@ module.exports.initGame = function () {
 
 /* ====== Tank Weapon Movement ======== */
 
-    
+    module.exports.moveWeapon = (ctx, xCoordinate, yCoordinate, angle) => {
+            ctx.save();
+            ctx.translate(xCoordinate, yCoordinate-weaponHeight);
+            ctx.rotate(-angle- angle*Math.PI/180);
+            ctx.drawImage(weaponImage, 0,  -weaponHeight/2, weaponWidth, weaponHeight);
+            ctx.restore();
+    };        
 
-    let moveWeaponKeyDown = (evt) => {
+    module.exports.moveWeaponKeyDown = (evt) => {
         switch (evt.keyCode) {
                 case 38:    //Up arrow was pressed /
                     if(angle >=  80) {return;}

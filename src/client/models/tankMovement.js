@@ -6,7 +6,7 @@ let originalPoints = externalVariables.originalPoints,
 
 const WIDTH = externalVariables.WIDTH;
 
-export function findLinePoints (posX) {
+const findLinePoints = (posX) => {
     let arr = [];
 
     for(let i = originalPoints.length - 1; i > 0; i--) {

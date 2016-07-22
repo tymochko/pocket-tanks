@@ -9,9 +9,10 @@
         bulletImg=new Image();
     const g = 9.81;
 
+
     bulletImg.src='./public/images/bullet2.png';
 
-    const makeShot = () => {
+    module.exports.makeShot = () => {
         dt2=0;
         bullet = { pos: [tankX, tankY],
             imgInf: new ImgInf(bulletImg.src, [0,0], angle, power),
@@ -44,8 +45,10 @@
         })();
     }
 
-    const generateExplosion = (dt) => {
+    module.exports.generateExplosion = (dt) => {
+        const weaponWidth = 25;
             bullet.pos[0] = tankX + weaponWidth * Math.cos(angleWeapon + angle*Math.PI/180) + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180 + angleWeapon);
+
             bullet.pos[1] = tankY-30 - weaponWidth * Math.sin(angleWeapon + angle*Math.PI/180)- (bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180 + angleWeapon) - g * dt2 * dt2 / 2);
             dt2 += 4*dt;
                 // creating path for bullet and originalPoints
