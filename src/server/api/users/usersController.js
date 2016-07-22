@@ -59,6 +59,21 @@ const showProfile = function (id, callback) {
     });
 };
 
+const idontknow = function (id, callback) {
+    this.findOne(id, function (err, foundUser) {
+        if (err) {
+            console.log(err);
+            return err;
+        }
+
+        if (!foundUser) {
+            return err;
+        }
+
+        callback(err, foundUser);
+    });
+};
+
 const passHash = (userPassword, callback) => {
     bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(userPassword, salt, (err, hash) => {
@@ -158,20 +173,6 @@ const logoutUser = function (id, callback) {
         });
 };
 
-const checkUser = function (id, callback) {
-    console.log('checkUser', id);
-    this.findOne(id, (err, foundUser) => {
-        // if (err) {
-        //     console.log(err);
-        //     return err;
-        // }
-        // if (!foundUser) {
-        //     return err;
-        // }
-
-        callback(err, foundUser);
-    });
-};
 
 const updateUser = function (id, updatedData, callback) {
     var User = this;
@@ -348,7 +349,6 @@ const handleEmail = function (name, email) {
         }
         ;
     });
-
 };
 const uploadImg = function (request, res) {
     var d = new Date();

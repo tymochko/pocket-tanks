@@ -13,7 +13,7 @@ const userUploadsScopeName = 'userUploads';
 const publicImgURL = "/api/users/profile/getImage/" + publicScopeName + '/';
 const userImgURL = '/api/users/profile/getImage/' + userUploadsScopeName + '/';
 const userInfoDir = './src/server/static/usersInfo/';
-
+const gameData = require('./tankController');
 
 // get all users in database, for instance in dashboard
 router.get('/', (req, res) => {
@@ -43,6 +43,8 @@ router.get('/profile', (req, res) => {
         }
     });
 });
+
+
 
 // log in user
 router.post('/login', (req, res) => {
@@ -89,7 +91,7 @@ router.get('/checkSession', (req, res) => {
 
 // add newUser
 router.post('/add', (req, res) => {
-    let newUser = new usersCollection();
+    var newUser = new usersCollection();
 
     newUser.userName = req.body.userName;
     newUser.userAge = req.body.userAge;
@@ -186,6 +188,72 @@ router.get('/profile/publicImages', (req, res) => {
     catch (e) {
         console.log(e);
     }
+});
+
+
+//Don't touch with hands
+router.get('/startGame', (req, res) => { 
+        //req.data.sender_user = user._id;
+        //req.data.sender_username = user.userName;
+        // start data at start
+        var data = [
+            {   player1: {
+                    tankX: 150,
+                    tankY: 200,
+                    bulletX: 0,
+                    bulletY: 0,
+                    weaponX: 100,
+                    weaponY: 100,
+                    angle: 0.17,
+                    weaponAngle: 0.34
+                },
+                player2: {
+                    tankX: 450,
+                    tankY: 400,
+                    bulletX: 0,
+                    bulletY: 0,
+                    weaponX: 300,
+                    weaponY: 300,
+                    angle: 0.17,
+                    weaponAngle: 0.34
+                },
+                originalPoints: [
+                    [0, 280],[200, 350], [350, 150], [500, 250],[800, 250],
+                    [800, 500],[0, 500],[0, 280]
+                ]
+            }
+        ];
+
+        let newGame = new gameData();
+            
+            newGame.data[0].player1.tankX = data[0].player1.tankX;
+            newGame.data[0].player1.tankY = data[0].player1.tankY;
+            newGame.data[0].player1.bulletX = data[0].player1.bulletX;
+            newGame.data[0].player1.bulletY = data[0].player1.bulletY;
+            newGame.data[0].player1.weaponX = data[0].player1.weaponX;
+            newGame.data[0].player1.weaponY = data[0].player1.weaponY;
+            newGame.data[0].player1.angle = data[0].player1.angle;
+            newGame.data[0].player1.weaponAngle = data[0].player1.weaponAngle;
+
+            newGame.data[1].player2.tankX = data[1].player2.tankX;
+            newGame.data[1].player2.tankY = data[1].player2.tankY;
+            newGame.data[1].player2.bulletX = data[1].player2.bulletX;
+            newGame.data[1].player2.bulletY = data[1].player2.bulletY;
+            newGame.data[1].player2.weaponX = data[1].player2.weaponX;
+            newGame.data[1].player2.weaponY = data[1].player2.weaponY;
+            newGame.data[1].player2.angle = data[1].player2.angle;
+            newGame.data[1].player2.weaponAngle = data[1].player2.weaponAngle;
+
+            gameData.createGame(newGame, function (err, game) {
+                if (err) {
+                    console.log(err);
+                    res.status(400).send();
+                    
+                } 
+                else {
+                     res.status(200).send();
+            }
+        }
 });
 
 module.exports = router;
