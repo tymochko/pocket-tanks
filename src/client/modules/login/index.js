@@ -15,8 +15,12 @@ module.exports = angular.module('tanks.login', [
                         $scope.status = true;
                         $uibModalInstance.close(item);
                         $window.location.reload();
+                        window.localStorage.user = response.data.user;
+                        window.localStorage.username = response.data.username;
                     },
                     (response) => {
+                        window.localStorage.user = null;
+                        window.localStorage.username = null;
                         alert('failed to login');
                     });
         };
