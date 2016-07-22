@@ -8,7 +8,6 @@ export class ManageProfileController {
         $scope.nameMaxLength = 15;
         $scope.passMinLength = 6;
         $scope.passMaxLength = 12;
-        $scope.selectedImg = "api/users/profile/getImage/userAvatar";
 
         $scope.user = {
             userName: "",
@@ -22,8 +21,10 @@ export class ManageProfileController {
         };
 
         $scope.getSalt = () => {
-            return $scope.selectedImg + "?salt=" + new Date().getTime();
+            return "?salt=" + new Date().getTime();
         };
+
+        $scope.selectedImg = "api/users/profile/getImage/userAvatar" + ($scope.getSalt)();
 
         function savingMsg() {
             toastr.success('Your changes are saved!', 'Message', {
@@ -39,13 +40,11 @@ export class ManageProfileController {
             });
         }
 
-        // let init = () => {
-        //     profileService.getProfile().then((resp) => {
-        //         $scope.user = resp.data;
-        //     });
-        // };
-        //
-        // init();
+        $scope.init = (() => {
+            ProfileService.getProfile().then((resp) => {
+                $scope.user = resp.data;
+            });
+        })();
 
         $scope.saveChanges = (user) => {
             let userInfo = {

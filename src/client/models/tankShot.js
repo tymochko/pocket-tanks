@@ -1,35 +1,38 @@
 'use strict';
 import paper from 'paper';
-import constans from './constans';
+import externalVariables from './externalVariables';
+import externalFunctions from './externalFunctions';
 import showChatWindow from './chatField';
 import tankMovement from './tankMovement';
 
-var findLinePoints = tankMovement.findLinePoints;
-var originalPoints = constans.originalPoints;
+const findLinePoints = tankMovement.findLinePoints,
+    tankMove = tankMovement.tankMove,
+    getId = externalFunctions.getId,
+    requestAnimFrame = externalFunctions.requestAnimFrame;
 
-const radius = 40;
-const WIDTH = 800,
-    HEIGHT = 500;
+let originalPoints = externalVariables.originalPoints,
+    tankX = externalVariables.tankObj.tankX,
+    tankY = externalVariables.tankObj.tankY,
+    angleWeapon = externalVariables.tankObj.angleWeapon;
+
+const WIDTH = externalVariables.WIDTH,
+    HEIGHT = externalVariables.HEIGHT,
+    TANKWIDTH = externalVariables.TANKWIDTH,
+    TANKHEIGHT = externalVariables.TANKHEIGHT,
+    WEAPONWIDTH = externalVariables.WEAPONWIDTH,
+    WEAPONHEIGHT = externalVariables.WEAPONHEIGHT;
+
+// const radius = 40; // TODO remove
 
 var ctx;
-var tankX, tankY;
-var angleWeaponInc = 0;
+// var tankX, tankY;
+// var angleWeaponInc = 0;
 
-let angleWeapon,
-    angle,
+// let angleWeapon,
+let angle,
     power;
-var requestAnimFrame = (function(){
-    return window.requestAnimationFrame   ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame    ||
-        window.oRequestAnimationFrame      ||
-        window.msRequestAnimationFrame     ||
-        function(callback){
-            window.setTimeout(callback, 1000 / 60);
-        };
-})();
 
-module.exports.initGame = function (){
+module.exports.initGame = function () {
     var lastTimeTankMoved;
     var pattern;
     const tankHeight = 30,
@@ -39,14 +42,14 @@ module.exports.initGame = function (){
         tankImage = new Image(),
         weaponImage = new Image();
 
-    let angleWeapon10 = 10*Math.PI/180;
+    // let angleWeapon10 = 10*Math.PI/180;
     var backCanvas;
     var backCtx, canvas;
 
 /* ====== initialization ======== */
     backCanvas = document.createElement('canvas');
 
-    paper.setup(backCanvas)
+    paper.setup(backCanvas);
     backCanvas.width  = WIDTH;
     backCanvas.height = HEIGHT;
     backCtx = backCanvas.getContext('2d');
@@ -104,8 +107,7 @@ module.exports.initGame = function (){
     const weaponImage = new Image();
     var xCof, yCof;
     var angle_second;
-    var angleWeapon;
-    var angle_weapon = 0;*/
+    var angleWeapon;*/
 
     const drawTankFn = () => {
 
@@ -113,33 +115,33 @@ module.exports.initGame = function (){
         weaponImage.src = './public/images/tankWeapon_straight.png';
 
 
-        return (xCoordinate, yCoordinate, angleW) => {
+        return (xCoordinate, yCoordinate, angle) => {
 
-            angleWeapon = -tiltTank(xCoordinate);
+            // angleWeapon = -tiltTank(xCoordinate);
 
             ctx.save();
             ctx.translate(xCoordinate, yCoordinate-weaponHeight);
-            ctx.rotate(-angleWeapon);
+            ctx.rotate(-angle);
             ctx.drawImage(tankImage,-tankWidth/2-weaponWidth/3,-tankHeight/2+weaponHeight/2 ,
             tankWidth, tankHeight);
             ctx.restore();
 
-            moveWeapon(xCoordinate, yCoordinate, angleW);
+            moveWeapon(xCoordinate, yCoordinate, angle);
         };
 
-    }
+    };
 
     const drawTank = drawTankFn();
 
 /* ====== Tank Weapon Movement ======== */
 
-    let moveWeapon = (xCoordinate, yCoordinate, angleW) => {
+    let moveWeapon = (xCoordinate, yCoordinate, angle) => {
             ctx.save();
             ctx.translate(xCoordinate, yCoordinate-weaponHeight);
-            ctx.rotate(-angleWeapon- angle*Math.PI/180);
+            ctx.rotate(-angle- angle*Math.PI/180);
             ctx.drawImage(weaponImage, 0,  -weaponHeight/2, weaponWidth, weaponHeight);
             ctx.restore();
-    }
+    };
 
     let moveWeaponKeyDown = (evt) => {
         switch (evt.keyCode) {
@@ -148,8 +150,8 @@ module.exports.initGame = function (){
                     angle +=5;
                     clear();
                     fillBackground();
-                    angleWeaponInc = angle*Math.PI/180;
-                    drawTank(tankX, tankY,angleWeaponInc);
+                    angleWeapon = angle*Math.PI/180;
+                    drawTank(tankX, tankY, angleWeapon);
                     getId('angle').innerHTML = angle;
                     break;
 
@@ -158,12 +160,12 @@ module.exports.initGame = function (){
                    angle -=5;
                     clear();
                     fillBackground();
-                    angleWeaponInc = angle*Math.PI/180;
-                    drawTank(tankX, tankY,angleWeaponInc);
+                    angleWeapon = angle*Math.PI/180;
+                    drawTank(tankX, tankY, angleWeapon);
                     getId('angle').innerHTML = angle;
                     break;
         }
-    }
+    };
 
     document.addEventListener('keydown',moveWeaponKeyDown,true);
 
@@ -222,29 +224,25 @@ module.exports.initGame = function (){
 
 /* ======  Vika's part - Navigation ======== */
 
-    function getId(id) {
-        return document.getElementById(id);
-    }
-
     getId('fire').onclick = function() {
         makeShot();
-    }
+    };
 
     getId('morePower').onclick = function (){
         power++;
         getId('power').innerHTML = power;
         power = parseInt(getId('power').innerHTML);
-    }
+    };
 
     getId('lessPower').onclick = function (){
         power--;
         getId('power').innerHTML = power;
         power = parseInt(getId('power').innerHTML);
-    }
+    };
 
     getId('moreAngle').onclick = function (){
 
-       getId('angle').innerHTML = angle;
+        getId('angle').innerHTML = angle;
 
         if(angle >= 80) {return;}
         angle +=5;
@@ -253,9 +251,9 @@ module.exports.initGame = function (){
 
         clear();
         fillBackground();
-        angleWeaponInc = angle*Math.PI/180;
-        drawTank(tankX, tankY,angleWeaponInc);
-    }
+        angleWeapon = angle*Math.PI/180;
+        drawTank(tankX, tankY, angleWeapon);
+    };
 
     getId('lessAngle').onclick = function (){
 
@@ -268,17 +266,13 @@ module.exports.initGame = function (){
 
         clear();
         fillBackground();
-        angleWeaponInc = angle*Math.PI/180;
-        drawTank(tankX, tankY,angleWeaponInc);
-    }
+        angleWeapon = angle*Math.PI/180;
+        drawTank(tankX, tankY, angleWeapon);
+    };
 
     getId('chatBtn').onclick = showChatWindow;
 
     (function initialization() {
-        originalPoints = [[0, 280],[20, 285],[40, 310],[145, 325],[125, 380],[165, 330],[175, 340],[220, 350],
-            [240, 300],[280, 280],[300, 250],[340, 180],[370, 150],[440, 170],[550, 410],[530, 350],[540, 310],
-            [575, 290],[630, 320],[685, 320],[690, 335],[700, 320],[750, 280],[755, 285],[795, 250],[800, 250],
-            [800, 500],[0, 500],[0, 280]];
         clear();
         drawSky();
         drawGround();
@@ -288,9 +282,9 @@ module.exports.initGame = function (){
         tankY = findLinePoints(tankX);
         lastTimeTankMoved = 0;
         fillBackground();
-        angle_weapon = tiltTank(tankX);
+        angleWeapon = -tiltTank(tankX, tankY);
         weaponImage.onload = function() {
-            drawTank(tankX, tankY);
+            drawTank(tankX, tankY, angleWeapon);
         }
     })();
 
@@ -303,4 +297,4 @@ module.exports.initGame = function (){
     window.drawSky=drawSky;
     window.drawGround=drawGround;
     window.backCanvas=backCanvas;
-}
+};
