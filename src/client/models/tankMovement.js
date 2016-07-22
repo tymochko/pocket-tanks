@@ -28,7 +28,7 @@ const findLinePoints = (posX) => {
             }
         }
     }
-}
+};
 
 const animate = (time) => {
     const duration = 1500;
@@ -41,7 +41,7 @@ const animate = (time) => {
 
     if(tankX >= WIDTH - 11 || tankX <= 11){
         window.cancelAnimationFrame(requestAnimFrame);
-         console.log('stop!!!');
+        console.log('stop!!!');
     } else if (timePassed < duration) {
         requestAnimFrame(animate);
     }
@@ -74,4 +74,4 @@ module.exports.tankMove = (direction) => {
     direct = direction;
     let timePassed;
     animateStart(draw, 1500);
-}
+};

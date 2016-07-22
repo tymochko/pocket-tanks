@@ -45,3 +45,5 @@ src/server/static/usersInfo/
 test/units.html
 
 
+# Merge tool backup files
+*.orig

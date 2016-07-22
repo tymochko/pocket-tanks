@@ -7,6 +7,7 @@ import signup from './signup';
 import profile from './profile';
 import dashboard from './dashboard';
 import navigation from './navigation';
+import service from './serviceSendData';
 
 module.exports = angular.module('tanks', [
     require('angular-route'),
@@ -22,7 +23,8 @@ module.exports = angular.module('tanks', [
     login.name,
     signup.name,
     profile.name,
-    navigation.name
+    navigation.name,
+    service.name
 ]).config(RouteConfig)
 .factory('socket', ['$rootScope', function($rootScope) {
   var socket = io.connect();

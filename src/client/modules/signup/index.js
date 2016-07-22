@@ -1,19 +1,13 @@
 
 import angular from 'angular';
 import ngRoute from 'angular-route';
-var toastr = require('angular-toastr');
+import {toastr} from 'angular-toastr';
 
 
 module.exports = angular.module('tanks.signup', [
     ngRoute
 ])
     .config(RouteConfig)
-    // .config(function (toastrConfig) {
-    //     angular.extend(toastrConfig, {
-    //         autoDismiss: false,
-    //         positionClass: 'toast-top-center',
-    //     });
-    // })
     .controller('testCtrl2', ['$scope', function ($scope) {
 
 

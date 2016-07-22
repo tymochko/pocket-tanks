@@ -400,7 +400,6 @@ const getPublicImg = function (req, res) {
             }
             check();
             fs.readdir(userDir, function (e, files) {
-                // console.log(e, files.length > 0);
                 if (!e && files.length > 0)
                     images.push({image: userImgURL + files[0] + fsHelper.getSalt(), uploadedImg: true});
                 res.send(200, images);

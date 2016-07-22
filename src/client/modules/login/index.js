@@ -8,36 +8,27 @@ module.exports = angular.module('tanks.login', [
 .service('sendLog',['$http', '$window',
     function($http, $window){
 
-        this.log = (userInfo, $scope, $uibModalInstance, items, loginResult) => {
-            $scope.items = items;
-            $scope.selected = {
-                item: $scope.items[0]
-            };
+        this.log = (userInfo, $scope, $uibModalInstance, item) => {
+            
             return $http.post('/api/users/login', userInfo)
                     .then((response) => {
-                        loginResult.result = true;
+                        $scope.status = true;
+                        $uibModalInstance.close(item);
+                        $window.location.reload();
                         window.localStorage.user = response.data.user;
                         window.localStorage.username = response.data.username;
-                        $uibModalInstance.close($scope.selected.item);
-                        $window.location.reload();
                     },
                     (response) => {
-                        loginResult.result = false;
                         window.localStorage.user = null;
                         window.localStorage.username = null;
-                        console.log('failed to login');
+                        alert('failed to login');
                     });
         };
 }])
 
-.factory('loginResult', () => {
-    return {
-        result: false,
-    };
-})
+.controller('LoginCtrl', ['$scope', 'sendLog', '$uibModalInstance', 'item', function($scope, sendLog, $uibModalInstance, item) {
 
-.controller('LoginCtrl', ['$scope', 'sendLog', '$uibModalInstance', 'items', 'loginResult',
-function($scope, sendLog, $uibModalInstance, items, loginResult) {
+        $scope.status = false;
 
         $scope.minLengthName = 5;
         $scope.maxLengthName = 15;
@@ -47,13 +38,12 @@ function($scope, sendLog, $uibModalInstance, items, loginResult) {
 
         $scope.login = (user) => {
 
-            var userInfo = {
+            let userInfo = {
                 userName: user.name,
                 userPassword: user.password
             };
 
-            sendLog.log(userInfo, $scope, $uibModalInstance, items, loginResult);
-            // alert(loginResult.result);
+            sendLog.log(userInfo, $scope, $uibModalInstance, item);
         }
     }
 ]);

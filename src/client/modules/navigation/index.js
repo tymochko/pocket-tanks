@@ -9,8 +9,7 @@ module.exports = angular.module('tanks.navigation', [
         ($scope, $http, $location, $window, $uibModal) => {
 
             $scope.logged = false;
-
-            $scope.items = [];
+            $scope.item = {};
 
             $scope.logInClick = () => {
                 const modalInstance = $uibModal.open({
@@ -18,8 +17,8 @@ module.exports = angular.module('tanks.navigation', [
                     templateUrl: 'login/login.html',
                     controller: 'LoginCtrl',
                     resolve: {
-                        items: () => {
-                            return $scope.items;
+                        item: () => {
+                            return $scope.item;
                         }
                     }
                 });
@@ -44,8 +43,8 @@ module.exports = angular.module('tanks.navigation', [
                     window.localStorage.user = null;
                     window.localStorage.username = null;
                 }, () => {
-                    console.log('server error');
-                });
+                    alert('server error');           //-------------> will be OK?
+                }); 
             };
 
             $scope.checkSessionFunc();
