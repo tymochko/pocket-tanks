@@ -2,7 +2,9 @@
 import { transportData } from './GameCtrl';
 import angular from 'angular';
 import ngRoute from 'angular-route';
-import { initGame } from '../../models/tankShot';
+// import { initGame } from '../../models/tankShot';
+// import tankShot from '../../models/tankShot';
+// import externalVariables from '../../models/externalVariables';
 
 module.exports = angular.module('tanks.game', [
     ngRoute,

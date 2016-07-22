@@ -8,8 +8,10 @@ module.exports.TANKHEIGHT = 30;
 module.exports.WEAPONWIDTH = 35;
 module.exports.WEAPONHEIGHT = 20;
 
-module.exports.tankObj = {
-    tankX: 0,
-    tankY: 0,
-    angleWeapon: 0
-};
+module.exports.radius = 40;
+
+// module.exports.tankObj = {
+//     tankX: 0,
+//     tankY: 0,
+//     angleWeapon: 0
+// };
