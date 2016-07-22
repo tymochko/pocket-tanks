@@ -32,6 +32,14 @@ var ctx;
 let angle,
     power;
 
+export const moveWeapon = (ctx, xCoordinate, yCoordinate, angle) => {
+            ctx.save();
+            ctx.translate(xCoordinate, yCoordinate-weaponHeight);
+            ctx.rotate(-angle- angle*Math.PI/180);
+            ctx.drawImage(weaponImage, 0,  -weaponHeight/2, weaponWidth, weaponHeight);
+            ctx.restore();
+    };    
+
 module.exports.initGame = function () {
     var lastTimeTankMoved;
     var pattern;
@@ -126,7 +134,7 @@ module.exports.initGame = function () {
             tankWidth, tankHeight);
             ctx.restore();
 
-            moveWeapon(xCoordinate, yCoordinate, angle);
+            moveWeapon(ctx, xCoordinate, yCoordinate, angle);
         };
 
     };
@@ -135,13 +143,7 @@ module.exports.initGame = function () {
 
 /* ====== Tank Weapon Movement ======== */
 
-    let moveWeapon = (xCoordinate, yCoordinate, angle) => {
-            ctx.save();
-            ctx.translate(xCoordinate, yCoordinate-weaponHeight);
-            ctx.rotate(-angle- angle*Math.PI/180);
-            ctx.drawImage(weaponImage, 0,  -weaponHeight/2, weaponWidth, weaponHeight);
-            ctx.restore();
-    };
+    
 
     let moveWeaponKeyDown = (evt) => {
         switch (evt.keyCode) {

@@ -1,13 +1,38 @@
+//import { moveWeapon } from "tankShot"; 
+// import {findLinePoints} from "./src/client/models/tankMovement";
 describe ("Test weapon's movement", function () {
+	console.log('findLinePoints TEST');
+/*
+		let coord;
+		beforeEach (function(){
+			coord = {
+				"x": 0,
+				"y": 0
+			}
+		})
 
-	let angle;
+		fit ("should be defined", function(){
+			expect(findLinePoints(coord.x)).toBeDefined();
+		})
+	    fit ("should be equal in the beginning", function(){
+	    	coord = {
+				"x": 0,
+				"y": 500
+			}
+	        expect(findLinePoints(coord.x)).toEqual(coord.y);
+	    })
+*/
+
+	/*let angle;
+
 
 	beforeEach(function(){
 		angle = 0;
 	})
 
+
     fit ("Initial state of weapon", function(){
-		expect(angleWeapon.toEqual(0));
+		expect(tankX.toEqual(myx));
     });
 
     fit ("Increase angle", function(){
@@ -36,6 +61,6 @@ describe ("Test weapon's movement", function () {
     	getId('lessAngle').onclick;
     	expect(angle.toEqual(0));
 		expect(angleWeapon.toEqual(0));
-    });
+    });*/
 
 });
