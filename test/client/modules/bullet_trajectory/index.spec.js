@@ -1,4 +1,5 @@
 import explosion from '/home/olga/Desktop/project/pocket-tanks/src/client/models/shotTrajectory'; 
+import paper from 'paper';
 describe ("Test shot trajectory", function () {
 
 		let dt2, tankX, tankY, angleWeapon, bulletSpeed, bulletImg, bullet;
@@ -15,16 +16,16 @@ describe ("Test shot trajectory", function () {
 			bulletSpeed = 5;
 			//weaponWidth = 25;
 				bulletImg = {};
-			const bullet = { pos: [50, 100],
-            imgInf: new ImgInf(bulletImg.src, [0,0], 30, 5),
-            angle: 30,
-            bulletSpeed: 5
+			bullet = { pos: [50, 100],
+            	imgInf: bulletImg,
+            	angle: 30,
+            	bulletSpeed: 5
             };
 
-			//console.log(explosion.bullet);
-			explosion.generateExplosion(dt2);
-			expect(bullet.pos[0]).toEqual(58.66);
-			expect(bullet.pos[1]).toEqual(114.62);
+			console.log(bullet);
+			explosion.generateExplosion(dt2, bullet, 50, 100, 30, 30, false);
+			expect(bullet.pos[0]).toEqual(65.69003715549151);
+			expect(bullet.pos[1]).toEqual(89.4633690315756);
  	        //expect(generateExplosion(dt2)).toEqual(5);
  	    })
 	    

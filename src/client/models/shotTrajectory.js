@@ -45,12 +45,16 @@
         })();
     }
 
-    module.exports.generateExplosion = (dt) => {
+
+    module.exports.generateExplosion = (dt, bullet, tankX, tankY, angleWeapon, angle, myflag = true) => {
         const weaponWidth = 25;
+
             bullet.pos[0] = tankX + weaponWidth * Math.cos(angleWeapon + angle*Math.PI/180) + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180 + angleWeapon);
 
             bullet.pos[1] = tankY-30 - weaponWidth * Math.sin(angleWeapon + angle*Math.PI/180)- (bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180 + angleWeapon) - g * dt2 * dt2 / 2);
             dt2 += 4*dt;
+
+            if(myflag){
                 // creating path for bullet and originalPoints
                 var bull = new paper.Path.Rectangle(bullet.pos[0],bullet.pos[1], 45, 7);
             //check angle for accuracy of point
@@ -107,6 +111,7 @@
             {
                 requestAnimFrame(drawBullet);
             }
+        }
     }
 
     const renderEntity = (entity) => {
