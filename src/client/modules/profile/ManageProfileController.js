@@ -75,7 +75,7 @@ export class ManageProfileController {
             });
             deleteInstance.result.then(() => {
                 ProfileService.deleteAccount();
-                $scope.logOut($scope.user._id);
+                $scope.logOutClick($scope.user._id);
                 $location.path('/');
             });
         };

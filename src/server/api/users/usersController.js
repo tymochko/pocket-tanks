@@ -276,7 +276,7 @@ const getUserImage = function (req, res) {
         cb(err, foundUser);
     });
     function cb(err, foundUser) {
-        if(foundUser === null) {
+        if(!foundUser) {
             return res.status(403).send();
         }
         userImage = foundUser.userImg;
