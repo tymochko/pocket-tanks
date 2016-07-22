@@ -29,15 +29,28 @@ module.exports = angular.module('tanks', [
         () => {
             let socket = io.connect();
 
-            return {
-                on: (eventName, callback) => {
-                    socket.on(eventName, callback);
-                },
-                emit: (eventName, data) => {
-                    socket.emit(eventName, data);
-                }
-            };
-        });
+
+  socket.on('connect', function() {
+    socket.emit('auth', {
+        user: window.localStorage.user,
+        username: window.localStorage.username
+    });
+  });
+
+  socket.on('you-are-invited', function(data) {
+      var result = confirm('Wanna play with ' + data.sender_username + '?');
+      // Send reply based on result!
+  });
+
+  return {
+    on: function(eventName, callback){
+      socket.on(eventName, callback);
+    },
+    emit: function(eventName, data) {
+      socket.emit(eventName, data);
+    }
+  };
+}]);
 
 
 RouteConfig.$inject = ['$routeProvider', '$locationProvider'];

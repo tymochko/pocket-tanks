@@ -32,6 +32,40 @@ client.on('connection',function(socket){
 	        });
 	    }
 	}
+
+});
+
+// <----------Vika`s part ------------>
+
+var connections = [];
+
+client.on('connection', function(socket) {
+	console.log('NEW USER!');
+
+	var info = {socket: socket, user: null, username: null};
+
+	connections.push(info);
+
+	socket.once('auth', function(data) {
+		info.user = data.user;
+		info.username = data.username;
+
+		console.log('User identified as', data.username);
+
+		socket.on('invite', (data) => {
+			console.log('User wants to invite someone:', data);
+
+			connections.forEach(function(other) {
+				if (other.user == data.target_user) {
+					console.log('Invite sent');
+					other.socket.emit('you-are-invited', {
+						sender_user: info.user,
+						sender_username: info.username
+					});
+				}
+			});
+		});
+	});
 });
 
 module.exports = app;
