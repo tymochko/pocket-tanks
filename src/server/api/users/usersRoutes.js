@@ -56,7 +56,10 @@ router.post('/login', (req, res) => {
         } else {
             req.session.user = foundUser._id;
             req.session.username = foundUser.userName;
-            res.status(200).send();
+            res.status(200).json({
+                user: foundUser._id,
+                username: foundUser.userName
+            }).send();
         }
     });
 });

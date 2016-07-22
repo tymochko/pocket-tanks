@@ -6,11 +6,11 @@ import { requestAnimFrame } from './externalFunctions';
 import showChatWindow from './chatField';
 import tankMovement from './tankMovement';
 import { navPanel } from './navPanel';
+import shotTrajectory from './shotTrajectory';
 
 const findLinePoints = tankMovement.findLinePoints,
-    tankMove = tankMovement.tankMove;
-    // getId = getId(),
-    // requestAnimFrame = requestAnimFrame();
+    tankMove = tankMovement.tankMove,
+    makeShot = shotTrajectory.makeShot;
 
 let originalPoints = externalVariables.originalPoints,
     tankX = externalVariables.tankObj.tankX,
@@ -26,13 +26,24 @@ const WIDTH = externalVariables.WIDTH,
 
 // const radius = 40; // TODO remove
 
-var ctx;
+//var ctx;
 // var tankX, tankY;
 // var angleWeaponInc = 0;
 
 // let angleWeapon,
 let angle,
     power;
+var pattern;
+
+// export function initCanvas () {
+//     backCanvas = document.createElement('canvas');
+//     canvas = document.getElementById('myCanvas');
+//     ctx = canvas.getContext('2d');
+//     backCanvas.width  = 800;
+//     backCanvas.height = 500;
+//     backCtx = backCanvas.getContext('2d');
+//     return { 'ctx': ctx, 'backCanvas': backCanvas, 'backCtx': backCtx };
+// }
 
 const mySuperVariable = {
     tankX: 184,
@@ -41,10 +52,10 @@ const mySuperVariable = {
     points: [1, 2, 3, 4, 5]
 };
 
-export const initGame = (paramX) => {
-    console.log(paramX, 'paramX');
+module.exports.initGame = function (ctx, backCanvas, backCtx) {
+
     var lastTimeTankMoved;
-    var pattern;
+
     const tankHeight = 30,
         tankWidth = 70,
         weaponHeight = 20,
@@ -53,24 +64,21 @@ export const initGame = (paramX) => {
         weaponImage = new Image();
 
     // let angleWeapon10 = 10*Math.PI/180;
-    var backCanvas;
-    var backCtx, canvas;
+    //var backCanvas;
+    //var backCtx, canvas;
 
 
     // console.log(DataService, 'DataService');
     // console.log(DataService('new'), 'DataService.greet');
 
 /* ====== initialization ======== */
-    backCanvas = document.createElement('canvas');
 
     paper.setup(backCanvas);
-    backCanvas.width  = WIDTH;
-    backCanvas.height = HEIGHT;
-    backCtx = backCanvas.getContext('2d');
 
-    canvas = document.getElementById('myCanvas');
-    ctx = canvas.getContext('2d');
-
+//     canvas = document.getElementById('myCanvas');
+// //console.log(canvas);
+// ctx = canvas.getContext('2d');
+    
     power =  parseInt(getId('power').innerHTML);
     angle = parseInt(getId('angle').innerHTML);
 
@@ -216,7 +224,7 @@ export const initGame = (paramX) => {
                     tankMove('right');
                     break;
                 case 13: /*ENTER*/
-                    makeShot();
+                    makeShot(ctx, backCanvas, backCtx, pattern);
                 break;
 
             }
@@ -256,6 +264,7 @@ export const initGame = (paramX) => {
             drawTank(tankX, tankY, angleWeapon);
         }
     })();
+
 
     window.clear = clear;
     window.fillBackground = fillBackground;
