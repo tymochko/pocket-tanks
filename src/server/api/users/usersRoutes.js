@@ -227,7 +227,7 @@ router.get('/startGame', (req, res) => {
             }
         ];
 
-        let newGame = new gameData();
+        var newGame = new gameData();
             
             newGame.data[0].player1.tankX = data[0].player1.tankX;
             newGame.data[0].player1.tankY = data[0].player1.tankY;
@@ -256,7 +256,7 @@ router.get('/startGame', (req, res) => {
                 else {
                      res.status(200).send();
             }
-        }
+        });
 });
 
 module.exports = router;
