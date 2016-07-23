@@ -3,6 +3,7 @@ import { requestAnimFrame } from './externalFunctions';
 import { tank } from './tankModel';
 // let originalPoints = externalVariables.originalPoints;
 import { ground } from './groundModel';
+import { initCanvas } from './initCanvas';
 
 let originalPoints = ground.getGround();
 
@@ -62,6 +63,7 @@ const draw = (direction, timePassed, checkTank = true) => {
     let tankY,
         tankX = tank.getCoord().tankX,
         angleWeapon = tank.getWeaponAngle();
+    let ctx = initCanvas().ctx;
 
     if(direction == "right") {
         tankX++;
@@ -72,8 +74,8 @@ const draw = (direction, timePassed, checkTank = true) => {
     if (checkTank) {
         tankY = findLinePoints(tankX);
         tank.setCoord(tankX, tankY);
-        clear();
-        fillBackground();
+        clear(ctx);
+        fillBackground(ctx);
         drawTank(tankX, tankY, angleWeapon);
     }
     return tankX;
