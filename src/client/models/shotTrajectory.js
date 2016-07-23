@@ -1,19 +1,16 @@
 import externalVariables from './externalVariables';
-import tankShot from './tankShot';
 import paper from 'paper';
-import tankMovement from './tankMovement';
+import { findLinePoints } from './tankMovement';
 import { tick } from './explosion';
 import { calculateDamageArea } from './generateDamage';
 import { ground } from './groundModel';
 import { drawGround } from './canvasRedrawModel';
 import { drawSky } from './canvasRedrawModel'
-
-const findLinePoints = tankMovement.findLinePoints;
+import { requestAnimFrame } from './externalFunctions';
 
 let WIDTH = externalVariables.WIDTH,
     HEIGHT = externalVariables.HEIGHT,
     originalPoints,
-    // angleWeapon = externalVariables.tankObj.angleWeapon,
     weaponWidth = externalVariables.WEAPONWIDTH;
     let lastTime,
         dt2 = 0,
@@ -49,11 +46,11 @@ let WIDTH = externalVariables.WIDTH,
             bulletSpeed: power
         };
         lastFire = Date.now();
-        shotStart(ctx2);
+        shotStart();
     };
 
     module.exports.makeShot = makeShot;
-    const shotStart = (ctx) => {
+    const shotStart = () => {
 
         lastTime = Date.now();
         drawBullet();
@@ -111,15 +108,13 @@ let WIDTH = externalVariables.WIDTH,
                 
                 ground.setGround(calculatedGroundPoints);
 
-                // temporary solution for redrawing updated array originalPoints
                 clear();
                 drawSky(newBackCtx);
                 drawGround(ground.getGround(), newBackCtx);
 
-                newPattern = ctx2.createPattern(backCanvas, "no-repeat");
-                // tankY = findLinePoints(tankX);
+                newPattern = ctx2.createPattern(newBackCanvas, "no-repeat");
 
-                fillBackground();
+                fillBackground(newPattern);
                 drawTank(tankX, tankY);
             }
             else if(bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT)
@@ -130,11 +125,11 @@ let WIDTH = externalVariables.WIDTH,
                 clear();
                 drawSky(newBackCtx);
                 drawGround(ground.getGround(), newBackCtx);
-                console.log(ctx2);
-                newPattern = ctx2.createPattern(backCanvas, "no-repeat");
+
+                newPattern = ctx2.createPattern(newBackCanvas, "no-repeat");
                 tankY = findLinePoints(tankX);
 
-                fillBackground();
+                fillBackground(newPattern);
                 drawTank(tankX, tankY);
             }
             else

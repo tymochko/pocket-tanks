@@ -11,9 +11,5 @@ export function initCanvas () {
     backCanvas.height = 500;
     backCtx = backCanvas.getContext('2d');
 
-	// setBackCtx: (updatedBackCtx) => {
-	// 	this.backCtx = updatedBackCtx;
-	// },
-
 	return { 'ctx': ctx, 'backCanvas': backCanvas, 'backCtx': backCtx };
 }

@@ -14,13 +14,7 @@ const polygon = (array, color, backCtx) => {
 };
 
 export function drawGround(originalPoints, backCtx) {
-
-    const points = originalPoints;
-
-    const colors = ['#040905', '#030C37', '#352E58', '#2F010B', '#991E23', '#E72E10', '#FFC057'];
-    colors.forEach(function (color) {
-        polygon(points, color, backCtx);
-    })
+    polygon(originalPoints, '#FFC057', backCtx);
 }
 
 export function drawSky(backCtx){
