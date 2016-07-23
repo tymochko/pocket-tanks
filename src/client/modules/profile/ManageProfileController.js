@@ -57,7 +57,7 @@ export class ManageProfileController {
             if (user.oldPassword) {
                 userInfo.userOldPassword = user.oldPassword;
                 userInfo.userNewPassword = user.newPassword;
-                userInfo.userConfPassword = user.newPassword;
+                userInfo.userConfPassword = user.confirmNewPassword;
             }
 
             ProfileService.update(userInfo);

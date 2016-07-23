@@ -3,6 +3,7 @@ import {UploadController} from './UploadController';
 import {DeleteUserController} from './DeleteUserController';
 import {AvatarController} from './AvatarController';
 import {ProfileService} from './ProfileService';
+import {match} from './PasswordDirective';
 import angular from 'angular';
 import ngRoute from 'angular-route';
 
@@ -14,6 +15,8 @@ module.exports = angular.module('tanks.profile', [
     .controller('DeleteUserController', DeleteUserController)
     .controller('AvatarController', AvatarController)
     .service('ProfileService', ProfileService)
+    .directive('match', match)
+
     .config(function ($routeProvider) {
         $routeProvider
             .when('/profile', {
