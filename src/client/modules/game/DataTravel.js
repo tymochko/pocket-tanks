@@ -10,4 +10,5 @@ module.exports.gameService = () => {
         putGameData: (paramX) => {
             return initGame(paramX);
         }
-}};
+    }
+};

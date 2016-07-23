@@ -3,14 +3,16 @@ import tankShot from './tankShot';
 import paper from 'paper';
 import tankMovement from './tankMovement';
 import { tick } from './explosion';
+import { calculateDamageArea } from './generateDamage';
+import { ground } from './groundModel';
+import { drawGround } from './canvasRedrawModel';
+import { drawSky } from './canvasRedrawModel'
 
 const findLinePoints = tankMovement.findLinePoints;
 
-let originalPoints = externalVariables.originalPoints, 
-   // tankX = externalVariables.tankObj.tankX,
-   // tankY = externalVariables.tankObj.tankY,
-    WIDTH = externalVariables.WIDTH,
+let WIDTH = externalVariables.WIDTH,
     HEIGHT = externalVariables.HEIGHT,
+    originalPoints,
     // angleWeapon = externalVariables.tankObj.angleWeapon,
     weaponWidth = externalVariables.WEAPONWIDTH;
     let lastTime,
@@ -18,7 +20,7 @@ let originalPoints = externalVariables.originalPoints,
         bullet,
         lastFire = Date.now(),
         gameTime = 0,
-        power = 60,
+        power = 30,
         angle = 60,
         bulletImg = new Image();
     const g = 9.81;
@@ -31,7 +33,8 @@ let originalPoints = externalVariables.originalPoints,
         newBackCtx, newBackCanvas, newPattern;
 
     const makeShot = (ctx, backCanvas, backCtx, pattern, tankCoordX, tankCoordY, angleWeaponValue) => {
-        console.log(angleWeapon, 'angleWeapon 1');
+        originalPoints = ground.getGround();
+
         ctx2 = ctx;
         tankX = tankCoordX;
         tankY = tankCoordY;
@@ -47,21 +50,17 @@ let originalPoints = externalVariables.originalPoints,
         };
         lastFire = Date.now();
         shotStart(ctx2);
-        console.log(bullet.pos[0], bullet.pos[1]);
-
     };
 
     module.exports.makeShot = makeShot;
     const shotStart = (ctx) => {
 
-        console.log(angleWeapon, 'angleWeapon 2');
         lastTime = Date.now();
         drawBullet();
     };
 
     const drawBullet = () => {
 
-        console.log(angleWeapon, 'angleWeapon 3');
             clear();
 
             fillBackground();
@@ -75,17 +74,14 @@ let originalPoints = externalVariables.originalPoints,
     };
 
     const update = (dt) => {
-        console.log(angleWeapon, 'angleWeapon 4');
             gameTime += dt;
             generateExplosion(dt);
     };
 
     const generateExplosion = (dt) => {
-        console.log(angleWeapon, 'angleWeapon 5');
             bullet.pos[0] = tankX + weaponWidth * Math.cos(angleWeapon + angle*Math.PI/180) + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180 + angleWeapon);
             bullet.pos[1] = tankY-30 - weaponWidth * Math.sin(angleWeapon + angle*Math.PI/180)- (bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180 + angleWeapon) - g * dt2 * dt2 / 2);
             dt2 += 4*dt;
-            console.log(bullet.pos[0], bullet.pos[1], dt, dt2);
                 // creating path for bullet and originalPoints
                 var bull = new paper.Path.Rectangle(bullet.pos[0],bullet.pos[1], 45, 7);
             //check angle for accuracy of point
@@ -107,18 +103,21 @@ let originalPoints = externalVariables.originalPoints,
                     y: intersect[0]._point.y
                 };
                 console.log( 'x:' +  crossPoint.x, 'y:' + crossPoint.y );
-                tick(crossPoint, tankX, tankY, ctx2);                                   // <------ Explosion ------>
+
+                tick(crossPoint.x, crossPoint.y, tankX, tankY, ctx2);
                 window.cancelAnimationFrame(requestAnimFrame);
 
-                originalPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
+                let calculatedGroundPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
+                
+                ground.setGround(calculatedGroundPoints);
 
                 // temporary solution for redrawing updated array originalPoints
                 clear();
-                drawSky();
-                drawGround();
+                drawSky(newBackCtx);
+                drawGround(ground.getGround(), newBackCtx);
 
                 newPattern = ctx2.createPattern(backCanvas, "no-repeat");
-                tankY = findLinePoints(tankX);
+                // tankY = findLinePoints(tankX);
 
                 fillBackground();
                 drawTank(tankX, tankY);
@@ -129,8 +128,8 @@ let originalPoints = externalVariables.originalPoints,
                 window.cancelAnimationFrame(requestAnimFrame);
 
                 clear();
-                drawSky();
-                drawGround();
+                drawSky(newBackCtx);
+                drawGround(ground.getGround(), newBackCtx);
                 console.log(ctx2);
                 newPattern = ctx2.createPattern(backCanvas, "no-repeat");
                 tankY = findLinePoints(tankX);
@@ -160,7 +159,7 @@ let originalPoints = externalVariables.originalPoints,
             this.angle=angle;
             this.v0=v0;
             this.currAngle = 0;
-        };
+        }
 
         ImgInf.prototype = {
 

@@ -7,33 +7,34 @@ let explosionX,
     explosionY,
     tankX,
     tankY,
-    ctx,
-    firstTimeRun = true;
+    ctx;
 
-export function tick(coords, tankCoordsX, tankCoordsY, ctx2){
+var xExplosion;
+var yExplosion;
 
-    if(firstTimeRun) {
-        explosionX = coords.x;
-        explosionY = coords.y;
-        tankX = tankCoordsX;
-        tankY = tankCoordsY;
-        ctx = ctx2;
-    }
+export function tick(crossPointX, crossPointY, tankCoordsX, tankCoordsY, ctx2){
 
-    firstTimeRun = false;
+    explosionX = crossPointX;
+    explosionY = crossPointY;
+    tankX = tankCoordsX;
+    tankY = tankCoordsY;
+    ctx = ctx2;
 
-    var xExplosion = explosionX - radius;
-    var yExplosion = explosionY - radius;
+    xExplosion = explosionX - radius;
+    yExplosion = explosionY - radius;
+    animateExplosion();
+}
 
-    clear(); 
-    fillBackground(); 
-    drawTank(tankX, tankY); 
+const animateExplosion = () => {
     ctx.drawImage(sprite, xSprite, 0, 134, 134, xExplosion, yExplosion, 134, 134);
 
     if (xSprite < 1608) {
         xSprite = xSprite + 134;
-        window.setTimeout(tick, 70);
+        window.setTimeout(animateExplosion, 70);
     } else {
         xSprite = 0;
+        clear();
+        fillBackground();
+        drawTank(tankX, tankY);
     }
-}
+};

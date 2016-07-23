@@ -1,7 +1,10 @@
 import externalVariables from './externalVariables';
 import { requestAnimFrame } from './externalFunctions';
 import { tank } from './tankModel';
-let originalPoints = externalVariables.originalPoints;
+// let originalPoints = externalVariables.originalPoints;
+import { ground } from './groundModel';
+
+let originalPoints = ground.getGround();
 
 const WIDTH = externalVariables.WIDTH;
 
