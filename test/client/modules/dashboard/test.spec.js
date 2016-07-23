@@ -1,4 +1,4 @@
-describe("Testing dashboard", function () {
+/*describe("Testing dashboard", function () {
     var injector, $httpBackend, $controller;
 
     beforeEach(angular.mock.module("tanks.dashboard"));
@@ -25,4 +25,4 @@ describe("Testing dashboard", function () {
         expect($scope.var1).toEqual(5);
         $httpBackend.flush();
     }));
-});
+});*/

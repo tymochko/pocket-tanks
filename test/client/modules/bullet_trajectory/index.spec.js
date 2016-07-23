@@ -1,32 +1,71 @@
-import explosion from '/home/olga/Desktop/project/pocket-tanks/src/client/models/shotTrajectory'; 
+import explosion from '/home/olga/Desktop/project/pocket-tanks/src/client/models/shotTrajectory';
+import externalVariables from '/home/olga/Desktop/project/pocket-tanks/src/client/models/externalVariables'; 
 import paper from 'paper';
+
 describe ("Test shot trajectory", function () {
 
-		let dt2, tankX, tankY, angleWeapon, bulletSpeed, bulletImg, bullet;
+		let bullet, dt2,
+		    tankX, tankY, 
+		    angleWeapon, bulletImg;
+		let weaponWidth = externalVariables.WEAPONWIDTH;
 
-		/*fit ("Trajectory should be defined", function(){
-			expect(generateExplosion(dt2)).toBeDefined();
-		})*/
+		beforeEach( function() {
+			bulletImg = {};
 
-		fit ("Trajectory in the beginning", function(){
+			bullet = { pos: [tankX, tankY],
+            	imgInf: bulletImg,
+            	angle: 0,
+            	bulletSpeed: 0
+            };
+		});
+
+		it ("Trajectory should be defined", function(){
+			dt2 = 1;
+            bullet.angle = 0;
+			tankX = 100;
+			tankY = 100;
+			bullet.bulletSpeed = 1;
+
+			explosion.generateExplosion(dt2, bullet, tankX, tankY, bullet.angle, bullet.angle, false);
+
+			expect(bullet.pos[0]).toBeDefined();
+			expect(bullet.pos[1]).toBeDefined();
+		});
+
+		it ("Trajectory at time moment 1", function(){
+			dt2 = 1;
+            bullet.angle = 10;
+			tankX = 100;
+			tankY = 150;
+			bullet.bulletSpeed = 7;
+
+			explosion.generateExplosion(dt2, bullet, tankX, tankY, bullet.angle, bullet.angle, false);
+
+			expect(bullet.pos[0]).toEqual(53.893080023174704);
+			expect(bullet.pos[1]).toEqual(241.41194533503725);
+ 	    });
+
+		it ("Trajectory at time moment 2", function(){
 			dt2 = 2;
+            bullet.angle = 30;
 			tankX = 50;
 			tankY = 100;
-			angleWeapon = 30;
-			bulletSpeed = 5;
-			//weaponWidth = 25;
-				bulletImg = {};
-			bullet = { pos: [50, 100],
-            	imgInf: bulletImg,
-            	angle: 30,
-            	bulletSpeed: 5
-            };
+			bullet.bulletSpeed = 5;
+			explosion.generateExplosion(dt2, bullet, tankX, tankY, bullet.angle, bullet.angle, false);
+			expect(bullet.pos[0]).toEqual(97.07011146647453);
+			expect(bullet.pos[1]).toEqual(442.3101070947268);
+ 	    });
 
-			console.log(bullet);
-			explosion.generateExplosion(dt2, bullet, 50, 100, 30, 30, false);
-			expect(bullet.pos[0]).toEqual(65.69003715549151);
-			expect(bullet.pos[1]).toEqual(89.4633690315756);
- 	        //expect(generateExplosion(dt2)).toEqual(5);
- 	    })
-	    
+ 	    it ("Trajectory at time moment 5", function(){
+			dt2 = 5;
+            bullet.angle = 60;
+			tankX = 150;
+			tankY = 100;
+			bullet.bulletSpeed = 6;
+
+			explosion.generateExplosion(dt2, bullet, tankX, tankY, bullet.angle, bullet.angle, false);
+			
+			expect(bullet.pos[0]).toEqual(122.19750988234321);
+			expect(bullet.pos[1]).toEqual(1453.6957081894936);
+ 	    }); 
 });

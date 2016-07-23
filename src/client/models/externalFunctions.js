@@ -9,6 +9,6 @@ module.exports.requestAnimFrame = (function(){
     };
 })();
 
-module.exports.getId = function(id) {
+export function getId (id) {
     return document.getElementById(id);
-}
+};
