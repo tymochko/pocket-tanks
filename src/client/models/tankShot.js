@@ -14,16 +14,11 @@ let originalPoints = externalVariables.originalPoints;
     // angleWeapon = externalVariables.tankObj.angleWeapon;
 
 const WIDTH = externalVariables.WIDTH,
-    HEIGHT = externalVariables.HEIGHT,
-    TANKWIDTH = externalVariables.TANKWIDTH,
-    TANKHEIGHT = externalVariables.TANKHEIGHT,
-    WEAPONWIDTH = externalVariables.WEAPONWIDTH,
-    WEAPONHEIGHT = externalVariables.WEAPONHEIGHT;
+    HEIGHT = externalVariables.HEIGHT;
 
 // const radius = 40; // TODO remove
 
 //var ctx;
-// var tankX, tankY;
 // var angleWeaponInc = 0;
 
 let tankX,
@@ -235,12 +230,13 @@ module.exports.initGame = function (ctx, backCanvas, backCtx) {
         clear();
         drawSky();
         drawGround();
+
         tankX = Math.floor((Math.random() * 330) + 30);
         tankY = findLinePoints(tankX);
         angleWeapon = tank.getWeaponAngle();
-        tank.setCoord(tankX, tankY);
         pattern = ctx.createPattern(backCanvas, "no-repeat");
-        // tank.setCoord(tankX, tankY);
+
+        tank.setCoord(tankX, tankY);
         lastTimeTankMoved = 0;
         fillBackground();
         angleWeapon = -tiltTank(tankX, tankY);

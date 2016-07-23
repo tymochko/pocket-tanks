@@ -1,5 +1,3 @@
-import tankMovement from './tankMovement';
-
 module.exports.tank = {
     tankX: 45,
     tankY: 45,
@@ -13,7 +11,7 @@ module.exports.tank = {
         return {
             tankX: this.tankX,
             tankY: this.tankY
-        }
+        };
     },
     setCoord: function(x, y) {
         this.tankX = x;
