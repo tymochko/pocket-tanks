@@ -10,5 +10,6 @@ export function initCanvas () {
 	backCanvas.width  = 800;
     backCanvas.height = 500;
     backCtx = backCanvas.getContext('2d');
+
 	return { 'ctx': ctx, 'backCanvas': backCanvas, 'backCtx': backCtx };
 }
