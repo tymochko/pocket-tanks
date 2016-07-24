@@ -6,8 +6,6 @@ import { canvasModel } from './canvasModel';
 
 let originalPoints = ground.getGround();
 
-// const WIDTH = externalVariables.WIDTH;
-
 const findLinePoints = (posX) => {
     let arr = [];
 
