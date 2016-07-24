@@ -12,6 +12,10 @@ import { getId } from './externalFunctions';
 import { tank } from './tankModel';
 import { drawGround } from './canvasRedrawModel';
 import { drawSky } from './canvasRedrawModel';
+import { clear } from './externalFunctions';
+import { fillBackground } from './externalFunctions';
+import { canvasModel } from './canvasModel';
+
 
 let originalPoints = ground.getGround();
 
@@ -25,6 +29,7 @@ let tankX,
 module.exports.initGame = function (ctx, backCanvas, backCtx) {
 
     let lastTimeTankMoved;
+    canvasModel.setCtx(ctx);
 
     const tankHeight = tank.getVehicleHeight(),
         tankWidth = tank.getVehicleWidth(),
@@ -83,8 +88,8 @@ module.exports.initGame = function (ctx, backCanvas, backCtx) {
                 case 38:    //Up arrow was pressed /
                     if(angle >=  80) {return;}
                     angle +=5;
-                    clear();
-                    fillBackground();
+                    clear(ctx);
+                    fillBackground(ctx, pattern);
                     angleWeapon = angle*Math.PI/180;
                     drawTank(tankX, tankY, angleWeapon);
                     getId('angle').innerHTML = angle;
@@ -93,8 +98,8 @@ module.exports.initGame = function (ctx, backCanvas, backCtx) {
                 case 40:   //Down arrow was pressed /
                   if(angle <=  0) {return;}
                    angle -=5;
-                    clear();
-                    fillBackground();
+                    clear(ctx);
+                    fillBackground(ctx, pattern);
                     angleWeapon = angle*Math.PI/180;
                     drawTank(tankX, tankY, angleWeapon);
                     getId('angle').innerHTML = angle;
@@ -127,6 +132,7 @@ module.exports.initGame = function (ctx, backCanvas, backCtx) {
 
     const doKeyDown = (evt) => {
         let now = new Date().getTime();
+        
         if(now - lastTimeTankMoved > 1500) {
             switch (evt.keyCode) {
                 case 37:  /* Left arrow was pressed */
@@ -136,7 +142,7 @@ module.exports.initGame = function (ctx, backCanvas, backCtx) {
                     tankMove('right');
                     break;
                 case 13: /*ENTER*/
-                    makeShot(ctx, backCanvas, backCtx, pattern, tank.getCoord().tankX, tank.getCoord().tankY, angleWeapon);
+                    makeShot(canvasModel.getCtx().ctx, backCanvas, backCtx, pattern, tank.getCoord().tankX, tank.getCoord().tankY, angleWeapon);
                 break;
 
             }
@@ -145,16 +151,6 @@ module.exports.initGame = function (ctx, backCanvas, backCtx) {
     };
     window.addEventListener('keydown',doKeyDown,true);
 
-    const clear = () => {
-        ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    };
-
-    const fillBackground = (pattern) => {
-        ctx.rect(0,0,WIDTH,HEIGHT);
-        ctx.fillStyle = pattern;
-        ctx.fill();
-    };
-
 /* ======   Navigation ======== */
 
     navPanel(angle, tankX, tankY, angleWeapon);
@@ -162,18 +158,20 @@ module.exports.initGame = function (ctx, backCanvas, backCtx) {
     getId('chatBtn').onclick = showChatWindow;
 
     (function initialization() {
-        clear();
+        clear(ctx);
+
         drawSky(backCtx);
         drawGround(originalPoints, backCtx);
 
         tankX = Math.floor((Math.random() * 330) + 30);
         tankY = findLinePoints(tankX);
         angleWeapon = tank.getWeaponAngle();
+
         tank.setCoord(tankX, tankY);
 
         pattern = ctx.createPattern(backCanvas, "no-repeat");
         lastTimeTankMoved = 0;
-        fillBackground(pattern);
+        fillBackground(ctx, pattern);
         angleWeapon = -tiltTank(tankX, tankY);
         weaponImage.onload = function() {
             drawTank(tankX, tankY, angleWeapon);
