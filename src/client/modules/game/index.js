@@ -11,7 +11,7 @@ module.exports = angular.module('tanks.game', [
     'tanks.chat'
 ])
     // .controller('GameCtrl', GameCtrl)
-    .controller('gameCtrl', ['gameService', transportData])
+    .controller('gameCtrl', ['gameService', 'socket', transportData])
     .config(RouteConfig)
     .factory('gameService', ['$http', ($http) => {
         let gameData = {};
