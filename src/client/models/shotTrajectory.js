@@ -24,7 +24,7 @@ let originalPoints,
     angle = 60,
     bulletImg = new Image();
 
-let ctx = canvasModel.getCtx().ctx;
+// let ctx = canvasModel.getCtx().ctx;
 
 bulletImg.src='./public/images/bullet2.png';
 var ctx2,
@@ -61,12 +61,12 @@ const shotStart = () => {
 };
 
 const drawBullet = () => {
-    let ctx = canvasModel.getCtx().ctx;
+    let ctx = canvasModel.getBullet().ctx;
 
     clear(ctx);
 
-    fillBackground(ctx);
-    drawTank(tankX, tankY);
+    // fillBackground(ctx);
+    // drawTank(tankX, tankY);
 
     var now = Date.now();
     var dt = (now - lastTime) / 1000.0;
@@ -81,7 +81,8 @@ const update = (dt) => {
 };
 
 const generateExplosion = (dt) => {
-    let ctx = canvasModel.getCtx().ctx;
+    let bulletCtx = canvasModel.getBullet().ctx,
+        groundCtx = canvasModel.getGround().ctx;
 
     bullet.pos[0] = tankX + WEAPONWIDTH * Math.cos(angleWeapon + angle*Math.PI/180) + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180 + angleWeapon);
     bullet.pos[1] = tankY-30 - WEAPONWIDTH * Math.sin(angleWeapon + angle*Math.PI/180)- (bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180 + angleWeapon) - G * dt2 * dt2 / 2);
@@ -108,36 +109,36 @@ const generateExplosion = (dt) => {
         };
         console.log( 'x:' +  crossPoint.x, 'y:' + crossPoint.y );
 
-        tick(crossPoint.x, crossPoint.y, tankX, tankY, ctx2);
+        tick(crossPoint.x, crossPoint.y, tankX, tankY, canvasModel.getBullet().ctx);
         window.cancelAnimationFrame(requestAnimFrame);
 
         let calculatedGroundPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
 
         ground.setGround(calculatedGroundPoints);
 
-        clear(ctx);
-        drawSky(newBackCtx);
-        drawGround(ground.getGround(), newBackCtx);
+        clear(groundCtx);
+        // drawSky(newBackCtx);
+        drawGround(ground.getGround(), canvasModel.getGround().ctx);
 
-        newPattern = ctx2.createPattern(newBackCanvas, "no-repeat");
+        // newPattern = ctx2.createPattern(newBackCanvas, "no-repeat");
 
-        fillBackground(ctx, newPattern);
-        drawTank(tankX, tankY);
+        // fillBackground(ctx, newPattern);
+        // drawTank(tankX, tankY);
     }
     else if(bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT)
     {
         bullet = null;
         window.cancelAnimationFrame(requestAnimFrame);
 
-        clear(ctx);
-        drawSky(newBackCtx);
-        drawGround(ground.getGround(), newBackCtx);
+        clear(groundCtx);
+        // drawSky(newBackCtx);
+        drawGround(ground.getGround(), canvasModel.getGround().ctx);
 
-        newPattern = ctx2.createPattern(newBackCanvas, "no-repeat");
+        // newPattern = ctx2.createPattern(newBackCanvas, "no-repeat");
         tankY = findLinePoints(tankX);
 
-        fillBackground(ctx, newPattern);
-        drawTank(tankX, tankY);
+        // fillBackground(ctx, newPattern);
+        // drawTank(tankX, tankY);
     }
     else
     {

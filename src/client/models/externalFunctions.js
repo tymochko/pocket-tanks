@@ -17,9 +17,17 @@ export function getId (id) {
     return document.getElementById(id);
 }
 
-export function clear() {
-    let ctx = canvasModel.getCtx().ctx;
+export function clear(ctx) {
+    // let ctx = canvasModel.getCtx().ctx;
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
+}
+
+export function clearAll(sky, ground, lightning, tank, bullet) {
+    sky.clearRect(0, 0, WIDTH, HEIGHT);
+    ground.ctx.clearRect(0, 0, WIDTH, HEIGHT);
+    lightning.clearRect(0, 0, WIDTH, HEIGHT);
+    tank.clearRect(0, 0, WIDTH, HEIGHT);
+    bullet.clearRect(0, 0, WIDTH, HEIGHT);
 }
 
 export function fillBackground(ctx, pattern) {

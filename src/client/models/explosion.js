@@ -34,8 +34,8 @@ const animateExplosion = () => {
         window.setTimeout(animateExplosion, 70);
     } else {
         xSprite = 0;
-        clear();
-        fillBackground(canvasModel.getCtx().ctx);
-        drawTank(tankX, tankY);
+        clear(canvasModel.getBullet().ctx);
+        // fillBackground(canvasModel.getCtx().ctx);
+        // drawTank(tankX, tankY);
     }
 };
