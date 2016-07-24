@@ -1,3 +1,5 @@
+import { DAMAGERADIUS } from './externalVariables';
+
 export function calculateDamageArea(array, damageX, damageY) {
     let x1,
         y1,
@@ -14,10 +16,9 @@ export function calculateDamageArea(array, damageX, damageY) {
 
     const delta = (Math.PI / 12),
         // setting distanceBetweenDamageSegments static as a distance between points of damaged ground
-        distanceBetweenDamageSegments = 30,
-        damageRadius = 40;
+        distanceBetweenDamageSegments = 30;
 
-    pointsToReplace = findDamageLimits(array, damageX, damageY, damageRadius);
+    pointsToReplace = findDamageLimits(array, damageX, damageY, DAMAGERADIUS);
     
     pointsToReplace.map((item) => {
         if (item[2] === 'inDamage') {
@@ -43,7 +44,7 @@ export function calculateDamageArea(array, damageX, damageY) {
 
                 theta -= delta;
 
-                pointOnCircle = rotateFixed(damageX, damageY, damageRadius, theta);
+                pointOnCircle = rotateFixed(damageX, damageY, DAMAGERADIUS, theta);
 
                 distance = calculateDistance(pointOnCircle[0], pointOnCircle[1], x2, y2);
             }
@@ -76,7 +77,7 @@ export function calculateDamageArea(array, damageX, damageY) {
     return array;
 }
 
-const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
+const findOriginalPointsToReplace = (array, damageX, damageY, DAMAGERADIUS) => {
     let segmentPairPoints = [],
         distance,
         elementOfLast,
@@ -89,14 +90,14 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
     distanceFromDamageCenter1 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[0][0], pointsOfDamageCenterSegment[0][1]);
     distanceFromDamageCenter2 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[1][0], pointsOfDamageCenterSegment[1][1]);
 
-    if (distanceFromDamageCenter1 >= damageRadius && damageRadius <= distanceFromDamageCenter2) {
+    if (distanceFromDamageCenter1 >= DAMAGERADIUS && DAMAGERADIUS <= distanceFromDamageCenter2) {
         segmentPairPoints.push(pointsOfDamageCenterSegment[0]);
         segmentPairPoints.push(pointsOfDamageCenterSegment[1]);
 
     } else {
         for (let i = 1; i < array.length; i++) {
             distance = calculateDistance(damageX, damageY, array[i][0], array[i][1]);
-            if (distance < damageRadius) {
+            if (distance < DAMAGERADIUS) {
                 segmentPairPoints.push([array[i - 1][0], array[i - 1][1], (i - 1)]);
                 segmentPairPoints.push([array[i][0], array[i][1], i]);
             }
@@ -131,7 +132,7 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
     return segmentPairPoints;
 };
 
-const findDamageLimits = (array, damageX, damageY, damageRadius) => {
+const findDamageLimits = (array, damageX, damageY, DAMAGERADIUS) => {
     let pointsOnDamageLine = [],
         pointsToReplace = [],
         segmentPairPoints,
@@ -146,7 +147,7 @@ const findDamageLimits = (array, damageX, damageY, damageRadius) => {
         intersectPt2X,
         intersectPt2Y;
 
-    segmentPairPoints = findOriginalPointsToReplace(array, damageX, damageY, damageRadius);
+    segmentPairPoints = findOriginalPointsToReplace(array, damageX, damageY, DAMAGERADIUS);
 
     // populating array pointsToReplace with points of area which is going to be modified
     pointsToReplace.push(segmentPairPoints[0]);
@@ -156,7 +157,7 @@ const findDamageLimits = (array, damageX, damageY, damageRadius) => {
         xCurr = segmentPairPoints[i][0];
         yCurr = segmentPairPoints[i][1];
 
-        pointsOnDamageLine = findIntersectionCoordinates(xPrev, yPrev, xCurr, yCurr, damageX, damageY, damageRadius);
+        pointsOnDamageLine = findIntersectionCoordinates(xPrev, yPrev, xCurr, yCurr, damageX, damageY, DAMAGERADIUS);
         intersectPt1 = pointsOnDamageLine[0];
         intersectPt2 = pointsOnDamageLine[1];
         intersectPt1X = intersectPt1[0];

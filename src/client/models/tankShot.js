@@ -1,6 +1,8 @@
 'use strict';
 import paper from 'paper';
-import externalVariables from './externalVariables';
+import { WIDTH } from './externalVariables';
+import { HEIGHT } from './externalVariables';
+import { ground } from './groundModel';
 import showChatWindow from './chatField';
 import { findLinePoints } from './tankMovement';
 import { tankMove } from './tankMovement';
@@ -11,10 +13,7 @@ import { tank } from './tankModel';
 import { drawGround } from './canvasRedrawModel';
 import { drawSky } from './canvasRedrawModel';
 
-let originalPoints = externalVariables.originalPoints;
-
-const WIDTH = externalVariables.WIDTH,
-    HEIGHT = externalVariables.HEIGHT;
+let originalPoints = ground.getGround();
 
 let tankX,
     tankY,

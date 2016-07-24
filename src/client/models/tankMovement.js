@@ -1,12 +1,11 @@
-import externalVariables from './externalVariables';
+import { WIDTH } from './externalVariables';
 import { requestAnimFrame } from './externalFunctions';
 import { tank } from './tankModel';
-// let originalPoints = externalVariables.originalPoints;
 import { ground } from './groundModel';
 
 let originalPoints = ground.getGround();
 
-const WIDTH = externalVariables.WIDTH;
+// const WIDTH = externalVariables.WIDTH;
 
 const findLinePoints = (posX) => {
     let arr = [];
