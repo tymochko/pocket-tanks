@@ -12,6 +12,7 @@ import { drawGround } from './canvasRedrawModel';
 import { drawSky } from './canvasRedrawModel';
 import { clear } from './externalFunctions';
 import { fillBackground } from './externalFunctions';
+import { canvasModel } from './canvasModel';
 
 
 let originalPoints = externalVariables.originalPoints;
@@ -29,6 +30,7 @@ let tankX,
 module.exports.initGame = function (ctx, backCanvas, backCtx) {
 
     let lastTimeTankMoved;
+    canvasModel.setCtx(ctx);
 
     const tankHeight = tank.getVehicleHeight(),
         tankWidth = tank.getVehicleWidth(),
@@ -131,6 +133,7 @@ module.exports.initGame = function (ctx, backCanvas, backCtx) {
 
     const doKeyDown = (evt) => {
         let now = new Date().getTime();
+        
         if(now - lastTimeTankMoved > 1500) {
             switch (evt.keyCode) {
                 case 37:  /* Left arrow was pressed */
@@ -140,7 +143,7 @@ module.exports.initGame = function (ctx, backCanvas, backCtx) {
                     tankMove('right');
                     break;
                 case 13: /*ENTER*/
-                    makeShot(ctx, backCanvas, backCtx, pattern, tank.getCoord().tankX, tank.getCoord().tankY, angleWeapon);
+                    makeShot(canvasModel.getCtx().ctx, backCanvas, backCtx, pattern, tank.getCoord().tankX, tank.getCoord().tankY, angleWeapon);
                 break;
 
             }

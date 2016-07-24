@@ -1,3 +1,4 @@
+import { canvasModel } from './canvasModel';
 import externalVariables from './externalVariables';
 const WIDTH = externalVariables.WIDTH,
     HEIGHT = externalVariables.HEIGHT;
@@ -17,7 +18,8 @@ export function getId (id) {
     return document.getElementById(id);
 }
 
-export function clear(ctx) {
+export function clear() {
+    let ctx = canvasModel.getCtx().ctx;
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 }
 

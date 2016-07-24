@@ -1,4 +1,5 @@
 import { radius } from './externalVariables';
+import { canvasModel } from './canvasModel';
 
 var xSprite = 0;
 var sprite = new Image();
@@ -34,7 +35,7 @@ const animateExplosion = () => {
     } else {
         xSprite = 0;
         clear();
-        fillBackground();
+        fillBackground(canvasModel.getCtx().ctx);
         drawTank(tankX, tankY);
     }
 };
