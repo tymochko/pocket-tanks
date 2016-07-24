@@ -3,6 +3,7 @@ import { requestAnimFrame } from './externalFunctions';
 import { tank } from './tankModel';
 // let originalPoints = externalVariables.originalPoints;
 import { ground } from './groundModel';
+import { canvasModel } from './canvasModel';
 
 let originalPoints = ground.getGround();
 let socket;
@@ -29,13 +30,11 @@ const findLinePoints = (posX) => {
             for(let i = 0; i < arr.length; i++) {
                 if(arr[i][0] === posX) return (arr[i][1]);
             }
+        } else if(posX >= WIDTH || posX <= 0){
+            return -1;
         }
     }
 };
-
-// tankX = Math.floor((Math.random() * 330) + 30);
-// tankY = findLinePoints(tankX);
-// angleWeapon = tank.getWeaponAngle();
 
 const animate = (time) => {
     const duration = 1500;
@@ -46,7 +45,7 @@ const animate = (time) => {
     }
     draw(direct, timePassed);
 
-    if(tank.getCoord().tankX >= WIDTH - 11 || tank.getCoord().tankX <= 11){
+    if(tank.getCoord().tankX >= WIDTH - tank.getVehicleWidth()/5 || tank.getCoord().tankX <= tank.getVehicleWidth()/5){
         window.cancelAnimationFrame(requestAnimFrame);
         console.log('stop!!!');
     } else if (timePassed < duration) {
@@ -62,10 +61,11 @@ const animateStart = (draw, duration) => {
 };
 
 const draw = (direction, timePassed, checkTank = true) => {
-    
     let tankY,
         tankX = tank.getCoord().tankX,
         angleWeapon = tank.getWeaponAngle();
+    let ctx = canvasModel.getCtx().ctx;
+
     if(direction == "right") {
         tankX++;
     } else {
@@ -82,18 +82,18 @@ const draw = (direction, timePassed, checkTank = true) => {
             angleWeapon: angleWeapon
         });
 
-        clear();
-        fillBackground();
+        clear(ctx);
+        fillBackground(ctx);
+
         drawTank(tankX, tankY, angleWeapon);
 
         socket.on('outputPosTank', function(data){
             console.log(data, 'moving');
-            clear();
-            fillBackground();
+            clear(ctx);
+            fillBackground(ctx);
             return drawTank(data.x, data.y, data.angleWeapon);
         });
     }
-
     return tankX;
 };
 

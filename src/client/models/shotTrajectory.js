@@ -7,6 +7,7 @@ import { ground } from './groundModel';
 import { drawGround } from './canvasRedrawModel';
 import { drawSky } from './canvasRedrawModel'
 import { requestAnimFrame } from './externalFunctions';
+import { canvasModel } from './canvasModel';
 
 let WIDTH = externalVariables.WIDTH,
     HEIGHT = externalVariables.HEIGHT,
@@ -22,8 +23,10 @@ let WIDTH = externalVariables.WIDTH,
         bulletImg = new Image();
     const g = 9.81;
 
+//let ctx = canvasModel.getCtx().ctx;
+//console.log(ctx);
     bulletImg.src='./public/images/bullet2.png';
-    var ctx2,
+    let ctx2,
         tankX,
         tankY,
         angleWeapon,
@@ -59,16 +62,18 @@ let WIDTH = externalVariables.WIDTH,
     };
 
     const drawBullet = () => {
+        //let ctx = canvasModel.getCtx().ctx;
 
-            clear();
-            fillBackground();
-            drawTank(tankX, tankY);
+        clear(ctx2);
 
-            var now = Date.now();
-            var dt = (now - lastTime) / 1000.0;
-            update(dt);
-            renderEntity(bullet);
-            lastTime = now;
+        fillBackground(ctx2);
+        drawTank(tankX, tankY);
+
+        var now = Date.now();
+        var dt = (now - lastTime) / 1000.0;
+        update(dt);
+        renderEntity(bullet);
+        lastTime = now;
     };
 
     const update = (dt) => {
@@ -78,70 +83,74 @@ let WIDTH = externalVariables.WIDTH,
 
     const generateExplosion = (dt) => {
 
-            bullet.pos[0] = tankX + weaponWidth * Math.cos(angleWeapon + angle*Math.PI/180) + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180 + angleWeapon);
-            bullet.pos[1] = tankY-30 - weaponWidth * Math.sin(angleWeapon + angle*Math.PI/180)- (bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180 + angleWeapon) - g * dt2 * dt2 / 2);
+        //let ctx = canvasModel.getCtx().ctx;
 
-            dt2 += 4*dt;
-                // creating path for bullet and originalPoints
-                var bull = new paper.Path.Rectangle(bullet.pos[0],bullet.pos[1], 45, 7);
-            //check angle for accuracy of point
-            bull.rotate(-bullet.imgInf.currAngle);
+        bullet.pos[0] = tankX + weaponWidth * Math.cos(angleWeapon + angle*Math.PI/180) + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180 + angleWeapon);
+        bullet.pos[1] = tankY-30 - weaponWidth * Math.sin(angleWeapon + angle*Math.PI/180)- (bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180 + angleWeapon) - g * dt2 * dt2 / 2);
+        dt2 += 4*dt;
+            // creating path for bullet and originalPoints
+        let bull = new paper.Path.Rectangle(bullet.pos[0],bullet.pos[1], 45, 7);
+        //check angle for accuracy of point
+        bull.rotate(-bullet.imgInf.currAngle);
 
-            var groundPath = new paper.Path(
-                new paper.Point(originalPoints[0][0], originalPoints[0][1])
-                );
-            for(let i = 1; i < originalPoints.length; i++) {
-                groundPath.add(new paper.Point(originalPoints[i][0], originalPoints[i][1]))
-            }
-            // check if intersect the original points
-            var intersect = bull.getIntersections(groundPath);
-            if(intersect.length > 0 ) {
-                bullet = null;
+        let groundPath = new paper.Path(
+            new paper.Point(originalPoints[0][0], originalPoints[0][1])
+            );
+        for(let i = 1; i < originalPoints.length; i++) {
+            groundPath.add(new paper.Point(originalPoints[i][0], originalPoints[i][1]))
+        }
+        // check if intersect the original points
+        let intersect = bull.getIntersections(groundPath);
+        
+        if(intersect.length > 0 ) {
+            bullet = null;
 
-                let crossPoint = {
-                    x: intersect[0]._point.x,
-                    y: intersect[0]._point.y
-                };
-                console.log( 'x:' +  crossPoint.x, 'y:' + crossPoint.y );
+            let crossPoint = {
+                x: intersect[0]._point.x,
+                y: intersect[0]._point.y
+            };
+            console.log( 'x:' +  crossPoint.x, 'y:' + crossPoint.y );
 
-                tick(crossPoint.x, crossPoint.y, tankX, tankY, ctx2);
-                window.cancelAnimationFrame(requestAnimFrame);
+            tick(crossPoint.x, crossPoint.y, tankX, tankY, ctx2);
+            window.cancelAnimationFrame(requestAnimFrame);
 
-                let calculatedGroundPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
-                
-                ground.setGround(calculatedGroundPoints);
-                clear();
-                drawSky(newBackCtx);
-                drawGround(ground.getGround(), newBackCtx);
+            let calculatedGroundPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
 
-                newPattern = ctx2.createPattern(newBackCanvas, "no-repeat");
+            ground.setGround(calculatedGroundPoints);
 
-                fillBackground(newPattern);
-                drawTank(tankX, tankY);
-            }
-            else if(bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT)
-            {
-                bullet = null;
-                window.cancelAnimationFrame(requestAnimFrame);
+            clear(ctx2);
+            drawSky(newBackCtx);
+            drawGround(ground.getGround(), newBackCtx);
 
-                clear();
-                drawSky(newBackCtx);
-                drawGround(ground.getGround(), newBackCtx);
+            newPattern = ctx2.createPattern(newBackCanvas, "no-repeat");
 
-                newPattern = ctx2.createPattern(newBackCanvas, "no-repeat");
-                tankY = findLinePoints(tankX);
+            fillBackground(ctx2, newPattern);
+            drawTank(tankX, tankY);
+        }
+        else if(bullet.pos[0] > WIDTH || bullet.pos[1] > HEIGHT)
+        {
+            bullet = null;
+            window.cancelAnimationFrame(requestAnimFrame);
 
-                fillBackground(newPattern);
-                drawTank(tankX, tankY);
-            }
-            else
-            {
-                requestAnimFrame(drawBullet);
-            }
+            clear(ctx2);
+            drawSky(newBackCtx);
+            drawGround(ground.getGround(), newBackCtx);
+
+            newPattern = ctx2.createPattern(newBackCanvas, "no-repeat");
+            tankY = findLinePoints(tankX);
+
+            fillBackground(ctx2, newPattern);
+            drawTank(tankX, tankY);
+        }
+        else
+        {
+            requestAnimFrame(drawBullet);
+        }
     };
 
     const renderEntity = (entity) => {
         if(entity){
+            console.log(socket);
             socket.emit('inputPos',{
                 posX: bullet.pos[0],
                 posY: bullet.pos[1],
