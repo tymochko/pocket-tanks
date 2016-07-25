@@ -35,12 +35,11 @@ client.on('connection',function(socket){
 
 });
 
-// <----------Vika`s part ------------>
+// <----------Invitation part ------------>
 
 var connections = [];
 
 client.on('connection', function(socket) {
-	console.log('NEW USER!');
 
 	var info = {socket: socket, user: null, username: null};
 
@@ -50,14 +49,9 @@ client.on('connection', function(socket) {
 		info.user = data.user;
 		info.username = data.username;
 
-		console.log('User identified as', data.username);
-
 		socket.on('invite', (data) => {
-			console.log('User wants to invite someone:', data);
-
 			connections.forEach(function(other) {
 				if (other.user == data.target_user) {
-					console.log('Invite sent');
 					other.socket.emit('you-are-invited', {
 						sender_user: info.user,
 						sender_username: info.username						
@@ -68,7 +62,6 @@ client.on('connection', function(socket) {
 		socket.on('accepted', (data) => {
 			connections.forEach(function(other) {
 				if (other.user == data.invitor) {
-					console.log('Invitation accepted');
 					other.socket.emit('invite-accepted', {
 						other_user: info.user
 					});
@@ -78,7 +71,6 @@ client.on('connection', function(socket) {
 		socket.on('rejected', (data) => {
 			connections.forEach(function(other) {
 				if (other.user == data.invitor) {
-					console.log('Invitation rejected');
 					other.socket.emit('invite-rejected', {
 						other_user: info.user
 					});
