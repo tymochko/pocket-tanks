@@ -1,9 +1,10 @@
 /*import tankMovement from '/mnt/pocket-tanks/src/client/models/tankMovement';
 import externalVariables from '/mnt/pocket-tanks/src/client/models/externalVariables';
+import { tank } from '/mnt/pocket-tanks/src/client/models/tankModel';
 
 const findLinePoints = tankMovement.findLinePoints,
 	draw = tankMovement.draw;
-let tankX = externalVariables.tankObj.tankX;
+let tankX = tank.getCoord().tankX;
 
 describe ("Test tank's movement", function () {
 	describe ("Test Y coordinate", function () {
@@ -44,8 +45,8 @@ describe ("Test tank's movement", function () {
 
     describe ("Test tank's move", function () {
     	let values = {
-    		'right': 1,
-    		'left': 0
+    		'right': tankX + 1,
+    		'left': tankX - 1
     	},
     		time;
 

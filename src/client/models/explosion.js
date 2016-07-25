@@ -1,5 +1,6 @@
 import { DAMAGERADIUS } from './externalVariables';
 import { canvasModel } from './canvasModel';
+import { clear } from './externalFunctions';
 
 var xSprite = 0;
 var sprite = new Image();
@@ -13,13 +14,13 @@ let explosionX,
 var xExplosion;
 var yExplosion;
 
-export function tick(crossPointX, crossPointY, tankCoordsX, tankCoordsY, ctx2){
+export function tick(crossPointX, crossPointY, tankCoordsX, tankCoordsY){
 
     explosionX = crossPointX;
     explosionY = crossPointY;
     tankX = tankCoordsX;
     tankY = tankCoordsY;
-    ctx = ctx2;
+    ctx = canvasModel.getBullet().ctx;
 
     xExplosion = explosionX - DAMAGERADIUS;
     yExplosion = explosionY - DAMAGERADIUS;
@@ -34,6 +35,6 @@ const animateExplosion = () => {
         window.setTimeout(animateExplosion, 70);
     } else {
         xSprite = 0;
-        clear(canvasModel.getBullet().ctx);
+        clear(ctx);
     }
 };

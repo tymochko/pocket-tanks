@@ -42,6 +42,10 @@ module.exports = function (config) {
             './public/main.js': ['coverage']
         },
 
+        ngHtml2JsPreprocessor: {
+            stripPrefix: 'src/client/modules',
+            moduleName: 'dir-templates'
+        },
 
         // test results reporter to use
         // possible values: 'dots', 'progress'
@@ -93,8 +97,6 @@ module.exports = function (config) {
         //browsers: ['PhantomJS'],
         browsers: ['Chrome'],
 
-
-
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
         singleRun: false,
@@ -106,9 +108,9 @@ module.exports = function (config) {
 
         browserNoActivityTimeout: 300000,  //5 minute for running tests
 
-          phantomjsLauncher: {
-      // Have phantomjs exit if a ResourceError is encountered (useful if karma exits without killing phantom)
-      exitOnResourceError: true
-    }
+        phantomjsLauncher: {
+            // Have phantomjs exit if a ResourceError is encountered (useful if karma exits without killing phantom)
+            exitOnResourceError: true
+        }
     })
 };

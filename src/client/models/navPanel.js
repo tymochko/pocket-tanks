@@ -28,10 +28,8 @@ export function navPanel(angle, tankX, tankY, angleWeapon) {
         getId('angle').innerHTML = angle;
         angle = parseInt(getId('angle').innerHTML);
 
-        clear();
-        fillBackground();
         angleWeapon = angle * Math.PI / 180;
-        drawTank(tankX, tankY, angleWeapon);
+        // drawTank(tankX, tankY, angleWeapon);
     };
 
     getId('lessAngle').onclick = function () {
@@ -45,9 +43,7 @@ export function navPanel(angle, tankX, tankY, angleWeapon) {
         getId('angle').innerHTML = angle;
         angle = parseInt(getId('angle').innerHTML);
 
-        clear();
-        fillBackground();
         angleWeapon = angle * Math.PI / 180;
-        drawTank(tankX, tankY, angleWeapon);
+        // drawTank(tankX, tankY, angleWeapon);
     };
 }

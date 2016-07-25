@@ -7,6 +7,7 @@ import signup from './signup';
 import profile from './profile';
 import dashboard from './dashboard';
 import navigation from './navigation';
+import { gameService } from './game/DataTravel';
 
 module.exports = angular.module('tanks', [
     require('angular-route'),
@@ -24,8 +25,9 @@ module.exports = angular.module('tanks', [
     profile.name,
     navigation.name
 ])
+
 .config(RouteConfig)
-.factory('socket', () => {
+.factory('socket', ['gameService', (gameService) => {
     let socket = io.connect();
 
     socket.on('connect', () => {
@@ -40,6 +42,9 @@ module.exports = angular.module('tanks', [
         if (result == true) {
             socket.emit('accepted', {invitor: data.sender_user});
             window.location = "/game";
+            if (result) {
+                gameService.getInitGameData();
+            }
         } else {
             socket.emit('rejected', {invitor: data.sender_user});
         }
@@ -59,10 +64,12 @@ module.exports = angular.module('tanks', [
     	  },
     	  emit: (eventName, data) => {
     		    socket.emit(eventName, data);
-    	  }
+    	  },
+        once: (eventName, data) => {
+          socket.once(eventName, data);
+        }
     };
-});
-
+}]);
 
 
 RouteConfig.$inject = ['$routeProvider', '$locationProvider'];
