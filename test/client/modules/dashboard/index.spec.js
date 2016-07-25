@@ -21,7 +21,7 @@ describe("Testing dashboard", function () {
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    it("calls api/users", inject(($http) => {
+    fit("calls api/users", inject(($http) => {
         var $scope = {};
         $httpBackend.expectGET('api/users');
         var controller = $controller('DashboardCtrl', {
@@ -29,6 +29,19 @@ describe("Testing dashboard", function () {
             $http: $http,
             socket: fakeSocket
         });
+        $httpBackend.flush();
+    }));
+
+    fit("emits socket event", inject(($http) => {
+        var $scope = {};
+        spyOn(fakeSocket, 'emit');
+        var controller = $controller('DashboardCtrl', {
+            $scope: $scope,
+            $http: $http,
+            socket: fakeSocket
+        });
+        $scope.sendInvite();
+        expect(fakeSocket.emit).toHaveBeenCalled();
         $httpBackend.flush();
     }));
 });

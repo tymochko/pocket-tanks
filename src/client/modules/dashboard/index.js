@@ -5,8 +5,6 @@ module.exports = angular.module('tanks.dashboard', [
     ngRoute
 ])
 .controller('DashboardCtrl', ['$scope', '$http', 'socket', function($scope, $http, socket) {
-    $scope.var1 = 5;
-
     $http.get('api/users').then(function(response){
         var users = response.data.users,
             id = response.data.sessionId;
