@@ -7,7 +7,7 @@ describe ("Test shot trajectory", function () {
 		let bullet, dt2,
 		    tankX, tankY, 
 		    angleWeapon, bulletImg;
-		let weaponWidth = externalVariables.WEAPONWIDTH;
+		    let canvas=document.createElement("canvas");
 
 		beforeEach( function() {
 			bulletImg = {};

@@ -1,4 +1,4 @@
-const calculateDamageArea = (array, damageX, damageY) => {
+export function calculateDamageArea(array, damageX, damageY) {
     let x1,
         y1,
         x2,
@@ -74,7 +74,7 @@ const calculateDamageArea = (array, damageX, damageY) => {
     });
 
     return array;
-};
+}
 
 const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
     let segmentPairPoints = [],
@@ -127,7 +127,7 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
         // also setting index number from originalPoints array
         segmentPairPoints[segmentPairPoints.length - 1].push(elementOfLast);
     }
-
+    
     return segmentPairPoints;
 };
 
