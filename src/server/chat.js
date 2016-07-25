@@ -60,7 +60,27 @@ client.on('connection', function(socket) {
 					console.log('Invite sent');
 					other.socket.emit('you-are-invited', {
 						sender_user: info.user,
-						sender_username: info.username
+						sender_username: info.username						
+					});
+				}
+			});
+		});
+		socket.on('accepted', (data) => {
+			connections.forEach(function(other) {
+				if (other.user == data.invitor) {
+					console.log('Invitation accepted');
+					other.socket.emit('invite-accepted', {
+						other_user: info.user
+					});
+				}
+			});
+		});
+		socket.on('rejected', (data) => {
+			connections.forEach(function(other) {
+				if (other.user == data.invitor) {
+					console.log('Invitation rejected');
+					other.socket.emit('invite-rejected', {
+						other_user: info.user
 					});
 				}
 			});

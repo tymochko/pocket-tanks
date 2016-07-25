@@ -38,7 +38,21 @@ module.exports = angular.module('tanks', [
 
   socket.on('you-are-invited', function(data) {
       var result = confirm('Wanna play with ' + data.sender_username + '?');
-      // Send reply based on result!
+      //
+      if (result == true) {
+          socket.emit('accepted', {invitor: data.sender_user});
+          window.location = "/game";
+      } else {
+          socket.emit('rejected', {invitor: data.sender_user});
+      }
+  });
+
+  socket.on('invite-accepted', function(data) {
+    alert('Your game is starting...');
+    window.location = "/game";
+  });
+  socket.on('invite-rejected', function(data) {
+    alert('Your invitation was rejected.');
   });
 
   return {
