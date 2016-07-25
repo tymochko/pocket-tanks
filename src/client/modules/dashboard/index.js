@@ -20,10 +20,8 @@ module.exports = angular.module('tanks.dashboard', [
     });
 
     $scope.sendInvite = function(id){
-        // console.log('INVITE ID:', id);
         socket.emit('invite', { target_user: id });
     }
-    console.log("required dashboard!");
 }])
 .config(RouteConfig);
 

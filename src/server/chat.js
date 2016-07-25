@@ -80,12 +80,11 @@ client.on('connection', function(socket){
 });
 }).call(this);
 
-//<----------Vika`s part ------------>
+// <----------Invitation part ------------>
 
 var connections = [];
 
 client.on('connection', function(socket) {
-	console.log('NEW USER!');
 
 	var info = {socket: socket, user: null, username: null};
 
@@ -95,18 +94,31 @@ client.on('connection', function(socket) {
 		info.user = data.user;
 		info.username = data.username;
 
-		console.log('User identified as', data.username);
-
 		socket.on('invite', (data) => {
-			console.log('User wants to invite someone:', data);
-
 			connections.forEach(function(other) {
 				if (other.user == data.target_user) {
-					console.log('Invite sent');
 					other.socket.emit('you-are-invited', {
                         target_user: data.target_user,
 						sender_user: info.user,
-						sender_username: info.username
+						sender_username: info.username						
+					});
+				}
+			});
+		});
+		socket.on('accepted', (data) => {
+			connections.forEach(function(other) {
+				if (other.user == data.invitor) {
+					other.socket.emit('invite-accepted', {
+						other_user: info.user
+					});
+				}
+			});
+		});
+		socket.on('rejected', (data) => {
+			connections.forEach(function(other) {
+				if (other.user == data.invitor) {
+					other.socket.emit('invite-rejected', {
+						other_user: info.user
 					});
 				}
 			});
