@@ -6,6 +6,7 @@ const path = require('path');
 const usersCollection = require('./usersController');
 const fsHelper = require('../libs/fsHelper');
 const multer = require('multer');
+const gameData = require('../game/gameController');
 
 const userScopeName = 'userAvatar';
 const publicScopeName = 'public';
@@ -82,7 +83,7 @@ router.get('/checkSession', (req, res) => {
     usersCollection.checkUser({_id: req.session.user}, (err, foundUser) => {
         if (err) {
             res.status(401).send();
-        } else if (foundUser != null){
+        } else if (foundUser != null) {
             res.status(200).json({'status': 'success'});
         } else {
             res.status(200).json({'status': 'error'});
@@ -189,6 +190,57 @@ router.get('/profile/publicImages', (req, res) => {
     catch (e) {
         console.log(e);
     }
+});
+
+//Don't touch with hands
+router.post('/startGame', (req, res) => {
+    console.log(req.data, 'req.data');
+    //req.data.sender_user = user._id;
+    //req.data.sender_username = user.userName;
+    // start data at start
+    var data = {
+            player1: {
+                tankX: 150,
+                tankY: 200,
+                bulletX: 0,
+                bulletY: 0,
+                weaponX: 100,
+                weaponY: 100,
+                angle: 0.17,
+                weaponAngle: 0.34
+            },
+            player2: {
+                tankX: 450,
+                tankY: 400,
+                bulletX: 0,
+                bulletY: 0,
+                weaponX: 300,
+                weaponY: 300,
+                angle: 0.17,
+                weaponAngle: 0.34
+            },
+            originalPoints: [
+                [0, 280], [200, 350], [350, 150], [500, 250], [800, 250],
+                [800, 500], [0, 500], [0, 280]
+            ]
+        };
+
+    var newGame = new gameData();
+    newGame.player1 = data.player1;
+    newGame.player2 = data.player2;
+
+    newGame.originalPoints = data.originalPoints;
+
+    gameData.createGame(newGame, function (err, game) {
+        if (err) {
+            console.log(err);
+            res.status(400).send();
+
+        }
+        else {
+            res.status(200).send(game);
+        }
+    });
 });
 
 module.exports = router;

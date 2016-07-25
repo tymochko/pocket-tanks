@@ -104,6 +104,7 @@ client.on('connection', function(socket) {
 				if (other.user == data.target_user) {
 					console.log('Invite sent');
 					other.socket.emit('you-are-invited', {
+                        target_user: data.target_user,
 						sender_user: info.user,
 						sender_username: info.username
 					});

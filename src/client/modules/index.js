@@ -7,6 +7,7 @@ import signup from './signup';
 import profile from './profile';
 import dashboard from './dashboard';
 import navigation from './navigation';
+import { gameService } from './game/DataTravel';
 
 module.exports = angular.module('tanks', [
     require('angular-route'),
@@ -36,8 +37,14 @@ module.exports = angular.module('tanks', [
 		});
 
 		socket.on('you-are-invited', (data) => {
+            console.log(data, 'data');
 			var result = confirm('Wanna play with ' + data.sender_username + '?');
-			// Send reply based on result!
+			
+            if (result) {
+                console.log(gameService, 'gameService');
+                console.log(gameService.getInitGameData, 'gameService.getInitGameData');
+                gameService.getInitGameData();
+            }
 		});
 
 		return {
