@@ -65,8 +65,8 @@ const drawBullet = () => {
     renderEntity(bullet);
     lastTime = now;
     groundCtx = canvasModel.getGround().ctx;
-    clear(groundCtx);
-    drawGround(ground.getGround(), groundCtx);
+    // clear(groundCtx);
+    // drawGround(ground.getGround(), groundCtx);
 };
 
 const update = (dt) => {
@@ -93,6 +93,7 @@ const generateExplosion = (dt) => {
     for(let i = 1; i < originalPoints.length; i++) {
         groundPath.add(new paper.Point(originalPoints[i][0], originalPoints[i][1]))
     }
+
     // check if intersect the original points
     var intersect = bull.getIntersections(groundPath);
     if(intersect.length > 0 ) {
@@ -107,7 +108,7 @@ const generateExplosion = (dt) => {
         window.cancelAnimationFrame(requestAnimFrame);
 
         let calculatedGroundPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
-
+        
         ground.setGround(calculatedGroundPoints);
 
         groundCtx = canvasModel.getGround().ctx;
@@ -118,10 +119,6 @@ const generateExplosion = (dt) => {
     {
         bullet = null;
         window.cancelAnimationFrame(requestAnimFrame);
-
-        groundCtx = canvasModel.getGround().ctx;
-        clear(groundCtx);
-        drawGround(ground.getGround(), groundCtx);
     }
     else
     {
@@ -171,7 +168,8 @@ const renderEntity = (entity) => {
                 ctx.drawImage(bulletImg, x, y);
                 ctx.restore();
                 groundCtx = canvasModel.getGround().ctx;
-                drawGround(ground.getGround(), groundCtx);
+                // clear(groundCtx);
+                // drawGround(ground.getGround(), groundCtx);
             }
             else
             {

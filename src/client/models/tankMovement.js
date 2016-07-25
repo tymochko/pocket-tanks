@@ -99,7 +99,6 @@ module.exports.tankMove = (direction, tankImg, weaponImg, socketio) => {
     direct = direction;
     tankImage = tankImg;
     weaponImage = weaponImg;
-    let timePassed;
     animateStart(draw, 1500);
 };
 module.exports.draw = draw;

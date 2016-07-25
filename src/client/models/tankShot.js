@@ -32,7 +32,7 @@ module.exports.initGame = function ( backCanvas, backCtx, socket) {
 
 /* ====== initialization ======== */
 
-    paper.setup(backCanvas);
+    paper.setup(canvasModel.getBullet().canvas);
 
     power =  parseInt(getId('power').innerHTML);
     angle = parseInt(getId('angle').innerHTML);
