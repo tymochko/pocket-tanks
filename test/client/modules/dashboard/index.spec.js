@@ -21,7 +21,7 @@ describe("Testing dashboard", function () {
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    fit("calls api/users", inject(($http) => {
+    it("calls api/users", inject(($http) => {
         var $scope = {};
         $httpBackend.expectGET('api/users');
         var controller = $controller('DashboardCtrl', {
@@ -32,7 +32,7 @@ describe("Testing dashboard", function () {
         $httpBackend.flush();
     }));
 
-    fit("emits socket event", inject(($http) => {
+    it("emits socket event", inject(($http) => {
         var $scope = {};
         spyOn(fakeSocket, 'emit');
         var controller = $controller('DashboardCtrl', {
