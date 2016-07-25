@@ -16,7 +16,7 @@ export function calculateDamageArea(array, damageX, damageY) {
 
     const delta = (Math.PI / 12),
         // setting distanceBetweenDamageSegments static as a distance between points of damaged ground
-        distanceBetweenDamageSegments = 30;
+        distanceBetweenDamageSegments = 10;
 
     pointsToReplace = findDamageLimits(array, damageX, damageY, DAMAGERADIUS);
     
@@ -27,6 +27,7 @@ export function calculateDamageArea(array, damageX, damageY) {
     });
 
     for (let i = 1; i < pointsOfIntersect.length; i++) {
+
         if (i % 2) {
             x1 = pointsOfIntersect[i - 1][0];
             y1 = pointsOfIntersect[i - 1][1];
@@ -47,6 +48,7 @@ export function calculateDamageArea(array, damageX, damageY) {
                 pointOnCircle = rotateFixed(damageX, damageY, DAMAGERADIUS, theta);
 
                 distance = calculateDistance(pointOnCircle[0], pointOnCircle[1], x2, y2);
+                
             }
             while (distance > distanceBetweenDamageSegments);
 
