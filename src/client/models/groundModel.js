@@ -3,12 +3,10 @@ export let ground = {
     [800, 500],[0, 500],[0, 280]],
 
     getGround: function () {
-        console.log(this.groundPoints, 'this.groundPoints');
         return this.groundPoints;
     },
 
     setGround: function (newGroundPoints) {
         this.groundPoints = newGroundPoints;
-        console.log(this.groundPoints, 'this.groundPoints');
     }
 };

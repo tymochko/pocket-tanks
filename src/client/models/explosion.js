@@ -1,4 +1,5 @@
-import { radius } from './externalVariables';
+import { DAMAGERADIUS } from './externalVariables';
+import { canvasModel } from './canvasModel';
 
 var xSprite = 0;
 var sprite = new Image();
@@ -20,8 +21,8 @@ export function tick(crossPointX, crossPointY, tankCoordsX, tankCoordsY, ctx2){
     tankY = tankCoordsY;
     ctx = ctx2;
 
-    xExplosion = explosionX - radius;
-    yExplosion = explosionY - radius;
+    xExplosion = explosionX - DAMAGERADIUS;
+    yExplosion = explosionY - DAMAGERADIUS;
     animateExplosion();
 }
 
@@ -34,7 +35,7 @@ const animateExplosion = () => {
     } else {
         xSprite = 0;
         clear();
-        fillBackground();
+        fillBackground(canvasModel.getCtx().ctx);
         drawTank(tankX, tankY);
     }
 };
