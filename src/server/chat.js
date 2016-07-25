@@ -11,7 +11,7 @@ client.on('connection',function(socket){
 	var col = mongoose.connection.db.collection('messages');
 
 	(col.find().sort({$natural: -1 }).limit(messageLimit)).toArray(function(err,res){
-	    if(err) 
+	    if(err)
 	    	throw err;
 	    socket.emit('output',res);
 	});
@@ -43,10 +43,10 @@ client.on('connection', function(socket){
         client.emit('outputPos',{
         	x: data.posX,
         	y: data.posY,
-        	angle: data.angle,
         	power: data.power,
         	angleWeapon: data.angleWeapon,
-        	deltaT: data.deltaT
+        	deltaT: data.deltaT,
+			weaponAngle: weaponAngle
         });
 	}
 
@@ -55,9 +55,9 @@ client.on('connection', function(socket){
 		client.emit('initOutPosTank', {
 			x: data.tankX,
 			y: data.tankY,
-			angleWeapon: data.angleWeapon,
             tankImage: data.tankImage,
-            weaponImage: data.weaponImage
+            weaponImage: data.weaponImage,
+			weaponAngle: data.weaponAngle
 		});
 	});
 });
@@ -100,7 +100,7 @@ client.on('connection', function(socket) {
 					other.socket.emit('you-are-invited', {
                         target_user: data.target_user,
 						sender_user: info.user,
-						sender_username: info.username						
+						sender_username: info.username
 					});
 				}
 			});

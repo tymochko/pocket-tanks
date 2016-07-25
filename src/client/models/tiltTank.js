@@ -1,7 +1,7 @@
 import { ground } from './groundModel';
 let originalPoints = ground.getGround();
 
-module.exports.tiltTank = function(posX) {
+module.exports.tiltTank = (posX) => {
     let angle = 0;
     for(let i = originalPoints.length - 1; i > 0; i--) {
         if(originalPoints[i][0] >= posX && originalPoints[i-1][0] <= posX) {

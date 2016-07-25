@@ -29,7 +29,7 @@ let originalPoints,
 
 bulletImg.src='./public/images/bullet2.png';
 
-const makeShot = (ctx, backCanvas, backCtx, pattern, tankCoordX, tankCoordY, angleWeaponValue, socketIo) => {
+const makeShot = (ctx, backCanvas, backCtx, tankCoordX, tankCoordY, angleWeaponValue, socketIo) => {
     originalPoints = ground.getGround();
 
     socket = socketIo;
@@ -108,7 +108,7 @@ const generateExplosion = (dt) => {
         window.cancelAnimationFrame(requestAnimFrame);
 
         let calculatedGroundPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
-        
+
         ground.setGround(calculatedGroundPoints);
 
         groundCtx = canvasModel.getGround().ctx;

@@ -64,8 +64,7 @@ const animateStart = (draw, duration) => {
 const draw = (direction, timePassed, checkTank = true) => {
     let tankY,
         tankX = tank.getCoord().tankX,
-        tankAngle = tank.getWeaponAngle();
-        // angleWeapon = tank.getWeaponAngle();
+        weaponAngle = tank.getWeaponAngle();
     let ctx = canvasModel.getTank().ctx;
 
     if(direction == "right") {
@@ -76,23 +75,21 @@ const draw = (direction, timePassed, checkTank = true) => {
 
     if (checkTank) {
         tankY = findLinePoints(tankX);
-        tankAngle = -tiltTank(tankX);
 
         tank.setCoord(tankX, tankY);
-        tank.setWeaponAngle(tankAngle);
 
         socket.emit('inputPosTank', {
             posX: tankX,
             posY: tankY,
-            angleWeapon: tankAngle
+            weaponAngle: weaponAngle
         });
 
         clear(ctx);
-        drawTank(tankX, tankY, tankAngle, tankImage, weaponImage);
+        drawTank(tankX, tankY, tankImage, weaponImage, weaponAngle);
 
         socket.on('outputPosTank', function(data){
             clear(ctx);
-            return drawTank(data.x, data.y, data.angleWeapon, tankImage, weaponImage);
+            return drawTank(data.x, data.y, tankImage, weaponImage, weaponAngle);
         });
     }
     return tankX;

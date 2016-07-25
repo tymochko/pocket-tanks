@@ -13,21 +13,18 @@ import { drawSky } from './canvasRedrawModel';
 import { clear } from './externalFunctions';
 import { canvasModel } from './canvasModel';
 import { drawTank } from './drawTank';
-import { tiltTank } from './tiltTank';
 
 let originalPoints = ground.getGround();
 
 let tankX,
     tankY,
-    tankAngle,
-    angleWeapon,
+    weaponAngle,
     angle,
     power,
-    pattern,
     tankImage = new Image(),
     weaponImage = new Image();
 
-module.exports.initGame = function ( backCanvas, backCtx, socket) {
+module.exports.initGame = ( backCanvas, backCtx, socket) => {
 
     let tankCtx = canvasModel.getTank().ctx;
     let lastTimeTankMoved;
@@ -38,7 +35,6 @@ module.exports.initGame = function ( backCanvas, backCtx, socket) {
 
     power =  parseInt(getId('power').innerHTML);
     angle = parseInt(getId('angle').innerHTML);
-
 /* ====== Tank Weapon Movement ======== */
 
     let moveWeaponKeyDown = (evt) => {
@@ -47,8 +43,11 @@ module.exports.initGame = function ( backCanvas, backCtx, socket) {
                 if(angle >=  80) {return;}
                 angle +=5;
                 clear(tankCtx);
-                angleWeapon = angle*Math.PI/180;
-                drawTank(tankX, tankY, angleWeapon, tankImage, weaponImage);
+                weaponAngle = angle*Math.PI/180;
+                tankX = tank.getCoord().tankX;
+                tankY = tank.getCoord().tankY;
+                tank.setWeaponAngle(weaponAngle);
+                drawTank(tankX, tankY, tankImage, weaponImage, weaponAngle);
                 getId('angle').innerHTML = angle;
                 break;
 
@@ -56,8 +55,11 @@ module.exports.initGame = function ( backCanvas, backCtx, socket) {
                 if(angle <=  0) {return;}
                 angle -=5;
                 clear(tankCtx);
-                angleWeapon = angle*Math.PI/180;
-                drawTank(tankX, tankY, angleWeapon, tankImage, weaponImage);
+                weaponAngle = angle*Math.PI/180;
+                tankX = tank.getCoord().tankX;
+                tankY = tank.getCoord().tankY;
+                tank.setWeaponAngle(weaponAngle);
+                drawTank(tankX, tankY, tankImage, weaponImage, weaponAngle);
                 getId('angle').innerHTML = angle;
                 break;
         }
@@ -79,7 +81,7 @@ module.exports.initGame = function ( backCanvas, backCtx, socket) {
                     tankMove('right', tankImage, weaponImage, socket);
                     break;
                 case 13: /*ENTER*/
-                    makeShot(canvasModel.getBullet().ctx, backCanvas, backCtx, pattern, tank.getCoord().tankX, tank.getCoord().tankY, angleWeapon, socket);
+                    makeShot(canvasModel.getBullet().ctx, backCanvas, backCtx, tank.getCoord().tankX, tank.getCoord().tankY, tank.getTankAngle(), socket);
                 break;
 
             }
@@ -90,7 +92,7 @@ module.exports.initGame = function ( backCanvas, backCtx, socket) {
 
 /* ======   Navigation ======== */
 
-    navPanel(angle, tankX, tankY, angleWeapon);
+    navPanel(angle, tankX, tankY, weaponAngle);
 
     getId('chatBtn').onclick = showChatWindow;
 
@@ -103,16 +105,15 @@ module.exports.initGame = function ( backCanvas, backCtx, socket) {
 
         tankX = 179;
         tankY = findLinePoints(tankX);
-        tankAngle = -tiltTank(tankX);
+        weaponAngle = tank.getWeaponAngle();
 
         tank.setCoord(tankX, tankY);
-        tank.setWeaponAngle(tankAngle);
 
         lastTimeTankMoved = 0;
-        socket.emit('initPosTank', {'tankX':tankX, 'tankY':tankY, 'angleWeapon': tankAngle, 'tankImage': tankImage, 'weaponImage': weaponImage});
+        socket.emit('initPosTank', {'tankX':tankX, 'tankY':tankY, 'tankImage': tankImage, 'weaponImage': weaponImage, 'weaponAngle': weaponAngle});
         weaponImage.onload = function() {
             socket.on('initOutPosTank', function(data){
-                return drawTank(data.x, data.y, data.angleWeapon, tankImage, weaponImage);
+                return drawTank(data.x, data.y, tankImage, weaponImage, weaponAngle);
             });
         }
     })();

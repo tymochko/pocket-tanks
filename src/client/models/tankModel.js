@@ -1,7 +1,8 @@
 module.exports.tank = {
     tankX: 45,
     tankY: 45,
-    weaponAngle: 45,
+    tankAngle: 0,
+    weaponAngle: 0,
     vehicleWidth: 70,
     vehicleHeight: 30,
     weaponWidth: 35,
@@ -18,7 +19,15 @@ module.exports.tank = {
         this.tankX = x;
         this.tankY = y;
     },
-    
+
+    getTankAngle: function() {
+        return this.tankAngle;
+    },
+
+    setTankAngle: function(value) {
+        this.tankAngle = value;
+    },
+
     getWeaponAngle: function() {
         return this.weaponAngle;
     },
@@ -26,7 +35,7 @@ module.exports.tank = {
     setWeaponAngle: function(value) {
         this.weaponAngle = value;
     },
-    
+
     getVehicleWidth: function() {
         return this.vehicleWidth;
     },
@@ -34,7 +43,7 @@ module.exports.tank = {
     getVehicleHeight: function() {
         return this.vehicleHeight;
     },
-    
+
     getWeaponWidth: function() {
         return this.weaponWidth;
     },
