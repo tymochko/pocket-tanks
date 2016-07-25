@@ -16,7 +16,7 @@ export function calculateDamageArea(array, damageX, damageY) {
 
     const delta = (Math.PI / 12),
         // setting distanceBetweenDamageSegments static as a distance between points of damaged ground
-        distanceBetweenDamageSegments = 30;
+        distanceBetweenDamageSegments = 10;
 
     pointsToReplace = findDamageLimits(array, damageX, damageY, DAMAGERADIUS);
     
@@ -27,6 +27,7 @@ export function calculateDamageArea(array, damageX, damageY) {
     });
 
     for (let i = 1; i < pointsOfIntersect.length; i++) {
+
         if (i % 2) {
             x1 = pointsOfIntersect[i - 1][0];
             y1 = pointsOfIntersect[i - 1][1];
@@ -47,6 +48,7 @@ export function calculateDamageArea(array, damageX, damageY) {
                 pointOnCircle = rotateFixed(damageX, damageY, DAMAGERADIUS, theta);
 
                 distance = calculateDistance(pointOnCircle[0], pointOnCircle[1], x2, y2);
+                
             }
             while (distance > distanceBetweenDamageSegments);
 
@@ -217,7 +219,8 @@ const findLineSegmentCoefficient = (endpoint1X, endpoint1Y, endpoint2X, endpoint
     // find coefficient of point, situated on line segment
     let conditionX,
         conditionY,
-        conditionEqual;
+        conditionEqual,
+        conditionZero;
 
     const deltaX = (endpoint2X - endpoint1X);
     const deltaY = (endpoint2Y - endpoint1Y);
@@ -225,9 +228,14 @@ const findLineSegmentCoefficient = (endpoint1X, endpoint1Y, endpoint2X, endpoint
     const tX = Math.ceil( ( (damagePointX - endpoint1X) / deltaX ) * 10 ) / 10;
     const tY = Math.ceil( ( (damagePointY - endpoint1Y) / deltaY ) * 10 ) / 10;
 
-    conditionX = ( 0 < tX && tX <= 1);
-    conditionY = ( 0 < tY && tY <= 1);
+    conditionX = ( 0 < tX && tX <= 1 );
+    conditionY = ( 0 < tY && tY <= 1 );
     conditionEqual = (tX === tY);
+    conditionZero = ( (conditionX && deltaY === 0) || (deltaX === 0 && conditionY) );
+
+    if (conditionZero) {
+        return true;
+    }
 
     return (conditionX && conditionY && conditionEqual);
 };
@@ -289,16 +297,19 @@ const findSegmentOfPoint = (array, damageX, damageY) => {
                 const point1 = [array[i - 2][0], array[i - 2][1], (i - 2)];
                 const point2 = [x2, y2, i];
 
+                return [point1, point2];
+
             } else {
                 const point1 = [array[array.length - 1][0], array[array.length - 1][1], (array.length - 1)];
                 const point2 = [x2, y2, i];
-            }
 
-            return [point1, point2];
+                return [point1, point2];
+            }
         }
 
         if (x2 >= damageX) {
             ptCoeff = findLineSegmentCoefficient(x1, y1, x2, y2, damageX, damageY);
+
             if (ptCoeff) {
                 const point1 = [x1, y1, (i - 1)];
                 const point2 = [x2, y2, i];

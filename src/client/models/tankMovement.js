@@ -7,8 +7,6 @@ import { clear } from './externalFunctions';
 
 let originalPoints = ground.getGround();
 
-// const WIDTH = externalVariables.WIDTH;
-
 const findLinePoints = (posX) => {
     let arr = [];
 

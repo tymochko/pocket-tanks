@@ -28,7 +28,6 @@ module.exports = angular.module('tanks.game', [
 
         return function (msg) {
             gameData = msg;
-            console.log(gameData, 'gameData');
             
             $http({
                 method: 'GET',
