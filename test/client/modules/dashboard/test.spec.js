@@ -18,7 +18,7 @@ describe("Testing dashboard", function () {
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    fit("calls api/places", inject(($http) => {
+    it("calls api/places", inject(($http) => {
         var $scope = {};
         $httpBackend.expectGET('api/users');
         var controller = $controller('DashboardCtrl', { $scope: $scope, $http: $http });
