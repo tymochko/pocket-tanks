@@ -5,6 +5,7 @@ import { ground } from './groundModel';
 import { canvasModel } from './canvasModel';
 import { clear } from './externalFunctions';
 import { drawTank } from './drawTank';
+import { tiltTank } from './tiltTank';
 
 let originalPoints = ground.getGround();
 let tankImage, weaponImage;
@@ -63,7 +64,8 @@ const animateStart = (draw, duration) => {
 const draw = (direction, timePassed, checkTank = true) => {
     let tankY,
         tankX = tank.getCoord().tankX,
-        angleWeapon = tank.getWeaponAngle();
+        tankAngle = tank.getWeaponAngle();
+        // angleWeapon = tank.getWeaponAngle();
     let ctx = canvasModel.getTank().ctx;
 
     if(direction == "right") {
@@ -74,16 +76,19 @@ const draw = (direction, timePassed, checkTank = true) => {
 
     if (checkTank) {
         tankY = findLinePoints(tankX);
+        tankAngle = -tiltTank(tankX);
+
         tank.setCoord(tankX, tankY);
+        tank.setWeaponAngle(tankAngle);
 
         socket.emit('inputPosTank', {
             posX: tankX,
             posY: tankY,
-            angleWeapon: angleWeapon
+            angleWeapon: tankAngle
         });
 
         clear(ctx);
-        drawTank(tankX, tankY, angleWeapon, tankImage, weaponImage);
+        drawTank(tankX, tankY, tankAngle, tankImage, weaponImage);
 
         socket.on('outputPosTank', function(data){
             clear(ctx);

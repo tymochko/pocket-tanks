@@ -73,7 +73,7 @@ router.post('/logout', (req, res) => {
             res.status(401).send();
         } else {
             req.session.destroy();
-            res.status(204).send(foundUser);
+            res.status(200).json({'status': 'success'});
         }
     });
 });

@@ -13,11 +13,13 @@ import { drawSky } from './canvasRedrawModel';
 import { clear } from './externalFunctions';
 import { canvasModel } from './canvasModel';
 import { drawTank } from './drawTank';
+import { tiltTank } from './tiltTank';
 
 let originalPoints = ground.getGround();
 
 let tankX,
     tankY,
+    tankAngle,
     angleWeapon,
     angle,
     power,
@@ -63,30 +65,11 @@ module.exports.initGame = function ( backCanvas, backCtx, socket) {
 
     document.addEventListener('keydown',moveWeaponKeyDown,true);
 
-/* ====== Tank Tilt ======== */
-
-    var tiltTank = function(posX) {
-        let angle = 0;
-        for(let i = originalPoints.length - 1; i > 0; i--) {
-            if(originalPoints[i][0] >= posX && originalPoints[i-1][0] <= posX) {
-                var x1 = originalPoints[i-1][0],
-                x2 = originalPoints[i][0],
-                y1 = originalPoints[i-1][1],
-                y2 = originalPoints[i][1];
-            }
-        }
-        let tan = (y1 > y2) ? (y1 - y2) / (x1 - x2) : (y2 - y1) / (x2 - x1);
-
-        angle = Math.atan(tan);
-
-        return angle;
-    };
-
 /* ======  Tank movement ======== */
 
     const doKeyDown = (evt) => {
         let now = new Date().getTime();
-        
+
         if(now - lastTimeTankMoved > 1500) {
             switch (evt.keyCode) {
                 case 37:  /* Left arrow was pressed */
@@ -120,13 +103,13 @@ module.exports.initGame = function ( backCanvas, backCtx, socket) {
 
         tankX = 179;
         tankY = findLinePoints(tankX);
-        angleWeapon = tank.getWeaponAngle();
+        tankAngle = -tiltTank(tankX);
 
         tank.setCoord(tankX, tankY);
+        tank.setWeaponAngle(tankAngle);
 
         lastTimeTankMoved = 0;
-        angleWeapon = -tiltTank(tankX, tankY);
-        socket.emit('initPosTank', {'tankX':tankX, 'tankY':tankY, 'angleWeapon': angleWeapon, 'tankImage': tankImage, 'weaponImage': weaponImage});
+        socket.emit('initPosTank', {'tankX':tankX, 'tankY':tankY, 'angleWeapon': tankAngle, 'tankImage': tankImage, 'weaponImage': weaponImage});
         weaponImage.onload = function() {
             socket.on('initOutPosTank', function(data){
                 return drawTank(data.x, data.y, data.angleWeapon, tankImage, weaponImage);

@@ -33,4 +33,4 @@ function RouteConfig($routeProvider) {
         controller: 'DashboardCtrl',
         templateUrl: 'dashboard/dashboard.html'
     });
-};
+}

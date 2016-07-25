@@ -34,7 +34,7 @@ describe('LoginCtrl', function() {
 
 		beforeEach(inject((_$httpBackend_) => {
 	        $httpBackend = _$httpBackend_;
-	    }));        
+	    }));
 
         afterEach(() => {
 		     $httpBackend.verifyNoOutstandingExpectation();
@@ -46,15 +46,15 @@ describe('LoginCtrl', function() {
 	   		expect($scope.status).toBe(false);
 	   	});
 
-        it('$scope.status should be true', () => {
-        	controller = createController();
-            
-            $httpBackend.expectPOST('/api/users/login').respond(200, {});
-            sendLog.log(userInfo, $scope, $uibModalInstance, item);
-            $httpBackend.flush();
-
-            expect($scope.status).toBe(true);
-        });
+        // it('$scope.status should be true', () => {
+        // 	controller = createController();
+        //
+        //     $httpBackend.expectPOST('/api/users/login').respond(200, {});
+        //     sendLog.log(userInfo, $scope, $uibModalInstance, item);
+        //     $httpBackend.flush();
+        //
+        //     expect($scope.status).toBe(true);
+        // });
 
     });
 

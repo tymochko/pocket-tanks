@@ -50,7 +50,7 @@ gulp.task('lintJS', function () {
         .pipe(lint.format());
 });
 
-gulp.task('test',['js'], function (done) {
+gulp.task('test', ['js'], function (done) {
     new Server({
         configFile:__dirname + '/karma.conf.js',
         singleRun: true
