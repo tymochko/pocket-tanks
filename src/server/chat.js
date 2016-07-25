@@ -51,7 +51,6 @@ client.on('connection', function(socket){
 	}
 
 	socket.on('initPosTank', function(data){
-        console.log(data);
 		client.emit('initOutPosTank', {
 			x: data.tankX,
 			y: data.tankY,
