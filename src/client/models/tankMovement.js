@@ -60,16 +60,18 @@ const draw = (direction, timePassed, checkTank = true) => {
     } else {
         tankX--;
     }
-
     if (checkTank) {
         tankY = findLinePoints(tankX);
         clear();
         fillBackground();
         drawTank(tankX, tankY, angleWeapon);
     }
+
+    return tankX;
 };
 
 module.exports.findLinePoints = findLinePoints;
+module.exports.draw = draw;
 module.exports.tankMove = (direction) => {
     direct = direction;
     let timePassed;
