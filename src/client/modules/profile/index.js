@@ -16,6 +16,7 @@ module.exports = angular.module('tanks.profile', [
     .controller('AvatarController', AvatarController)
     .service('ProfileService', ProfileService)
     .directive('match', match)
+     .controller('AvatarController', AvatarController)
 
     .config(function ($routeProvider) {
         $routeProvider

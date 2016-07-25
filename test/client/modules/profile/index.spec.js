@@ -1,5 +1,5 @@
 describe("Profile page", () => {
-    let scope, ctrl, uibModal, profileService, toastr, location, userInfo;
+    let scope, ctrl, uibModal, ProfileService, toastr, location, userInfo;
     const testJson = {
         userName: "ingrid",
         userAge: 30,
@@ -10,7 +10,7 @@ describe("Profile page", () => {
     beforeEach(angular.mock.module("tanks.profile"));
 
     beforeEach(angular.mock.module(($provide) => {
-        $provide.value('profileService', {
+        $provide.value('ProfileService', {
             getProfile: () => {
                 return {
                     then: () => {
@@ -26,16 +26,16 @@ describe("Profile page", () => {
         })
     }));
 
-    beforeEach(inject(($controller, $httpBackend, $location, _profileService_) => {
+    beforeEach(inject(($controller, $httpBackend, $location, _ProfileService_) => {
         scope = {};
         uibModal = {};
         toastr = {};
         toastr.success = () => {};
 
-        profileService = _profileService_;
+        ProfileService = _ProfileService_;
         location = $location;
 
-        ctrl = $controller('manageProfileController', {$scope: scope, $uibModal: uibModal, profileService: profileService, toastr: toastr, $location: location
+        ctrl = $controller('ManageProfileController', {$scope: scope, $uibModal: uibModal, ProfileService: ProfileService, toastr: toastr, $location: location
         });
     }));
 
@@ -55,7 +55,7 @@ describe("Profile page", () => {
     });
 
     it("should fill up with data", () => {
-        scope.user = profileService.getProfile().then();
+        scope.user = ProfileService.getProfile().then();
 
         expect(scope.user.userName).toEqual('ingrid');
     });
@@ -63,7 +63,7 @@ describe("Profile page", () => {
     it("should pass data when saveChanges", () => {
         expect(userInfo).toBe(undefined);
 
-        scope.user = profileService.getProfile().then();
+        scope.user = ProfileService.getProfile().then();
         scope.saveChanges(scope.user);
 
         expect(userInfo.userName).toEqual('ingrid');
