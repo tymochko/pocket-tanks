@@ -1,11 +1,9 @@
-import gameService from './DataTravel';
 import { initGame } from '../../models/tankShot';
 import { initCanvas } from '../../models/initCanvas';
+import { canvasModel } from '../../models/canvasModel';
 
 export function transportData(gameService, socket) {
-    // gameService.getGameData(initGame());
-    // gameService.putGameData(126);
-    let canvasCont = initCanvas();
-    console.log(socket);
-    gameService(initGame(canvasCont.ctx, canvasCont.backCanvas, canvasCont.backCtx, socket));
+    initCanvas();
+    
+    gameService(initGame(canvasModel.getGround().canvas, canvasModel.getGround().ctx, socket));
 }

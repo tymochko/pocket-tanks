@@ -11,7 +11,7 @@ module.exports.tank = {
         return {
             tankX: this.tankX,
             tankY: this.tankY
-        }
+        };
     },
 
     setCoord: function(x, y) {

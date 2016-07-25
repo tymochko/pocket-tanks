@@ -1,3 +1,5 @@
+import { DAMAGERADIUS } from './externalVariables';
+
 export function calculateDamageArea(array, damageX, damageY) {
     let x1,
         y1,
@@ -14,10 +16,9 @@ export function calculateDamageArea(array, damageX, damageY) {
 
     const delta = (Math.PI / 12),
         // setting distanceBetweenDamageSegments static as a distance between points of damaged ground
-        distanceBetweenDamageSegments = 30,
-        damageRadius = 40;
+        distanceBetweenDamageSegments = 10;
 
-    pointsToReplace = findDamageLimits(array, damageX, damageY, damageRadius);
+    pointsToReplace = findDamageLimits(array, damageX, damageY, DAMAGERADIUS);
     
     pointsToReplace.map((item) => {
         if (item[2] === 'inDamage') {
@@ -26,6 +27,7 @@ export function calculateDamageArea(array, damageX, damageY) {
     });
 
     for (let i = 1; i < pointsOfIntersect.length; i++) {
+
         if (i % 2) {
             x1 = pointsOfIntersect[i - 1][0];
             y1 = pointsOfIntersect[i - 1][1];
@@ -43,9 +45,10 @@ export function calculateDamageArea(array, damageX, damageY) {
 
                 theta -= delta;
 
-                pointOnCircle = rotateFixed(damageX, damageY, damageRadius, theta);
+                pointOnCircle = rotateFixed(damageX, damageY, DAMAGERADIUS, theta);
 
                 distance = calculateDistance(pointOnCircle[0], pointOnCircle[1], x2, y2);
+                
             }
             while (distance > distanceBetweenDamageSegments);
 
@@ -76,7 +79,7 @@ export function calculateDamageArea(array, damageX, damageY) {
     return array;
 }
 
-const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
+const findOriginalPointsToReplace = (array, damageX, damageY, DAMAGERADIUS) => {
     let segmentPairPoints = [],
         distance,
         elementOfLast,
@@ -89,14 +92,14 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
     distanceFromDamageCenter1 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[0][0], pointsOfDamageCenterSegment[0][1]);
     distanceFromDamageCenter2 = calculateDistance(damageX, damageY, pointsOfDamageCenterSegment[1][0], pointsOfDamageCenterSegment[1][1]);
 
-    if (distanceFromDamageCenter1 >= damageRadius && damageRadius <= distanceFromDamageCenter2) {
+    if (distanceFromDamageCenter1 >= DAMAGERADIUS && DAMAGERADIUS <= distanceFromDamageCenter2) {
         segmentPairPoints.push(pointsOfDamageCenterSegment[0]);
         segmentPairPoints.push(pointsOfDamageCenterSegment[1]);
 
     } else {
         for (let i = 1; i < array.length; i++) {
             distance = calculateDistance(damageX, damageY, array[i][0], array[i][1]);
-            if (distance < damageRadius) {
+            if (distance < DAMAGERADIUS) {
                 segmentPairPoints.push([array[i - 1][0], array[i - 1][1], (i - 1)]);
                 segmentPairPoints.push([array[i][0], array[i][1], i]);
             }
@@ -131,7 +134,7 @@ const findOriginalPointsToReplace = (array, damageX, damageY, damageRadius) => {
     return segmentPairPoints;
 };
 
-const findDamageLimits = (array, damageX, damageY, damageRadius) => {
+const findDamageLimits = (array, damageX, damageY, DAMAGERADIUS) => {
     let pointsOnDamageLine = [],
         pointsToReplace = [],
         segmentPairPoints,
@@ -146,7 +149,7 @@ const findDamageLimits = (array, damageX, damageY, damageRadius) => {
         intersectPt2X,
         intersectPt2Y;
 
-    segmentPairPoints = findOriginalPointsToReplace(array, damageX, damageY, damageRadius);
+    segmentPairPoints = findOriginalPointsToReplace(array, damageX, damageY, DAMAGERADIUS);
 
     // populating array pointsToReplace with points of area which is going to be modified
     pointsToReplace.push(segmentPairPoints[0]);
@@ -156,7 +159,7 @@ const findDamageLimits = (array, damageX, damageY, damageRadius) => {
         xCurr = segmentPairPoints[i][0];
         yCurr = segmentPairPoints[i][1];
 
-        pointsOnDamageLine = findIntersectionCoordinates(xPrev, yPrev, xCurr, yCurr, damageX, damageY, damageRadius);
+        pointsOnDamageLine = findIntersectionCoordinates(xPrev, yPrev, xCurr, yCurr, damageX, damageY, DAMAGERADIUS);
         intersectPt1 = pointsOnDamageLine[0];
         intersectPt2 = pointsOnDamageLine[1];
         intersectPt1X = intersectPt1[0];
@@ -216,7 +219,8 @@ const findLineSegmentCoefficient = (endpoint1X, endpoint1Y, endpoint2X, endpoint
     // find coefficient of point, situated on line segment
     let conditionX,
         conditionY,
-        conditionEqual;
+        conditionEqual,
+        conditionZero;
 
     const deltaX = (endpoint2X - endpoint1X);
     const deltaY = (endpoint2Y - endpoint1Y);
@@ -224,9 +228,14 @@ const findLineSegmentCoefficient = (endpoint1X, endpoint1Y, endpoint2X, endpoint
     const tX = Math.ceil( ( (damagePointX - endpoint1X) / deltaX ) * 10 ) / 10;
     const tY = Math.ceil( ( (damagePointY - endpoint1Y) / deltaY ) * 10 ) / 10;
 
-    conditionX = ( 0 < tX && tX <= 1);
-    conditionY = ( 0 < tY && tY <= 1);
+    conditionX = ( 0 < tX && tX <= 1 );
+    conditionY = ( 0 < tY && tY <= 1 );
     conditionEqual = (tX === tY);
+    conditionZero = ( (conditionX && deltaY === 0) || (deltaX === 0 && conditionY) );
+
+    if (conditionZero) {
+        return true;
+    }
 
     return (conditionX && conditionY && conditionEqual);
 };
@@ -288,16 +297,19 @@ const findSegmentOfPoint = (array, damageX, damageY) => {
                 const point1 = [array[i - 2][0], array[i - 2][1], (i - 2)];
                 const point2 = [x2, y2, i];
 
+                return [point1, point2];
+
             } else {
                 const point1 = [array[array.length - 1][0], array[array.length - 1][1], (array.length - 1)];
                 const point2 = [x2, y2, i];
-            }
 
-            return [point1, point2];
+                return [point1, point2];
+            }
         }
 
         if (x2 >= damageX) {
             ptCoeff = findLineSegmentCoefficient(x1, y1, x2, y2, damageX, damageY);
+
             if (ptCoeff) {
                 const point1 = [x1, y1, (i - 1)];
                 const point2 = [x2, y2, i];

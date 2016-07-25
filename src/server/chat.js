@@ -51,10 +51,13 @@ client.on('connection', function(socket){
 	}
 
 	socket.on('initPosTank', function(data){
+        console.log(data);
 		client.emit('initOutPosTank', {
 			x: data.tankX,
 			y: data.tankY,
-			angleWeapon: data.angleWeapon
+			angleWeapon: data.angleWeapon,
+            tankImage: data.tankImage,
+            weaponImage: data.weaponImage
 		});
 	});
 });
@@ -70,6 +73,8 @@ client.on('connection', function(socket){
         	x: data.posX,
         	y: data.posY,
         	angleWeapon: data.angleWeapon,
+			tankImage: data.tankImage,
+			weaponImage: data.weaponImage
         });
 	}
 });

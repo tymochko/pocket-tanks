@@ -18,7 +18,18 @@
 //         $httpBackend.verifyNoOutstandingRequest();
 //     });
 
-
+/*
+<<<<<<< HEAD
+    it("calls api/places", inject(($http) => {
+        var $scope = {};
+        $httpBackend.expectGET('api/users');
+        var controller = $controller('DashboardCtrl', { $scope: $scope, $http: $http });
+        expect($scope.var1).toEqual(5);
+        $httpBackend.flush();
+    }));
+});
+=======
+>>>>>>> module_send_data
 //     fit("calls api/places", inject(($http) => {
 //         var $scope = {};
 //         $httpBackend.expectGET('api/users');
@@ -27,4 +38,9 @@
 //         $httpBackend.flush();
 //     }));
 // });
+<<<<<<< HEAD
+
+=======
+>>>>>>> second_tank
+*/
 

@@ -1,4 +1,4 @@
-import tankMovement from '/mnt/pocket-tanks/src/client/models/tankMovement';
+/*import tankMovement from '/mnt/pocket-tanks/src/client/models/tankMovement';
 import externalVariables from '/mnt/pocket-tanks/src/client/models/externalVariables';
 import { tank } from '/mnt/pocket-tanks/src/client/models/tankModel';
 
@@ -65,3 +65,4 @@ describe ("Test tank's movement", function () {
 	    });
 	});
 });
+*/

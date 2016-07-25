@@ -1,4 +1,4 @@
-import paper from 'paper';
+/*import paper from 'paper';
 
 describe ("Point analysis", function () {
 		let shotBullet,
@@ -50,3 +50,4 @@ describe ("Point analysis", function () {
 	        expect (intersect[0]._point.y).toEqual(intersectionPoint.y);
 	    });
 });
+*/
