@@ -26,14 +26,14 @@ export class ManageProfileController {
 
         $scope.selectedImg = "api/users/profile/getImage/userAvatar" + ($scope.getSalt)();
 
-        function savingMsg() {
+        function savingMsg () {
             toastr.success('Your changes are saved!', 'Message', {
                 closeButton: true,
                 closeHtml: '<button>&times;</button>'
             });
         }
 
-        function avatarMsg() {
+        function avatarMsg () {
             toastr.warning('Do not forget to save changes!!', 'Message', {
                 closeButton: true,
                 closeHtml: '<button>&times;</button>'
