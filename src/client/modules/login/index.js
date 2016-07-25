@@ -1,12 +1,13 @@
 import angular from 'angular';
 import ngRoute from 'angular-route';
+import { toastr } from 'angular-toastr';
 
 module.exports = angular.module('tanks.login', [
     ngRoute
 ])
 
-.service('sendLog',['$http', '$window',
-    function($http, $window){
+.service('sendLog',['$http', '$window', 'toastr',
+    function($http, $window, toastr){
 
         this.log = (userInfo, $scope, $uibModalInstance, item) => {
             
@@ -21,7 +22,10 @@ module.exports = angular.module('tanks.login', [
                     (response) => {
                         window.localStorage.user = null;
                         window.localStorage.username = null;
-                        alert('failed to login');
+                        toastr.warning('Failed to log in', 'Oops!', {
+		                    closeButton: true,
+		                    closeHtml: '<button>&times;</button>'
+		                })
                     });
         };
 }])
@@ -32,7 +36,6 @@ module.exports = angular.module('tanks.login', [
 
         $scope.minLengthName = 5;
         $scope.maxLengthName = 15;
-
         $scope.minLengthPass = 6;
         $scope.maxLengthPass = 12;
 
