@@ -1,4 +1,4 @@
-import angular from 'angular';
+import 'angular';
 import home from './home';
 import game from './game';
 import chat from './chat';
@@ -7,7 +7,7 @@ import signup from './signup';
 import profile from './profile';
 import dashboard from './dashboard';
 import navigation from './navigation';
-import service from './serviceSendData';
+import { gameService } from './game/DataTravel';
 
 module.exports = angular.module('tanks', [
     require('angular-route'),
@@ -23,33 +23,43 @@ module.exports = angular.module('tanks', [
     login.name,
     signup.name,
     profile.name,
-    navigation.name,
-    service.name
-]).config(RouteConfig)
-.factory('socket', ['$rootScope', function($rootScope) {
-    var socket = io.connect();
+    navigation.name
+])
+    .config(RouteConfig)
+	.factory('socket', () => {
+	    let socket = io.connect();
 
-  socket.on('connect', function() {
-    socket.emit('auth', {
-        user: window.localStorage.user,
-        username: window.localStorage.username
-    });
-  });
+		socket.on('connect', () => {
+			socket.emit('auth', {
+				user: window.localStorage.user,
+				username: window.localStorage.username
+			});
+		});
 
-  socket.on('you-are-invited', function(data) {
-      var result = confirm('Wanna play with ' + data.sender_username + '?');
-      // Send reply based on result!
-  });
+		socket.on('you-are-invited', (data) => {
+            console.log(data, 'data');
+			var result = confirm('Wanna play with ' + data.sender_username + '?');
+			
+            if (result) {
+                console.log(gameService, 'gameService');
+                console.log(gameService.getInitGameData, 'gameService.getInitGameData');
+                gameService.getInitGameData();
+            }
+		});
 
-  return {
-    on: function(eventName, callback){
-      socket.on(eventName, callback);
-    },
-    emit: function(eventName, data) {
-      socket.emit(eventName, data);
-    }
-  };
-}]);
+		return {
+			on: (eventName, callback) => {
+				socket.on(eventName, callback);
+			},
+			emit: (eventName, data) => {
+				socket.emit(eventName, data);
+			},
+			once: (eventName, data) => {
+				socket.once(eventName, data);
+			}
+		};
+	});
+
 
 
 RouteConfig.$inject = ['$routeProvider', '$locationProvider'];

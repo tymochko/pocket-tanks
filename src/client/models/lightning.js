@@ -1,4 +1,4 @@
-var drawLightning = function(x, y) {
+var drawLightning = function(x, y, ctx) {
     ctx.fillStyle = '#002';
     ctx.strokeStyle = '#FFF';
     ctx.imageSmoothingEnabled = true;

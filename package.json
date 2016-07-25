@@ -6,7 +6,7 @@
   "scripts": {
     "build": "gulp",
     "start": "node src/server/bin/www",
-    "test": "gulp test"
+    "test" : "gulp test"
   },
   "repository": {
     "type": "git",
