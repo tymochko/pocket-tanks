@@ -3,15 +3,12 @@ import { HEIGHT } from './externalVariables';
 import { WEAPONWIDTH } from './externalVariables';
 import { G } from './externalVariables';
 import paper from 'paper';
-import { findLinePoints } from './tankMovement';
 import { tick } from './explosion';
 import { calculateDamageArea } from './generateDamage';
 import { ground } from './groundModel';
 import { drawGround } from './canvasRedrawModel';
-import { drawSky } from './canvasRedrawModel'
 import { requestAnimFrame } from './externalFunctions';
 import { clear } from './externalFunctions';
-import { fillBackground } from './externalFunctions';
 import { canvasModel } from './canvasModel';
 
 let originalPoints,
@@ -22,27 +19,24 @@ let originalPoints,
     gameTime = 0,
     power = 50,
     angle = 60,
-    bulletImg = new Image();
-
-// let ctx = canvasModel.getCtx().ctx;
-
-bulletImg.src='./public/images/bullet2.png';
-var ctx2,
+    bulletImg = new Image(),
     tankX,
     tankY,
     angleWeapon,
-    newBackCtx, newBackCanvas, newPattern;
+    socket,
+    bulletCtx,
+    groundCtx;
 
-const makeShot = (ctx, backCanvas, backCtx, pattern, tankCoordX, tankCoordY, angleWeaponValue) => {
+bulletImg.src='./public/images/bullet2.png';
+
+const makeShot = (ctx, backCanvas, backCtx, pattern, tankCoordX, tankCoordY, angleWeaponValue, socketIo) => {
     originalPoints = ground.getGround();
 
-    ctx2 = ctx;
+    socket = socketIo;
     tankX = tankCoordX;
     tankY = tankCoordY;
     angleWeapon = angleWeaponValue;
-    newBackCanvas = backCanvas;
-    newBackCtx = backCtx;
-    newPattern = pattern;
+
     dt2=0;
     bullet = { pos: [tankX, tankY],
         imgInf: new ImgInf(bulletImg.src, [0,0], angle, power),
@@ -65,14 +59,14 @@ const drawBullet = () => {
 
     clear(ctx);
 
-    // fillBackground(ctx);
-    // drawTank(tankX, tankY);
-
     var now = Date.now();
     var dt = (now - lastTime) / 1000.0;
     update(dt);
     renderEntity(bullet);
     lastTime = now;
+    groundCtx = canvasModel.getGround().ctx;
+    // clear(groundCtx);
+    // drawGround(ground.getGround(), groundCtx);
 };
 
 const update = (dt) => {
@@ -81,11 +75,12 @@ const update = (dt) => {
 };
 
 const generateExplosion = (dt) => {
-    let bulletCtx = canvasModel.getBullet().ctx,
-        groundCtx = canvasModel.getGround().ctx;
+    bulletCtx = canvasModel.getBullet().ctx;
+    groundCtx = canvasModel.getGround().ctx;
 
     bullet.pos[0] = tankX + WEAPONWIDTH * Math.cos(angleWeapon + angle*Math.PI/180) + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180 + angleWeapon);
     bullet.pos[1] = tankY-30 - WEAPONWIDTH * Math.sin(angleWeapon + angle*Math.PI/180)- (bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180 + angleWeapon) - G * dt2 * dt2 / 2);
+
     dt2 += 4*dt;
     // creating path for bullet and originalPoints
     var bull = new paper.Path.Rectangle(bullet.pos[0],bullet.pos[1], 45, 7);
@@ -98,6 +93,7 @@ const generateExplosion = (dt) => {
     for(let i = 1; i < originalPoints.length; i++) {
         groundPath.add(new paper.Point(originalPoints[i][0], originalPoints[i][1]))
     }
+
     // check if intersect the original points
     var intersect = bull.getIntersections(groundPath);
     if(intersect.length > 0 ) {
@@ -107,38 +103,22 @@ const generateExplosion = (dt) => {
             x: intersect[0]._point.x,
             y: intersect[0]._point.y
         };
-        console.log( 'x:' +  crossPoint.x, 'y:' + crossPoint.y );
 
-        tick(crossPoint.x, crossPoint.y, tankX, tankY, canvasModel.getBullet().ctx);
+        tick(crossPoint.x, crossPoint.y, tankX, tankY);
         window.cancelAnimationFrame(requestAnimFrame);
 
         let calculatedGroundPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
-
+        
         ground.setGround(calculatedGroundPoints);
 
+        groundCtx = canvasModel.getGround().ctx;
         clear(groundCtx);
-        // drawSky(newBackCtx);
-        drawGround(ground.getGround(), canvasModel.getGround().ctx);
-
-        // newPattern = ctx2.createPattern(newBackCanvas, "no-repeat");
-
-        // fillBackground(ctx, newPattern);
-        // drawTank(tankX, tankY);
+        drawGround(ground.getGround(), groundCtx);
     }
     else if(bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT)
     {
         bullet = null;
         window.cancelAnimationFrame(requestAnimFrame);
-
-        clear(groundCtx);
-        // drawSky(newBackCtx);
-        drawGround(ground.getGround(), canvasModel.getGround().ctx);
-
-        // newPattern = ctx2.createPattern(newBackCanvas, "no-repeat");
-        tankY = findLinePoints(tankX);
-
-        // fillBackground(ctx, newPattern);
-        // drawTank(tankX, tankY);
     }
     else
     {
@@ -148,10 +128,18 @@ const generateExplosion = (dt) => {
 
 const renderEntity = (entity) => {
     if(entity){
-        ctx2.save();
-        ctx2.translate(entity.pos[0], entity.pos[1]);
-        entity.imgInf.render(ctx2, dt2);
-        ctx2.restore();
+        socket.emit('inputPos',{
+            posX: bullet.pos[0],
+            posY: bullet.pos[1],
+            angle: angle,
+            power: power,
+            angleWeapon: angleWeapon,
+            deltaT: dt2
+        });
+        entity.imgInf.render(canvasModel.getBullet().ctx, dt2);
+        socket.on('outputPos', function(data){
+            return entity.imgInf.render(canvasModel.getBullet().ctx, dt2, data);
+        });
     }
 };
 
@@ -166,16 +154,32 @@ const renderEntity = (entity) => {
 
     ImgInf.prototype = {
 
-        render: function(ctx, dt2) {
+        render: function(ctx, dt2, data) {
+            ctx.save();
             var x = this.pos[0];
             var y = this.pos[1];
-            ctx.translate(x,y);
-
-            var A=this.v0*Math.cos(this.angle*Math.PI/180 + angleWeapon);
-            this.currAngle=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180 + angleWeapon)-G*dt2)/A);
-            ctx.rotate(-this.currAngle);
-            ctx.drawImage(bulletImg,x, y);
-            ctx.restore();
+            if(data)
+            {
+                clear(ctx);
+                ctx.translate(data.x, data.y);
+                var A=data.power*Math.cos(data.angle*Math.PI/180 + data.angleWeapon);
+                this.currAngle=Math.atan(((data.power)*Math.sin(data.angle*Math.PI/180 + data.angleWeapon)- G * data.deltaT)/A);
+                ctx.rotate(-this.currAngle);
+                ctx.drawImage(bulletImg, x, y);
+                ctx.restore();
+                groundCtx = canvasModel.getGround().ctx;
+                // clear(groundCtx);
+                // drawGround(ground.getGround(), groundCtx);
+            }
+            else
+            {
+                ctx.translate(bullet.pos[0], bullet.pos[1]);
+                var A=this.v0*Math.cos(this.angle*Math.PI/180 + angleWeapon);
+                this.currAngle=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180 + angleWeapon)- G * dt2)/A);
+                ctx.rotate(-this.currAngle);
+                ctx.drawImage(bulletImg, x, y);
+                ctx.restore();
+            }
         }
     };
 

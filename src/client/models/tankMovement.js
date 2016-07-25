@@ -4,10 +4,11 @@ import { tank } from './tankModel';
 import { ground } from './groundModel';
 import { canvasModel } from './canvasModel';
 import { clear } from './externalFunctions';
-
+import { drawTank } from './drawTank';
 
 let originalPoints = ground.getGround();
 let tankImage, weaponImage;
+let socket;
 
 const findLinePoints = (posX) => {
     let arr = [];
@@ -74,19 +75,30 @@ const draw = (direction, timePassed, checkTank = true) => {
     if (checkTank) {
         tankY = findLinePoints(tankX);
         tank.setCoord(tankX, tankY);
+
+        socket.emit('inputPosTank', {
+            posX: tankX,
+            posY: tankY,
+            angleWeapon: angleWeapon
+        });
+
         clear(ctx);
-        // fillBackground(ctx);
         drawTank(tankX, tankY, angleWeapon, tankImage, weaponImage);
+
+        socket.on('outputPosTank', function(data){
+            clear(ctx);
+            return drawTank(data.x, data.y, data.angleWeapon, tankImage, weaponImage);
+        });
     }
     return tankX;
 };
 
 module.exports.findLinePoints = findLinePoints;
-module.exports.tankMove = (direction, tankImg, weaponImg) => {
+module.exports.tankMove = (direction, tankImg, weaponImg, socketio) => {
+    socket = socketio;
     direct = direction;
     tankImage = tankImg;
     weaponImage = weaponImg;
-    let timePassed;
     animateStart(draw, 1500);
 };
 module.exports.draw = draw;

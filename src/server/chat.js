@@ -1,11 +1,11 @@
 var io = require('socket.io');
-var express=require('express');
-var app=express();
-var client=io();
+var express = require('express');
+var app = express();
+var client = io();
 var mongoose = require('mongoose');
-const messageLimit=5;
+const messageLimit = 5;
 
-app.io=client;
+app.io = client;
 
 client.on('connection',function(socket){
 	var col = mongoose.connection.db.collection('messages');
@@ -34,8 +34,53 @@ client.on('connection',function(socket){
 	}
 
 });
+(function(){
+client.on('connection', function(socket){
+	socket.on('inputPos', insertData2);
 
-// <----------Vika`s part ------------>
+	function insertData2(data){
+
+        client.emit('outputPos',{
+        	x: data.posX,
+        	y: data.posY,
+        	angle: data.angle,
+        	power: data.power,
+        	angleWeapon: data.angleWeapon,
+        	deltaT: data.deltaT
+        });
+	}
+
+	socket.on('initPosTank', function(data){
+        console.log(data);
+		client.emit('initOutPosTank', {
+			x: data.tankX,
+			y: data.tankY,
+			angleWeapon: data.angleWeapon,
+            tankImage: data.tankImage,
+            weaponImage: data.weaponImage
+		});
+	});
+});
+}).call(this);
+
+(function(){
+client.on('connection', function(socket){
+	socket.on('inputPosTank', insertData2);
+
+	function insertData2(data){
+
+        client.emit('outputPosTank',{
+        	x: data.posX,
+        	y: data.posY,
+        	angleWeapon: data.angleWeapon,
+			tankImage: data.tankImage,
+			weaponImage: data.weaponImage
+        });
+	}
+});
+}).call(this);
+
+//<----------Vika`s part ------------>
 
 var connections = [];
 

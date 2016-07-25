@@ -17,6 +17,7 @@
 //         $httpBackend.verifyNoOutstandingExpectation();
 //         $httpBackend.verifyNoOutstandingRequest();
 //     });
+
 /*
 <<<<<<< HEAD
     it("calls api/places", inject(($http) => {
@@ -28,6 +29,7 @@
     }));
 });
 =======
+>>>>>>> module_send_data
 //     fit("calls api/places", inject(($http) => {
 //         var $scope = {};
 //         $httpBackend.expectGET('api/users');
@@ -36,5 +38,9 @@
 //         $httpBackend.flush();
 //     }));
 // });
+<<<<<<< HEAD
+
+=======
 >>>>>>> second_tank
 */
+

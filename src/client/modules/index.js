@@ -46,6 +46,9 @@ module.exports = angular.module('tanks', [
 			},
 			emit: (eventName, data) => {
 				socket.emit(eventName, data);
+			},
+			once: (eventName, data) => {
+				socket.once(eventName, data);
 			}
 		};
 	});
