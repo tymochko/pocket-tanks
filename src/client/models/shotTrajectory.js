@@ -168,8 +168,8 @@ const renderEntity = (entity) => {
                 ctx.drawImage(bulletImg, x, y);
                 ctx.restore();
                 groundCtx = canvasModel.getGround().ctx;
-                // clear(groundCtx);
-                // drawGround(ground.getGround(), groundCtx);
+                clear(groundCtx);
+                drawGround(ground.getGround(), groundCtx);
             }
             else
             {

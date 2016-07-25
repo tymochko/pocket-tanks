@@ -46,7 +46,7 @@ client.on('connection', function(socket){
         	power: data.power,
         	angleWeapon: data.angleWeapon,
         	deltaT: data.deltaT,
-			weaponAngle: weaponAngle
+			weaponAngle: data.weaponAngle
         });
 	}
 
