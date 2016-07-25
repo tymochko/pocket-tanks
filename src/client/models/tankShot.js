@@ -83,7 +83,7 @@ module.exports.initGame = function (ctx, backCanvas, backCtx) {
             ctx.restore();
     };
 
-    module.exports.moveWeaponKeyDown = (evt) => {
+    let moveWeaponKeyDown = (evt) => {
         switch (evt.keyCode) {
                 case 38:    //Up arrow was pressed /
                     if(angle >=  80) {return;}
