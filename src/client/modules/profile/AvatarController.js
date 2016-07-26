@@ -6,10 +6,7 @@ export class AvatarController {
         ProfileService.getPublicImages().then((res) => {
             $scope.images = res.data;
             $scope.setCurrentImage($scope.images[0]);
-        }).catch((err) => {
-            console.log(err);
         });
-
         $scope.setCurrentImage = (image) => {
             $scope.currentImage = image;
         };
