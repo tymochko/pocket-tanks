@@ -42,8 +42,7 @@ module.exports = angular.module('tanks', [
 			
             if (result) {
                 console.log(gameService, 'gameService');
-                console.log(gameService.getInitGameData, 'gameService.getInitGameData');
-                gameService.getInitGameData();
+                gameService(data);
             }
 		});
 

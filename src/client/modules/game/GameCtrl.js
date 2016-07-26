@@ -4,6 +4,8 @@ import { canvasModel } from '../../models/canvasModel';
 
 export function transportData(gameService, socket) {
     initCanvas();
-    
-    gameService(initGame(canvasModel.getGround().canvas, canvasModel.getGround().ctx, socket));
+
+    initGame(canvasModel.getGround().canvas, canvasModel.getGround().ctx, socket);
+
+    gameService(socket);
 }
