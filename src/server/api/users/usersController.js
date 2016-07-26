@@ -394,7 +394,6 @@ const getPublicImg = function (req, res) {
 
             var userId = req.session.user;
             const userDir = __dirname + '/../../static/usersInfo/' + userId + '/';
-            //todo async?
             var check = function () {
                 fsHelper.checkDir(userDir);
             }
