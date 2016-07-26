@@ -1,11 +1,11 @@
-/*import explosion from '/home/olga/Desktop/project/pocket-tanks/src/client/models/shotTrajectory';
-import externalVariables from '/home/olga/Desktop/project/pocket-tanks/src/client/models/externalVariables'; 
+import explosion from '/home/olga/Desktop/project/pocket-tanks/src/client/models/shotTrajectory';
+import externalVariables from '/home/olga/Desktop/project/pocket-tanks/src/client/models/externalVariables';
 import paper from 'paper';
 
 describe ("Test shot trajectory", function () {
 
 		let bullet, dt2,
-		    tankX, tankY, 
+		    tankX, tankY,
 		    angleWeapon, bulletImg;
 		    let canvas=document.createElement("canvas");
 
@@ -64,8 +64,8 @@ describe ("Test shot trajectory", function () {
 			bullet.bulletSpeed = 6;
 
 			explosion.generateExplosion(dt2, bullet, tankX, tankY, bullet.angle, bullet.angle, false);
-			
+
 			expect(bullet.pos[0]).toEqual(122.19750988234321);
 			expect(bullet.pos[1]).toEqual(1453.6957081894936);
- 	    }); 
-});*/
+ 	    });
+});

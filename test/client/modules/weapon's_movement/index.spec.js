@@ -1,4 +1,4 @@
-/*import moveWeapon from '/home/olga/Desktop/project/pocket-tanks/src/client/models/tankShot'; 
+import moveWeapon from '/home/olga/Desktop/project/pocket-tanks/src/client/models/tankShot';
 import externalVariables from '/home/olga/Desktop/project/pocket-tanks/src/client/models/externalVariables';
 describe ("Test weapon's movement", function () {
 
@@ -8,7 +8,7 @@ describe ("Test weapon's movement", function () {
 
 	})
 
-    
+
 
     fit ("Initial state of weapon", function(){
 
@@ -42,4 +42,4 @@ describe ("Test weapon's movement", function () {
     	expect(angle.toEqual(0));
 		expect(angleWeapon.toEqual(0));
     });
-});*/
+});

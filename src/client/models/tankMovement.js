@@ -72,7 +72,6 @@ const draw = (direction, timePassed, checkTank = true) => {
     } else {
         tankX--;
     }
-
     if (checkTank) {
         tankY = findLinePoints(tankX);
 
