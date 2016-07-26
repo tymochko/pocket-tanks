@@ -39,14 +39,15 @@ client.on('connection', function(socket){
 	socket.on('inputPos', insertData2);
 
 	function insertData2(data){
+		console.log(data);
 
         client.emit('outputPos',{
         	x: data.posX,
         	y: data.posY,
         	power: data.power,
-        	angleWeapon: data.angleWeapon,
-        	deltaT: data.deltaT,
-			weaponAngle: weaponAngle
+        	angleWeapon: data.angle,
+			tankAngle: data.tankAngle,
+        	deltaT: data.deltaT
         });
 	}
 
@@ -72,9 +73,9 @@ client.on('connection', function(socket){
         client.emit('outputPosTank',{
         	x: data.posX,
         	y: data.posY,
-        	angleWeapon: data.angleWeapon,
 			tankImage: data.tankImage,
-			weaponImage: data.weaponImage
+			weaponImage: data.weaponImage,
+			weaponAngle: data.weaponAngle
         });
 	}
 });

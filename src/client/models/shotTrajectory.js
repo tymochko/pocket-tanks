@@ -22,20 +22,20 @@ let originalPoints,
     bulletImg = new Image(),
     tankX,
     tankY,
-    angleWeapon,
+    tankAngle,
     socket,
     bulletCtx,
     groundCtx;
 
 bulletImg.src='./public/images/bullet2.png';
 
-const makeShot = (ctx, backCanvas, backCtx, tankCoordX, tankCoordY, angleWeaponValue, socketIo) => {
+const makeShot = (ctx, backCanvas, backCtx, tankCoordX, tankCoordY, tankangle, socketIo) => {
     originalPoints = ground.getGround();
 
     socket = socketIo;
     tankX = tankCoordX;
     tankY = tankCoordY;
-    angleWeapon = angleWeaponValue;
+    tankAngle = tankangle;
 
     dt2=0;
     bullet = { pos: [tankX, tankY],
@@ -78,8 +78,8 @@ const generateExplosion = (dt) => {
     bulletCtx = canvasModel.getBullet().ctx;
     groundCtx = canvasModel.getGround().ctx;
 
-    bullet.pos[0] = tankX + WEAPONWIDTH * Math.cos(angleWeapon + angle*Math.PI/180) + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180 + angleWeapon);
-    bullet.pos[1] = tankY-30 - WEAPONWIDTH * Math.sin(angleWeapon + angle*Math.PI/180)- (bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180 + angleWeapon) - G * dt2 * dt2 / 2);
+    bullet.pos[0] = tankX + WEAPONWIDTH * Math.cos(tankAngle + angle*Math.PI/180) + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180 + tankAngle);
+    bullet.pos[1] = tankY-30 - WEAPONWIDTH * Math.sin(tankAngle + angle*Math.PI/180)- (bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180 + tankAngle) - G * dt2 * dt2 / 2);
 
     dt2 += 4*dt;
     // creating path for bullet and originalPoints
@@ -131,9 +131,9 @@ const renderEntity = (entity) => {
         socket.emit('inputPos',{
             posX: bullet.pos[0],
             posY: bullet.pos[1],
-            angle: angle,
             power: power,
-            angleWeapon: angleWeapon,
+            angle: angle,
+            tankAngle: tankAngle,
             deltaT: dt2
         });
         entity.imgInf.render(canvasModel.getBullet().ctx, dt2);
@@ -162,8 +162,8 @@ const renderEntity = (entity) => {
             {
                 clear(ctx);
                 ctx.translate(data.x, data.y);
-                var A=data.power*Math.cos(data.angle*Math.PI/180 + data.angleWeapon);
-                this.currAngle=Math.atan(((data.power)*Math.sin(data.angle*Math.PI/180 + data.angleWeapon)- G * data.deltaT)/A);
+                var A=data.power*Math.cos(data.angle*Math.PI/180 + data.tankAngle);
+                this.currAngle=Math.atan(((data.power)*Math.sin(data.angle*Math.PI/180 + data.tankAngle)- G * data.deltaT)/A);
                 ctx.rotate(-this.currAngle);
                 ctx.drawImage(bulletImg, x, y);
                 ctx.restore();
@@ -174,8 +174,8 @@ const renderEntity = (entity) => {
             else
             {
                 ctx.translate(bullet.pos[0], bullet.pos[1]);
-                var A=this.v0*Math.cos(this.angle*Math.PI/180 + angleWeapon);
-                this.currAngle=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180 + angleWeapon)- G * dt2)/A);
+                var A=this.v0*Math.cos(this.angle*Math.PI/180 + tankAngle);
+                this.currAngle=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180 + tankAngle)- G * dt2)/A);
                 ctx.rotate(-this.currAngle);
                 ctx.drawImage(bulletImg, x, y);
                 ctx.restore();
