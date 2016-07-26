@@ -1,4 +1,4 @@
-/*import paper from 'paper';
+import paper from 'paper';
 
 describe ("Point analysis", function () {
 		let shotBullet,
@@ -42,12 +42,11 @@ describe ("Point analysis", function () {
 	    	intersect = bulletPath.getIntersections(groundPath);
         });
 
-	    fit ("should be equal X coord", function(){
+	    it ("should be equal X coord", function(){
 	        expect (intersect[0]._point.x).toEqual(intersectionPoint.x);
 	    });
 
-	    fit ("should be equal Y coord", function(){
+	    it ("should be equal Y coord", function(){
 	        expect (intersect[0]._point.y).toEqual(intersectionPoint.y);
 	    });
 });
-*/
