@@ -27,36 +27,8 @@ module.exports = angular.module('tanks', [
 ])
 
 .config(RouteConfig)
-.factory('socket', ['gameService', (gameService) => {
+.factory('socket', () => {
     let socket = io.connect();
-
-    socket.on('connect', () => {
-    	  socket.emit('auth', {
-    		    user: window.localStorage.user,
-    		    username: window.localStorage.username
-    	  });
-    });
-
-    socket.on('you-are-invited', function(data) {
-        var result = confirm('Wanna play with ' + data.sender_username + '?');
-        if (result == true) {
-            socket.emit('accepted', {invitor: data.sender_user});
-            window.location = "/game";
-            if (result) {
-                gameService.getInitGameData();
-            }
-        } else {
-            socket.emit('rejected', {invitor: data.sender_user});
-        }
-    });
-
-    socket.on('invite-accepted', function(data) {
-        alert('Your game is starting...');
-        window.location = "/game";
-    });
-    socket.on('invite-rejected', function(data) {
-        alert('Your invitation was rejected.');
-    });
 
     return {
     	  on: (eventName, callback) => {
@@ -69,8 +41,7 @@ module.exports = angular.module('tanks', [
           socket.once(eventName, data);
         }
     };
-}]);
-
+});
 
 RouteConfig.$inject = ['$routeProvider', '$locationProvider'];
 function RouteConfig($routeProvider, $locationProvider) {
