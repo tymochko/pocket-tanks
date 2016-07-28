@@ -2,12 +2,12 @@ import {AvatarController} from './AvatarController';
 import {DeleteUserController} from './DeleteUserController';
 import {ProfileService} from './ProfileService';
 export class ManageProfileController {
-    constructor($scope, $uibModal, ProfileService, toastr, $location) {
+    constructor($scope, $uibModal, ProfileService, toastr, $location , $translate) {
         $scope.emailStatus = true;
         $scope.nameMinLength = 5;
         $scope.nameMaxLength = 15;
         $scope.passMinLength = 6;
-        $scope.passMaxLength = 12;
+        $scope.passMaxLength = 15;
 
         $scope.user = {
             userName: "",
@@ -17,7 +17,8 @@ export class ManageProfileController {
             oldPassword: "",
             newPassword: "",
             confirmNewPassword: "",
-            userAge: ""
+            userAge: "",
+            userLanguage:""
         };
 
         $scope.getSalt = () => {
@@ -43,6 +44,7 @@ export class ManageProfileController {
         $scope.init = (() => {
             ProfileService.getProfile().then((resp) => {
                 $scope.user = resp.data;
+                $translate.use($scope.user.userLanguage);
             });
         })();
 
@@ -51,7 +53,8 @@ export class ManageProfileController {
                 userName: user.userName,
                 userAge: user.userAge,
                 userEmail: user.userEmail,
-                userImg: user.userImg
+                userImg: user.userImg,
+                userLanguage:user.userLanguage
             };
 
             if (user.oldPassword) {
@@ -96,6 +99,13 @@ export class ManageProfileController {
                 $scope.user.userImg = $scope.avatar;
                 $scope.selectedImg = img.image;
             })
+        }
+        $scope.changeLanguage =(key) => {
+
+            $translate.use(key);
+            $scope.user.userLanguage = key;
+            avatarMsg();
+
         }
     }
 }

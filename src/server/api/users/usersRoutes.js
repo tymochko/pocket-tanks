@@ -38,7 +38,8 @@ router.get('/profile', (req, res) => {
             const userInfoDTO = {
                 userName: foundUser.userName,
                 userAge: foundUser.userAge,
-                userEmail: foundUser.userEmail
+                userEmail: foundUser.userEmail,
+                userLanguage:foundUser.userLanguage
             };
             res.send(userInfoDTO);
         }
@@ -101,6 +102,7 @@ router.post('/add', (req, res) => {
     newUser.userPassword = req.body.userPassword;
     newUser.isOnline = false;
     newUser.isEnabled = true;
+    newUser.userLanguage = 'ukr';
 
     usersCollection.createUser(newUser, function (err, user) {
         if (err) {

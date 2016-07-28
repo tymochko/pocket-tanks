@@ -6,8 +6,9 @@ import {ProfileService} from './ProfileService';
 import angular from 'angular';
 import ngRoute from 'angular-route';
 
+
 module.exports = angular.module('tanks.profile', [
-    ngRoute
+    ngRoute,'pascalprecht.translate'
 ])
     .controller('ManageProfileController', ManageProfileController)
     .controller('UploadController', UploadController)
