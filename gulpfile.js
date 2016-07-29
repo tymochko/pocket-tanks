@@ -4,15 +4,19 @@ const sass = require('gulp-sass');
 const babel = require('gulp-babel');
 const buffer = require('vinyl-buffer');
 const rename = require('gulp-rename');
+const fs = require('fs');
 const inject = require('gulp-inject');
 const concat = require('gulp-concat');
 const source = require('vinyl-source-stream');
 const babelify = require('babelify');
 const sourcemaps = require('gulp-sourcemaps');
+const reporter = require('eslint-html-reporter');
 const browserify = require('browserify');
 const templateCache = require('gulp-angular-templatecache');
 const lint = require('gulp-eslint');
 const Server = require('karma').Server;
+
+
 
 const pathDist = 'public/';
 const pathClient = 'src/client/';
@@ -44,10 +48,12 @@ gulp.task('template', () => {
         .pipe(gulp.dest(pathDist));
 });
 
-gulp.task('lintJS', function () {
+gulp.task('lintJS', () => {
     return gulp.src( './src/client/**/*.js')
         .pipe(lint({config: 'eslint.config.json'}))
-        .pipe(lint.format());
+        .pipe(lint.format(reporter, (results) => {
+            fs.writeFileSync(path.join(__dirname, 'ESLint-result.html'), results);
+        }))
 });
 
 gulp.task('test', ['js'], function (done) {
