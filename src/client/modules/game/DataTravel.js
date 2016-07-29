@@ -1,39 +1,18 @@
-export function gameService ($http) {
-    let gameData = {};
-
-    // const getInitGameData = (data) => {
-    //     return $http.post('api/users/startGame', data);
-    // };
-
-
+export function gameService (socket) {
+    
     return {
-        getInitGameData: function (msg) {
-            gameData = msg;
-
-            console.log(gameData, 'gameData');
-            return $http({
-                method: 'POST',
-                url: 'api/users/startGame'
-            }, msg).then(function successCallback(response) {
-                console.log(response.data, 'response.data');
-                console.log('success');
-                // this callback will be called asynchronously
-                // when the response is available
-            }, function errorCallback(response) {
-                console.log(response.data, 'response.data');
-                console.log('error');
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
+        
+        getGameData: function (usersData) {
+            socket.emit('set game data', {
+                Player1: usersData.this_user,
+                Player2: usersData.other_user
             });
         },
 
-        getGameData: function (msg) {
-            gameData = msg;
-            console.log(gameData, 'gameData');
-        },
-
-        putGameData: function (paramX) {
-            return initGame(paramX);
+        putGameData: function () {
+            socket.on('put game data', (data) => {
+                return data;
+            });
         }
     }
-};
+}

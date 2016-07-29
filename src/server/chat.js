@@ -98,9 +98,9 @@ client.on('connection', function(socket) {
 			connections.forEach(function(other) {
 				if (other.user == data.target_user) {
 					other.socket.emit('you-are-invited', {
-                        target_user: data.target_user,
 						sender_user: info.user,
-						sender_username: info.username
+						sender_username: info.username,
+                        target_user: data.target_user
 					});
 				}
 			});
@@ -109,7 +109,8 @@ client.on('connection', function(socket) {
 			connections.forEach(function(other) {
 				if (other.user == data.invitor) {
 					other.socket.emit('invite-accepted', {
-						other_user: info.user
+						other_user: info.user,
+                        this_user: data.invitor
 					});
 				}
 			});
@@ -124,6 +125,15 @@ client.on('connection', function(socket) {
 			});
 		});
 	});
+});
+
+client.on('connection', function(socket) {
+    socket.on('set game data', (data) => {
+        console.log(data, 'data on my service on backend');
+        socket.emit('put game data', {
+            data: data
+        });
+    })
 });
 
 module.exports = app;

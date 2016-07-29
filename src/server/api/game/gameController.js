@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 var gameInfo = new Schema({
     // idGame: {type: Number, required: true, unique: true},
     player1: {type: Object},
-    player2:{type:Object},
-    originalPoints:{type : Array }
+    player2: {type:Object},
+    originalPoints: {type : Array }
 
 
 });

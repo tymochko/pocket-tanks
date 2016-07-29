@@ -9,7 +9,7 @@ module.exports = angular.module('tanks.game', [
 ])
     .controller('gameCtrl', ['gameService', 'socket', transportData])
     .config(RouteConfig)
-    .factory('gameService', ['$http', gameService]);
+    .factory('gameService', ['socket', gameService]);
 
 RouteConfig.$inject = ['$routeProvider'];
 function RouteConfig($routeProvider) {
