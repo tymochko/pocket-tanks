@@ -5,7 +5,7 @@ export class DeleteUserController {
             $uibModalInstance.close();
         };
         $scope.cancel = () => {
-            $uibModalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss("cancel");
         };
     }
 }

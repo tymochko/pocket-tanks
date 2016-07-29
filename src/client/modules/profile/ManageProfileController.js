@@ -1,8 +1,7 @@
-import {AvatarController} from './AvatarController';
-import {DeleteUserController} from './DeleteUserController';
-import {ProfileService} from './ProfileService';
+import {AvatarController} from "./AvatarController";
+import {DeleteUserController} from "./DeleteUserController";
 export class ManageProfileController {
-    constructor($scope, $uibModal, ProfileService, toastr, $location , $translate) {
+    constructor($scope, $uibModal, ProfileService, toastr, $location, $translate) {
         $scope.emailStatus = true;
         $scope.nameMinLength = 5;
         $scope.nameMaxLength = 15;
@@ -27,17 +26,17 @@ export class ManageProfileController {
 
         $scope.selectedImg = "api/users/profile/getImage/userAvatar" + ($scope.getSalt)();
 
-        function savingMsg () {
-            toastr.success('Your changes are saved!', 'Message', {
+        function savingMsg() {
+            toastr.success("Your changes are saved!", "Message", {
                 closeButton: true,
-                closeHtml: '<button>&times;</button>'
+                closeHtml: "<button>&times;</button>"
             });
         }
 
-        function avatarMsg () {
-            toastr.warning('Do not forget to save changes!!', 'Message', {
+        function avatarMsg() {
+            toastr.warning("Do not forget to save changes!!", "Message", {
                 closeButton: true,
-                closeHtml: '<button>&times;</button>'
+                closeHtml: "<button>&times;</button>"
             });
         }
 
@@ -49,7 +48,7 @@ export class ManageProfileController {
         })();
 
         $scope.saveChanges = (user) => {
-            let userInfo = {
+            const userInfo = {
                 userName: user.userName,
                 userAge: user.userAge,
                 userEmail: user.userEmail,
@@ -72,13 +71,13 @@ export class ManageProfileController {
 
             const deleteInstance = $uibModal.open({
                 animation: true,
-                templateUrl: 'profile/DeleteContent.html',
+                templateUrl: "profile/DeleteContent.html",
                 controller: DeleteUserController
             });
             deleteInstance.result.then(() => {
                 ProfileService.deleteAccount();
                 $scope.logOutClick($scope.user._id);
-                $location.path('/');
+                $location.path("/");
             });
         };
 // change avatar Popup window
@@ -90,7 +89,7 @@ export class ManageProfileController {
 
             const changeInstance = $uibModal.open({
                 animation: true,
-                templateUrl: 'profile/avatarContent.html',
+                templateUrl: "profile/avatarContent.html",
                 controller: AvatarController
             });
             changeInstance.result.then((img) => {
@@ -98,14 +97,13 @@ export class ManageProfileController {
                 $scope.avatar = img;
                 $scope.user.userImg = $scope.avatar;
                 $scope.selectedImg = img.image;
-            })
+            });
         }
         $scope.changeLanguage =(key) => {
 
             $translate.use(key);
             $scope.user.userLanguage = key;
             avatarMsg();
-
-        }
+        };
     }
 }

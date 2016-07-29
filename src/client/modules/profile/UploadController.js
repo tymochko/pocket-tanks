@@ -8,14 +8,14 @@ export class UploadController {
         };
         $scope.upload = (file) => {
             Upload.upload({
-                url: 'api/users/profile/upload',
-                data: {file: file}
+                url: "api/users/profile/upload",
+                data: {file}
             }).then((resp) => {
                 $uibModalInstance.close(resp.data);
             });
         };
         $scope.cancel = () => {
-            $uibModalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss("cancel");
         };
 
     }

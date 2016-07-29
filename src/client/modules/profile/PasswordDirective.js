@@ -1,10 +1,10 @@
-import angular from 'angular';
-export function match ($parse) {
+import angular from "angular";
+export function match($parse) {
     return {
-        require: '?ngModel',
-        restrict: 'A',
+        require: "?ngModel",
+        restrict: "A",
         link: (scope, elem, attrs, ctrl) => {
-            if(!ctrl || !attrs.match) {
+            if (!ctrl || !attrs.match) {
                 return;
             }
 
@@ -27,7 +27,7 @@ export function match ($parse) {
 
             function getMatchValue(){
                 let match = matchGetter(scope);
-                if(angular.isObject(match) && match.hasOwnProperty('$viewValue')){
+                if (angular.isObject(match) && match.hasOwnProperty("$viewValue")) {
                     match = match.$viewValue;
                 }
                 return match;

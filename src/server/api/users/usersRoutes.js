@@ -102,7 +102,7 @@ router.post('/add', (req, res) => {
     newUser.userPassword = req.body.userPassword;
     newUser.isOnline = false;
     newUser.isEnabled = true;
-    newUser.userLanguage = 'ukr';
+    newUser.userLanguage = 'eng';
 
     usersCollection.createUser(newUser, function (err, user) {
         if (err) {
