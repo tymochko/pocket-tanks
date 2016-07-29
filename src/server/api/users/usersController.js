@@ -24,7 +24,8 @@ var userSchema = new Schema({
     userAge: {type: Number, required: true},
     userImg: {type: Object},
     isOnline: {type: Boolean},
-    isEnabled: {type: Boolean}
+    isEnabled: {type: Boolean},
+    userLanguage: {type:String}
 });
 
 module.exports = mongoose.model('User', userSchema);
@@ -202,9 +203,11 @@ const updateUser = function (id, updatedData, callback) {
                 User.update({
                         userName: foundUser.userName,
                         userAge: foundUser.userAge,
-                        userImg: foundUser.userImg
+                        userImg: foundUser.userImg,
+                        userLanguage: foundUser.userLanguage
                     }, {
                         userName: updatedData.userName,
+                        userLanguage: updatedData.userLanguage,
                         userAge: updatedData.userAge,
                         userImg: (!updatedData.userImg || !updatedData.userImg.image) ? foundUser.userImg : updatedData.userImg
                     },
@@ -226,11 +229,13 @@ const updateUser = function (id, updatedData, callback) {
                     userPassword: foundUser.userPassword,
                     userName: foundUser.userName,
                     userAge: foundUser.userAge,
+                    userLanguage: foundUser.userLanguage,
                     userImg: foundUser.userImg
                 }, {
                     userPassword: updatedData.userConfPassword,
                     userName: updatedData.userName,
                     userAge: updatedData.userAge,
+                    userLanguage: updatedData.userLanguage,
                     userImg: updatedData.userImg
                 },
 

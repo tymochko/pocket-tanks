@@ -43,6 +43,8 @@ dist
 public/
 src/server/static/usersInfo/
 test/units.html
+ESLint-result.html
+
 
 
 # Merge tool backup files
