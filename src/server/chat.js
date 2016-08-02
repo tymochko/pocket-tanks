@@ -107,17 +107,20 @@ client.on('connection', function(socket) {
 		});
 		socket.on('accepted', (data) => {
 			connections.forEach(function(other) {
-				if (other.user == data.invitor) {
+				if (other.user === data.invitor) {
+                    socket.emit('fetch-users-ids', {
+                        player1: info.user,
+                        player2: data.invitor
+                    });
 					other.socket.emit('invite-accepted', {
-						other_user: info.user,
-                        this_user: data.invitor
+						other_user: info.user
 					});
 				}
 			});
 		});
 		socket.on('rejected', (data) => {
 			connections.forEach(function(other) {
-				if (other.user == data.invitor) {
+				if (other.user === data.invitor) {
 					other.socket.emit('invite-rejected', {
 						other_user: info.user
 					});
@@ -125,15 +128,6 @@ client.on('connection', function(socket) {
 			});
 		});
 	});
-});
-
-client.on('connection', function(socket) {
-    socket.on('set game data', (data) => {
-        console.log(data, 'data on my service on backend');
-        socket.emit('put game data', {
-            data: data
-        });
-    })
 });
 
 module.exports = app;

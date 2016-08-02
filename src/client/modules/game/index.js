@@ -7,9 +7,9 @@ module.exports = angular.module('tanks.game', [
     ngRoute,
     'tanks.chat'
 ])
-    .controller('gameCtrl', ['gameService', 'socket', transportData])
-    .config(RouteConfig)
-    .factory('gameService', ['socket', gameService]);
+    .controller('gameCtrl', ['socket', transportData])
+    .config(RouteConfig);
+    // .factory('gameService', ['socket', gameService]);
 
 RouteConfig.$inject = ['$routeProvider'];
 function RouteConfig($routeProvider) {

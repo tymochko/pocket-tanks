@@ -1,10 +1,7 @@
-export class Game {
-    constructor (idGame, Player1, Player2, originalPoints) {
-        this.idGame = idGame;
-        this.Player1 = Player1;
-        this.Player2 = Player2;
-        this.originalPoints = originalPoints;
-        this.gameComplete = false;
-    }
-    
+export function game(Player1, Player2) {
+    const player1 = Player1;
+    const player2 = Player2;
+
+    console.log(player1, 'player1');
+    return player1;
 }

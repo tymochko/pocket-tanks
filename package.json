@@ -65,6 +65,7 @@
     "consolidate": "^0.14.1",
     "eslint": "^3.1.1",
     "eslint-html-reporter": "^0.5.2",
+    "eslint-plugin-extra-rules": "^0.6.1",
     "gulp": "^3.9.1",
     "gulp-angular-templatecache": "^2.0.0",
     "gulp-babel": "^6.1.2",
