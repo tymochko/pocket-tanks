@@ -196,12 +196,13 @@ router.get('/profile/publicImages', (req, res) => {
 
 //Don't touch with hands
 router.post('/startGame', (req, res) => {
-    console.log(req.data, 'req.data');
+    console.log(req.body, 'req.body');
     //req.data.sender_user = user._id;
     //req.data.sender_username = user.userName;
     // start data at start
     var data = {
             player1: {
+                player1Id: req.body.player1,
                 tankX: 150,
                 tankY: 200,
                 bulletX: 0,
@@ -212,6 +213,7 @@ router.post('/startGame', (req, res) => {
                 weaponAngle: 0.34
             },
             player2: {
+                player2Id: req.body.player2,
                 tankX: 450,
                 tankY: 400,
                 bulletX: 0,

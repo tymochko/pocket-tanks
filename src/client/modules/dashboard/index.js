@@ -1,11 +1,12 @@
 import angular from 'angular';
 import ngRoute from 'angular-route';
-import { gameService } from '../game/DataTravel';
+import { gameService } from '../game/gameService';
+import { game } from '../../models/gameModel';
 
 module.exports = angular.module('tanks.dashboard', [
     ngRoute
 ])
-.controller('DashboardCtrl', ['$scope', '$http', 'socket', function($scope, $http, socket) {
+.controller('DashboardCtrl', ['$scope', '$http', 'socket', '$q', function($scope, $http, socket, $q) {
     $http.get('api/users').then(function(response){
         var users = response.data.users,
             id = response.data.sessionId;
@@ -42,7 +43,6 @@ module.exports = angular.module('tanks.dashboard', [
     });
 
     socket.on('invite-accepted', function(data) {
-        console.log(gameService.users, 'gameService.users 11111111');
         // alert('Your game is starting...');
         // window.location = "/game";
     });
@@ -51,7 +51,12 @@ module.exports = angular.module('tanks.dashboard', [
         alert('Your invitation was rejected.');
     });
 
-    gameService.fetchUsersIds(socket);
+    gameService(socket, $q).then((usersIds) => {
+        $http.post('/api/users/startGame', usersIds)
+            .then((res) => {
+                console.log(res, 'res');
+            });
+    });
 }])
 .config(RouteConfig);
 
