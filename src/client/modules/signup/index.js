@@ -19,4 +19,3 @@ function RouteConfig($routeProvider) {
     	templateUrl: 'signup/signup.html'
 	});
 };
-

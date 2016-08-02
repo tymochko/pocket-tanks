@@ -7,6 +7,7 @@ import signup from './signup';
 import profile from './profile';
 import dashboard from './dashboard';
 import navigation from './navigation';
+import scores from './scores';
 import { gameService } from './game/DataTravel';
 
 module.exports = angular.module('tanks', [
@@ -23,7 +24,8 @@ module.exports = angular.module('tanks', [
     login.name,
     signup.name,
     profile.name,
-    navigation.name
+    navigation.name,
+    scores.name
 ])
 
 .config(RouteConfig)
