@@ -32,30 +32,34 @@ module.exports = angular.module('tanks.dashboard', [
     });
 
     socket.on('you-are-invited', function(data) {
-        var result = confirm('Wanna play with ' + data.sender_username + '?');
+        const result = confirm('Wanna play with ' + data.sender_username + '?');
         if (result === true) {
             socket.emit('accepted', {invitor: data.sender_user, invited: data.target_user});
-            // window.location = "/game";
+            // window.location = "/game?id=" + gameId;
 
         } else {
             socket.emit('rejected', {invitor: data.sender_user});
         }
     });
 
-    socket.on('invite-accepted', function(data) {
-        // alert('Your game is starting...');
-        // window.location = "/game";
+    // socket.on('invite-accepted', function(data) {
+    //     console.log('accepted');
+    //     // alert('Your game is starting...');
+    //     // window.location = `/api/users/game`;
+    // });
+
+    socket.on('game-created', function(foundGame) {
+        console.log(foundGame, 'foundGame');
+        // window.location = `/game?id=${foundGame._id}`;
     });
 
     socket.on('invite-rejected', function(data) {
         alert('Your invitation was rejected.');
     });
 
-    gameService(socket, $q).then((usersIds) => {
-        $http.post('/api/users/startGame', usersIds)
-            .then((res) => {
-                console.log(res, 'res');
-            });
+    gameService().getUsersIds(socket, $q).then((usersIds) => {
+        console.log(usersIds, 'usersIds');
+        socket.emit('start-game', usersIds);
     });
 }])
 .config(RouteConfig);

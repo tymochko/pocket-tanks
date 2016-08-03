@@ -126,7 +126,6 @@
         "prefer-template": [2],
         "object-shorthand": [2],
         "no-this-before-super": [2],
-        "no-duplicate-imports": [2],
-        "extra-rules/no-commented-out-code": [1]
+        "no-duplicate-imports": [2]
     }
 }

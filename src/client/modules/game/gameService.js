@@ -1,9 +1,13 @@
-export function gameService(socket, $q) {
-    const deferred = $q.defer();
+export function gameService() {
 
-    socket.once('fetch-users-ids', (usersIds) => {
-        deferred.resolve(usersIds);
-    });
+    return {
+        getUsersIds(socket, $q) {
+            const deferred = $q.defer();
 
-    return deferred.promise;
+            socket.once('fetch-users-ids', (usersIds) => {
+                deferred.resolve(usersIds);
+            });
+            return deferred.promise;
+        }
+    };
 }

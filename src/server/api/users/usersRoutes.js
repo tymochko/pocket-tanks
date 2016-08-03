@@ -6,7 +6,7 @@ const path = require('path');
 const usersCollection = require('./usersController');
 const fsHelper = require('../libs/fsHelper');
 const multer = require('multer');
-const gameData = require('../game/gameController');
+const GameData = require('../game/gameController');
 
 const userScopeName = 'userAvatar';
 const publicScopeName = 'public';
@@ -195,55 +195,65 @@ router.get('/profile/publicImages', (req, res) => {
 });
 
 //Don't touch with hands
-router.post('/startGame', (req, res) => {
-    console.log(req.body, 'req.body');
-    //req.data.sender_user = user._id;
-    //req.data.sender_username = user.userName;
-    // start data at start
-    var data = {
-            player1: {
-                player1Id: req.body.player1,
-                tankX: 150,
-                tankY: 200,
-                bulletX: 0,
-                bulletY: 0,
-                weaponX: 100,
-                weaponY: 100,
-                angle: 0.17,
-                weaponAngle: 0.34
-            },
-            player2: {
-                player2Id: req.body.player2,
-                tankX: 450,
-                tankY: 400,
-                bulletX: 0,
-                bulletY: 0,
-                weaponX: 300,
-                weaponY: 300,
-                angle: 0.17,
-                weaponAngle: 0.34
-            },
-            originalPoints: [
-                [0, 280], [200, 350], [350, 150], [500, 250], [700, 150], [800, 250], [800, 500], [0, 500], [0, 280]
-            ]
-        };
+// router.post('/startGame', (req, res) => {
+//     //req.data.sender_user = user._id;
+//     //req.data.sender_username = user.userName;
+//     // start data at start
+//     var data = {
+//             player1: {
+//                 player1Id: req.body.player1,
+//                 tankX: 150,
+//                 tankY: 200,
+//                 bulletX: 0,
+//                 bulletY: 0,
+//                 weaponX: 100,
+//                 weaponY: 100,
+//                 angle: 0.17,
+//                 weaponAngle: 0.34
+//             },
+//             player2: {
+//                 player2Id: req.body.player2,
+//                 tankX: 450,
+//                 tankY: 400,
+//                 bulletX: 0,
+//                 bulletY: 0,
+//                 weaponX: 300,
+//                 weaponY: 300,
+//                 angle: 0.17,
+//                 weaponAngle: 0.34
+//             },
+//             originalPoints: [
+//                 [0, 280], [200, 350], [350, 150], [500, 250], [700, 150], [800, 250], [800, 500], [0, 500], [0, 280]
+//             ]
+//         };
+//
+//     var newGame = new GameData();
+//     newGame.player1 = data.player1;
+//     newGame.player2 = data.player2;
+//
+//     newGame.originalPoints = data.originalPoints;
+//
+//     GameData.createGame(newGame, function (err, game) {
+//         if (err) {
+//             console.log(err);
+//             res.status(400).send();
+//
+//         }
+//         else {
+//             res.status(200).send(game);
+//         }
+//     });
+// });
 
-    var newGame = new gameData();
-    newGame.player1 = data.player1;
-    newGame.player2 = data.player2;
+// get gameId when on game page
+router.get('/game', (req, res) => {
+    console.log(req.body, 'req.body on GET');
+});
 
-    newGame.originalPoints = data.originalPoints;
-
-    gameData.createGame(newGame, function (err, game) {
-        if (err) {
-            console.log(err);
-            res.status(400).send();
-
-        }
-        else {
-            res.status(200).send(game);
-        }
-    });
+// Redirect to game page, post gameId
+router.post('/game', (req, res) => {
+    console.log(req.body, 'req.body on POST');
+    return res.send(req.body);
 });
 
 module.exports = router;
