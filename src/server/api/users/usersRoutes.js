@@ -245,15 +245,4 @@ router.get('/profile/publicImages', (req, res) => {
 //     });
 // });
 
-// get gameId when on game page
-router.get('/game', (req, res) => {
-    console.log(req.body, 'req.body on GET');
-});
-
-// Redirect to game page, post gameId
-router.post('/game', (req, res) => {
-    console.log(req.body, 'req.body on POST');
-    return res.send(req.body);
-});
-
 module.exports = router;

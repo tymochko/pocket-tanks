@@ -8,6 +8,18 @@ export function gameService() {
                 deferred.resolve(usersIds);
             });
             return deferred.promise;
+        },
+
+        getInitGameData(socket, $q, gameId) {
+            socket.emit('enter-with-gameId', gameId);
+
+            const deferred = $q.defer();
+            
+            socket.on('get-game-data', (gameData) => {
+                deferred.resolve(gameData);
+            });
+            
+            return deferred.promise;
         }
     };
 }

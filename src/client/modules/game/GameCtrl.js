@@ -2,8 +2,9 @@ import { initGame } from '../../models/tankShot';
 import { initCanvas } from '../../models/initCanvas';
 import { canvasModel } from '../../models/canvasModel';
 
-export function transportData(socket, $http) {
-    console.log('HELLO');
+export function transportData(socket, $q) {
+    const localUrl = window.location.href;
+
     function getParameterByName(name, url) {
         if (!url) url = window.location.href;
         name = name.replace(/[\[\]]/g, "\\$&");
@@ -13,10 +14,12 @@ export function transportData(socket, $http) {
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
-    
-    // getParameterByName(id, );
-    
-    $http.get('/api/users/game?id');
+
+    const gameId = getParameterByName('id', localUrl);
+    gameService().getInitGameData(socket, $q, gameId)
+        .then((gameData) => {
+            console.log(gameData, 'gameData inside GameCtrl');
+        });
 
     initCanvas();
     initGame(socket);

@@ -7,12 +7,13 @@ module.exports = angular.module('tanks.dashboard', [
     ngRoute
 ])
 .controller('DashboardCtrl', ['$scope', '$http', 'socket', '$q', function($scope, $http, socket, $q) {
+    let senderId;
     $http.get('api/users').then(function(response){
-        var users = response.data.users,
-            id = response.data.sessionId;
+        var users = response.data.users;
+        senderId = response.data.sessionId;
 
         users.forEach(function(value, index) {
-            if (value._id == id) {
+            if (value._id == senderId) {
                 delete users[index];
             }
         });
@@ -21,7 +22,7 @@ module.exports = angular.module('tanks.dashboard', [
 
     $scope.sendInvite = function(id){
         console.log('Invite sent');
-        socket.emit('invite', { target_user: id });
+        socket.emit('invite', { sender_user: senderId, target_user: id });
     };
 
     socket.on('connect', () => {
@@ -35,22 +36,20 @@ module.exports = angular.module('tanks.dashboard', [
         const result = confirm('Wanna play with ' + data.sender_username + '?');
         if (result === true) {
             socket.emit('accepted', {invitor: data.sender_user, invited: data.target_user});
-            // window.location = "/game?id=" + gameId;
 
         } else {
             socket.emit('rejected', {invitor: data.sender_user});
         }
     });
 
-    // socket.on('invite-accepted', function(data) {
-    //     console.log('accepted');
-    //     // alert('Your game is starting...');
-    //     // window.location = `/api/users/game`;
-    // });
+    socket.on('game-create-player2', function(foundGame) {
 
-    socket.on('game-created', function(foundGame) {
-        console.log(foundGame, 'foundGame');
-        // window.location = `/game?id=${foundGame._id}`;
+        window.location = `/game?id=${foundGame.gameId}`;
+    });
+
+    socket.on('game-create-player1', function(foundGame) {
+
+        window.location = `/game?id=${foundGame.gameId}`;
     });
 
     socket.on('invite-rejected', function(data) {
@@ -58,8 +57,7 @@ module.exports = angular.module('tanks.dashboard', [
     });
 
     gameService().getUsersIds(socket, $q).then((usersIds) => {
-        console.log(usersIds, 'usersIds');
-        socket.emit('start-game', usersIds);
+        socket.emit('create-game', usersIds);
     });
 }])
 .config(RouteConfig);
