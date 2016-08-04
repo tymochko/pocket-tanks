@@ -48,7 +48,7 @@ gulp.task('template', () => {
         .pipe(gulp.dest(pathDist));
 });
 
-gulp.task('lintJS', () => {
+gulp.task('lint', () => {
     return gulp.src( './src/client/**/*.js')
         .pipe(lint({config: 'eslint.config.json'}))
         .pipe(lint.format(reporter, (results) => {

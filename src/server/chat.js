@@ -4,6 +4,7 @@ var app = express();
 var client = io();
 var mongoose = require('mongoose');
 const messageLimit = 5;
+const GameData = require('../server/api/game/gameController');
 
 app.io = client;
 
@@ -107,33 +108,70 @@ client.on('connection', function(socket) {
 		});
 		socket.on('accepted', (data) => {
 			connections.forEach(function(other) {
-				if (other.user == data.invitor) {
-					other.socket.emit('invite-accepted', {
-						other_user: info.user,
-                        this_user: data.invitor
-					});
+				if (other.user === data.invitor) {
+                    socket.emit('fetch-users-ids', {
+                        player1: info.user,
+                        player2: data.invitor
+                    });
+					// other.socket.emit('invite-accepted', {
+					// 	other_user: info.user
+					// });
 				}
 			});
 		});
 		socket.on('rejected', (data) => {
 			connections.forEach(function(other) {
-				if (other.user == data.invitor) {
+				if (other.user === data.invitor) {
 					other.socket.emit('invite-rejected', {
 						other_user: info.user
 					});
 				}
 			});
 		});
-	});
-});
 
-client.on('connection', function(socket) {
-    socket.on('set game data', (data) => {
-        console.log(data, 'data on my service on backend');
-        socket.emit('put game data', {
-            data: data
+        socket.on('start-game', (usersIds) => {
+            const initGameData = {
+                player1: {
+                    player1Id: usersIds.player1,
+                    tankX: 150,
+                    tankY: 200,
+                    bulletX: 0,
+                    bulletY: 0,
+                    weaponX: 100,
+                    weaponY: 100,
+                    angle: 0.17,
+                    weaponAngle: 0.34
+                },
+                player2: {
+                    player2Id: usersIds.player2,
+                    tankX: 450,
+                    tankY: 400,
+                    bulletX: 0,
+                    bulletY: 0,
+                    weaponX: 300,
+                    weaponY: 300,
+                    angle: 0.17,
+                    weaponAngle: 0.34
+                },
+                originalPoints: [
+                    [0, 280], [200, 350], [350, 150], [500, 250], [700, 150], [800, 250], [800, 500], [0, 500], [0, 280]
+                ]
+            };
+
+            const newGame = new GameData();
+            newGame.player1 = initGameData.player1;
+            newGame.player2 = initGameData.player2;
+            newGame.originalPoints = data.originalPoints;
+
+            GameData.createGame(newGame, function(err, game) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    socket.emit('game-created', game);
+                }
+            });
         });
-    })
+	});
 });
 
 module.exports = app;

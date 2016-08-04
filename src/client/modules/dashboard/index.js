@@ -1,11 +1,12 @@
 import angular from 'angular';
 import ngRoute from 'angular-route';
-import { gameService } from '../game/DataTravel';
+import { gameService } from '../game/gameService';
+import { game } from '../../models/gameModel';
 
 module.exports = angular.module('tanks.dashboard', [
     ngRoute
 ])
-.controller('DashboardCtrl', ['$scope', '$http', 'socket', 'gameService', function($scope, $http, socket, gameService) {
+.controller('DashboardCtrl', ['$scope', '$http', 'socket', '$q', function($scope, $http, socket, $q) {
     $http.get('api/users').then(function(response){
         var users = response.data.users,
             id = response.data.sessionId;
@@ -31,26 +32,35 @@ module.exports = angular.module('tanks.dashboard', [
     });
 
     socket.on('you-are-invited', function(data) {
-        var result = confirm('Wanna play with ' + data.sender_username + '?');
+        const result = confirm('Wanna play with ' + data.sender_username + '?');
         if (result === true) {
             socket.emit('accepted', {invitor: data.sender_user, invited: data.target_user});
-            window.location = "/game";
+            // window.location = "/game?id=" + gameId;
 
         } else {
             socket.emit('rejected', {invitor: data.sender_user});
         }
     });
 
-    socket.on('invite-accepted', function(data) {
-        gameService.getGameData(data);
-        alert('Your game is starting...');
-        window.location = "/game";
+    // socket.on('invite-accepted', function(data) {
+    //     console.log('accepted');
+    //     // alert('Your game is starting...');
+    //     // window.location = `/api/users/game`;
+    // });
+
+    socket.on('game-created', function(foundGame) {
+        console.log(foundGame, 'foundGame');
+        // window.location = `/game?id=${foundGame._id}`;
     });
 
     socket.on('invite-rejected', function(data) {
         alert('Your invitation was rejected.');
     });
 
+    gameService().getUsersIds(socket, $q).then((usersIds) => {
+        console.log(usersIds, 'usersIds');
+        socket.emit('start-game', usersIds);
+    });
 }])
 .config(RouteConfig);
 

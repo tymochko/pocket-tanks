@@ -22,7 +22,6 @@ module.exports = angular.module('tanks.navigation', [
                         }
                     }
                 });
-                console.log(modalInstance.result);
                 modalInstance.result.then((selectedItem) => {
                     $scope.selected = selectedItem;
                 });

@@ -13,6 +13,7 @@ import { drawSky } from './canvasRedrawModel';
 import { clear } from './externalFunctions';
 import { canvasModel } from './canvasModel';
 import { drawTank } from './drawTank';
+import { Game } from './gameModel';
 
 const originalPoints = ground.getGround();
 const tank = new Tank();
