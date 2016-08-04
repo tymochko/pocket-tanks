@@ -1,6 +1,7 @@
 import { initGame } from '../../models/tankShot';
 import { initCanvas } from '../../models/initCanvas';
 import { canvasModel } from '../../models/canvasModel';
+import {gameService} from './gameService';
 
 export function transportData(socket, $q) {
     const localUrl = window.location.href;
