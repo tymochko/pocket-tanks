@@ -16,8 +16,7 @@ export function navPanel(tank, angle, weaponAngle) {
     getId('fire').onclick = () => {
         makeShot(
             canvasModel.getBullet().ctx,
-            canvasModel.getGround().canvas,
-            canvasModel.getGround().ctx,
+            tank,
             tank.getCoord().tankX,
             tank.getCoord().tankY,
             tank.getWeaponAngle(),

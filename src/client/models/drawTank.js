@@ -2,8 +2,6 @@ import { canvasModel } from './canvasModel';
 import { TANK_HEIGHT, TANK_WIDTH, WEAPON_HEIGHT, WEAPON_WIDTH } from './externalVariables';
 import { tiltTank } from './tiltTank';
 
-console.log('Tank class test:\n' + TANK_HEIGHT + ' ' + WEAPON_HEIGHT);
-
 const moveWeapon = (xCoordinate, yCoordinate, tankAngle, tankCtx, weaponImage, weaponAngle) => {
     tankCtx.save();
     tankCtx.translate(xCoordinate, yCoordinate - WEAPON_HEIGHT);
@@ -21,7 +19,7 @@ const drawTankFn = () => {
         tank.setTankAngle(tankAngle);
 
         tankCtx.save();
-        tankCtx.translate(xCoordinate, yCoordinate-WEAPON_HEIGHT);
+        tankCtx.translate(xCoordinate, yCoordinate - WEAPON_HEIGHT);
         tankCtx.rotate(-tankAngle);
         tankCtx.drawImage(tankImage, -TANK_WIDTH/2 - WEAPON_WIDTH/3, -TANK_HEIGHT/2 + WEAPON_HEIGHT/2,
         TANK_WIDTH, TANK_HEIGHT);

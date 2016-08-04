@@ -19,5 +19,5 @@ export function transportData(socket, $http) {
     $http.get('/api/users/game?id');
 
     initCanvas();
-    initGame(canvasModel.getGround().canvas, canvasModel.getGround().ctx, socket);
+    initGame(socket);
 }

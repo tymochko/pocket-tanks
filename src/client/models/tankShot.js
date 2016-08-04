@@ -2,15 +2,12 @@
 import paper from 'paper';
 import { ground } from './groundModel';
 import showChatWindow from './chatField';
-import { findLinePoints } from './tankMovement';
-import { tankMove } from './tankMovement';
+import { findLinePoints, tankMove } from './tankMovement';
 import { navPanel } from './navPanel';
 import { makeShot } from './shotTrajectory';
-import { getId } from './externalFunctions';
+import { getId, clear } from './externalFunctions';
 import { Tank } from './tankModel';
-import { drawGround } from './canvasRedrawModel';
-import { drawSky } from './canvasRedrawModel';
-import { clear } from './externalFunctions';
+import { drawGround, drawSky } from './canvasRedrawModel';
 import { canvasModel } from './canvasModel';
 import { drawTank } from './drawTank';
 import { Game } from './gameModel';
@@ -26,23 +23,23 @@ let tankX,
     tankImage = new Image(),
     weaponImage = new Image();
 
-module.exports.initGame = (backCanvas, backCtx, socket) => {
+module.exports.initGame = (socket) => {
 
     let tankCtx = canvasModel.getTank().ctx;
     let lastTimeTankMoved;
 
 /* ====== initialization ======== */
 
-    paper.setup(canvasModel.getBullet().canvas);
+    paper.setup(canvasModel.getLightning().canvas);
 
     power = parseInt(getId('power').innerHTML);
     angle = parseInt(getId('angle').innerHTML);
 /* ====== Tank Weapon Movement ======== */
 
-    let moveWeaponKeyDown = (evt) => {
+    const moveWeaponKeyDown = (evt) => {
         switch (evt.keyCode) {
             case 38:    //Up arrow was pressed /
-                if(angle >= 80) {
+                if (angle >= 80) {
                     return;
                 }
                 angle +=5;
@@ -54,7 +51,7 @@ module.exports.initGame = (backCanvas, backCtx, socket) => {
                 break;
 
             case 40:   //Down arrow was pressed /
-                if(angle <= 0) {
+                if (angle <= 0) {
                     return;
                 }
                 angle -=5;
@@ -74,7 +71,7 @@ module.exports.initGame = (backCanvas, backCtx, socket) => {
     const doKeyDown = (evt) => {
         let now = new Date().getTime();
 
-        if(now - lastTimeTankMoved > 1500) {
+        if (now - lastTimeTankMoved > 1500) {
             switch (evt.keyCode) {
                 case 37:  /* Left arrow was pressed */
                     tankMove('left', tank, tankImage, weaponImage, socket);
@@ -85,8 +82,7 @@ module.exports.initGame = (backCanvas, backCtx, socket) => {
                 case 13: /*ENTER*/
                     makeShot(
                         canvasModel.getBullet().ctx,
-                        backCanvas,
-                        backCtx,
+                        tank,
                         tank.getCoord().tankX,
                         tank.getCoord().tankY,
                         tank.getTankAngle(),
@@ -112,25 +108,18 @@ module.exports.initGame = (backCanvas, backCtx, socket) => {
 
         drawSky(canvasModel.getSky().ctx);
         drawGround(originalPoints, canvasModel.getGround().ctx);
+        drawGround(originalPoints, canvasModel.getLightning().ctx);
 
-        tankX = 179;
+        tankX = Math.floor((Math.random() * 330) + 30);
         tankY = findLinePoints(tankX);
         weaponAngle = tank.getWeaponAngle();
 
         tank.setCoord(tankX, tankY);
 
         lastTimeTankMoved = 0;
-        socket.emit('initPosTank',
-            {
-                'tankX': tankX,
-                'tankY': tankY,
-                'tankImage': tankImage,
-                'weaponImage': weaponImage,
-                'weaponAngle': weaponAngle
-            }
-        );
+        socket.emit('initPosTank', { tankX, tankY, tankImage, weaponImage, weaponAngle });
 
-        weaponImage.onload = function() {
+        weaponImage.onload = () => {
             socket.on('initOutPosTank', (data) => {
                 return drawTank(tank, data.x, data.y, tankImage, weaponImage, weaponAngle);
             });

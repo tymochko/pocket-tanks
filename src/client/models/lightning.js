@@ -1,5 +1,3 @@
-import { clear } from './externalFunctions';
-
 export function drawLightning(x, y, ctx) {
     ctx.fillStyle = '#002';
     ctx.strokeStyle = '#FFF';

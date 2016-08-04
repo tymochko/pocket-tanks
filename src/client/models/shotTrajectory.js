@@ -1,14 +1,10 @@
-import { WIDTH } from './externalVariables';
-import { HEIGHT } from './externalVariables';
-import { WEAPONWIDTH } from './externalVariables';
-import { G } from './externalVariables';
+import { WIDTH, HEIGHT, WEAPON_WIDTH, G } from './externalVariables';
 import paper from 'paper';
 import { tick } from './explosion';
 import { calculateDamageArea } from './generateDamage';
 import { ground } from './groundModel';
 import { drawGround } from './canvasRedrawModel';
-import { requestAnimFrame } from './externalFunctions';
-import { clear } from './externalFunctions';
+import { requestAnimFrame, clear } from './externalFunctions';
 import { canvasModel } from './canvasModel';
 
 let originalPoints,
@@ -18,26 +14,26 @@ let originalPoints,
     lastFire = Date.now(),
     gameTime = 0,
     power = 50,
-    angle = 60,
+    angle,
     bulletImg = new Image(),
     tankX,
     tankY,
     tankAngle,
     socket,
     bulletCtx,
-    groundCtx;
+    groundCtx,
+    lightningCtx;
 
 bulletImg.src='./public/images/bullet2.png';
 
-const makeShot = (ctx, backCanvas, backCtx, tankCoordX, tankCoordY, tankangle, socketIo) => {
+const makeShot = (ctx, tank, tankCoordX, tankCoordY, tankangle, socketIo) => {
     originalPoints = ground.getGround();
 
+    angle = tank.getWeaponAngle();
     socket = socketIo;
     tankX = tankCoordX;
     tankY = tankCoordY;
     tankAngle = tankangle;
-
-    console.log('tank position: ' + tankX + ' ' + tankY);
 
     dt2=0;
     bullet = { pos: [tankX, tankY],
@@ -57,7 +53,7 @@ const shotStart = () => {
 };
 
 const drawBullet = () => {
-    let ctx = canvasModel.getBullet().ctx;
+    const ctx = canvasModel.getBullet().ctx;
 
     clear(ctx);
 
@@ -66,7 +62,7 @@ const drawBullet = () => {
     update(dt);
     renderEntity(bullet);
     lastTime = now;
-    groundCtx = canvasModel.getGround().ctx;
+    // groundCtx = canvasModel.getGround().ctx;
     // clear(groundCtx);
     // drawGround(ground.getGround(), groundCtx);
 };
@@ -80,15 +76,15 @@ const generateExplosion = (dt) => {
     bulletCtx = canvasModel.getBullet().ctx;
     groundCtx = canvasModel.getGround().ctx;
 
-    bullet.pos[0] = tankX + WEAPONWIDTH * Math.cos(tankAngle + angle*Math.PI/180) + bullet.bulletSpeed * dt2*Math.cos(bullet.angle*Math.PI/180 + tankAngle);
-    bullet.pos[1] = tankY-30 - WEAPONWIDTH * Math.sin(tankAngle + angle*Math.PI/180)- (bullet.bulletSpeed * dt2*Math.sin(bullet.angle*Math.PI/180 + tankAngle) - G * dt2 * dt2 / 2);
+    bullet.pos[0] = tankX + WEAPON_WIDTH * Math.cos(tankAngle + angle) + bullet.bulletSpeed * dt2*Math.cos(bullet.angle + tankAngle);
+    bullet.pos[1] = tankY-30 - WEAPON_WIDTH * Math.sin(tankAngle + angle)- (bullet.bulletSpeed * dt2*Math.sin(bullet.angle + tankAngle) - G * dt2 * dt2 / 2);
 
     dt2 += 4*dt;
     // creating path for bullet and originalPoints
     var bull = new paper.Path.Rectangle(bullet.pos[0], bullet.pos[1], 45, 7);
     //check angle for accuracy of point
-    bull.rotate(-bullet.imgInf.currAngle);
-
+    // bull.rotate(-bullet.imgInf.currAngle);
+    
     var groundPath = new paper.Path(
         new paper.Point(originalPoints[0][0], originalPoints[0][1])
         );
@@ -114,8 +110,13 @@ const generateExplosion = (dt) => {
         ground.setGround(calculatedGroundPoints);
 
         groundCtx = canvasModel.getGround().ctx;
+        lightningCtx = canvasModel.getLightning().ctx;
+
         clear(groundCtx);
         drawGround(ground.getGround(), groundCtx);
+        
+        clear(lightningCtx);
+        drawGround(ground.getGround(), lightningCtx);
     }
     else if(bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT)
     {
@@ -164,20 +165,26 @@ const renderEntity = (entity) => {
             {
                 clear(ctx);
                 ctx.translate(data.x, data.y);
-                var A=data.power*Math.cos(data.angle*Math.PI/180 + data.tankAngle);
-                this.currAngle=Math.atan(((data.power)*Math.sin(data.angle*Math.PI/180 + data.tankAngle)- G * data.deltaT)/A);
+                var A=data.power*Math.cos(data.angle + data.tankAngle);
+                this.currAngle=Math.atan(((data.power)*Math.sin(data.angle + data.tankAngle)- G * data.deltaT)/A);
                 ctx.rotate(-this.currAngle);
                 ctx.drawImage(bulletImg, x, y);
                 ctx.restore();
+
                 groundCtx = canvasModel.getGround().ctx;
+                lightningCtx = canvasModel.getLightning().ctx;
+
                 clear(groundCtx);
                 drawGround(ground.getGround(), groundCtx);
+                
+                clear(lightningCtx);
+                drawGround(ground.getGround(), lightningCtx);
             }
             else
             {
                 ctx.translate(bullet.pos[0], bullet.pos[1]);
-                var A=this.v0*Math.cos(this.angle*Math.PI/180 + tankAngle);
-                this.currAngle=Math.atan(((this.v0)*Math.sin(this.angle*Math.PI/180 + tankAngle)- G * dt2)/A);
+                var A=this.v0*Math.cos(this.angle + tankAngle);
+                this.currAngle=Math.atan(((this.v0)*Math.sin(this.angle + tankAngle)- G * dt2)/A);
                 ctx.rotate(-this.currAngle);
                 ctx.drawImage(bulletImg, x, y);
                 ctx.restore();
