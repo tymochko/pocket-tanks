@@ -131,22 +131,14 @@ client.on('connection', function(socket) {
                     player1Id: usersIds.player1,
                     tankX: 150,
                     tankY: 200,
-                    bulletX: 0,
-                    bulletY: 0,
-                    weaponX: 100,
-                    weaponY: 100,
-                    angle: 0.17,
+                    tankAngle: 0.17,
                     weaponAngle: 0.34
                 },
                 player2: {
                     player2Id: usersIds.player2,
                     tankX: 450,
                     tankY: 400,
-                    bulletX: 0,
-                    bulletY: 0,
-                    weaponX: 300,
-                    weaponY: 300,
-                    angle: 0.17,
+                    tankAngle: 0.17,
                     weaponAngle: 0.34
                 },
                 originalPoints: [

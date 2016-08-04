@@ -13,7 +13,7 @@ import { drawTank } from './drawTank';
 import { Game } from './gameModel';
 
 const originalPoints = ground.getGround();
-const tank = new Tank();
+const tank = new Tank('playerId');
 
 let tankX,
     tankY,

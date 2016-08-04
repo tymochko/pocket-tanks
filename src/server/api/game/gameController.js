@@ -2,16 +2,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var gameInfo = new Schema({
-    // idGame: {type: Number, required: true, unique: true},
     player1: {type: Object},
-    player2: {type:Object},
-    originalPoints: {type : Array }
-
-
+    player2: {type: Object},
+    originalPoints: {type: Array }
 });
 module.exports = mongoose.model('Game', gameInfo);
 
-const createGame = function (newGame, callback) {
+const createGame = function(newGame, callback) {
     console.log('CREATE GAME');
 
     newGame.save(function (err, game) {
@@ -22,7 +19,7 @@ const createGame = function (newGame, callback) {
     });
 };
 
-const updateGameInfo = function (id, updatedData, callback) {
+const updateGameInfo = function(id, updatedData, callback) {
     var Game = this;
 
     Game.findOne(id, (err, foundGame) => {

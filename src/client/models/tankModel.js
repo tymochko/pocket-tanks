@@ -1,9 +1,10 @@
 class Tank {
-    constructor() {
-        this.tankX = 45;
-        this.tankY = 45;
-        this.tankAngle = 0;
-        this.weaponAngle = 0;
+    constructor(id = null, tankX = 45, tankY = 45, tankAngle = 0, weaponAngle = 0) {
+        this.tankId = id;
+        this.tankX = tankX;
+        this.tankY = tankY;
+        this.tankAngle = tankAngle;
+        this.weaponAngle = weaponAngle;
         this.vehicleWidth = 70;
         this.vehicleHeight = 30;
         this.weaponWidth = 35;
