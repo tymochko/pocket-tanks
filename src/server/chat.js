@@ -95,30 +95,26 @@ client.on('connection', function(socket) {
 		info.user = data.user;
 		info.username = data.username;
 
-		socket.on('invite', (data) => {
+		socket.on('invite', (usersIds) => {
 			connections.forEach(function(other) {
-				if (other.user == data.target_user) {
-					other.socket.emit('you-are-invited', {
-						sender_user: info.user,
-						sender_username: info.username,
-                        target_user: data.target_user
-					});
-				}
-			});
-		});
-		socket.on('accepted', (data) => {
-			connections.forEach(function(other) {
-				if (other.user === data.invitor) {
-                    socket.emit('fetch-users-ids', {
-                        player1: info.user,
-                        player2: data.invitor
+                if (other.user === usersIds.target_user) {
+                    console.log(other.user, 'other.user TARGET');
+                    other.socket.emit('you-are-invited', {
+                        sender_user: info.user,
+                        sender_username: info.username,
+                        target_user: usersIds.target_user
                     });
-					// other.socket.emit('invite-accepted', {
-					// 	other_user: info.user
-					// });
-				}
-			});
+                }
+            });
 		});
+
+		socket.on('accepted', (data) => {
+            socket.emit('fetch-users-ids', {
+                player1: data.invitor,
+                player2: info.user
+            });
+		});
+
 		socket.on('rejected', (data) => {
 			connections.forEach(function(other) {
 				if (other.user === data.invitor) {
@@ -129,7 +125,7 @@ client.on('connection', function(socket) {
 			});
 		});
 
-        socket.on('start-game', (usersIds) => {
+        socket.on('create-game', (usersIds) => {
             const initGameData = {
                 player1: {
                     player1Id: usersIds.player1,
@@ -167,11 +163,28 @@ client.on('connection', function(socket) {
                 if (err) {
                     console.log(err);
                 } else {
-                    socket.emit('game-created', game);
+                    connections.forEach(function(other) {
+                        if (other.user === usersIds.player1) {
+                            other.socket.emit('game-create-player1', {gameId: game._id});
+                        }
+                    });
+
+                    socket.emit('game-create-player2', {gameId: game._id});
                 }
             });
         });
 	});
+
+    socket.on('enter-with-gameId', (gameId) => {
+        GameData.findGame({_id: gameId}, (err, foundGame) => {
+            if (err) {
+                console.log('err ', err);
+                throw err;
+            } else {
+                socket.emit('get-game-data', foundGame);
+            }
+        });
+    });
 });
 
 module.exports = app;

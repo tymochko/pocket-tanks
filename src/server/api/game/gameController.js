@@ -48,5 +48,22 @@ const updateGameInfo = function (id, updatedData, callback) {
     });
 };
 
+const findGame = function(gameId, callback) {
+    this.findOne(gameId, function(err, foundGame) {
+        if (err) {
+            console.log(err);
+            return err;
+        }
+
+        if (!foundGame) {
+            console.log(err, 'err');
+            return err;
+        }
+
+        callback(err, foundGame);
+    });
+};
+
 module.exports.createGame = createGame;
 module.exports.updateGameInfo = updateGameInfo;
+module.exports.findGame = findGame;
