@@ -1,33 +1,30 @@
 import { canvasModel } from './canvasModel';
-import { tank } from './tankModel';
+import { TANK_HEIGHT, TANK_WIDTH, WEAPON_HEIGHT, WEAPON_WIDTH } from './externalVariables';
 import { tiltTank } from './tiltTank';
 
-const tankHeight = tank.getVehicleHeight(),
-    tankWidth = tank.getVehicleWidth(),
-    weaponHeight = tank.getWeaponHeight(),
-    weaponWidth = tank.getWeaponWidth();
+console.log('Tank class test:\n' + TANK_HEIGHT + ' ' + WEAPON_HEIGHT);
 
 const moveWeapon = (xCoordinate, yCoordinate, tankAngle, tankCtx, weaponImage, weaponAngle) => {
     tankCtx.save();
-    tankCtx.translate(xCoordinate, yCoordinate-weaponHeight);
-    tankCtx.rotate(-tankAngle- weaponAngle);
-    tankCtx.drawImage(weaponImage, 0,  -weaponHeight/2, weaponWidth, weaponHeight);
+    tankCtx.translate(xCoordinate, yCoordinate - WEAPON_HEIGHT);
+    tankCtx.rotate(-tankAngle - weaponAngle);
+    tankCtx.drawImage(weaponImage, 0, -WEAPON_HEIGHT/2, WEAPON_WIDTH, WEAPON_HEIGHT);
     tankCtx.restore();
 };
 
 const drawTankFn = () => {
-    return (xCoordinate, yCoordinate, tankImage, weaponImage, weaponAngle) => {
-
-        let tankCtx = canvasModel.getTank().ctx,
-            tankAngle = -tiltTank(xCoordinate);
+    return (tank, xCoordinate, yCoordinate, tankImage, weaponImage, weaponAngle) => {
+        
+        const tankCtx = canvasModel.getTank().ctx;
+        const tankAngle = -tiltTank(xCoordinate);
 
         tank.setTankAngle(tankAngle);
 
         tankCtx.save();
-        tankCtx.translate(xCoordinate, yCoordinate-weaponHeight);
+        tankCtx.translate(xCoordinate, yCoordinate-WEAPON_HEIGHT);
         tankCtx.rotate(-tankAngle);
-        tankCtx.drawImage(tankImage,-tankWidth/2-weaponWidth/3,-tankHeight/2+weaponHeight/2 ,
-        tankWidth, tankHeight);
+        tankCtx.drawImage(tankImage, -TANK_WIDTH/2 - WEAPON_WIDTH/3, -TANK_HEIGHT/2 + WEAPON_HEIGHT/2,
+        TANK_WIDTH, TANK_HEIGHT);
         tankCtx.restore();
 
         moveWeapon(xCoordinate, yCoordinate, tankAngle, tankCtx, weaponImage, weaponAngle);

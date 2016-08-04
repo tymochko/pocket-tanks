@@ -1,18 +1,21 @@
 import { WIDTH } from './externalVariables';
 import { requestAnimFrame } from './externalFunctions';
-import { tank } from './tankModel';
 import { ground } from './groundModel';
 import { canvasModel } from './canvasModel';
 import { clear } from './externalFunctions';
 import { drawTank } from './drawTank';
-import { tiltTank } from './tiltTank';
+// import { tiltTank } from './tiltTank';
 
-let originalPoints = ground.getGround();
-let tankImage, weaponImage;
+const originalPoints = ground.getGround();
+let tank;
+let tankImage;
+let weaponImage;
 let socket;
+let direct;
+let start = performance.now();
 
 const findLinePoints = (posX) => {
-    let arr = [];
+    const arr = [];
 
     for(let i = originalPoints.length - 1; i > 0; i--) {
         if(originalPoints[i][0] >= posX && originalPoints[i-1][0] <= posX) {
@@ -23,7 +26,7 @@ const findLinePoints = (posX) => {
 
             let time = Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
             for (let j = 0; j <= time; j++) {
-                let delta = j/time ;
+                let delta = j/time;
                 let a =  delta*(x2 - x1) + x1;
                 let b =  delta*(y2 - y1) + y1;
                 arr.push([Math.round(a), Math.round(b)]);
@@ -54,8 +57,6 @@ const animate = (time) => {
     }
 };
 
-let start = performance.now(), direct;
-
 const animateStart = (draw, duration) => {
     start = performance.now();
     requestAnimFrame(animate);
@@ -84,20 +85,21 @@ const draw = (direction, timePassed, checkTank = true) => {
         });
 
         clear(ctx);
-        drawTank(tankX, tankY, tankImage, weaponImage, weaponAngle);
+        drawTank(tank, tankX, tankY, tankImage, weaponImage, weaponAngle);
 
-        socket.on('outputPosTank', function(data){
+        socket.on('outputPosTank', function(data) {
             clear(ctx);
-            return drawTank(data.x, data.y, tankImage, weaponImage, weaponAngle);
+            return drawTank(tank, data.x, data.y, tankImage, weaponImage, weaponAngle);
         });
     }
     return tankX;
 };
 
 module.exports.findLinePoints = findLinePoints;
-module.exports.tankMove = (direction, tankImg, weaponImg, socketio) => {
+module.exports.tankMove = (direction, tankInst, tankImg, weaponImg, socketio) => {
     socket = socketio;
     direct = direction;
+    tank = tankInst;
     tankImage = tankImg;
     weaponImage = weaponImg;
     animateStart(draw, 1500);

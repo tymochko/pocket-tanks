@@ -1,54 +1,58 @@
-module.exports.tank = {
-    tankX: 45,
-    tankY: 45,
-    tankAngle: 0,
-    weaponAngle: 0,
-    vehicleWidth: 70,
-    vehicleHeight: 30,
-    weaponWidth: 35,
-    weaponHeight: 20,
+class Tank {
+    constructor() {
+        this.tankX = 45;
+        this.tankY = 45;
+        this.tankAngle = 0;
+        this.weaponAngle = 0;
+        this.vehicleWidth = 70;
+        this.vehicleHeight = 30;
+        this.weaponWidth = 35;
+        this.weaponHeight = 20;
+    }
 
-    getCoord: function() {
+    getCoord() {
         return {
             tankX: this.tankX,
             tankY: this.tankY
         };
-    },
+    }
 
-    setCoord: function(x, y) {
+    setCoord(x, y) {
         this.tankX = x;
         this.tankY = y;
-    },
+    }
 
-    getTankAngle: function() {
+    getTankAngle() {
         return this.tankAngle;
-    },
+    }
 
-    setTankAngle: function(value) {
+    setTankAngle(value) {
         this.tankAngle = value;
-    },
+    }
 
-    getWeaponAngle: function() {
+    getWeaponAngle() {
         return this.weaponAngle;
-    },
+    }
 
-    setWeaponAngle: function(value) {
+    setWeaponAngle(value) {
         this.weaponAngle = value;
-    },
+    }
 
-    getVehicleWidth: function() {
+    getVehicleWidth() {
         return this.vehicleWidth;
-    },
+    }
 
-    getVehicleHeight: function() {
+    getVehicleHeight() {
         return this.vehicleHeight;
-    },
+    }
 
-    getWeaponWidth: function() {
+    getWeaponWidth() {
         return this.weaponWidth;
-    },
+    }
 
-    getWeaponHeight: function() {
+    getWeaponHeight() {
         return this.weaponHeight;
     }
-};
+}
+
+module.exports.Tank = Tank;

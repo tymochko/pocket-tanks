@@ -37,9 +37,11 @@ const makeShot = (ctx, backCanvas, backCtx, tankCoordX, tankCoordY, tankangle, s
     tankY = tankCoordY;
     tankAngle = tankangle;
 
+    console.log('tank position: ' + tankX + ' ' + tankY);
+
     dt2=0;
     bullet = { pos: [tankX, tankY],
-        imgInf: new ImgInf(bulletImg.src, [0,0], angle, power),
+        imgInf: new ImgInf(bulletImg.src, [0, 0], angle, power),
         angle: angle,
         bulletSpeed: power
     };
@@ -83,7 +85,7 @@ const generateExplosion = (dt) => {
 
     dt2 += 4*dt;
     // creating path for bullet and originalPoints
-    var bull = new paper.Path.Rectangle(bullet.pos[0],bullet.pos[1], 45, 7);
+    var bull = new paper.Path.Rectangle(bullet.pos[0], bullet.pos[1], 45, 7);
     //check angle for accuracy of point
     bull.rotate(-bullet.imgInf.currAngle);
 
@@ -91,12 +93,12 @@ const generateExplosion = (dt) => {
         new paper.Point(originalPoints[0][0], originalPoints[0][1])
         );
     for(let i = 1; i < originalPoints.length; i++) {
-        groundPath.add(new paper.Point(originalPoints[i][0], originalPoints[i][1]))
+        groundPath.add(new paper.Point(originalPoints[i][0], originalPoints[i][1]));
     }
 
     // check if intersect the original points
     var intersect = bull.getIntersections(groundPath);
-    if(intersect.length > 0 ) {
+    if(intersect.length > 0) {
         bullet = null;
 
         let crossPoint = {
@@ -128,7 +130,7 @@ const generateExplosion = (dt) => {
 
 const renderEntity = (entity) => {
     if(entity){
-        socket.emit('inputPos',{
+        socket.emit('inputPos', {
             posX: bullet.pos[0],
             posY: bullet.pos[1],
             power: power,
@@ -137,7 +139,7 @@ const renderEntity = (entity) => {
             deltaT: dt2
         });
         entity.imgInf.render(canvasModel.getBullet().ctx, dt2);
-        socket.on('outputPos', function(data){
+        socket.on('outputPos', function(data) {
             return entity.imgInf.render(canvasModel.getBullet().ctx, dt2, data);
         });
     }
