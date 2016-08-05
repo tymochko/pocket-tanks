@@ -5,6 +5,7 @@ var client = io();
 var mongoose = require('mongoose');
 const messageLimit = 5;
 const GameData = require('../server/api/game/gameController');
+import { findGame } from '../server/api/game/gameController';
 
 app.io = client;
 
