@@ -108,8 +108,8 @@ module.exports.initGame = (socket) => {
         drawSky(canvasModel.getSky().ctx);
         drawGround(originalPoints, canvasModel.getGround().ctx);
 
-        tankX = Math.floor((Math.random() * 330) + 30);
-        tankY = findLinePoints(tankX);
+        tankX = tank.getCoord().tankX;
+        tankY = tank.getCoord().tankY;
         weaponAngle = tank.getWeaponAngle();
 
         tank.setCoord(tankX, tankY);

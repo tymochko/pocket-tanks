@@ -128,18 +128,10 @@ client.on('connection', function(socket) {
         socket.on('create-game', (usersIds) => {
             const initGameData = {
                 player1: {
-                    player1Id: usersIds.player1,
-                    tankX: 150,
-                    tankY: 200,
-                    tankAngle: 0.17,
-                    weaponAngle: 0.34
+                    id: usersIds.player1
                 },
                 player2: {
-                    player2Id: usersIds.player2,
-                    tankX: 450,
-                    tankY: 400,
-                    tankAngle: 0.17,
-                    weaponAngle: 0.34
+                    id: usersIds.player2
                 },
                 originalPoints: [
                     [0, 280], [200, 350], [350, 150], [500, 250], [700, 150], [800, 250], [800, 500], [0, 500], [0, 280]
@@ -149,7 +141,7 @@ client.on('connection', function(socket) {
             const newGame = new GameData();
             newGame.player1 = initGameData.player1;
             newGame.player2 = initGameData.player2;
-            newGame.originalPoints = data.originalPoints;
+            newGame.originalPoints = initGameData.originalPoints;
 
             GameData.createGame(newGame, function(err, game) {
                 if (err) {
@@ -157,11 +149,11 @@ client.on('connection', function(socket) {
                 } else {
                     connections.forEach(function(other) {
                         if (other.user === usersIds.player1) {
-                            other.socket.emit('game-create-player1', {gameId: game._id});
+                            other.socket.emit('game-create-player1', {gameId: game._id, player1id: usersIds.player1});
                         }
                     });
 
-                    socket.emit('game-create-player2', {gameId: game._id});
+                    socket.emit('game-create-player2', {gameId: game._id, player2id: usersIds.player2});
                 }
             });
         });
