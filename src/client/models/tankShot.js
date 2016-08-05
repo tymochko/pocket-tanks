@@ -10,7 +10,6 @@ import { Tank } from './tankModel';
 import { drawGround, drawSky } from './canvasRedrawModel';
 import { canvasModel } from './canvasModel';
 import { drawTank } from './drawTank';
-import { Game } from './gameModel';
 
 const originalPoints = ground.getGround();
 const tank = new Tank('playerId');
@@ -30,7 +29,7 @@ module.exports.initGame = (socket) => {
 
 /* ====== initialization ======== */
 
-    paper.setup(canvasModel.getLightning().canvas);
+    paper.setup(canvasModel.getBullet().canvas);
 
     power = parseInt(getId('power').innerHTML);
     angle = parseInt(getId('angle').innerHTML);
@@ -108,7 +107,6 @@ module.exports.initGame = (socket) => {
 
         drawSky(canvasModel.getSky().ctx);
         drawGround(originalPoints, canvasModel.getGround().ctx);
-        drawGround(originalPoints, canvasModel.getLightning().ctx);
 
         tankX = Math.floor((Math.random() * 330) + 30);
         tankY = findLinePoints(tankX);
