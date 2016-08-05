@@ -21,6 +21,7 @@ export function transportData(socket, $q) {
         .then((gameData) => {
             console.log(gameData, 'gameData inside GameCtrl');
             const game = gameCreate(gameData);
+            console.log(game)
 
         });
 

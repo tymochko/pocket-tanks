@@ -16,7 +16,7 @@ export const gameCreate = (gameData) => {
     const player1 = new Player(player1Id, true, tank1);
     const player2 = new Player(player2Id, false, tank2);
 
-    return (new Game(player1, player2, gameData.originalPoints));
+    return (new Game(gameData._id, player1, player2, gameData.originalPoints));
 };
 
 export const gameUpdate = () => {
