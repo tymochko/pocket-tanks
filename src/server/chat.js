@@ -52,10 +52,10 @@ client.on('connection', function(socket){
         });
 	}
 
-	socket.on('initPosTank', function(data){
+	socket.on('initPosTank', function(data) {
 		client.emit('initOutPosTank', {
-			x: data.tankX,
-			y: data.tankY,
+			tank1: data.tank1,
+			tank2: data.tank2,
             tankImage: data.tankImage,
             weaponImage: data.weaponImage,
 			weaponAngle: data.weaponAngle
