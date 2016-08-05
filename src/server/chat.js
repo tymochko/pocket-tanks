@@ -128,18 +128,10 @@ client.on('connection', function(socket) {
         socket.on('create-game', (usersIds) => {
             const initGameData = {
                 player1: {
-                    player1Id: usersIds.player1,
-                    tankX: 150,
-                    tankY: 200,
-                    tankAngle: 0.17,
-                    weaponAngle: 0.34
+                    player1Id: usersIds.player1
                 },
                 player2: {
-                    player2Id: usersIds.player2,
-                    tankX: 450,
-                    tankY: 400,
-                    tankAngle: 0.17,
-                    weaponAngle: 0.34
+                    player2Id: usersIds.player2
                 },
                 originalPoints: [
                     [0, 280], [200, 350], [350, 150], [500, 250], [700, 150], [800, 250], [800, 500], [0, 500], [0, 280]
@@ -149,7 +141,7 @@ client.on('connection', function(socket) {
             const newGame = new GameData();
             newGame.player1 = initGameData.player1;
             newGame.player2 = initGameData.player2;
-            newGame.originalPoints = data.originalPoints;
+            newGame.originalPoints = initGameData.originalPoints;
 
             GameData.createGame(newGame, function(err, game) {
                 if (err) {
