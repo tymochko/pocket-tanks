@@ -2,6 +2,7 @@ import { initGame } from '../../models/tankShot';
 import { initCanvas } from '../../models/initCanvas';
 import { canvasModel } from '../../models/canvasModel';
 import {gameService} from './gameService';
+import {gameCreate} from './gameFunc';
 
 export function transportData(socket, $q) {
     const localUrl = window.location.href;
@@ -20,6 +21,8 @@ export function transportData(socket, $q) {
     gameService().getInitGameData(socket, $q, gameId)
         .then((gameData) => {
             console.log(gameData, 'gameData inside GameCtrl');
+            const game = gameCreate(gameData);
+
         });
 
     initCanvas();
