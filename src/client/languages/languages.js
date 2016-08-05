@@ -28,7 +28,21 @@ export const eng =  {
     UploadPhoto: 'Press button for upload photo',
     Title: 'Tanks | Student Game',
     Footer: 'Tanks Game 2016.',
-    test:'testttt'
+    test:'testttt',
+    Status: 'Status',
+    DashboardName: 'Name',
+    Invite:'Invite',
+    Online: 'Online',
+    Offline: 'Offline',
+    ButtonInvite: 'Invite',
+    Users: 'Users',
+    ChangeButtonUkr: 'Ukrainian language',
+    ChangeButtonEng: 'English language'
+
+
+
+
+
 
 
 };
@@ -62,6 +76,18 @@ export const ukr = {
     UploadPhoto: 'Нажміть кнопку для загрузки фото',
     Title: 'Танки | Навчальний проект',
     Footer: 'Танки 2016.',
-    test:'теститититит'
+    test:'теститититит',
+    Status: 'Статус гравця',
+    DashboardName: "Ім'я гравця",
+    Invite:'Запросити',
+    Online: 'Онлайн',
+    Offline: 'Офлайн',
+    ButtonInvite: 'Запросити',
+    Users: 'Гравці',
+    ChangeButtonUkr: 'Українська мова',
+    ChangeButtonEng: 'Англійська мова'
+
+
+
 
 };

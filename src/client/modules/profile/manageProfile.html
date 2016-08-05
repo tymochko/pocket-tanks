@@ -100,9 +100,9 @@
             </div>
             <button type="button" class="btn btn-primary pull-right avatarButton" ng-click="changeAvatar()" translate="ChangePhotoButton">
             </button>
-            <button type="button" class="btn btn-primary pull-right avatarButton" ng-click="changeLanguage('ukr')">Change to UKR
+            <button type="button" class="btn btn-primary pull-right avatarButton" ng-click="changeLanguage('ukr')" ng-show="user.userLanguage == 'eng'" translate="ChangeButtonUkr">
             </button>
-            <button type="button" class="btn btn-primary pull-right avatarButton" ng-click="changeLanguage('eng')">Change to ENG
+            <button type="button" class="btn btn-primary pull-right avatarButton" ng-click="changeLanguage('eng')" ng-show="user.userLanguage == 'ukr'" translate="ChangeButtonEng">
             </button>
 
         </div>
