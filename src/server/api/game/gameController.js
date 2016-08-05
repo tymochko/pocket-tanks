@@ -28,14 +28,13 @@ const updateGameInfo = function(id, updatedData, callback) {
         }
         else if (foundGame) {
             Game.update({
-                    //     player1: foundGame.player1
-                    // }, {
-                    //     player1: updatedData.player1
                     player1: foundGame.player1,
-                    player2: foundGame.player2
+                    player2: foundGame.player2,
+                    originalPoints:foundGame.originalPoints
                 }, {
                     player1:updatedData.player1,
-                    player2:updatedData.player2
+                    player2:updatedData.player2,
+                    originalPoints:updatedData.originalPoints
 
                 },
                 function (err, foundGame) {

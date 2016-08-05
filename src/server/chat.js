@@ -169,6 +169,11 @@ client.on('connection', function(socket) {
             }
         });
     });
+	socket.on('transfer-data', (gameData) => {
+		gameData.updateGameInfo(gameData.id, gameData, (err, foundGame) =>{
+			console.log(foundGame);
+		});
+	});
 });
 
 module.exports = app;
