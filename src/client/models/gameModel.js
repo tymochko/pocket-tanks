@@ -1,8 +1,9 @@
 class Game {
-    constructor(player1, player2, originalPoints) {
+    constructor(id, player1, player2, originalPoints) {
+        this.id = id;
         this.player1 = player1;
         this.player2 = player2;
-        this.originalPoints = originalPoints;
+        this.points = originalPoints;
     }
 }
 

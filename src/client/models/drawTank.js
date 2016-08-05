@@ -11,21 +11,24 @@ const moveWeapon = (xCoordinate, yCoordinate, tankAngle, tankCtx, weaponImage, w
 };
 
 const drawTankFn = () => {
-    return (tank, xCoordinate, yCoordinate, tankImage, weaponImage, weaponAngle) => {
-        
-        const tankCtx = canvasModel.getTank().ctx;
-        const tankAngle = -tiltTank(xCoordinate);
+    return (playerId, tank, tankImage, weaponImage, weaponAngle) => {
+        const xCoordinate = tank.tankX;
+        const yCoordinate = tank.tankY;
+        console.log(xCoordinate + ' ' + yCoordinate + ' in drawTank');
 
-        tank.setTankAngle(tankAngle);
+        const tankCtx = canvasModel.getTank().ctx;
+        const _tankAngle = -tiltTank(xCoordinate);
+
+        tank.tankAngle = _tankAngle;
 
         tankCtx.save();
         tankCtx.translate(xCoordinate, yCoordinate - WEAPON_HEIGHT);
-        tankCtx.rotate(-tankAngle);
+        tankCtx.rotate(-_tankAngle);
         tankCtx.drawImage(tankImage, -TANK_WIDTH/2 - WEAPON_WIDTH/3, -TANK_HEIGHT/2 + WEAPON_HEIGHT/2,
-        TANK_WIDTH, TANK_HEIGHT);
+            TANK_WIDTH, TANK_HEIGHT);
         tankCtx.restore();
 
-        moveWeapon(xCoordinate, yCoordinate, tankAngle, tankCtx, weaponImage, weaponAngle);
+        moveWeapon(xCoordinate, yCoordinate, _tankAngle, tankCtx, weaponImage, weaponAngle);
     };
 };
 

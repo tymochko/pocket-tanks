@@ -28,6 +28,7 @@ export const eng =  {
     UploadPhoto: 'Press button for upload photo',
     Title: 'Tanks | Student Game',
     Footer: 'Tanks Game 2016.',
+    test:'testttt'
 
 
 };
@@ -60,6 +61,7 @@ export const ukr = {
     DeleteMsg: 'Ви впевнені що хочете видалити аккаунт?!',
     UploadPhoto: 'Нажміть кнопку для загрузки фото',
     Title: 'Танки | Навчальний проект',
-    Footer: 'Танки 2016.'
+    Footer: 'Танки 2016.',
+    test:'теститититит'
 
 };

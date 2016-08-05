@@ -1,6 +1,5 @@
 import { canvasModel } from './canvasModel';
-import { WIDTH } from './externalVariables';
-import { HEIGHT } from './externalVariables';
+import { WIDTH, HEIGHT } from './externalVariables';
 
 module.exports.requestAnimFrame = (function(){
     return window.requestAnimationFrame   ||
@@ -34,4 +33,10 @@ export function fillBackground(ctx, pattern) {
     ctx.rect(0, 0, WIDTH, HEIGHT);
     ctx.fillStyle = pattern;
     ctx.fill();
+}
+
+export const initTanks = (callback, tank1, tank2, tankImage, weaponImage, weaponAngle) => {
+    console.log('initTanks: ' + tank1.id);
+    callback(tank1.id, tank1, tankImage, weaponImage, weaponAngle);
+    callback(tank2.id, tank2, tankImage, weaponImage, weaponAngle);
 }

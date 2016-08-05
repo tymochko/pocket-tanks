@@ -43,12 +43,13 @@ module.exports = angular.module('tanks.dashboard', [
     });
 
     socket.on('game-create-player2', function(foundGame) {
-
+        localStorage.setItem('playerId', foundGame.player2id);
         window.location = `/game?id=${foundGame.gameId}`;
     });
 
     socket.on('game-create-player1', function(foundGame) {
-
+        localStorage.setItem('playerId', foundGame.player1id);
+        // localStorage.setItem('turn', true);
         window.location = `/game?id=${foundGame.gameId}`;
     });
 
