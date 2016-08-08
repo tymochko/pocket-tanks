@@ -23,7 +23,7 @@ const getNewNames = (routes, key) => {
     });
 };
 
-export function RouteNavigation($route, $location, ProfileService) {
+export function RouteNavigation($route, $location, ProfileService, $translate) {
 
     return {
         routes,
@@ -32,6 +32,7 @@ export function RouteNavigation($route, $location, ProfileService) {
         },
         getNewRoutes: () => {
             return ProfileService.getProfile().then(({data}) => {
+                $translate.use(data.userLanguage);
                 return getNewNames(routes, data.userLanguage);
             });
         }
