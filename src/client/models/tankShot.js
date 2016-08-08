@@ -44,7 +44,7 @@ module.exports.initGame = (gameInst, socket) => {
                 clear(tankCtx);
                 weaponAngle = angle*Math.PI/180;
                 tank.setWeaponAngle(weaponAngle);
-                drawTank(tank, tank.getCoord().tankX, tank.getCoord().tankY, tankImage, weaponImage, weaponAngle);
+                drawTank(localStorage.getItem('playerId'), tank, tankImage, weaponImage, weaponAngle);
                 getId('angle').innerHTML = angle;
                 break;
 
@@ -56,7 +56,7 @@ module.exports.initGame = (gameInst, socket) => {
                 clear(tankCtx);
                 weaponAngle = angle*Math.PI/180;
                 tank.setWeaponAngle(weaponAngle);
-                drawTank(tank, tank.getCoord().tankX, tank.getCoord().tankY, tankImage, weaponImage, weaponAngle);
+                drawTank(localStorage.getItem('playerId'), tank, tankImage, weaponImage, weaponAngle);
                 getId('angle').innerHTML = angle;
                 break;
 
