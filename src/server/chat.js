@@ -36,21 +36,19 @@ client.on('connection',function(socket){
 	}
 
 });
-(function(){
+
 client.on('connection', function(socket){
-	socket.on('inputPos', insertData2);
+    
+	socket.on('inputBulletPos', insertBulletPos);
 
-	function insertData2(data){
-		console.log(data);
+	function insertBulletPos(data){
 
-        client.emit('outputPos',{
-        	x: data.posX,
-        	y: data.posY,
+        client.emit('outputBulletPos', {
         	power: data.power,
         	angleWeapon: data.angle,
-			tankAngle: data.tankAngle,
-        	deltaT: data.deltaT
+			tankAngle: data.tankAngle
         });
+
 	}
 
 	socket.on('initPosTank', function(data) {
@@ -63,9 +61,7 @@ client.on('connection', function(socket){
 		});
 	});
 });
-}).call(this);
 
-(function(){
 client.on('connection', function(socket){
 	socket.on('inputPosTank', insertData2);
 
@@ -80,7 +76,7 @@ client.on('connection', function(socket){
         });
 	}
 });
-}).call(this);
+
 
 // <----------Invitation part ------------>
 

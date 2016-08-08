@@ -64,15 +64,16 @@ const draw = (direction, timePassed, checkTank = true) => {
         });
 
         clear(ctx);
-        drawTank(tank, tankX, tankY, tankImage, weaponImage, weaponAngle);
+        drawTank(localStorage.getItem('playerId'), tank, tankImage, weaponImage, weaponAngle);
 
         socket.on('outputPosTank', function(data) {
             clear(ctx);
-            return drawTank(tank, data.x, data.y, tankImage, weaponImage, weaponAngle);
+            return drawTank(localStorage.getItem('playerId'), tank, tankImage, weaponImage, weaponAngle);
         });
     }
     return tankX;
 };
+
 
 const animate = (time) => {
     const duration = 1500;
@@ -98,6 +99,7 @@ const animateStart = () => {
 
 module.exports.findLinePoints = findLinePoints;
 module.exports.tankMove = (direction, tankInst, tankImg, weaponImg, socketio) => {
+    console.log(tankInst);
     socket = socketio;
     direct = direction;
     tank = tankInst;
