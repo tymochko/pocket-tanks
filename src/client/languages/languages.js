@@ -28,7 +28,6 @@ export const eng =  {
     UploadPhoto: 'Press button for upload photo',
     Title: 'Tanks | Student Game',
     Footer: 'Tanks Game 2016.',
-    test:'testttt',
     Status: 'Status',
     DashboardName: 'Name',
     Invite:'Invite',
@@ -37,12 +36,10 @@ export const eng =  {
     ButtonInvite: 'Invite',
     Users: 'Users',
     ChangeButtonUkr: 'Ukrainian language',
-    ChangeButtonEng: 'English language'
-
-
-
-
-
+    ChangeButtonEng: 'English language',
+    avatarMsg : "Do not forget to save changes!!",
+    avatarTitle : "Message",
+    savingMsg: "Your changes are saved!"
 
 
 };
@@ -85,9 +82,20 @@ export const ukr = {
     ButtonInvite: 'Запросити',
     Users: 'Гравці',
     ChangeButtonUkr: 'Українська мова',
-    ChangeButtonEng: 'Англійська мова'
+    ChangeButtonEng: 'Англійська мова',
+    avatarMsg : 'Не забудьте зберегти зміни!',
+    avatarTitle: "Повідомлення",
+    savingMsg: "Ваші зміни збережені!"
 
-
-
-
+};
+export const lang = {
+    "ukr": {
+        "dashboard": "Користувачі",
+        "scores" : "Очки",
+        "about" : "Про гру",
+        "profile": "Профіль",
+        "logout" : "Вийти",
+        "singup" : "Зарегіструватися",
+        "Login" : "Ввійти"
+    }
 };
