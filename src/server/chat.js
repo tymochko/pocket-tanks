@@ -150,11 +150,11 @@ client.on('connection', function(socket) {
                 } else {
                     connections.forEach(function(other) {
                         if (other.user === usersIds.player1) {
-                            other.socket.emit('game-create-player1', {gameId: game._id, player1id: usersIds.player1});
+                            other.socket.emit('start-game', {gameId: game._id, playerId: usersIds.player1});
                         }
                     });
 
-                    socket.emit('game-create-player2', {gameId: game._id, player2id: usersIds.player2});
+                    socket.emit('start-game', {gameId: game._id, playerId: usersIds.player2});
                 }
             });
         });
