@@ -45,7 +45,7 @@ const updateGameInfo = function(id, updatedData, callback) {
 };
 
 const findGame = function(gameId, callback) {
-    this.findOne(gameId, function(err, foundGame) {
+    this.findOne(gameId, (err, foundGame) => {
         if (err) {
             console.log(err);
             return err;
