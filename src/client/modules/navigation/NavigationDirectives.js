@@ -9,9 +9,6 @@ export function navigation(RouteNavigation) {
                 RouteNavigation.routes = newRoutes;
                 $scope.routes = RouteNavigation.routes;
                 $scope.activeRoute = RouteNavigation.activeRoute;
-                // $scope.routes = newRoutes;
-                console.log($scope.routes)
-
             });
         }
     };
