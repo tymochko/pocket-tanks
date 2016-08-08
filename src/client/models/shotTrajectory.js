@@ -105,26 +105,19 @@ const generateExplosion = (dt) => {
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
         window.cancelAnimationFrame(requestAnimFrame);
 
-        let calculatedGroundPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
+        const calculatedGroundPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
 
         ground.setGround(calculatedGroundPoints);
 
         groundCtx = canvasModel.getGround().ctx;
-        lightningCtx = canvasModel.getLightning().ctx;
+        bulletCtx = canvasModel.getBullet().ctx;
 
         clear(groundCtx);
         drawGround(ground.getGround(), groundCtx);
-        
-        clear(lightningCtx);
-        drawGround(ground.getGround(), lightningCtx);
-    }
-    else if(bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT)
-    {
+    } else if (bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT) {
         bullet = null;
         window.cancelAnimationFrame(requestAnimFrame);
-    }
-    else
-    {
+    } else {
         requestAnimFrame(drawBullet);
     }
 };
@@ -172,13 +165,10 @@ const renderEntity = (entity) => {
                 ctx.restore();
 
                 groundCtx = canvasModel.getGround().ctx;
-                lightningCtx = canvasModel.getLightning().ctx;
+                bulletCtx = canvasModel.getBullet().ctx;
 
                 clear(groundCtx);
                 drawGround(ground.getGround(), groundCtx);
-                
-                clear(lightningCtx);
-                drawGround(ground.getGround(), lightningCtx);
             }
             else
             {

@@ -1,6 +1,6 @@
 import { initGame } from '../../models/tankShot';
 import { initCanvas } from '../../models/initCanvas';
-import {gameCreate} from './gameFunc';
+import { gameCreate } from './gameFunc';
 import { gameService } from './gameService';
 
 export function transportData(socket, $q) {
@@ -20,11 +20,12 @@ export function transportData(socket, $q) {
     gameService().getInitGameData(socket, $q, gameId)
         .then((gameData) => {
             console.log(gameData, 'gameData inside GameCtrl');
-            const game = gameCreate(gameData);
-            console.log(game)
+            const gameInst = gameCreate(gameData);
 
+            console.log('gameInst: ', gameInst);
+            initCanvas();
+            initGame(gameInst, socket);
+        }, () => {
+            alert('Server error. No game data received.');
         });
-
-    initCanvas();
-    initGame(socket);
 }

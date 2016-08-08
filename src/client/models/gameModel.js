@@ -4,7 +4,7 @@ class Game {
         this.player1 = player1;
         this.player2 = player2;
         this.points = originalPoints;
-    };
+    }
 }
 
 module.exports.Game = Game;

@@ -4,8 +4,15 @@ export function navigation(RouteNavigation) {
         replace: true,
         templateUrl: "navigation/navigation.html",
         controller: ($scope) => {
-            $scope.routes = RouteNavigation.routes;
-            $scope.activeRoute = RouteNavigation.activeRoute;
+
+            RouteNavigation.getNewRoutes().then((newRoutes) => {
+                RouteNavigation.routes = newRoutes;
+                $scope.routes = RouteNavigation.routes;
+                $scope.activeRoute = RouteNavigation.activeRoute;
+                // $scope.routes = newRoutes;
+                console.log($scope.routes)
+
+            });
         }
     };
 }
