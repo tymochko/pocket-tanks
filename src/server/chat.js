@@ -38,12 +38,14 @@ client.on('connection',function(socket){
 });
 
 client.on('connection', function(socket){
-    
+
 	socket.on('inputBulletPos', insertBulletPos);
 
 	function insertBulletPos(data){
 
         client.emit('outputBulletPos', {
+			x: data.posX,
+			y: data.posY,
         	power: data.power,
         	angleWeapon: data.angle,
 			tankAngle: data.tankAngle
@@ -52,6 +54,7 @@ client.on('connection', function(socket){
 	}
 
 	socket.on('initPosTank', function(data) {
+		console.log(data.tank1.setWeaponAngle);
 		client.emit('initOutPosTank', {
 			tank1: data.tank1,
 			tank2: data.tank2,
@@ -67,7 +70,7 @@ client.on('connection', function(socket){
 
 	function insertData2(data){
 
-        client.emit('outputPosTank',{
+        client.emit('outputPosTank', {
         	x: data.posX,
         	y: data.posY,
 			tankImage: data.tankImage,
@@ -76,12 +79,10 @@ client.on('connection', function(socket){
         });
 	}
 
-
-    socket.on('moveIdServer', (data) => {
-        client.emit('moveIdClient', { playerId: data.playerId });
-    });
+	socket.on('moveIdServer', (data) => {
+		client.emit('moveIdClient', { playerId: data.playerId });
+	});
 });
-
 
 // <----------Invitation part ------------>
 

@@ -1,7 +1,7 @@
 import {AvatarController} from "./AvatarController";
 import {DeleteUserController} from "./DeleteUserController";
 export class ManageProfileController {
-    constructor($scope, $uibModal, ProfileService, toastr, $location, $translate) {
+    constructor($scope, $uibModal, ProfileService, toastr, $location, $translate, $window) {
         $scope.emailStatus = true;
         $scope.nameMinLength = 5;
         $scope.nameMaxLength = 15;
@@ -27,16 +27,34 @@ export class ManageProfileController {
         $scope.selectedImg = "api/users/profile/getImage/userAvatar" + ($scope.getSalt)();
 
         function savingMsg() {
-            toastr.success("Your changes are saved!", "Message", {
-                closeButton: true,
-                closeHtml: "<button>&times;</button>"
-            });
+            $translate('savingMsg')
+                .then( (translatedValue) => {
+                    $scope.savingMsg = translatedValue;
+                    $translate('avatarTitle').then( (translVal) => {
+                        $scope.avatarTitle = translVal;
+                        toastr.success($scope.savingMsg, $scope.avatarTitle, {
+                            closeButton: true,
+                            closeHtml: "<button>&times;</button>"
+                        });
+                    });
+                });
+            $window.location.reload();
         }
 
         function avatarMsg() {
-            toastr.warning("Do not forget to save changes!!", "Message", {
-                closeButton: true,
-                closeHtml: "<button>&times;</button>"
+            $translate('avatarMsg')
+                .then( (translatedValue) => {
+                    $scope.avatarMsg = translatedValue;
+                    $translate('avatarTitle').then( (translVal) => {
+                        $scope.avatarTitle = translVal;
+                        toastr.warning($scope.avatarMsg, $scope.avatarTitle, {
+                            closeButton: true,
+                            closeHtml: "<button>&times;</button>"
+                        });
+                    });
+
+
+
             });
         }
 
