@@ -68,6 +68,7 @@ const draw = (direction, timePassed, checkTank = true) => {
 
         socket.on('outputPosTank', function(data) {
             clear(ctx);
+            tank.setCoord(data.x, data.y);
             return drawTank(localStorage.getItem('playerId'), tank, tankImage, weaponImage, weaponAngle);
         });
     }
@@ -99,7 +100,6 @@ const animateStart = () => {
 
 module.exports.findLinePoints = findLinePoints;
 module.exports.tankMove = (direction, tankInst, tankImg, weaponImg, socketio) => {
-    console.log(tankInst);
     socket = socketio;
     direct = direction;
     tank = tankInst;
