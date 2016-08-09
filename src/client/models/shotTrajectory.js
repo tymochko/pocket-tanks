@@ -27,7 +27,7 @@ let originalPoints,
 
 bulletImg.src='./public/images/bullet2.png';
 
-const makeShot = (ctx, tank, tankCoordX, tankCoordY, tankAngleParam, socketIo) => {
+const makeShot = (ctx, tank, tankCoordX, tankCoordY, tankAngleParam, socketIo, playerId) => {
 
 	originalPoints = ground.getGround();
 

@@ -75,6 +75,11 @@ client.on('connection', function(socket){
 			weaponAngle: data.weaponAngle
         });
 	}
+
+
+    socket.on('moveIdServer', (data) => {
+        client.emit('moveIdClient', { playerId: data.playerId });
+    });
 });
 
 

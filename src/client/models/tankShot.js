@@ -37,6 +37,15 @@ module.exports.initGame = (gameInst, socket) => {
     angle = parseInt(getId('angle').innerHTML);
 /* ====== Tank Weapon Movement ======== */
 
+    const getOpponentId = (playerId) => {
+        let opponentId;
+        socket.emit('moveIdServer', { playerId });
+        socket.on('moveIdClient', (data) => {
+            opponentId = data.playerId;
+        });
+        return opponentId;
+    };
+
     const moveWeaponKeyDown = (evt) => {
         switch (evt.keyCode) {
             case 38:    //Up arrow was pressed /
@@ -86,14 +95,26 @@ module.exports.initGame = (gameInst, socket) => {
                     break;
 
                 case 13: /*ENTER*/
-                    makeShot(
-                        canvasModel.getBullet().ctx,
-                        tank,
-                        tank.getCoord().tankX,
-                        tank.getCoord().tankY,
-                        tank.getTankAngle(),
-                        socket
-                    );
+                        //if(tank1.id == data.playerId) {
+                            makeShot(
+                                canvasModel.getBullet().ctx,
+                                tank,
+                                tank.getCoord().tankX,
+                                tank.getCoord().tankY,
+                                tank.getTankAngle(),
+                                socket
+                            );
+                       // } else {
+                            // makeShot(
+                            //     canvasModel.getBullet().ctx,
+                            //     tank2,
+                            //     tank2.getCoord().tankX,
+                            //     tank2.getCoord().tankY,
+                            //     tank2.getTankAngle(),
+                            //     socket
+                            // );
+                      //  }
+                    
                     break;
 
                 default:
