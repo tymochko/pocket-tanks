@@ -36,21 +36,21 @@ client.on('connection',function(socket){
 	}
 
 });
-(function(){
+
 client.on('connection', function(socket){
-	socket.on('inputPos', insertData2);
 
-	function insertData2(data) {
-		console.log(data);
+	socket.on('inputBulletPos', insertBulletPos);
 
-        client.emit('outputPos', {
-        	x: data.posX,
-        	y: data.posY,
+	function insertBulletPos(data){
+
+        client.emit('outputBulletPos', {
+			x: data.posX,
+			y: data.posY,
         	power: data.power,
         	angleWeapon: data.angle,
-			tankAngle: data.tankAngle,
-        	deltaT: data.deltaT
+			tankAngle: data.tankAngle
         });
+
 	}
 
 	socket.on('initPosTank', function(data) {
@@ -64,7 +64,6 @@ client.on('connection', function(socket){
 		});
 	});
 });
-}).call(this);
 
 client.on('connection', function(socket){
 	socket.on('inputPosTank', insertData2);
