@@ -19,10 +19,8 @@ export function transportData(socket, $q) {
     const gameId = getParameterByName('id', localUrl);
     gameService().getInitGameData(socket, $q, gameId)
         .then((gameData) => {
-            console.log(gameData, 'gameData inside GameCtrl');
             const gameInst = gameCreate(gameData);
 
-            console.log('gameInst: ', gameInst);
             initCanvas();
             initGame(gameInst, socket);
         }, () => {

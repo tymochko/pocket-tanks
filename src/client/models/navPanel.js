@@ -61,4 +61,8 @@ export function navPanel(tank, angle, weaponAngle) {
         drawTank(tank, tank.getCoord().tankX, tank.getCoord().tankY, tankImage, weaponImage, weaponAngle);
         getId('angle').innerHTML = angle;
     };
+
+    getId('surrender').onclick = () => {
+        console.log('HELLO SURRENDER');
+    };
 }

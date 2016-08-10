@@ -64,15 +64,17 @@ const draw = (direction, timePassed, checkTank = true) => {
         });
 
         clear(ctx);
-        drawTank(tank, tankX, tankY, tankImage, weaponImage, weaponAngle);
+        drawTank(localStorage.getItem('playerId'), tank, tankImage, weaponImage, weaponAngle);
 
         socket.on('outputPosTank', function(data) {
             clear(ctx);
-            return drawTank(tank, data.x, data.y, tankImage, weaponImage, weaponAngle);
+            tank.setCoord(data.x, data.y);
+            return drawTank(localStorage.getItem('playerId'), tank, tankImage, weaponImage, weaponAngle);
         });
     }
     return tankX;
 };
+
 
 const animate = (time) => {
     const duration = 1500;

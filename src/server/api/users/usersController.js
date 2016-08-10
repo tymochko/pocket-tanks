@@ -285,7 +285,11 @@ const getUserImage = function (req, res) {
             return res.status(403).send();
         }
         userImage = foundUser.userImg;
+        if(userImage.uploadedImg === null) {
+            return res.status(403).send();
+        }
         if (userImage.uploadedImg) {
+
             userDir = __dirname + '/../../static/usersInfo/' + userId + '/' + userImage.image;
         } else {
             userDir = __dirname + '/../../static/images/' + userImage.image;
