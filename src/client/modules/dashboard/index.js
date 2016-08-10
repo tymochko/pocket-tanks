@@ -22,7 +22,7 @@ module.exports = angular.module('tanks.dashboard', [
 
     $scope.sendInvite = function(id){
         console.log('Invite sent');
-        socket.emit('invite', { sender_user: senderId, target_user: id });
+        socket.emit('invite', { senderUser: senderId, targetUser: id });
     };
 
     socket.on('connect', () => {
@@ -44,7 +44,7 @@ module.exports = angular.module('tanks.dashboard', [
             templateUrl: 'dashboard/requestToPlay.html',
             controller: 'ConfirmCtrl',
             resolve: {
-                data: function () {
+                data() {
                     return data;
                 }
             }
@@ -67,14 +67,14 @@ module.exports = angular.module('tanks.dashboard', [
 .controller('ConfirmCtrl', ['$scope', '$uibModalInstance', 'data', 'socket', function($scope, $uibModalInstance, data, socket) {
     $scope.data = data;
 
-    $scope.ok = function () {
+    $scope.ok = function() {
         $uibModalInstance.close();
-        socket.emit('accepted', {invitor: data.sender_user, invited: data.target_user});
+        socket.emit('accepted', {invitor: data.senderUser, invited: data.targetUser});
     };
 
-    $scope.cancel = function () {
+    $scope.cancel = function() {
         $uibModalInstance.dismiss('cancel');
-        socket.emit('rejected', {invitor: data.sender_user});
+        socket.emit('rejected', {invitor: data.senderUser});
     };
 }])
 .config(RouteConfig);

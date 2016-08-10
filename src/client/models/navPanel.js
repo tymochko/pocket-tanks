@@ -1,7 +1,6 @@
-import { getId } from './externalFunctions';
+import { getId, clear } from './externalFunctions';
 import { drawTank } from './drawTank';
 import { makeShot } from './shotTrajectory';
-import { clear } from './externalFunctions';
 import { canvasModel } from './canvasModel';
 
 export function navPanel(tank, angle, weaponAngle) {
@@ -62,7 +61,13 @@ export function navPanel(tank, angle, weaponAngle) {
         getId('angle').innerHTML = angle;
     };
 
+    /*
+    set life to 0
+    set game status to false
+    redirect to Scores page
+    */
     getId('surrender').onclick = () => {
         console.log('HELLO SURRENDER');
+        window.location = '/dashboard';
     };
 }
