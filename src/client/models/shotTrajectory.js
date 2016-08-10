@@ -6,6 +6,14 @@ import { ground } from './groundModel';
 import { drawGround } from './canvasRedrawModel';
 import { requestAnimFrame, clear } from './externalFunctions';
 import { canvasModel } from './canvasModel';
+const player1 = {};
+const player2 = {};
+export const func = (tank1,tank2) => {
+    player1.data = tank1;
+    player2.data = tank2;
+    console.log(player1);
+
+};
 
 let originalPoints,
     lastTime,
@@ -109,6 +117,7 @@ const generateExplosion = (dt) => {
     //check angle for accuracy of point
     // bull.rotate(-bullet.imgInf.currAngle);
 
+
     var groundPath = new paper.Path(
         new paper.Point(originalPoints[0][0], originalPoints[0][1])
         );
@@ -116,7 +125,34 @@ const generateExplosion = (dt) => {
         groundPath.add(new paper.Point(originalPoints[i][0], originalPoints[i][1]));
     }
 
+    var playerr1 = new paper.Path.Rectangle(player1.data.tankX, player1.data.tankY,80,30);
+    var playerr2 = new paper.Path.Rectangle(player2.data.tankX, player2.data.tankY,80,30);
+
+    playerr1.rotate(player1.data.tankAngle);
+    playerr2.rotate(player2.data.tankAngle);
     // check if intersect the original points
+    var intt = bull.getIntersections(playerr2);
+    if(intt.length > 0) {
+        console.log('boom');
+        let crossPoint = {
+            x: intt[0]._point.x,
+            y: intt[0]._point.y
+        };
+        console.log(crossPoint);
+        bullet = null;
+
+    }
+    var intt2 = bull.getIntersections(playerr1);
+    if(intt2.length > 0) {
+        console.log('boom');
+        let crossPoint = {
+            x: intt2[0]._point.x,
+            y: intt2[0]._point.y
+        };
+        bullet = null;
+        console.log(crossPoint);
+
+    }
     var intersect = bull.getIntersections(groundPath);
     if(intersect.length > 0) {
         bullet = null;
@@ -150,7 +186,6 @@ const renderEntity = (bullet) => {
     if(!bullet) { return; }
     bullet.imgInf.render(canvasModel.getBullet().ctx, deltaT);
 };
-
 (function() {
     function ImgInf(url, pos, angle, v0) {
         this.pos = pos;
