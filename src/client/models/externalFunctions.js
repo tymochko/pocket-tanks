@@ -13,7 +13,7 @@ module.exports.requestAnimFrame = (function(){
     };
 })();
 
-export function getId (id) {
+export function getId(id) {
     return document.getElementById(id);
 }
 
@@ -38,6 +38,6 @@ export function fillBackground(ctx, pattern) {
 
 export const drawTanks = (callback, tank1, tank2, tankImage, weaponImage) => {
     canvasModel.getTank().ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    callback(tank1.id, tank1, tankImage, weaponImage, tank1.getWeaponAngle());
-    callback(tank2.id, tank2, tankImage, weaponImage, tank2.getWeaponAngle());
+    callback(tank1, tankImage, weaponImage, tank1.weaponAngle);
+    callback(tank2, tankImage, weaponImage, tank2.weaponAngle);
 }

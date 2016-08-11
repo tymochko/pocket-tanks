@@ -11,14 +11,15 @@ const moveWeapon = (xCoordinate, yCoordinate, tankAngle, tankCtx, weaponImage, w
 };
 
 const drawTankFn = () => {
-    return (playerId, tank, tankImage, weaponImage, weaponAngle) => {
+    return (tank, tankImage, weaponImage, weaponAngle) => {
+        console.log('draw tank');
         const xCoordinate = tank.tankX;
         const yCoordinate = tank.tankY;
 
         const tankCtx = canvasModel.getTank().ctx;
         const tankAngle = -tiltTank(xCoordinate);
 
-        tank.setTankAngle(tankAngle);
+        // tank.setTankAngle(tankAngle);
 
         tankCtx.save();
         tankCtx.translate(xCoordinate, yCoordinate - WEAPON_HEIGHT);
