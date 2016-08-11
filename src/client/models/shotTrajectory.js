@@ -6,12 +6,15 @@ import { ground } from './groundModel';
 import { drawGround } from './canvasRedrawModel';
 import { requestAnimFrame, clear } from './externalFunctions';
 import { canvasModel } from './canvasModel';
+
+
 const player1 = {};
 const player2 = {};
-export const func = (tank1,tank2) => {
+
+
+export const intersectionPlayer = (tank1,tank2) => {
     player1.data = tank1;
     player2.data = tank2;
-    console.log(player1);
 
 };
 
@@ -125,31 +128,32 @@ const generateExplosion = (dt) => {
         groundPath.add(new paper.Point(originalPoints[i][0], originalPoints[i][1]));
     }
 
-    var playerr1 = new paper.Path.Rectangle(player1.data.tankX, player1.data.tankY,80,30);
-    var playerr2 = new paper.Path.Rectangle(player2.data.tankX, player2.data.tankY,80,30);
+    var user1 = new paper.Path.Rectangle(player1.data.tankX, player1.data.tankY,80,30);
+    var user2 = new paper.Path.Rectangle(player2.data.tankX, player2.data.tankY,80,30);
 
-    playerr1.rotate(player1.data.tankAngle);
-    playerr2.rotate(player2.data.tankAngle);
+    user1.rotate(player1.data.tankAngle);
+    user2.rotate(player2.data.tankAngle);
     // check if intersect the original points
-    var intt = bull.getIntersections(playerr2);
-    if(intt.length > 0) {
-        console.log('boom');
+    var intersectPlayer1 = bull.getIntersections(user2);
+    if(intersectPlayer1.length > 0) {
+        bullet = null;
+        console.log('boom2');
         let crossPoint = {
-            x: intt[0]._point.x,
-            y: intt[0]._point.y
+            x: intersectPlayer1[0]._point.x,
+            y: intersectPlayer1[0]._point.y
         };
         console.log(crossPoint);
-        bullet = null;
 
     }
-    var intt2 = bull.getIntersections(playerr1);
-    if(intt2.length > 0) {
-        console.log('boom');
-        let crossPoint = {
-            x: intt2[0]._point.x,
-            y: intt2[0]._point.y
-        };
+    var intersectPlayer2 = bull.getIntersections(user1);
+    if(intersectPlayer2.length > 0) {
         bullet = null;
+        console.log('boom1');
+        let crossPoint = {
+            x: intersectPlayer2[0]._point.x,
+            y: intersectPlayer2[0]._point.y
+        };
+
         console.log(crossPoint);
 
     }

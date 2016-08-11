@@ -10,7 +10,7 @@ import { Tank } from './tankModel';
 import { drawGround, drawSky } from './canvasRedrawModel';
 import { canvasModel } from './canvasModel';
 import { drawTank } from './drawTank';
-import {func} from './shotTrajectory'
+import {intersectionPlayer} from './shotTrajectory'
 
 const originalPoints = ground.getGround();
 const tank = new Tank('playerId');
@@ -149,7 +149,7 @@ module.exports.initGame = (gameInst, socket) => {
         tank1 = gameInst.player1.tank;
         tank2 = gameInst.player2.tank;
 
-        func(tank1,tank2);
+        intersectionPlayer(tank1,tank2);
 
 
      
