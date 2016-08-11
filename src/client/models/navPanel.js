@@ -60,12 +60,11 @@ export function navPanel(tank, angle, weaponAngle, socket, gameInst) {
         getId('angle').innerHTML = angle;
     };
 
+    socket.on('redirect-away-from-game', () => {
+        window.location = '/dashboard';
+    });
+    
     getId('surrender').onclick = () => {
-        socket.on('redirect-away-from-game', () => {
-            console.log('IM HERE');
-            window.location = '/dashboard';
-        });
-
         const thisPlayerId = localStorage.getItem('playerId');
         gameInst.gameStatus = false;
 

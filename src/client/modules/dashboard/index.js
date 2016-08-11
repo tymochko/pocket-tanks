@@ -33,13 +33,6 @@ module.exports = angular.module('tanks.dashboard', [
     });
 
     socket.on('you-are-invited', function(data) {
-        // const result = confirm('Wanna play with ' + data.sender_username + '?');
-        // if (result === true) {
-        //     socket.emit('accepted', {invitor: data.sender_user, invited: data.target_user});
-
-        // } else {
-        //     socket.emit('rejected', {invitor: data.sender_user});
-        // }
         var modalInstance = $uibModal.open({
             templateUrl: 'dashboard/requestToPlay.html',
             controller: 'ConfirmCtrl',

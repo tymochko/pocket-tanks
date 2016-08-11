@@ -8,7 +8,7 @@ export function gameSocket(client) {
                 if (err) {
                     throw err;
                 } else {
-                    socket.emit('redirect-away-from-game', {});
+                    client.emit('redirect-away-from-game', {});
                 }
             });
         });
