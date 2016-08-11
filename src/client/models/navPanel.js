@@ -60,19 +60,15 @@ export function navPanel(tank, angle, weaponAngle, socket, gameInst) {
         getId('angle').innerHTML = angle;
     };
 
-    /*
-    set life to 0
-    set game status to false
-    redirect to Scores page
-    */
     getId('surrender').onclick = () => {
         socket.on('redirect-away-from-game', () => {
             console.log('IM HERE');
-            // window.location = '/dashboard';
+            window.location = '/dashboard';
         });
 
         const thisPlayerId = localStorage.getItem('playerId');
         gameInst.gameStatus = false;
+
         if (gameInst.player1.id === thisPlayerId) {
             gameInst.player1.life = 0;
         } else {
