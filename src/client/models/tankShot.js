@@ -135,7 +135,7 @@ module.exports.initGame = (gameInst, socket) => {
 
 /* ======   Navigation ======== */
 
-    navPanel(tank, angle, weaponAngle);
+    navPanel(tank, angle, weaponAngle, socket, gameInst);
 
     getId('chatBtn').onclick = showChatWindow;
 

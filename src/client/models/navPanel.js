@@ -3,9 +3,8 @@ import { drawTank } from './drawTank';
 import { makeShot } from './shotTrajectory';
 import { canvasModel } from './canvasModel';
 
-export function navPanel(tank, angle, weaponAngle) {
+export function navPanel(tank, angle, weaponAngle, socket, gameInst) {
     let tankCtx = canvasModel.getTank().ctx,
-        socket,
         tankImage = new Image(),
         weaponImage = new Image();
 
@@ -67,7 +66,19 @@ export function navPanel(tank, angle, weaponAngle) {
     redirect to Scores page
     */
     getId('surrender').onclick = () => {
-        console.log('HELLO SURRENDER');
-        window.location = '/dashboard';
+        socket.on('redirect-away-from-game', () => {
+            console.log('IM HERE');
+            // window.location = '/dashboard';
+        });
+
+        const thisPlayerId = localStorage.getItem('playerId');
+        gameInst.gameStatus = false;
+        if (gameInst.player1.id === thisPlayerId) {
+            gameInst.player1.life = 0;
+        } else {
+            gameInst.player2.life = 0;
+        }
+
+        socket.emit('end-game', gameInst);
     };
 }

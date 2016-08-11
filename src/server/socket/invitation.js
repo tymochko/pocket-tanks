@@ -1,11 +1,11 @@
 import GameData from '../api/game/gameController';
 
-var connections = [];
+const connections = [];
 
 export function invite(client) {
     client.on('connection', function(socket) {
 
-        var info = {socket, user: null, username: null};
+        const info = {socket, user: null, username: null};
 
         connections.push(info);
 
@@ -45,20 +45,28 @@ export function invite(client) {
             socket.on('create-game', (usersIds) => {
                 const initGameData = {
                     player1: {
-                        id: usersIds.player1
+                        id: usersIds.player1,
+                        tank: {},
+                        life: 2,
+                        turn: true
                     },
                     player2: {
-                        id: usersIds.player2
+                        id: usersIds.player2,
+                        tank: {},
+                        life: 2,
+                        turn: false
                     },
                     originalPoints: [
                         [0, 280], [200, 350], [350, 150], [500, 250], [700, 150], [800, 250], [800, 500], [0, 500], [0, 280]
-                    ]
+                    ],
+                    gameStatus: true
                 };
 
                 const newGame = new GameData();
                 newGame.player1 = initGameData.player1;
                 newGame.player2 = initGameData.player2;
                 newGame.originalPoints = initGameData.originalPoints;
+                newGame.gameStatus = initGameData.gameStatus;
 
                 GameData.createGame(newGame, function(err, game) {
                     if (err) {

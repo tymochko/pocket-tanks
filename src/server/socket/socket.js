@@ -5,6 +5,7 @@ var client = io();
 var mongoose = require('mongoose');
 const messageLimit = 5;
 import { invite } from './invitation';
+import { gameSocket } from './gameSocket';
 
 app.io = client;
 
@@ -84,5 +85,6 @@ client.on('connection', function(socket) {
 });
 
 invite(client);
+gameSocket(client);
 
 module.exports = app;
