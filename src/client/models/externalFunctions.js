@@ -16,10 +16,9 @@ export function getId(id) {
     return document.getElementById(id);
 }
 
-export function clear(ctx) {
-    // let ctx = canvasModel.getCtx().ctx;
+export const clear = (ctx) => {
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
-}
+};
 
 export function clearAll(sky, ground, lightning, tank, bullet) {
     sky.clearRect(0, 0, WIDTH, HEIGHT);
@@ -37,8 +36,8 @@ export function fillBackground(ctx, pattern) {
 
 export const drawTanks = (callback, tank1, tank2, tankImage, weaponImage) => {
     canvasModel.getTank().ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    callback(tank1, tankImage, weaponImage, tank1.weaponAngle);
-    callback(tank2, tankImage, weaponImage, tank2.weaponAngle);
+    callback(tank1, tankImage, weaponImage);
+    callback(tank2, tankImage, weaponImage);
 };
 
 export const checkTurn = (gameInst, callback) => {
