@@ -31,7 +31,6 @@ export function gameSocket(client) {
         });
 
         socket.on('initPosTank', function(data) {
-            console.log(tanksCoords);
             if (!Object.keys(tanksCoords).length) {
                 tanksCoords = {
                     tank1: {

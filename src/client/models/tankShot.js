@@ -38,7 +38,7 @@ module.exports.initGame = (gameInst, socket) => {
 
     power = parseInt(getId('power').innerHTML);
     angle = parseInt(getId('angle').innerHTML);
-    
+
 /* ====== Tank Weapon Movement ======== */
 
     const moveWeaponKeyDown = (evt) => {
@@ -134,8 +134,8 @@ module.exports.initGame = (gameInst, socket) => {
     });
 
 /* ======   Navigation ======== */
-    
-    // navPanel(tank, angle, weaponAngle, socket, gameInst);
+
+    navPanel(tank, angle, weaponAngle, socket, gameInst);
 
     getId('chatBtn').onclick = showChatWindow;
 
@@ -170,7 +170,6 @@ module.exports.initGame = (gameInst, socket) => {
             weaponAngle = tank.getWeaponAngle();
 
             socket.emit('initPosTank', { tank1, tank2 });
-            console.log(tank1, tank2);
 
             socket.on('initOutPosTank', (data) => {
                 tank1.setCoord(data.tank1.tankX, data.tank1.tankY);

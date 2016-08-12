@@ -12,7 +12,6 @@ const moveWeapon = (xCoordinate, yCoordinate, tankAngle, tankCtx, weaponImage, w
 
 const drawTankFn = () => {
     return (tank, tankImage, weaponImage, weaponAngle) => {
-        console.log('draw tank');
         const xCoordinate = tank.tankX;
         const yCoordinate = tank.tankY;
 
