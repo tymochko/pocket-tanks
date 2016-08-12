@@ -1,12 +1,10 @@
-import { getId } from './externalFunctions';
+import { getId, clear } from './externalFunctions';
 import { drawTank } from './drawTank';
 import { makeShot } from './shotTrajectory';
-import { clear } from './externalFunctions';
 import { canvasModel } from './canvasModel';
 
-export function navPanel(tank, angle, weaponAngle) {
+export function navPanel(tank, angle, weaponAngle, socket, gameInst) {
     let tankCtx = canvasModel.getTank().ctx,
-        socket,
         tankImage = new Image(),
         weaponImage = new Image();
 
@@ -60,5 +58,22 @@ export function navPanel(tank, angle, weaponAngle) {
         tank.setWeaponAngle(weaponAngle);
         drawTank(tank, tank.getCoord().tankX, tank.getCoord().tankY, tankImage, weaponImage, weaponAngle);
         getId('angle').innerHTML = angle;
+    };
+
+    socket.on('redirect-away-from-game', () => {
+        window.location = '/dashboard';
+    });
+    
+    getId('surrender').onclick = () => {
+        const thisPlayerId = localStorage.getItem('playerId');
+        gameInst.gameStatus = false;
+
+        if (gameInst.player1.id === thisPlayerId) {
+            gameInst.player1.life = 0;
+        } else {
+            gameInst.player2.life = 0;
+        }
+
+        socket.emit('end-game', gameInst);
     };
 }

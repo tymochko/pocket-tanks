@@ -10,13 +10,13 @@ import { Tank } from './tankModel';
 import { drawGround, drawSky } from './canvasRedrawModel';
 import { canvasModel } from './canvasModel';
 import { drawTank } from './drawTank';
+import {intersectionPlayer} from './shotTrajectory'
 
 const originalPoints = ground.getGround();
 
 let tank1;
 let tank2;
 let move;
-
 
 let tankX,
     tankY,
@@ -28,8 +28,6 @@ let tank;
 const tankImage = new Image();
 const weaponImage = new Image();
 
-//TODO tankMove in socket, not socket in tankMove
-
 module.exports.initGame = (gameInst, socket) => {
 
     const tankCtx = canvasModel.getTank().ctx;
@@ -40,6 +38,7 @@ module.exports.initGame = (gameInst, socket) => {
 
     power = parseInt(getId('power').innerHTML);
     angle = parseInt(getId('angle').innerHTML);
+    
 /* ====== Tank Weapon Movement ======== */
 
     const moveWeaponKeyDown = (evt) => {
@@ -135,8 +134,8 @@ module.exports.initGame = (gameInst, socket) => {
     });
 
 /* ======   Navigation ======== */
-
-    // navPanel(tank, angle, weaponAngle);
+    
+    // navPanel(tank, angle, weaponAngle, socket, gameInst);
 
     getId('chatBtn').onclick = showChatWindow;
 
@@ -166,6 +165,7 @@ module.exports.initGame = (gameInst, socket) => {
                 gameInst.player2.tank.weaponAngle
             );
 
+            intersectionPlayer(tank1,tank2);
             tank = new Tank(localStorage.getItem('playerId'), getRandomPos(333, 33));
             weaponAngle = tank.getWeaponAngle();
 
@@ -180,11 +180,7 @@ module.exports.initGame = (gameInst, socket) => {
 
                 drawTank(tank1, tankImage, weaponImage, weaponAngle);
                 drawTank(tank2, tankImage, weaponImage, weaponAngle);
-                // return drawTanks(drawTank, tank1temp, tank2temp, tankImage, weaponImage);
             });
         };
     })();
 };
-
-
-//TODO gameFunc tank initialization

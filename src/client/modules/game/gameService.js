@@ -14,11 +14,11 @@ export function gameService() {
             socket.emit('enter-with-gameId', gameId);
 
             const deferred = $q.defer();
-            
+
             socket.on('get-game-data', (gameData) => {
                 deferred.resolve(gameData);
             });
-            
+
             return deferred.promise;
         }
     };
