@@ -2,25 +2,21 @@
 import paper from 'paper';
 import { ground } from './groundModel';
 import showChatWindow from './chatField';
-import { findLinePoints, tankMove } from './tankMovement';
+import { tankMove } from './tankMovement';
 import { navPanel } from './navPanel';
-import { makeShot } from './shotTrajectory';
-import { getId, clear, clearAll, drawTanks } from './externalFunctions';
+import { makeShot, intersectionPlayer } from './shotTrajectory';
+import { getId, clear, drawTanks } from './externalFunctions';
 import { Tank } from './tankModel';
 import { drawGround, drawSky } from './canvasRedrawModel';
 import { canvasModel } from './canvasModel';
 import { drawTank } from './drawTank';
-import {intersectionPlayer} from './shotTrajectory'
 
 const originalPoints = ground.getGround();
 
 let tank1;
 let tank2;
-let move;
 
-let tankX,
-    tankY,
-    weaponAngle,
+let weaponAngle,
     angle,
     power;
 let tank;
@@ -41,6 +37,33 @@ module.exports.initGame = (gameInst, socket) => {
 
 /* ====== Tank Weapon Movement ======== */
 
+    const weaponToMove = (value) => {
+        let weaponMoves;
+        if (localStorage.getItem('playerId') === tank1.id) {
+            weaponMoves = 'tank1';
+        } else {
+            weaponMoves = 'tank2';
+        }
+
+        socket.emit('inputPosWeapon', {
+            weaponMoves,
+            angle: value,
+            tank1,
+            tank2
+        });
+    };
+
+    const weaponMove = (tankParam, angleParam) => {
+        clear(tankCtx);
+        if (tankParam === 'tank1') {
+            tank1.setWeaponAngle(angleParam);
+            drawTanks(drawTank, tank1, tank2, tankImage, weaponImage);
+        } else {
+            tank2.setWeaponAngle(angleParam);
+            drawTanks(drawTank, tank2, tank1, tankImage, weaponImage);
+        }
+    };
+
     const moveWeaponKeyDown = (evt) => {
         switch (evt.keyCode) {
             case 38:    //Up arrow was pressed /
@@ -48,11 +71,8 @@ module.exports.initGame = (gameInst, socket) => {
                     return;
                 }
                 angle +=5;
-                clear(tankCtx);
-                weaponAngle = angle*Math.PI/180;
-                tank.setWeaponAngle(weaponAngle);
-                drawTank(localStorage.getItem('playerId'), tank, tankImage, weaponImage, weaponAngle);
                 getId('angle').innerHTML = angle;
+                weaponToMove(angle*Math.PI/180);
                 break;
 
             case 40:   //Down arrow was pressed /
@@ -60,28 +80,31 @@ module.exports.initGame = (gameInst, socket) => {
                     return;
                 }
                 angle -=5;
-                clear(tankCtx);
-                weaponAngle = angle*Math.PI/180;
-                tank.setWeaponAngle(weaponAngle);
-                drawTank(localStorage.getItem('playerId'), tank, tankImage, weaponImage, weaponAngle);
                 getId('angle').innerHTML = angle;
+                weaponToMove(angle*Math.PI/180);
                 break;
 
             default:
                 break;
         }
     };
-
     document.addEventListener('keydown', moveWeaponKeyDown, true);
 
-/* ======  Tank movement ======== */
-    const toMove = (direction) => {
+    socket.on('outputPosWeapon', (data) => {
+        weaponMove(data.weaponMoves, data.angle);
+    });
+
+/* ========  Tank movement ======== */
+
+    const tankToMove = (direction) => {
         let tankMoves;
+
         if (localStorage.getItem('playerId') === tank1.id) {
             tankMoves = 'tank1';
         } else {
             tankMoves = 'tank2';
         }
+
         socket.emit('inputPosTank', {
             direction,
             tankMoves,
@@ -93,14 +116,14 @@ module.exports.initGame = (gameInst, socket) => {
     const doKeyDown = (evt) => {
         const now = new Date().getTime();
 
-        if (now - lastTimeTankMoved > 1500) {
+        if (now - lastTimeTankMoved > 800) {
             switch (evt.keyCode) {
                 case 37:  /* Left arrow was pressed */
-                    toMove('left');
+                    tankToMove('left');
                     break;
 
                 case 39:  /* Right arrow was pressed */
-                    toMove('right');
+                    tankToMove('right');
                     break;
 
                 case 13: /*ENTER*/
@@ -165,7 +188,7 @@ module.exports.initGame = (gameInst, socket) => {
                 gameInst.player2.tank.weaponAngle
             );
 
-            intersectionPlayer(tank1,tank2);
+            intersectionPlayer(tank1, tank2);
             tank = new Tank(localStorage.getItem('playerId'), getRandomPos(333, 33));
             weaponAngle = tank.getWeaponAngle();
 
@@ -177,8 +200,8 @@ module.exports.initGame = (gameInst, socket) => {
 
                 clear(canvasModel.getTank().ctx);
 
-                drawTank(tank1, tankImage, weaponImage, weaponAngle);
-                drawTank(tank2, tankImage, weaponImage, weaponAngle);
+                drawTanks(drawTank, tank1, tank2, tankImage, weaponImage);
+                // drawTank(tank2, tankImage, weaponImage);
             });
         };
     })();

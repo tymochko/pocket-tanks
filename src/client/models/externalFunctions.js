@@ -1,6 +1,5 @@
 import { canvasModel } from './canvasModel';
 import { WIDTH, HEIGHT } from './externalVariables';
-import { drawTank } from './drawTank';
 
 module.exports.requestAnimFrame = (function(){
     return window.requestAnimationFrame   ||
@@ -8,7 +7,7 @@ module.exports.requestAnimFrame = (function(){
     window.mozRequestAnimationFrame    ||
     window.oRequestAnimationFrame      ||
     window.msRequestAnimationFrame     ||
-    function(callback){
+    function(callback) {
         window.setTimeout(callback, 1000 / 60);
     };
 })();
@@ -17,10 +16,9 @@ export function getId(id) {
     return document.getElementById(id);
 }
 
-export function clear(ctx) {
-    // let ctx = canvasModel.getCtx().ctx;
+export const clear = (ctx) => {
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
-}
+};
 
 export function clearAll(sky, ground, lightning, tank, bullet) {
     sky.clearRect(0, 0, WIDTH, HEIGHT);
@@ -38,6 +36,6 @@ export function fillBackground(ctx, pattern) {
 
 export const drawTanks = (callback, tank1, tank2, tankImage, weaponImage) => {
     canvasModel.getTank().ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    callback(tank1, tankImage, weaponImage, tank1.weaponAngle);
-    callback(tank2, tankImage, weaponImage, tank2.weaponAngle);
+    callback(tank1, tankImage, weaponImage);
+    callback(tank2, tankImage, weaponImage);
 };

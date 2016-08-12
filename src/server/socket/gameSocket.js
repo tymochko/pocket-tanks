@@ -36,12 +36,14 @@ export function gameSocket(client) {
                     tank1: {
                         id: data.tank1.id,
                         tankX: data.tank1.tankX,
-                        tankY: data.tank1.tankY
+                        tankY: data.tank1.tankY,
+                        weaponAngle: data.tank1.weaponAngle
                     },
                     tank2: {
                         id: data.tank2.id,
                         tankX: data.tank2.tankX,
-                        tankY: data.tank2.tankY
+                        tankY: data.tank2.tankY,
+                        weaponAngle: data.tank2.weaponAngle
                     }
                 };
             }
@@ -62,6 +64,15 @@ export function gameSocket(client) {
                 tank2: data.tank2
             });
         }
+        
+        socket.on('inputPosWeapon', (data) => {
+            client.emit('outputPosWeapon', {
+                weaponMoves: data.weaponMoves,
+                angle: data.angle,
+                tank1: data.tank1,
+                tank2: data.tank2
+            });
+        });
 
         socket.on('moveIdServer', (data) => {
             client.emit('moveIdClient', { playerId: data.playerId });
