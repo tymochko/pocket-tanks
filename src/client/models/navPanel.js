@@ -2,6 +2,7 @@ import { getId, clear } from './externalFunctions';
 import { drawTank } from './drawTank';
 import { makeShot } from './shotTrajectory';
 import { canvasModel } from './canvasModel';
+import showChatWindow from './chatField';
 
 export function navPanel(tank, angle, weaponAngle, socket, gameInst) {
     let tankCtx = canvasModel.getTank().ctx,
@@ -60,10 +61,12 @@ export function navPanel(tank, angle, weaponAngle, socket, gameInst) {
         getId('angle').innerHTML = angle;
     };
 
+    getId('chatBtn').onclick = showChatWindow;
+
     socket.on('redirect-away-from-game', () => {
         window.location = '/dashboard';
     });
-    
+
     getId('surrender').onclick = () => {
         const thisPlayerId = localStorage.getItem('playerId');
         gameInst.gameStatus = false;

@@ -1,14 +1,13 @@
 import { canvasModel } from './canvasModel';
 import { WIDTH, HEIGHT } from './externalVariables';
-import { drawTank } from './drawTank';
 
-module.exports.requestAnimFrame = (function(){
-    return window.requestAnimationFrame   ||
+module.exports.requestAnimFrame = (function() {
+    return window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame    ||
-    window.oRequestAnimationFrame      ||
-    window.msRequestAnimationFrame     ||
-    function(callback){
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function(callback) {
         window.setTimeout(callback, 1000 / 60);
     };
 })();
@@ -40,4 +39,21 @@ export const drawTanks = (callback, tank1, tank2, tankImage, weaponImage) => {
     canvasModel.getTank().ctx.clearRect(0, 0, WIDTH, HEIGHT);
     callback(tank1, tankImage, weaponImage, tank1.weaponAngle);
     callback(tank2, tankImage, weaponImage, tank2.weaponAngle);
+};
+
+export const checkTurn = (gameInst, callback) => {
+    const thisWindowPlayerId = localStorage.getItem('playerId');
+    let thisWindowPlayerTurn;
+
+    if (thisWindowPlayerId === gameInst.player1.id) {
+        thisWindowPlayerTurn = gameInst.player1.turn;
+    } else {
+        thisWindowPlayerTurn = gameInst.player2.turn;
+    }
+
+    if (thisWindowPlayerTurn === true) {
+        return callback();
+    }
+
+    return null;
 };

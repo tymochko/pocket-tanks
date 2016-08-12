@@ -1,16 +1,14 @@
 'use strict';
 import paper from 'paper';
 import { ground } from './groundModel';
-import showChatWindow from './chatField';
-import { findLinePoints, tankMove } from './tankMovement';
+import { tankMove } from './tankMovement';
 import { navPanel } from './navPanel';
-import { makeShot } from './shotTrajectory';
-import { getId, clear, clearAll, drawTanks } from './externalFunctions';
+import { makeShot, intersectionPlayer } from './shotTrajectory';
+import { getId, clear, clearAll, drawTanks, checkTurn } from './externalFunctions';
 import { Tank } from './tankModel';
 import { drawGround, drawSky } from './canvasRedrawModel';
 import { canvasModel } from './canvasModel';
 import { drawTank } from './drawTank';
-import {intersectionPlayer} from './shotTrajectory'
 
 const originalPoints = ground.getGround();
 
@@ -29,7 +27,6 @@ const tankImage = new Image();
 const weaponImage = new Image();
 
 module.exports.initGame = (gameInst, socket) => {
-
     const tankCtx = canvasModel.getTank().ctx;
     let lastTimeTankMoved = 0;
 
@@ -120,7 +117,10 @@ module.exports.initGame = (gameInst, socket) => {
         lastTimeTankMoved = now;
         }
     };
-    window.addEventListener('keydown', doKeyDown, true);
+
+    checkTurn(gameInst, () => {
+        window.addEventListener('keydown', doKeyDown, true);
+    });
 
     socket.on('outputPosTank', (data) => {
         tankMove(data.direction, data.tankMoves, data.tank1, data.tank2, tankImage, weaponImage, socket);
@@ -136,8 +136,6 @@ module.exports.initGame = (gameInst, socket) => {
 /* ======   Navigation ======== */
 
     navPanel(tank, angle, weaponAngle, socket, gameInst);
-
-    getId('chatBtn').onclick = showChatWindow;
 
     const getRandomPos = (a, b) => {
         return Math.floor((Math.random() * a) + b);
@@ -165,7 +163,7 @@ module.exports.initGame = (gameInst, socket) => {
                 gameInst.player2.tank.weaponAngle
             );
 
-            intersectionPlayer(tank1,tank2);
+            intersectionPlayer(tank1, tank2);
             tank = new Tank(localStorage.getItem('playerId'), getRandomPos(333, 33));
             weaponAngle = tank.getWeaponAngle();
 

@@ -16,7 +16,6 @@ export function gameSocket(client) {
                 angleWeapon: data.angle,
                 tankAngle: data.tankAngle
             });
-
         }
 
         socket.on('changeCoords', (data) => {
