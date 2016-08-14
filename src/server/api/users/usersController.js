@@ -24,6 +24,7 @@ var userSchema = new Schema({
     userAge: {type: Number, required: true},
     userImg: {type: Object},
     isOnline: {type: Boolean},
+    activeGame: {type: String},
     isEnabled: {type: Boolean},
     userLanguage: {type:String}
 });
@@ -419,6 +420,27 @@ const getPublicImg = function (req, res) {
 
 };
 
+const updateActiveGame = function(id, updatedData, callback) {
+    this.findOneAndUpdate(
+        {_id: id}, {
+            $set: {
+                activeGame: updatedData
+            }
+        },
+        (err, foundUser) => {
+     
+            if (err) {
+                throw err;
+            } else {
+                foundUser.activeGame = updatedData;
+                callback(err, foundUser);
+            }
+        });
+};
+
+
+
+module.exports.updateActiveGame = updateActiveGame;
 module.exports.getPublicImg = getPublicImg;
 module.exports.uploadImg = uploadImg;
 module.exports.getUserImage = getUserImage;

@@ -1,4 +1,5 @@
 import GameData from '../api/game/gameController';
+import userData from '../api/users/usersController';
 
 let tanksCoords = {};
 
@@ -78,6 +79,21 @@ export function gameSocket(client) {
         });
 
         socket.on('end-game', (gameData) => {
+            userData.updateActiveGame(gameData.player1.id, null,  (err, data) => {
+                if (err) {
+                    throw err;
+                } else {
+                 return 0
+                }
+            });
+            userData.updateActiveGame(gameData.player2.id, null,  (err, data) => {
+                if (err) {
+                    throw err;
+                } else {
+                    return 0
+                }
+            });
+
             GameData.updateGameInfo(gameData.id, gameData, (err, game) => {
                 if (err) {
                     throw err;

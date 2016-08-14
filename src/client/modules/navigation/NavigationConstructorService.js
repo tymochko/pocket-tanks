@@ -1,16 +1,18 @@
 export class NavigationConstructor {
     constructor(RouteNavigation) {
         this.navBuild = (logged) => {
-
             let href;
             let name;
             let ngClick = "";
             let icon = "";
-
+            const activeGameId = RouteNavigation.activeData.active;
             let nav = '<ul class="nav navbar-nav"> ';
             let navRight = '<ul class="nav navbar-nav navbar-right"> ';
-            const navCenter = '<a href="/game" class="btn btn-danger navbar-center">Start GAME</a>';
+            let navCenter = '';
 
+            if(activeGameId){
+                 navCenter = '<button ng-click="test()" class="btn btn-danger navbar-center">Resume GAME</button>';
+            }
             if (logged) {
                 for (let i = 0; i < RouteNavigation.routes.length; i++) {
                     href = ' href="' + RouteNavigation.routes[i].template + '"';
@@ -56,5 +58,9 @@ export class NavigationConstructor {
             }
             return navRight;
         };
+        this.activeGameData = () => {
+            const activeGamesId = RouteNavigation.activeData.active;
+            return activeGamesId
+        }
     }
 }

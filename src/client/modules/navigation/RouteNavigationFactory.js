@@ -24,7 +24,11 @@ const getNewNames = (routes, key) => {
 };
 
 export function RouteNavigation($route, $location, ProfileService, $translate) {
-
+    const activeData = {};
+    function checkActiveGame(data) {
+        activeData.active = data;
+    }
+    
     return {
         routes,
         activeRoute: (route) => {
@@ -33,8 +37,10 @@ export function RouteNavigation($route, $location, ProfileService, $translate) {
         getNewRoutes: () => {
             return ProfileService.getProfile().then(({data}) => {
                 $translate.use(data.userLanguage);
+                checkActiveGame(data.activeGame);
                 return getNewNames(routes, data.userLanguage);
             });
-        }
+        },
+        activeData
     };
 }

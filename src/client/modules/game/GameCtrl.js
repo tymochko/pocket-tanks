@@ -26,4 +26,13 @@ export function transportData(socket, $q) {
         }, () => {
             alert('Server error. No game data received.');
         });
+    // socket.on('resume-game-data', function (gameData) {
+    //     console.log('+++++++'); console.log('+++++++');
+    //     const gameInsts = gameCreate(gameData);
+    //
+    //     initCanvas();
+    //     initGame(gameInsts, socket);
+    // });
+
 }
+
