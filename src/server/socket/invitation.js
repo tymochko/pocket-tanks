@@ -68,6 +68,8 @@ export function invite(client) {
                 const newGame = new GameData();
                 newGame.player1 = initGameData.player1;
                 newGame.player2 = initGameData.player2;
+                console.log(newGame.player1 , 'player 1');
+                console.log(newGame.player2 , 'player 2');
                 newGame.originalPoints = initGameData.originalPoints;
                 newGame.gameStatus = initGameData.gameStatus;
 

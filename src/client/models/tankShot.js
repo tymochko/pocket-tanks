@@ -1,7 +1,7 @@
 'use strict';
 import paper from 'paper';
 import { ground } from './groundModel';
-import { tankMove } from './tankMovement';
+import { tankMove, findLinePoints } from './tankMovement';
 import { navPanel } from './navPanel';
 import { makeShot, intersectionPlayer } from './shotTrajectory';
 import { getId, clear, drawTanks, checkTurn } from './externalFunctions';
@@ -10,8 +10,7 @@ import { drawGround, drawSky } from './canvasRedrawModel';
 import { canvasModel } from './canvasModel';
 import { drawTank } from './drawTank';
 
-const originalPoints = ground.getGround();
-
+let originalPoints;
 let tank1;
 let tank2;
 
@@ -24,7 +23,15 @@ const tankImage = new Image();
 const weaponImage = new Image();
 
 module.exports.initGame = (gameInst, socket) => {
+    console.log(gameInst);
     const tankCtx = canvasModel.getTank().ctx;
+    // socket.on('points',(data)=> {
+    //     ground.setGround(data);
+    //
+    // });
+    ground.setGround(gameInst.points);
+    originalPoints = ground.getGround();
+    console.log(originalPoints, 'points inside tankShot');
     let lastTimeTankMoved = 0;
 
 /* ====== initialization ======== */
@@ -41,6 +48,7 @@ module.exports.initGame = (gameInst, socket) => {
             weaponMoves = 'tank1';
         } else {
             weaponMoves = 'tank2';
+            value = value + Math.PI / 2;
         }
 
         socket.emit('inputPosWeapon', {
@@ -48,6 +56,23 @@ module.exports.initGame = (gameInst, socket) => {
             angle: value,
             tank1,
             tank2
+        });
+    };
+
+    const bulletToMove = () => {
+        let bulletMoves;
+        let tank;
+        if (localStorage.getItem('playerId') === tank1.id) {
+            bulletMoves = 'tank1';
+            tank = tank1;
+        } else {
+            bulletMoves = 'tank2';
+            tank = tank2;
+        }
+
+        socket.emit('inputBulletPos', {
+            bulletMoves,
+            tank
         });
     };
 
@@ -92,6 +117,34 @@ module.exports.initGame = (gameInst, socket) => {
         weaponMove(data.weaponMoves, data.angle);
     });
 
+    socket.on('outputBulletPos', (data) => {
+        bulletMove(data.bulletMoves, data.power, data.angleWeapon, data.tanbkAngle);
+
+    });
+
+    const bulletMove = (tankParam, powerParam, angleParam, tankAngleParam) => {
+        if (tankParam === 'tank1') {
+            makeShot(
+                canvasModel.getBullet().ctx,
+                tank1,
+                tank1.getCoord().tankX,
+                tank1.getCoord().tankY,
+                tank1.getTankAngle(),
+                tank1.getWeaponAngle(),
+                socket
+            );
+        } else {
+            makeShot(
+                canvasModel.getBullet().ctx,
+                tank2,
+                tank2.getCoord().tankX,
+                tank2.getCoord().tankY,
+                tank2.getTankAngle(),
+                tank2.getWeaponAngle(),
+                socket
+            );        
+        }
+    };
 /* ========  Tank movement ======== */
 
     const tankToMove = (direction) => {
@@ -125,14 +178,10 @@ module.exports.initGame = (gameInst, socket) => {
                     break;
 
                 case 13: /*ENTER*/
-                    makeShot(
-                        canvasModel.getBullet().ctx,
-                        tank,
-                        tank.getCoord().tankX,
-                        tank.getCoord().tankY,
-                        tank.getTankAngle(),
-                        socket
-                    );
+                    bulletToMove(); 
+                    tank1.tankY = findLinePoints(tank1.tankX);
+                    tank2.tankY = findLinePoints(tank2.tankX);
+                    drawTanks(drawTank, tank1, tank2, tankImage, weaponImage);
                     break;
 
                 default:
@@ -142,13 +191,14 @@ module.exports.initGame = (gameInst, socket) => {
         }
     };
 
-    checkTurn(gameInst, () => {
+    // checkTurn(gameInst, () => {
         window.addEventListener('keydown', doKeyDown, true);
-    });
+    // });
 
     socket.on('outputPosTank', (data) => {
         tankMove(data.direction, data.tankMoves, data.tank1, data.tank2, tankImage, weaponImage, socket);
     });
+
     socket.on('sendCoordsOnClient', (data) => {
         if (tank1.id === data.tank.id) {
             tank1.setCoord(data.tank.tankX, data.tank.tankY);
@@ -173,7 +223,6 @@ module.exports.initGame = (gameInst, socket) => {
 
             drawSky(canvasModel.getSky().ctx);
             drawGround(originalPoints, canvasModel.getGround().ctx);
-
             tank1 = new Tank(
                 gameInst.player1.id,
                 gameInst.player1.tank.tankX,
@@ -184,12 +233,12 @@ module.exports.initGame = (gameInst, socket) => {
                 gameInst.player2.id,
                 gameInst.player2.tank.tankX,
                 gameInst.player2.tank.tankAngle,
-                gameInst.player2.tank.weaponAngle
+                gameInst.player2.tank.weaponAngle + Math.PI / 2
             );
 
-            intersectionPlayer(tank1, tank2);
-            tank = new Tank(localStorage.getItem('playerId'), getRandomPos(333, 33));
-            weaponAngle = tank.getWeaponAngle();
+            intersectionPlayer(tank1, tank2,gameInst);
+            //tank = new Tank(localStorage.getItem('playerId'), getRandomPos(333, 33));
+            //weaponAngle = tank.getWeaponAngle();
 
             socket.emit('initPosTank', { tank1, tank2 });
 

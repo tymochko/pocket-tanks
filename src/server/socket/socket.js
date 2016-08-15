@@ -54,7 +54,6 @@ client.on('connection', function(socket) {
 	}
 
 	socket.on('initPosTank', function(data) {
-		console.log(data.tank1.setWeaponAngle);
 		client.emit('initOutPosTank', {
 			tank1: data.tank1,
 			tank2: data.tank2,

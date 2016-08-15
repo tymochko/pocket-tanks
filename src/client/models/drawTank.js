@@ -18,6 +18,8 @@ const drawTankFn = () => {
         const tankCtx = canvasModel.getTank().ctx;
         const tankAngle = -tiltTank(xCoordinate);
 
+        tank.tankAngle = tankAngle;
+
         tankCtx.save();
         tankCtx.translate(xCoordinate, yCoordinate - WEAPON_HEIGHT);
         tankCtx.rotate(-tankAngle);
