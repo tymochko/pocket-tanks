@@ -1,4 +1,3 @@
-import {ProfileService} from '../profile/ProfileService';
 import {lang} from '../../languages/languages';
 
 const routes = [

@@ -132,6 +132,7 @@ module.exports.initGame = (gameInst, socket) => {
                 tank1.getTankAngle(),
                 tank1.getWeaponAngle(),
                 socket
+
             );
         } else {
             makeShot(
@@ -237,6 +238,7 @@ module.exports.initGame = (gameInst, socket) => {
             );
 
             intersectionPlayer(tank1, tank2,gameInst);
+
             //tank = new Tank(localStorage.getItem('playerId'), getRandomPos(333, 33));
             //weaponAngle = tank.getWeaponAngle();
 

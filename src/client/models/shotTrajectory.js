@@ -41,11 +41,10 @@ let originalPoints,
     lightningCtx;
 
 bulletImg.src='./public/images/bullet2.png';
-
-
 const makeShot = (ctx, tank, tankCoordX, tankCoordY, tankAngleParam, weaponAngleParam, socketIo) => {
     originalPoints = ground.getGround();
     socket = socketIo;
+
     angle = weaponAngleParam;
     tankX = tankCoordX;
     tankY = tankCoordY;
