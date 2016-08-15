@@ -22,14 +22,14 @@ function ChatController($scope,socket)
 
      if(socket)
      {
-          socket.on('output', getMessages);
+          socket.on('outputMessage', getMessages);
 
           $scope.sentEventListener=function(event){
-               var inputMessage = $scope.inputMessage,
+               let inputMessage = $scope.inputMessage,
                name = $scope.inputName,
                date=new Date();
 
-               socket.emit('input',{
+               socket.emit('inputMessage',{
                     name: name,
                     message:inputMessage,
                     time: date.toUTCString()
@@ -45,15 +45,17 @@ function ChatController($scope,socket)
      {
           if(data.length)
           {
-               for(var x=data.length-1;x>=0; --x){
-                    $scope.$apply(function () {
-                         $scope.messages.push({
-                              "chater_name": data[x].name,
-                              "chater_message": data[x].message,
-                              "chater_time": data[x].time
-                         });
+               for(let x=data.length-1;x>=0; --x){
+                    $scope.messages.push({
+                         "chater_name": data[x].name,
+                         "chater_message": data[x].message,
+                         "chater_time": data[x].time
                     });
                }
+               
+               $scope.$apply(function () {
+                    $scope.messages
+               });
           }
      }
 }
