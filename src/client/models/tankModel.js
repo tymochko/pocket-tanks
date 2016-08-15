@@ -1,12 +1,13 @@
 import { findLinePoints } from './tankMovement';
 
 class Tank {
-    constructor(idVal, tankX = 45, tankAngle = 0, weaponAngle = 0) {
+    constructor(idVal, tankX = 45, tankAngle = 0, weaponAngle = 0, power = 60) {
         this.id = idVal;
         this.tankX = tankX;
         this.tankY = findLinePoints(tankX);
         this.tankAngle = tankAngle;
         this.weaponAngle = weaponAngle;
+        this.power = power;
         this.vehicleWidth = 70;
         this.vehicleHeight = 30;
         this.weaponWidth = 35;
