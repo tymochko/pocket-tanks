@@ -39,6 +39,9 @@ jspm_packages
 # JetBrains WebStorm IDE files
 .idea
 
+# Visual Studio Code folder
+.vscode
+
 dist
 public/
 src/server/static/usersInfo/
