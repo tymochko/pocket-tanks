@@ -1,52 +1,65 @@
 'use strict';
 import paper from 'paper';
 import { ground } from './groundModel';
-import showChatWindow from './chatField';
-import { findLinePoints, tankMove } from './tankMovement';
+import { tankMove } from './tankMovement';
 import { navPanel } from './navPanel';
-import { makeShot } from './shotTrajectory';
-import { getId, clear, clearAll, initTanks } from './externalFunctions';
+import { makeShot, intersectionPlayer } from './shotTrajectory';
+import { getId, clear, drawTanks, checkTurn } from './externalFunctions';
 import { Tank } from './tankModel';
 import { drawGround, drawSky } from './canvasRedrawModel';
 import { canvasModel } from './canvasModel';
 import { drawTank } from './drawTank';
 
 const originalPoints = ground.getGround();
-const tank = new Tank('playerId');
 
 let tank1;
 let tank2;
-let opponentId;
 
-let tankX,
-    tankY,
-    weaponAngle,
+let weaponAngle,
     angle,
-    power,
-    tankImage = new Image(),
-    weaponImage = new Image();
+    power;
+let tank;
+
+const tankImage = new Image();
+const weaponImage = new Image();
 
 module.exports.initGame = (gameInst, socket) => {
-
     const tankCtx = canvasModel.getTank().ctx;
-    let lastTimeTankMoved;
+    let lastTimeTankMoved = 0;
 
 /* ====== initialization ======== */
     paper.setup(canvasModel.getBullet().canvas);
 
     power = parseInt(getId('power').innerHTML);
     angle = parseInt(getId('angle').innerHTML);
+
 /* ====== Tank Weapon Movement ======== */
 
-    const opponentIdInit = (value) => {
-         opponentId = value;
+    const weaponToMove = (value) => {
+        let weaponMoves;
+        if (localStorage.getItem('playerId') === tank1.id) {
+            weaponMoves = 'tank1';
+        } else {
+            weaponMoves = 'tank2';
+        }
+
+        socket.emit('inputPosWeapon', {
+            weaponMoves,
+            angle: value,
+            tank1,
+            tank2
+        });
     };
 
-    const getOpponentId = (playerId) => {
-        socket.emit('moveIdServer', {playerId});
-        socket.on('moveIdClient', (data) => {
-            return opponentIdInit(data.playerId);
-        });
+    const weaponMove = (tankParam, angleParam) => {
+        clear(tankCtx);
+        if (tankParam === 'tank1') {
+            tank1.setWeaponAngle(angleParam);
+            drawTanks(drawTank, tank1, tank2, tankImage, weaponImage);
+        } else {
+            tank2.setWeaponAngle(angleParam);
+            drawTanks(drawTank, tank2, tank1, tankImage, weaponImage);
+        }
     };
 
     const moveWeaponKeyDown = (evt) => {
@@ -56,11 +69,8 @@ module.exports.initGame = (gameInst, socket) => {
                     return;
                 }
                 angle +=5;
-                clear(tankCtx);
-                weaponAngle = angle*Math.PI/180;
-                tank.setWeaponAngle(weaponAngle);
-                drawTank(localStorage.getItem('playerId'), tank, tankImage, weaponImage, weaponAngle);
                 getId('angle').innerHTML = angle;
+                weaponToMove(angle*Math.PI/180);
                 break;
 
             case 40:   //Down arrow was pressed /
@@ -68,35 +78,50 @@ module.exports.initGame = (gameInst, socket) => {
                     return;
                 }
                 angle -=5;
-                clear(tankCtx);
-                weaponAngle = angle*Math.PI/180;
-                tank.setWeaponAngle(weaponAngle);
-                drawTank(localStorage.getItem('playerId'), tank, tankImage, weaponImage, weaponAngle);
                 getId('angle').innerHTML = angle;
+                weaponToMove(angle*Math.PI/180);
                 break;
 
             default:
                 break;
         }
     };
-
     document.addEventListener('keydown', moveWeaponKeyDown, true);
 
-/* ======  Tank movement ======== */
+    socket.on('outputPosWeapon', (data) => {
+        weaponMove(data.weaponMoves, data.angle);
+    });
+
+/* ========  Tank movement ======== */
+
+    const tankToMove = (direction) => {
+        let tankMoves;
+
+        if (localStorage.getItem('playerId') === tank1.id) {
+            tankMoves = 'tank1';
+        } else {
+            tankMoves = 'tank2';
+        }
+
+        socket.emit('inputPosTank', {
+            direction,
+            tankMoves,
+            tank1,
+            tank2
+        });
+    };
 
     const doKeyDown = (evt) => {
-        let now = new Date().getTime();
+        const now = new Date().getTime();
 
-        if (now - lastTimeTankMoved > 1500) {
+        if (now - lastTimeTankMoved > 800) {
             switch (evt.keyCode) {
                 case 37:  /* Left arrow was pressed */
-                    getOpponentId(localStorage.getItem(('playerId')));
-                    console.log('opponentID: ' + opponentId);
-                    tankMove('left', tank1, tankImage, weaponImage, socket);
+                    tankToMove('left');
                     break;
 
                 case 39:  /* Right arrow was pressed */
-                    tankMove('right', tank2, tankImage, weaponImage, socket);
+                    tankToMove('right');
                     break;
 
                 case 13: /*ENTER*/
@@ -128,39 +153,67 @@ module.exports.initGame = (gameInst, socket) => {
         lastTimeTankMoved = now;
         }
     };
-    window.addEventListener('keydown', doKeyDown, true);
+
+    checkTurn(gameInst, () => {
+        window.addEventListener('keydown', doKeyDown, true);
+    });
+
+    socket.on('outputPosTank', (data) => {
+        tankMove(data.direction, data.tankMoves, data.tank1, data.tank2, tankImage, weaponImage, socket);
+    });
+    socket.on('sendCoordsOnClient', (data) => {
+        if (tank1.id === data.tank.id) {
+            tank1.setCoord(data.tank.tankX, data.tank.tankY);
+        } else if (tank2.id === data.tank.id) {
+            tank2.setCoord(data.tank.tankX, data.tank.tankY);
+        }
+    });
 
 /* ======   Navigation ======== */
 
-    navPanel(tank, angle, weaponAngle);
+    navPanel(tank, angle, weaponAngle, socket, gameInst);
 
-    getId('chatBtn').onclick = showChatWindow;
+    const getRandomPos = (a, b) => {
+        return Math.floor((Math.random() * a) + b);
+    };
 
     (function initialization() {
-	    tankImage.src = './public/images/tankVehicle.png';
+        tankImage.src = './public/images/tankVehicle.png';
         weaponImage.src = './public/images/tankWeapon_straight.png';
 
-        drawSky(canvasModel.getSky().ctx);
-        drawGround(originalPoints, canvasModel.getGround().ctx);
-
-        tank1 = gameInst.player1.tank;
-        tank2 = gameInst.player2.tank;
-
-        weaponAngle = tank.getWeaponAngle();
-
-        lastTimeTankMoved = 0;
-        socket.emit('initPosTank', { tank1, tank2, tankImage, weaponImage, weaponAngle });
-
         weaponImage.onload = () => {
-            initTanks(drawTank, tank1, tank2, tankImage, weaponImage, weaponAngle);
-            socket.on('initOutPosTank', (data) => {
-                const tank1temp = new Tank(gameInst.player1.id, data.tank1.tankX, data.tank1.tankAngle, data.tank1.weaponAngle);
-                const tank2temp = new Tank(gameInst.player2.id, data.tank2.tankX, data.tank2.tankAngle, data.tank2.weaponAngle);
 
-                return initTanks(drawTank, tank1temp, tank2temp, tankImage, weaponImage, weaponAngle);
+            drawSky(canvasModel.getSky().ctx);
+            drawGround(originalPoints, canvasModel.getGround().ctx);
+
+            tank1 = new Tank(
+                gameInst.player1.id,
+                gameInst.player1.tank.tankX,
+                gameInst.player1.tank.tankAngle,
+                gameInst.player1.tank.weaponAngle
+            );
+            tank2 = new Tank(
+                gameInst.player2.id,
+                gameInst.player2.tank.tankX,
+                gameInst.player2.tank.tankAngle,
+                gameInst.player2.tank.weaponAngle
+            );
+
+            intersectionPlayer(tank1, tank2);
+            tank = new Tank(localStorage.getItem('playerId'), getRandomPos(333, 33));
+            weaponAngle = tank.getWeaponAngle();
+
+            socket.emit('initPosTank', { tank1, tank2 });
+
+            socket.on('initOutPosTank', (data) => {
+                tank1.setCoord(data.tank1.tankX, data.tank1.tankY);
+                tank2.setCoord(data.tank2.tankX, data.tank2.tankY);
+
+                clear(canvasModel.getTank().ctx);
+
+                drawTanks(drawTank, tank1, tank2, tankImage, weaponImage);
+                // drawTank(tank2, tankImage, weaponImage);
             });
         };
     })();
 };
-
-module.exports.tank = tank;

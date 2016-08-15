@@ -1,25 +1,24 @@
 import { canvasModel } from './canvasModel';
 import { WIDTH, HEIGHT } from './externalVariables';
 
-module.exports.requestAnimFrame = (function(){
-    return window.requestAnimationFrame   ||
+module.exports.requestAnimFrame = (function() {
+    return window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame    ||
-    window.oRequestAnimationFrame      ||
-    window.msRequestAnimationFrame     ||
-    function(callback){
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function(callback) {
         window.setTimeout(callback, 1000 / 60);
     };
 })();
 
-export function getId (id) {
+export function getId(id) {
     return document.getElementById(id);
 }
 
-export function clear(ctx) {
-    // let ctx = canvasModel.getCtx().ctx;
+export const clear = (ctx) => {
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
-}
+};
 
 export function clearAll(sky, ground, lightning, tank, bullet) {
     sky.clearRect(0, 0, WIDTH, HEIGHT);
@@ -35,8 +34,25 @@ export function fillBackground(ctx, pattern) {
     ctx.fill();
 }
 
-export const initTanks = (callback, tank1, tank2, tankImage, weaponImage, weaponAngle) => {
+export const drawTanks = (callback, tank1, tank2, tankImage, weaponImage) => {
     canvasModel.getTank().ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    callback(tank1.id, tank1, tankImage, weaponImage, weaponAngle);
-    callback(tank2.id, tank2, tankImage, weaponImage, weaponAngle);
-}
+    callback(tank1, tankImage, weaponImage);
+    callback(tank2, tankImage, weaponImage);
+};
+
+export const checkTurn = (gameInst, callback) => {
+    const thisWindowPlayerId = localStorage.getItem('playerId');
+    let thisWindowPlayerTurn;
+
+    if (thisWindowPlayerId === gameInst.player1.id) {
+        thisWindowPlayerTurn = gameInst.player1.turn;
+    } else {
+        thisWindowPlayerTurn = gameInst.player2.turn;
+    }
+
+    if (thisWindowPlayerTurn === true) {
+        return callback();
+    }
+
+    return null;
+};

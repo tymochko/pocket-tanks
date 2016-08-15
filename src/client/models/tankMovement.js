@@ -1,11 +1,12 @@
 import { WIDTH } from './externalVariables';
-import { requestAnimFrame, clear } from './externalFunctions';
+import { requestAnimFrame, clear, drawTanks } from './externalFunctions';
 import { ground } from './groundModel';
 import { canvasModel } from './canvasModel';
 import { drawTank } from './drawTank';
 
 const originalPoints = ground.getGround();
-let tank;
+let tank1;
+let tank2;
 let tankImage;
 let weaponImage;
 let socket;
@@ -42,9 +43,9 @@ const findLinePoints = (posX) => {
 
 const draw = (direction, timePassed, checkTank = true) => {
     let tankY;
-    let tankX = tank.getCoord().tankX;
+    let tankX = tank1.tankX;
 
-    const weaponAngle = tank.getWeaponAngle();
+    // const weaponAngle = tank1.weaponAngle;
     const ctx = canvasModel.getTank().ctx;
 
     if (direction === "right") {
@@ -54,30 +55,22 @@ const draw = (direction, timePassed, checkTank = true) => {
     }
     if (checkTank) {
         tankY = findLinePoints(tankX);
-
-        tank.setCoord(tankX, tankY);
-
-        socket.emit('inputPosTank', {
-            posX: tankX,
-            posY: tankY,
-            weaponAngle
-        });
+        tank1.tankX = tankX;
+        tank1.tankY = tankY;
 
         clear(ctx);
-        drawTank(localStorage.getItem('playerId'), tank, tankImage, weaponImage, weaponAngle);
-
-        socket.on('outputPosTank', function(data) {
-            clear(ctx);
-            tank.setCoord(data.x, data.y);
-            return drawTank(localStorage.getItem('playerId'), tank, tankImage, weaponImage, weaponAngle);
-        });
+        drawTanks(drawTank, tank1, tank2, tankImage, weaponImage);
     }
     return tankX;
 };
 
+const sendCoords = () => {
+    socket.emit('changeCoords', { tank: tank1 });
+};
+
 
 const animate = (time) => {
-    const duration = 1500;
+    const duration = 800;
     let timePassed = time - start;
 
     if (timePassed > duration) {
@@ -85,11 +78,15 @@ const animate = (time) => {
     }
     draw(direct, timePassed);
 
-    if (tank.getCoord().tankX >= WIDTH - tank.getVehicleWidth()/5 ||
-        tank.getCoord().tankX <= tank.getVehicleWidth()/5) {
+    if (tank1.tankX >= WIDTH ||
+        tank1.tankX <= 33) {
+        sendCoords();
         window.cancelAnimationFrame(requestAnimFrame);
     } else if (timePassed < duration) {
         requestAnimFrame(animate);
+    } else {
+        sendCoords();
+        window.cancelAnimationFrame(requestAnimFrame);
     }
 };
 
@@ -99,10 +96,16 @@ const animateStart = () => {
 };
 
 module.exports.findLinePoints = findLinePoints;
-module.exports.tankMove = (direction, tankInst, tankImg, weaponImg, socketio) => {
+module.exports.tankMove = (direction, move, tank1param, tank2param, tankImg, weaponImg, socketio) => {
     socket = socketio;
     direct = direction;
-    tank = tankInst;
+    if (move === 'tank1') {
+        tank1 = tank1param;
+        tank2 = tank2param;
+    } else {
+        tank1 = tank2param;
+        tank2 = tank1param;
+    }
     tankImage = tankImg;
     weaponImage = weaponImg;
     animateStart(draw, 1500);

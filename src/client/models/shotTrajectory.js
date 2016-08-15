@@ -7,6 +7,17 @@ import { drawGround } from './canvasRedrawModel';
 import { requestAnimFrame, clear } from './externalFunctions';
 import { canvasModel } from './canvasModel';
 
+
+const player1 = {};
+const player2 = {};
+
+
+export const intersectionPlayer = (tank1,tank2) => {
+    player1.data = tank1;
+    player2.data = tank2;
+
+};
+
 let originalPoints,
     lastTime,
     deltaT = 0,
@@ -27,9 +38,9 @@ let originalPoints,
 
 bulletImg.src='./public/images/bullet2.png';
 
-const makeShot = (ctx, tank, tankCoordX, tankCoordY, tankAngleParam, socketIo, playerId) => {
 
-	originalPoints = ground.getGround();
+const makeShot = (ctx, tank, tankCoordX, tankCoordY, tankAngleParam, socketIo) => {
+    originalPoints = ground.getGround();
 
     angle = tank.getWeaponAngle();
     socket = socketIo;
@@ -110,6 +121,7 @@ const generateExplosion = (dt) => {
     //check angle for accuracy of point
     // bull.rotate(-bullet.imgInf.currAngle);
 
+
     var groundPath = new paper.Path(
         new paper.Point(originalPoints[0][0], originalPoints[0][1])
         );
@@ -117,7 +129,35 @@ const generateExplosion = (dt) => {
         groundPath.add(new paper.Point(originalPoints[i][0], originalPoints[i][1]));
     }
 
+    var user1 = new paper.Path.Rectangle(player1.data.tankX, player1.data.tankY,80,30);
+    var user2 = new paper.Path.Rectangle(player2.data.tankX, player2.data.tankY,80,30);
+
+    user1.rotate(player1.data.tankAngle);
+    user2.rotate(player2.data.tankAngle);
     // check if intersect the original points
+    var intersectPlayer1 = bull.getIntersections(user2);
+    if(intersectPlayer1.length > 0) {
+        bullet = null;
+        console.log('boom2');
+        let crossPoint = {
+            x: intersectPlayer1[0]._point.x,
+            y: intersectPlayer1[0]._point.y
+        };
+        console.log(crossPoint);
+
+    }
+    var intersectPlayer2 = bull.getIntersections(user1);
+    if(intersectPlayer2.length > 0) {
+        bullet = null;
+        console.log('boom1');
+        let crossPoint = {
+            x: intersectPlayer2[0]._point.x,
+            y: intersectPlayer2[0]._point.y
+        };
+
+        console.log(crossPoint);
+
+    }
     var intersect = bull.getIntersections(groundPath);
     if(intersect.length > 0) {
         bullet = null;
@@ -151,7 +191,6 @@ const renderEntity = (bullet) => {
     if(!bullet) { return; }
     bullet.imgInf.render(canvasModel.getBullet().ctx, deltaT);
 };
-
 (function() {
     function ImgInf(url, pos, angle, v0) {
         this.pos = pos;
@@ -171,11 +210,11 @@ const renderEntity = (bullet) => {
             ctx.translate(bullet.pos[0], bullet.pos[1]);
             var A = bullet.bulletSpeed * Math.cos(bullet.angle + bullet.tankAngle);
             this.currAngle = Math.atan(((bullet.bulletSpeed) * Math.sin(bullet.angle + bullet.tankAngle)- G * deltaT)/A);
-            
+
             if(this.currAngle > Math.PI/2) {
             	this.currAngle = this.currAngle + Math.PI;
             }
-            
+
             ctx.rotate(-this.currAngle);
             ctx.drawImage(bulletImg, x, y);
             ctx.restore();

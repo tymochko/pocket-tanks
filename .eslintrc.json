@@ -54,7 +54,6 @@
         "default-case": [2],
         "dot-location": [2, "property"],
         "yoda": [2, "never"],
-        "radix": [2],
         "no-with": [2],
         "no-useless-concat": [2],
         "no-useless-call": [2],
