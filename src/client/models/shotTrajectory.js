@@ -91,6 +91,7 @@ const update = (dt) => {
 
 const generateExplosion = (dt) => {
     if(!bullet) { return; }
+    paper.project.activeLayer.removeChildren();
 
     bulletCtx = canvasModel.getBullet().ctx;
     groundCtx = canvasModel.getGround().ctx;
@@ -103,23 +104,30 @@ const generateExplosion = (dt) => {
     deltaT += 4*dt;
 
     // creating path for bullet and originalPoints
-    var bull = new paper.Path.Rectangle(bullet.pos[0], bullet.pos[1], 45, 7);
+    var bull = new paper.Path.Rectangle(new paper.Point(bullet.pos[0], bullet.pos[1]), new paper.Size(45, 7));
     //check angle for accuracy of point
-    // bull.rotate(-bullet.imgInf.currAngle);
-
+    bull.rotate(-bullet.imgInf.currAngle * 180 / Math.PI);
+    bull.strokeColor = '#ff0000';
 
     var groundPath = new paper.Path(
         new paper.Point(originalPoints[0][0], originalPoints[0][1])
-        );
+    );
     for(let i = 1; i < originalPoints.length; i++) {
         groundPath.add(new paper.Point(originalPoints[i][0], originalPoints[i][1]));
     }
+    groundPath.strokeColor = '#000';
 
-    var user1 = new paper.Path.Rectangle(player1.data.tankX, player1.data.tankY,80,30);
-    var user2 = new paper.Path.Rectangle(player2.data.tankX, player2.data.tankY,80,30);
+    var tankSize = new paper.Size(80,30);
+    var user1 = new paper.Path.Rectangle(new paper.Point(player1.data.tankX - tankSize.width / 2, player1.data.tankY - tankSize.height / 2), tankSize);
+    user1.strokeColor = '#00ff00';
+    var user2 = new paper.Path.Rectangle(new paper.Point(player2.data.tankX - tankSize.width / 2, player2.data.tankY - tankSize.height / 2), tankSize);
+    user2.strokeColor = '#ff0000';
 
-    user1.rotate(player1.data.tankAngle);
-    user2.rotate(player2.data.tankAngle);
+    user1.rotate(-player1.data.tankAngle * 180 / Math.PI);
+    user2.rotate(-player2.data.tankAngle * 180 / Math.PI);
+
+
+    paper.view.draw();
     // check if intersect the original points
     var intersectPlayer1 = bull.getIntersections(user2);
     if(intersectPlayer1.length > 0) {
@@ -133,7 +141,7 @@ const generateExplosion = (dt) => {
         bullet = null;
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
         window.cancelAnimationFrame(requestAnimFrame);
-
+        return;
     }
     var intersectPlayer2 = bull.getIntersections(user1);
     if(intersectPlayer2.length > 0) {
@@ -147,7 +155,7 @@ const generateExplosion = (dt) => {
         bullet = null;
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
         window.cancelAnimationFrame(requestAnimFrame);
-
+        return;
     }
     var intersect = bull.getIntersections(groundPath);
     if(intersect.length > 0) {
@@ -164,7 +172,6 @@ const generateExplosion = (dt) => {
         const calculatedGroundPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
 
         gameData.points = calculatedGroundPoints;
-        console.log(gameData);
        socket.emit('update-data',gameData);
         
         

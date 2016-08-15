@@ -118,7 +118,7 @@ module.exports.initGame = (gameInst, socket) => {
     });
 
     socket.on('outputBulletPos', (data) => {
-        bulletMove(data.bulletMoves, data.power, data.angleWeapon, data.tanbkAngle);
+        bulletMove(data.bulletMoves, data.power, data.angleWeapon, data.tankAngle);
 
     });
 
