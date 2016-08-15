@@ -4,7 +4,7 @@ import { ground } from './groundModel';
 import { tankMove, findLinePoints } from './tankMovement';
 import { navPanel } from './navPanel';
 import { makeShot, intersectionPlayer } from './shotTrajectory';
-import { getId, clear, drawTanks, checkTurn } from './externalFunctions';
+import { getId, clear, drawTanks, allowTurn } from './externalFunctions';
 import { Tank } from './tankModel';
 import { drawGround, drawSky } from './canvasRedrawModel';
 import { canvasModel } from './canvasModel';
@@ -143,7 +143,7 @@ module.exports.initGame = (gameInst, socket) => {
                 tank2.getTankAngle(),
                 tank2.getWeaponAngle(),
                 socket
-            );        
+            );
         }
     };
 /* ========  Tank movement ======== */
@@ -179,7 +179,7 @@ module.exports.initGame = (gameInst, socket) => {
                     break;
 
                 case 13: /*ENTER*/
-                    bulletToMove(); 
+                    bulletToMove();
                     tank1.tankY = findLinePoints(tank1.tankX);
                     tank2.tankY = findLinePoints(tank2.tankX);
                     drawTanks(drawTank, tank1, tank2, tankImage, weaponImage);
@@ -192,9 +192,9 @@ module.exports.initGame = (gameInst, socket) => {
         }
     };
 
-    // checkTurn(gameInst, () => {
+    allowTurn(gameInst, () => {
         window.addEventListener('keydown', doKeyDown, true);
-    // });
+    });
 
     socket.on('outputPosTank', (data) => {
         tankMove(data.direction, data.tankMoves, data.tank1, data.tank2, tankImage, weaponImage, socket);
