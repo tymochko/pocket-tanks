@@ -19,6 +19,7 @@ export function transportData(socket, $q) {
     const gameId = getParameterByName('id', localUrl);
     gameService().getInitGameData(socket, $q, gameId)
         .then((gameData) => {
+            console.log('1');
             const gameInst = gameCreate(gameData);
             
             initCanvas();
@@ -26,8 +27,9 @@ export function transportData(socket, $q) {
         }, () => {
             alert('Server error. No game data received.');
         });
+    
     // socket.on('resume-game-data', function (gameData) {
-    //     console.log('+++++++'); console.log('+++++++');
+    //     console.log(gameData, 'gameData in GAMECTRL');
     //     const gameInsts = gameCreate(gameData);
     //
     //     initCanvas();

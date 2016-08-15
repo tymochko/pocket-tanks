@@ -79,7 +79,7 @@ export function invite(client) {
                     } else {
                         connections.forEach(function(other) {
                             if (other.user === usersIds.player1) {
-                                users.player1Id =  usersIds.player1;
+                                users.player1Id = usersIds.player1;
                                 other.socket.emit('start-game', {gameId: game._id, playerId: usersIds.player1});
                             }
                         });
@@ -114,16 +114,23 @@ export function invite(client) {
                 }
             });
         });
-        socket.on("resume-game-id", function (gameId) {
-            GameData.findGame({_id: gameId}, (err, foundGame) => {
+        
+        socket.on('resume-game-id', (resumeGameData) => {            
+            GameData.findGame({_id: resumeGameData.gameId}, (err, foundGame) => {
                 if (err) {
                     throw err;
                 } else {
-                    console.log(foundGame);
-                    socket.emit('resume-game-data', foundGame);
+                    connections.forEach(function(other) {
+                        console.log(foundGame);
+                        if (other.user === resumeGameData.playerId) {
+                            other.socket.emit('start-game', {gameId: foundGame._id, playerId: resumeGameData.playerId});
+                        }
+                    });
                 }
             });
-
-        })
+            
+            
+        });
+    
     });
 }

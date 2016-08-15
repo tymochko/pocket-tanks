@@ -5,9 +5,10 @@ export class NavigationController {
 
         $scope.logged = false;
         $scope.item = {};
-        $scope.test = () => {
-            socket.emit("resume-game-id", activeGameId)
-        }
+        $scope.resumeGame = () => {
+            const thisPlayerId = localStorage.getItem('playerId');
+            socket.emit("resume-game-id", {gameId: activeGameId, playerId: thisPlayerId});
+        };
 
         $scope.logInClick = () => {
             const modalInstance = $uibModal.open({

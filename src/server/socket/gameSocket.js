@@ -102,5 +102,16 @@ export function gameSocket(client) {
                 }
             });
         });
+        
+        socket.on('update-data' , (gameData) => {
+            GameData.updateGameInfo(gameData.id, gameData, (err, game) => {
+                if (err) {
+                    throw err;
+                } else {
+                    console.log('okey');
+                }
+            });
+            
+        });
     });
 }

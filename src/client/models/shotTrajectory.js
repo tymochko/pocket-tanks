@@ -170,7 +170,9 @@ const generateExplosion = (dt) => {
         window.cancelAnimationFrame(requestAnimFrame);
 
         const calculatedGroundPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
-
+        socket.emit('update-data',{});
+        
+        
         ground.setGround(calculatedGroundPoints);
 
         groundCtx = canvasModel.getGround().ctx;
