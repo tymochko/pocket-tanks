@@ -10,11 +10,10 @@ export function gameSocket(client) {
         function insertBulletPos(data) {
 
             client.emit('outputBulletPos', {
-                x: data.posX,
-                y: data.posY,
-                power: data.power,
-                angleWeapon: data.angle,
-                tankAngle: data.tankAngle
+                bulletMoves: data.bulletMoves,
+                power: data.tank.power,
+                angleWeapon: data.tank.weaponAngle,
+                tankAngle: data.tank.tankAngle
             });
         }
 
