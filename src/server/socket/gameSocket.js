@@ -63,7 +63,7 @@ export function gameSocket(client) {
                 tank2: data.tank2
             });
         }
-        
+
         socket.on('inputPosWeapon', (data) => {
             client.emit('outputPosWeapon', {
                 weaponMoves: data.weaponMoves,
@@ -77,7 +77,7 @@ export function gameSocket(client) {
             client.emit('moveIdClient', { playerId: data.playerId });
         });
 
-        socket.on('end-game', (gameData) => {
+        socket.once('end-game', (gameData) => {
             GameData.updateGameInfo(gameData.id, gameData, (err, game) => {
                 if (err) {
                     throw err;

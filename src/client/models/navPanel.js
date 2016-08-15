@@ -63,7 +63,7 @@ export function navPanel(tank, angle, weaponAngle, socket, gameInst) {
 
     getId('chatBtn').onclick = showChatWindow;
 
-    socket.on('redirect-away-from-game', () => {
+    socket.once('redirect-away-from-game', () => {
         window.location = '/dashboard';
     });
 

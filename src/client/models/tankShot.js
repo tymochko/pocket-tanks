@@ -4,7 +4,7 @@ import { ground } from './groundModel';
 import { tankMove } from './tankMovement';
 import { navPanel } from './navPanel';
 import { makeShot, intersectionPlayer } from './shotTrajectory';
-import { getId, clear, drawTanks, checkTurn } from './externalFunctions';
+import { getId, clear, drawTanks, allowTurn } from './externalFunctions';
 import { Tank } from './tankModel';
 import { drawGround, drawSky } from './canvasRedrawModel';
 import { canvasModel } from './canvasModel';
@@ -142,7 +142,7 @@ module.exports.initGame = (gameInst, socket) => {
         }
     };
 
-    checkTurn(gameInst, () => {
+    allowTurn(gameInst, () => {
         window.addEventListener('keydown', doKeyDown, true);
     });
 
