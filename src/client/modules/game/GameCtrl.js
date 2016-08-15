@@ -27,3 +27,4 @@ export function transportData(socket, $q) {
             alert('Server error. No game data received.');
         });
 }
+

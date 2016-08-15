@@ -1,4 +1,5 @@
 import GameData from '../api/game/gameController';
+import userData from '../api/users/usersController';
 
 const connections = [];
 
@@ -43,7 +44,9 @@ export function invite(client) {
             });
 
             socket.on('create-game', (usersIds) => {
+                
                 const initGameData = {
+                    
                     player1: {
                         id: usersIds.player1,
                         tank: {},
@@ -65,19 +68,39 @@ export function invite(client) {
                 const newGame = new GameData();
                 newGame.player1 = initGameData.player1;
                 newGame.player2 = initGameData.player2;
+                console.log(newGame.player1 , 'player 1');
+                console.log(newGame.player2 , 'player 2');
                 newGame.originalPoints = initGameData.originalPoints;
                 newGame.gameStatus = initGameData.gameStatus;
 
+
                 GameData.createGame(newGame, function(err, game) {
+                    const users = {};
                     if (err) {
                         throw err;
                     } else {
                         connections.forEach(function(other) {
                             if (other.user === usersIds.player1) {
+                                users.player1Id = usersIds.player1;
                                 other.socket.emit('start-game', {gameId: game._id, playerId: usersIds.player1});
                             }
                         });
-
+                        users.player2Id =  usersIds.player2;
+                        userData.updateActiveGame(users.player1Id, game._id ,  (err, data) => {
+                            if (err) {
+                                throw err;
+                            } else {
+                                return 0
+                            }
+                        });
+                        userData.updateActiveGame(users.player2Id, game._id ,  (err, data) => {
+                            if (err) {
+                                throw err;
+                            } else {
+                                return 0
+                            }
+                        });
+                        
                         socket.emit('start-game', {gameId: game._id, playerId: usersIds.player2});
                     }
                 });
@@ -93,5 +116,23 @@ export function invite(client) {
                 }
             });
         });
+        
+        socket.on('resume-game-id', (resumeGameData) => {            
+            GameData.findGame({_id: resumeGameData.gameId}, (err, foundGame) => {
+                if (err) {
+                    throw err;
+                } else {
+                    connections.forEach(function(other) {
+                        console.log(foundGame);
+                        if (other.user === resumeGameData.playerId) {
+                            other.socket.emit('start-game', {gameId: foundGame._id, playerId: resumeGameData.playerId});
+                        }
+                    });
+                }
+            });
+            
+            
+        });
+    
     });
 }

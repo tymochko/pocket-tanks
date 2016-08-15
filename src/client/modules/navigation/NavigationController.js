@@ -1,7 +1,14 @@
+import { NavigationConstructor } from './NavigationConstructorService';
 export class NavigationController {
-    constructor($scope, $http, $window, $uibModal) {
+    constructor($scope, $http, $window, $uibModal,NavigationConstructor,socket) {
+        let activeGameId = NavigationConstructor.activeGameData();
+
         $scope.logged = false;
         $scope.item = {};
+        $scope.resumeGame = () => {
+            const thisPlayerId = localStorage.getItem('playerId');
+            socket.emit("resume-game-id", {gameId: activeGameId, playerId: thisPlayerId});
+        };
 
         $scope.logInClick = () => {
             const modalInstance = $uibModal.open({

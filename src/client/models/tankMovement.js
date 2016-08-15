@@ -4,7 +4,6 @@ import { ground } from './groundModel';
 import { canvasModel } from './canvasModel';
 import { drawTank } from './drawTank';
 
-const originalPoints = ground.getGround();
 let tank1;
 let tank2;
 let tankImage;
@@ -14,6 +13,7 @@ let direct;
 let start = performance.now();
 
 const findLinePoints = (posX) => {
+    const originalPoints = ground.getGround();
     const arr = [];
 
     for (let i = originalPoints.length - 1; i > 0; i--) {

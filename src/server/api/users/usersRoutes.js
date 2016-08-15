@@ -35,6 +35,7 @@ router.get('/profile', (req, res) => {
                 userName: foundUser.userName,
                 userAge: foundUser.userAge,
                 userEmail: foundUser.userEmail,
+                activeGame:foundUser.activeGame,
                 userLanguage:foundUser.userLanguage
             };
             res.send(userInfoDTO);
@@ -98,6 +99,7 @@ router.post('/add', (req, res) => {
     newUser.userPassword = req.body.userPassword;
     newUser.isOnline = false;
     newUser.isEnabled = true;
+    newUser.activeGame = null;
     newUser.userLanguage = 'eng';
 
     UsersCollection.createUser(newUser, (err, user) => {

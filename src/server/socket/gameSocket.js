@@ -1,4 +1,5 @@
 import GameData from '../api/game/gameController';
+import userData from '../api/users/usersController';
 
 let tanksCoords = {};
 
@@ -10,11 +11,10 @@ export function gameSocket(client) {
         function insertBulletPos(data) {
 
             client.emit('outputBulletPos', {
-                x: data.posX,
-                y: data.posY,
-                power: data.power,
-                angleWeapon: data.angle,
-                tankAngle: data.tankAngle
+                bulletMoves: data.bulletMoves,
+                power: data.tank.power,
+                angleWeapon: data.tank.weaponAngle,
+                tankAngle: data.tank.tankAngle
             });
         }
 
@@ -78,6 +78,21 @@ export function gameSocket(client) {
         });
 
         socket.once('end-game', (gameData) => {
+            userData.updateActiveGame(gameData.player1.id, null,  (err, data) => {
+                if (err) {
+                    throw err;
+                } else {
+                 return 0
+                }
+            });
+            userData.updateActiveGame(gameData.player2.id, null,  (err, data) => {
+                if (err) {
+                    throw err;
+                } else {
+                    return 0
+                }
+            });
+
             GameData.updateGameInfo(gameData.id, gameData, (err, game) => {
                 if (err) {
                     throw err;
@@ -85,6 +100,17 @@ export function gameSocket(client) {
                     client.emit('redirect-away-from-game', {});
                 }
             });
+        });
+        
+        socket.on('update-data' , (gameData) => {
+            GameData.updateGameInfo(gameData.id, gameData, (err, game) => {
+                if (err) {
+                    throw err;
+                } else {
+                    return 0;
+                }
+            });
+            
         });
     });
 }
