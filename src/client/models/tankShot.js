@@ -120,6 +120,7 @@ module.exports.initGame = (gameInst, socket) => {
 
     socket.on('outputBulletPos', (data) => {
         bulletMove(data.bulletMoves);
+    });
 
     socket.on('outputPosWeapon', (data) => {
         weaponMove(data.weaponMoves, data.angle);

@@ -103,6 +103,8 @@ export function gameSocket(client) {
             client.emit('powerChangeAns', {
                 tankPowerChange: data.tankPowerChange,
                 power: data.power
+            });
+        });
 
         socket.on('update-data', (gameData) => {
             GameData.updateGameInfo(gameData.id, gameData, (err, game) => {
