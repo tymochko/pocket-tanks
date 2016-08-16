@@ -1,4 +1,6 @@
 import { NavigationConstructor } from './NavigationConstructorService';
+import { toastr } from 'angular-toastr';
+
 export class NavigationController {
     constructor($scope, $http, $window, $uibModal,NavigationConstructor,socket) {
         let activeGameId = NavigationConstructor.activeGameData();
@@ -29,9 +31,12 @@ export class NavigationController {
         $scope.logOutClick = () => {
             $http.post('/api/users/logout').then((response) => {
                 if (response.data.status === 'success') {
-                    return $window.location.reload();
+                    $window.location.href = '/';
                 }
-                alert('server error');
+                toastr.warning('Sorry! We have a problem \n with server.', 'Oops!', {
+                    closeButton: true,
+                    closeHtml: '<button>&times;</button>'
+                });
             });
         };
 
@@ -45,7 +50,10 @@ export class NavigationController {
                 window.localStorage.user = null;
                 window.localStorage.username = null;
             }, () => {
-                alert('server error');
+                toastr.warning('Sorry! We have a problem \n with server.', 'Oops!', {
+                    closeButton: true,
+                    closeHtml: '<button>&times;</button>'
+                });
             });
         };
 
