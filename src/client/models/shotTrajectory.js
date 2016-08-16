@@ -4,7 +4,7 @@ import { tick } from './explosion';
 import { calculateDamageArea } from './generateDamage';
 import { ground } from './groundModel';
 import { drawGround } from './canvasRedrawModel';
-import { requestAnimFrame, clear } from './externalFunctions';
+import { requestAnimFrame, clear, changeTurn } from './externalFunctions';
 import { canvasModel } from './canvasModel';
 
 
@@ -13,7 +13,7 @@ const player2 = {};
 let gameData;
 
 
-export const intersectionPlayer = (tank1,tank2,gameInst) => {
+export const intersectionPlayer = (tank1, tank2, gameInst) => {
     player1.data = tank1;
     player2.data = tank2;
     gameData = gameInst;
@@ -129,7 +129,7 @@ const generateExplosion = (dt) => {
             y: intersectPlayer1[0]._point.y
         };
         console.log(crossPoint);
-        
+
         bullet = null;
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
         window.cancelAnimationFrame(requestAnimFrame);
@@ -143,7 +143,7 @@ const generateExplosion = (dt) => {
             y: intersectPlayer2[0]._point.y
         };
         console.log(crossPoint);
-        
+
         bullet = null;
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
         window.cancelAnimationFrame(requestAnimFrame);
@@ -164,10 +164,12 @@ const generateExplosion = (dt) => {
         const calculatedGroundPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
 
         gameData.points = calculatedGroundPoints;
-        console.log(gameData);
-       socket.emit('update-data',gameData);
-        
-        
+
+        gameData.player1.turn = changeTurn(gameData.player1.turn);
+        gameData.player2.turn = changeTurn(gameData.player2.turn);
+
+        socket.emit('update-data', gameData);
+
         ground.setGround(calculatedGroundPoints);
 
         groundCtx = canvasModel.getGround().ctx;
@@ -175,6 +177,7 @@ const generateExplosion = (dt) => {
 
         clear(groundCtx);
         drawGround(ground.getGround(), groundCtx);
+
 
     } else if (bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT) {
         bullet = null;

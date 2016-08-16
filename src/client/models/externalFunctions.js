@@ -64,3 +64,10 @@ export const allowTurn = (gameInst, callback) => {
     document.getElementById(siblingWindowPlayer).style.color = 'red';
     return null;
 };
+
+export const changeTurn = (playerTurn) => {
+    if (playerTurn) {
+        return false;
+    }
+    return true;
+};
