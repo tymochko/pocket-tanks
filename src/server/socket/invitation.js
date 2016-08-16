@@ -123,7 +123,6 @@ export function invite(client) {
                     throw err;
                 } else {
                     connections.forEach(function(other) {
-                        console.log(foundGame);
                         if (other.user === resumeGameData.playerId) {
                             other.socket.emit('start-game', {gameId: foundGame._id, playerId: resumeGameData.playerId});
                         }

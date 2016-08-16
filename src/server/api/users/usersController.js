@@ -14,6 +14,7 @@ const userInfoDir = './src/server/static/usersInfo/';
 const publicScopeName = 'public';
 const userUploadsScopeName = 'userUploads';
 const publicImgURL = "/api/users/profile/getImage/" + publicScopeName + '/';
+const staticFolder =  __dirname + '/../../static/';
 const userImgURL = '/api/users/profile/getImage/' + userUploadsScopeName + '/';
 
 
@@ -291,9 +292,9 @@ const getUserImage = function (req, res) {
         }
         if (userImage.uploadedImg) {
 
-            userDir = __dirname + '/../../static/usersInfo/' + userId + '/' + userImage.image;
+            userDir = staticFolder + 'usersInfo/' + userId + '/' + userImage.image;
         } else {
-            userDir = __dirname + '/../../static/images/' + userImage.image;
+            userDir = staticFolder + 'images/' + userImage.image;
         }
         res.sendFile(path.resolve(userDir), function (err) {
             if (err) {
@@ -306,7 +307,7 @@ const getUserImage = function (req, res) {
 };
 
 const getPublicImage = function (req, res) {
-    res.sendFile(path.resolve(__dirname + '/../../static/images/' + req.params.imageName), function (err) {
+    res.sendFile(path.resolve(staticFolder + '/images/' + req.params.imageName), function (err) {
         if (err) {
             console.log(err);
             res.status(err.status).end();
@@ -318,7 +319,7 @@ const getPublicImage = function (req, res) {
 const getUserUploadedImage = function (req, res) {
     var userId = req.session.user;
     var imageName = req.params.imageName;
-    var imageDir = __dirname + '/../../static/usersInfo/' + userId + '/' + imageName;
+    var imageDir = staticFolder + 'usersInfo/' + userId + '/' + imageName;
 
     res.sendFile(path.resolve(imageDir), function (err) {
         if (err) {
@@ -395,7 +396,7 @@ const uploadImg = function (request, res) {
 };
 
 const getPublicImg = function (req, res) {
-    fs.readdir(__dirname + '/../../static/images/' + '/', function (e, files) {
+    fs.readdir(staticFolder + 'images/' + '/', function (e, files) {
         if (!e && files.length > 0) {
             var images = [];
             for (var file in files) {
@@ -403,7 +404,7 @@ const getPublicImg = function (req, res) {
             }
 
             var userId = req.session.user;
-            const userDir = __dirname + '/../../static/usersInfo/' + userId + '/';
+            const userDir =staticFolder + 'usersInfo/' + userId + '/';
             var check = function () {
                 fsHelper.checkDir(userDir);
             }
