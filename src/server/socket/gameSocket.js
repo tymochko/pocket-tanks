@@ -10,10 +10,7 @@ export function gameSocket(client) {
         function insertBulletPos(data) {
 
             client.emit('outputBulletPos', {
-                bulletMoves: data.bulletMoves,
-                power: data.tank.power,
-                angleWeapon: data.tank.weaponAngle,
-                tankAngle: data.tank.tankAngle
+                bulletMoves: data.bulletMoves
             });
         }
 
@@ -83,6 +80,13 @@ export function gameSocket(client) {
                 } else {
                     client.emit('redirect-away-from-game', {});
                 }
+            });
+        });
+
+        socket.on('powerChange', (data) => {
+            client.emit('powerChangeAns', {
+                tankPowerChange: data.tankPowerChange,
+                power: data.power
             });
         });
     });

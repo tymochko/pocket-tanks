@@ -7,10 +7,8 @@ import { drawGround } from './canvasRedrawModel';
 import { requestAnimFrame, clear } from './externalFunctions';
 import { canvasModel } from './canvasModel';
 
-
 const player1 = {};
 const player2 = {};
-
 
 export const intersectionPlayer = (tank1,tank2) => {
     player1.data = tank1;
@@ -25,7 +23,7 @@ let originalPoints,
     deltaT_tank2 = 0,
     bullet,
     gameTime = 0,
-    power = 50,
+    power,
     angle,
     bulletImg = new Image(),
     tankX,
@@ -38,7 +36,6 @@ let originalPoints,
 
 bulletImg.src='./public/images/bullet2.png';
 
-
 const makeShot = (ctx, tank, tankCoordX, tankCoordY, tankAngleParam, weaponAngleParam) => {
     originalPoints = ground.getGround();
 
@@ -46,6 +43,7 @@ const makeShot = (ctx, tank, tankCoordX, tankCoordY, tankAngleParam, weaponAngle
     tankX = tankCoordX;
     tankY = tankCoordY;
     tankAngle = tankAngleParam;
+    power = tank.power;
     deltaT = 0;
     deltaT_tank1 = 0;
     deltaT_tank2 = 0;
@@ -78,7 +76,6 @@ const drawBullet = () => {
     update(dt);
     renderEntity(bullet);
     lastTime = now;
-
 };
 
 const update = (dt) => {
@@ -180,6 +177,7 @@ const renderEntity = (bullet) => {
     if(!bullet) { return; }
     bullet.imgInf.render(canvasModel.getBullet().ctx, deltaT);
 };
+
 (function() {
     function ImgInf(url, pos, angle, v0) {
         this.pos = pos;

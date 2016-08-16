@@ -16,8 +16,7 @@ let tank1;
 let tank2;
 
 let weaponAngle,
-    angle,
-    power;
+    angle;
 let tank;
 
 const tankImage = new Image();
@@ -29,9 +28,6 @@ module.exports.initGame = (gameInst, socket) => {
 
 /* ====== initialization ======== */
     paper.setup(canvasModel.getBullet().canvas);
-
-    power = parseInt(getId('power').innerHTML);
-    angle = parseInt(getId('angle').innerHTML);
 
 /* ====== Tank Weapon Movement ======== */
 
@@ -52,6 +48,8 @@ module.exports.initGame = (gameInst, socket) => {
         });
     };
 
+    module.exports.weaponToMove = weaponToMove;
+
     const bulletToMove = () => {
         let bulletMoves;
         let tank;
@@ -69,6 +67,8 @@ module.exports.initGame = (gameInst, socket) => {
         });
     };
 
+    module.exports.bulletToMove = bulletToMove;
+
     const weaponMove = (tankParam, angleParam) => {
         clear(tankCtx);
         if (tankParam === 'tank1') {
@@ -83,21 +83,23 @@ module.exports.initGame = (gameInst, socket) => {
     const moveWeaponKeyDown = (evt) => {
         switch (evt.keyCode) {
             case 38:    //Up arrow was pressed /
+                angle = parseInt(getId('angle').innerHTML);
                 if (angle >= 80) {
                     return;
                 }
-                angle +=5;
+                angle += 5;
                 getId('angle').innerHTML = angle;
-                weaponToMove(angle*Math.PI/180);
+                weaponToMove(angle * Math.PI / 180);
                 break;
 
             case 40:   //Down arrow was pressed /
+                angle = parseInt(getId('angle').innerHTML);
                 if (angle <= 0) {
                     return;
                 }
-                angle -=5;
+                angle -= 5;
                 getId('angle').innerHTML = angle;
-                weaponToMove(angle*Math.PI/180);
+                weaponToMove(angle * Math.PI / 180);
                 break;
 
             default:
@@ -111,11 +113,10 @@ module.exports.initGame = (gameInst, socket) => {
     });
 
     socket.on('outputBulletPos', (data) => {
-        bulletMove(data.bulletMoves, data.power, data.angleWeapon, data.tanbkAngle);
-
+        bulletMove(data.bulletMoves);
     });
 
-    const bulletMove = (tankParam, powerParam, angleParam, tankAngleParam) => {
+    const bulletMove = (tankParam) => {
         if (tankParam === 'tank1') {
             makeShot(
                 canvasModel.getBullet().ctx,
@@ -200,8 +201,6 @@ module.exports.initGame = (gameInst, socket) => {
 
 /* ======   Navigation ======== */
 
-    navPanel(tank, angle, weaponAngle, socket, gameInst);
-
     const getRandomPos = (a, b) => {
         return Math.floor((Math.random() * a) + b);
     };
@@ -228,8 +227,6 @@ module.exports.initGame = (gameInst, socket) => {
             );
 
             intersectionPlayer(tank1, tank2);
-            //tank = new Tank(localStorage.getItem('playerId'), getRandomPos(333, 33));
-            //weaponAngle = tank.getWeaponAngle();
 
             socket.emit('initPosTank', { tank1, tank2 });
 
@@ -240,8 +237,10 @@ module.exports.initGame = (gameInst, socket) => {
                 clear(canvasModel.getTank().ctx);
 
                 drawTanks(drawTank, tank1, tank2, tankImage, weaponImage);
-                // drawTank(tank2, tankImage, weaponImage);
             });
+
+            navPanel(tank1, tank2, socket, gameInst);
+
         };
     })();
 };
