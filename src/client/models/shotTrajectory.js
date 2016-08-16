@@ -141,6 +141,11 @@ const generateExplosion = (dt) => {
         bullet = null;
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
         window.cancelAnimationFrame(requestAnimFrame);
+        
+        gameData.player1.turn = changeTurn(gameData.player1.turn);
+        gameData.player2.turn = changeTurn(gameData.player2.turn);
+
+        socket.emit('update-data', gameData);
         return;
     }
     var intersectPlayer2 = bull.getIntersections(user1);
@@ -155,6 +160,11 @@ const generateExplosion = (dt) => {
         bullet = null;
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
         window.cancelAnimationFrame(requestAnimFrame);
+        
+        gameData.player1.turn = changeTurn(gameData.player1.turn);
+        gameData.player2.turn = changeTurn(gameData.player2.turn);
+
+        socket.emit('update-data', gameData);
         return;
     }
     var intersect = bull.getIntersections(groundPath);
@@ -175,10 +185,10 @@ const generateExplosion = (dt) => {
         
         gameData.player1.turn = changeTurn(gameData.player1.turn);
         gameData.player2.turn = changeTurn(gameData.player2.turn);
-
+        
         socket.emit('update-data', gameData);
 
-        ground.setGround(calculatedGroundPoints);
+        // ground.setGround(calculatedGroundPoints);
 
         groundCtx = canvasModel.getGround().ctx;
         bulletCtx = canvasModel.getBullet().ctx;

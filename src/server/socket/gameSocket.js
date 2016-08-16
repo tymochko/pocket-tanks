@@ -103,11 +103,11 @@ export function gameSocket(client) {
         });
 
         socket.on('update-data', (gameData) => {
-            GameData.updateGameInfo(gameData.id, gameData, (err, game) => {
+            GameData.updateGameInfo(gameData.id, gameData, (err, gameData) => {
                 if (err) {
                     throw err;
                 } else {
-                    return 0;
+                    socket.emit('return-updated-gameData', gameData );
                 }
             });
         });
