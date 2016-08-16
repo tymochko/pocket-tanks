@@ -111,15 +111,13 @@ module.exports.initGame = (gameInst, socket) => {
                 break;
         }
     };
-    document.addEventListener('keydown', moveWeaponKeyDown, true);
+
+    allowTurn(gameInst, () => {
+        document.addEventListener('keydown', moveWeaponKeyDown, true);
+    });
 
     socket.on('outputPosWeapon', (data) => {
         weaponMove(data.weaponMoves, data.angle);
-    });
-
-    socket.on('outputBulletPos', (data) => {
-        bulletMove(data.bulletMoves, data.power, data.angleWeapon, data.tankAngle);
-
     });
 
     const bulletMove = (tankParam, powerParam, angleParam, tankAngleParam) => {
@@ -146,6 +144,11 @@ module.exports.initGame = (gameInst, socket) => {
             );
         }
     };
+
+    socket.on('outputBulletPos', (data) => {
+        bulletMove(data.bulletMoves, data.power, data.angleWeapon, data.tankAngle);
+    });
+
 /* ========  Tank movement ======== */
 
     const tankToMove = (direction) => {

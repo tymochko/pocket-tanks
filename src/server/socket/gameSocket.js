@@ -89,7 +89,7 @@ export function gameSocket(client) {
                 if (err) {
                     throw err;
                 } else {
-                    return 0
+                    return 0;
                 }
             });
 
@@ -101,8 +101,8 @@ export function gameSocket(client) {
                 }
             });
         });
-        
-        socket.on('update-data' , (gameData) => {
+
+        socket.on('update-data', (gameData) => {
             GameData.updateGameInfo(gameData.id, gameData, (err, game) => {
                 if (err) {
                     throw err;
@@ -110,7 +110,6 @@ export function gameSocket(client) {
                     return 0;
                 }
             });
-            
         });
     });
 }
