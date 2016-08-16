@@ -20,10 +20,11 @@ export function transportData(socket, $q) {
     gameService().getInitGameData(socket, $q, gameId)
         .then((gameData) => {
             const gameInst = gameCreate(gameData);
-            
+
             initCanvas();
             initGame(gameInst, socket);
         }, () => {
             alert('Server error. No game data received.');
         });
 }
+

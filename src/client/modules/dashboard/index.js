@@ -45,6 +45,7 @@ module.exports = angular.module('tanks.dashboard', [
     });
 
     socket.on('start-game', function(foundGame) {
+    //    socket.emit('points', {points:foundGame.originalPoints});
         localStorage.setItem('playerId', foundGame.playerId);
         window.location = `/game?id=${foundGame.gameId}`;
     });
