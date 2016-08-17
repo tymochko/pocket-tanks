@@ -7,3 +7,4 @@ export const WEAPON_HEIGHT = 20;
 export const DAMAGERADIUS = 40;
 export const G = 9.81;
 export const rideTime = 1000;
+export const FULL_LIFE = 2;
