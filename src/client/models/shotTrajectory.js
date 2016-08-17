@@ -4,7 +4,7 @@ import { tick } from './explosion';
 import { calculateDamageArea } from './generateDamage';
 import { ground } from './groundModel';
 import { drawGround } from './canvasRedrawModel';
-import { requestAnimFrame, clear } from './externalFunctions';
+import { requestAnimFrame, clear, drawLifeBar } from './externalFunctions';
 import { canvasModel } from './canvasModel';
 
 const player1 = {};
@@ -17,7 +17,6 @@ export const intersectionPlayer = (tank1, tank2, gameInst) => {
     gameData = gameInst;
     gameData.player1.tank = tank1;
     gameData.player2.tank = tank2;
-
 };
 
 let originalPoints,
@@ -88,6 +87,16 @@ const update = (dt) => {
     generateExplosion(dt);
 };
 
+const sendUpdates = () => {
+    const activePlayer = gameData.player1.turn ? gameData.player1.id : gameData.player2.id;
+    gameData.player1.turn = !gameData.player1.turn;
+    gameData.player2.turn = !gameData.player2.turn;
+
+    if (localStorage.getItem('playerId') === activePlayer) {
+        socket.emit('update-data', gameData);
+    }
+};
+
 const generateExplosion = (dt) => {
     if(!bullet) { return; }
     paper.project.activeLayer.removeChildren();
@@ -130,40 +139,38 @@ const generateExplosion = (dt) => {
     // check if intersect the original points
     var intersectPlayer1 = bull.getIntersections(user2);
     if(intersectPlayer1.length > 0) {
-        console.log('boom2');
         let crossPoint = {
             x: intersectPlayer1[0]._point.x,
             y: intersectPlayer1[0]._point.y
         };
-        console.log(crossPoint);
-
         bullet = null;
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
+
+        gameData.player2.life -= 1;
+        drawLifeBar('player2', gameData.player2.life);
+
         window.cancelAnimationFrame(requestAnimFrame);
+        sendUpdates();
 
-        gameData.player1.turn = changeTurn(gameData.player1.turn);
-        gameData.player2.turn = changeTurn(gameData.player2.turn);
-
-        socket.emit('update-data', gameData);
         return;
     }
     var intersectPlayer2 = bull.getIntersections(user1);
     if(intersectPlayer2.length > 0) {
-        console.log('boom1');
         let crossPoint = {
             x: intersectPlayer2[0]._point.x,
             y: intersectPlayer2[0]._point.y
         };
-        console.log(crossPoint);
 
         bullet = null;
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
+
+        gameData.player1.life -= 1;
+        drawLifeBar('player1', gameData.player1.life);
+
         window.cancelAnimationFrame(requestAnimFrame);
 
-        gameData.player1.turn = changeTurn(gameData.player1.turn);
-        gameData.player2.turn = changeTurn(gameData.player2.turn);
+        sendUpdates();
 
-        socket.emit('update-data', gameData);
         return;
     }
     var intersect = bull.getIntersections(groundPath);
@@ -181,19 +188,15 @@ const generateExplosion = (dt) => {
         const calculatedGroundPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
 
         gameData.points = calculatedGroundPoints;
-
-        gameData.player1.turn = !gameData.player1.turn;
-        gameData.player2.turn = !gameData.player2.turn;
-
-        socket.emit('update-data', gameData);
+        sendUpdates();
 
         // ground.setGround(calculatedGroundPoints);
 
-        groundCtx = canvasModel.getGround().ctx;
-        bulletCtx = canvasModel.getBullet().ctx;
-
-        clear(groundCtx);
-        drawGround(ground.getGround(), groundCtx);
+        // groundCtx = canvasModel.getGround().ctx;
+        // bulletCtx = canvasModel.getBullet().ctx;
+        //
+        // clear(groundCtx);
+        // drawGround(ground.getGround(), groundCtx);
 
 
     } else if (bullet.pos[0]>WIDTH || bullet.pos[1]>HEIGHT) {

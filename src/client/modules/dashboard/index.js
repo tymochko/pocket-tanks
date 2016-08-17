@@ -1,27 +1,26 @@
 import angular from 'angular';
 import ngRoute from 'angular-route';
 import { gameService } from '../game/gameService';
-import { game } from '../../models/gameModel';
+// import { game } from '../../models/gameModel';
 
 module.exports = angular.module('tanks.dashboard', [
     ngRoute
 ])
 .controller('DashboardCtrl', ['$scope', '$http', 'socket', '$q', '$uibModal', function($scope, $http, socket, $q, $uibModal) {
     let senderId;
-    $http.get('api/users').then(function(response){
-        var users = response.data.users;
+    $http.get('api/users').then(function(response) {
+        const users = response.data.users;
         senderId = response.data.sessionId;
 
         users.forEach(function(value, index) {
-            if (value._id == senderId) {
+            if (value._id === senderId) {
                 delete users[index];
             }
         });
         $scope.users = users;
     });
 
-    $scope.sendInvite = function(id){
-        console.log('Invite sent');
+    $scope.sendInvite = (id) => {
         socket.emit('invite', { senderUser: senderId, targetUser: id });
     };
 
@@ -33,7 +32,7 @@ module.exports = angular.module('tanks.dashboard', [
     });
 
     socket.on('you-are-invited', function(data) {
-        var modalInstance = $uibModal.open({
+        let modalInstance = $uibModal.open({
             templateUrl: 'dashboard/requestToPlay.html',
             controller: 'ConfirmCtrl',
             resolve: {

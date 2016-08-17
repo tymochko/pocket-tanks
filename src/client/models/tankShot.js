@@ -4,7 +4,7 @@ import { ground } from './groundModel';
 import { tankMove, findLinePoints } from './tankMovement';
 import { navPanel } from './navPanel';
 import { makeShot, intersectionPlayer } from './shotTrajectory';
-import { getId, clear, drawTanks, getTurnId } from './externalFunctions';
+import { getId, clear, drawTanks, getTurnId, drawLifeBar } from './externalFunctions';
 import { Tank } from './tankModel';
 import { drawGround, drawSky } from './canvasRedrawModel';
 import { canvasModel } from './canvasModel';
@@ -22,20 +22,25 @@ const tankImage = new Image();
 const weaponImage = new Image();
 
 module.exports.initGame = (gameInst, socket) => {
+    let playerTurnId = getTurnId(gameInst);
 
     function receiveUpdatedData(data) {
         if (data) {
             gameInst = data;
         }
         ground.setGround(data.originalPoints);
+        var groundCtx = canvasModel.getGround().ctx;
+        clear(groundCtx);
+        drawGround(ground.getGround(), groundCtx);
         console.log(ground.getGround());
+
+        playerTurnId = getTurnId(gameInst);
     }
     socket.on('return-updated-gameData', (gameData) => {
+        console.log(gameData, 'updated');
         receiveUpdatedData(gameData);
-        console.log(gameData);
-
     });
-
+    
     const tankCtx = canvasModel.getTank().ctx;
 
     originalPoints = ground.getGround();
@@ -182,7 +187,7 @@ module.exports.initGame = (gameInst, socket) => {
     const doKeyDown = (evt) => {
         const now = new Date().getTime();
 
-        if ((now - lastTimeTankMoved > 800) && (getTurnId(gameInst) === localStorage.getItem('playerId'))) {
+        if ((now - lastTimeTankMoved > 800) && (playerTurnId === localStorage.getItem('playerId'))) {
 
             switch (evt.keyCode) {
                 case 37:  /* Left arrow was pressed */
@@ -246,7 +251,7 @@ module.exports.initGame = (gameInst, socket) => {
                 gameInst.player2.tank.weaponAngle + Math.PI / 2
             );
 
-            intersectionPlayer(tank1, tank2,gameInst);
+            intersectionPlayer(tank1, tank2, gameInst);
 
             socket.emit('initPosTank', { tank1, tank2 });
 
@@ -258,9 +263,10 @@ module.exports.initGame = (gameInst, socket) => {
 
                 drawTanks(drawTank, tank1, tank2, tankImage, weaponImage);
             });
- navPanel(tank1, tank2, socket, gameInst);
 
-
+            navPanel(tank1, tank2, socket, gameInst);
+            drawLifeBar('player1', gameInst.player1.life);
+            drawLifeBar('player2', gameInst.player2.life);
         };
     })();
 };
