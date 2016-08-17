@@ -111,8 +111,7 @@ export function gameSocket(client) {
                 if (err) {
                     throw err;
                 } else {
-                    client.emit('return-updated-gameData', data );
-
+                    client.emit('return-updated-gameData', data);
                 }
             });
         });
