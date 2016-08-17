@@ -23,16 +23,19 @@ const weaponImage = new Image();
 
 module.exports.initGame = (gameInst, socket) => {
 
-    function reciveUpdatedData(data) {
+    function receiveUpdatedData(data) {
         if (data) {
             gameInst = data;
         }
         ground.setGround(data.originalPoints);
+        var groundCtx = canvasModel.getGround().ctx;
+        clear(groundCtx);
+        drawGround(ground.getGround(), groundCtx);
         console.log(ground.getGround());
     }
     socket.on('return-updated-gameData', (gameData) => {
-        reciveUpdatedData(gameData);
-        console.log(gameData);
+        console.log(gameData, 'updated');
+        receiveUpdatedData(gameData);
 
     });
 
