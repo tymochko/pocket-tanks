@@ -40,13 +40,13 @@ export const drawTanks = (callback, tank1, tank2, tankImage, weaponImage) => {
     callback(tank2, tankImage, weaponImage);
 };
 
-export const allowTurn = (gameInst) => {
+export const getTurnId = (gameInst) => {
     let thisWindowPlayerId;
     let thisWindowPlayer;
     let thisWindowPlayerTurn;
     let siblingWindowPlayer;
 
-    if (gameInst.player1.turn === true) {
+    if (gameInst.player1.turn) {
         thisWindowPlayer = 'player1';
         siblingWindowPlayer= 'player2';
         thisWindowPlayerTurn = gameInst.player1.turn;
@@ -58,18 +58,11 @@ export const allowTurn = (gameInst) => {
         thisWindowPlayerId = gameInst.player2.id;
     }
 
-    if (thisWindowPlayerTurn === true) {
+    if (thisWindowPlayerTurn) {
         document.getElementById(thisWindowPlayer).style.color = 'red';
         return thisWindowPlayerId;
     }
 
     document.getElementById(siblingWindowPlayer).style.color = 'red';
     return null;
-};
-
-export const changeTurn = (playerTurn) => {
-    if (playerTurn) {
-        return false;
-    }
-    return true;
 };

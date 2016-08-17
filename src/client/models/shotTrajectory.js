@@ -4,7 +4,7 @@ import { tick } from './explosion';
 import { calculateDamageArea } from './generateDamage';
 import { ground } from './groundModel';
 import { drawGround } from './canvasRedrawModel';
-import { requestAnimFrame, clear, changeTurn } from './externalFunctions';
+import { requestAnimFrame, clear } from './externalFunctions';
 import { canvasModel } from './canvasModel';
 
 const player1 = {};
@@ -140,7 +140,7 @@ const generateExplosion = (dt) => {
         bullet = null;
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
         window.cancelAnimationFrame(requestAnimFrame);
-        
+
         gameData.player1.turn = changeTurn(gameData.player1.turn);
         gameData.player2.turn = changeTurn(gameData.player2.turn);
 
@@ -159,7 +159,7 @@ const generateExplosion = (dt) => {
         bullet = null;
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
         window.cancelAnimationFrame(requestAnimFrame);
-        
+
         gameData.player1.turn = changeTurn(gameData.player1.turn);
         gameData.player2.turn = changeTurn(gameData.player2.turn);
 
@@ -181,10 +181,10 @@ const generateExplosion = (dt) => {
         const calculatedGroundPoints = calculateDamageArea(originalPoints, crossPoint.x, crossPoint.y);
 
         gameData.points = calculatedGroundPoints;
-        
-        gameData.player1.turn = changeTurn(gameData.player1.turn);
-        gameData.player2.turn = changeTurn(gameData.player2.turn);
-        
+
+        gameData.player1.turn = !gameData.player1.turn;
+        gameData.player2.turn = !gameData.player2.turn;
+
         socket.emit('update-data', gameData);
 
         // ground.setGround(calculatedGroundPoints);

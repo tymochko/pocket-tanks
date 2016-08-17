@@ -4,7 +4,7 @@ import { ground } from './groundModel';
 import { tankMove, findLinePoints } from './tankMovement';
 import { navPanel } from './navPanel';
 import { makeShot, intersectionPlayer } from './shotTrajectory';
-import { getId, clear, drawTanks, allowTurn } from './externalFunctions';
+import { getId, clear, drawTanks, getTurnId } from './externalFunctions';
 import { Tank } from './tankModel';
 import { drawGround, drawSky } from './canvasRedrawModel';
 import { canvasModel } from './canvasModel';
@@ -23,7 +23,7 @@ const weaponImage = new Image();
 
 module.exports.initGame = (gameInst, socket) => {
 
-    function reciveUpdatedData(data) {
+    function receiveUpdatedData(data) {
         if (data) {
             gameInst = data;
         }
@@ -31,7 +31,7 @@ module.exports.initGame = (gameInst, socket) => {
         console.log(ground.getGround());
     }
     socket.on('return-updated-gameData', (gameData) => {
-        reciveUpdatedData(gameData);
+        receiveUpdatedData(gameData);
         console.log(gameData);
 
     });
@@ -126,7 +126,7 @@ module.exports.initGame = (gameInst, socket) => {
     socket.on('outputBulletPos', (data) => {
         bulletMove(data.bulletMoves);
     });
-    
+
     socket.on('outputPosWeapon', (data) => {
         weaponMove(data.weaponMoves, data.angle);
     });
@@ -182,7 +182,7 @@ module.exports.initGame = (gameInst, socket) => {
     const doKeyDown = (evt) => {
         const now = new Date().getTime();
 
-        if ((now - lastTimeTankMoved > 800) && (allowTurn(gameInst) === localStorage.getItem('playerId'))) {
+        if ((now - lastTimeTankMoved > 800) && (getTurnId(gameInst) === localStorage.getItem('playerId'))) {
 
             switch (evt.keyCode) {
                 case 37:  /* Left arrow was pressed */
@@ -213,7 +213,6 @@ module.exports.initGame = (gameInst, socket) => {
 
     socket.on('outputPosTank', (data) => {
         tankMove(data.direction, data.tankMoves, data.tank1, data.tank2, tankImage, weaponImage, socket);
-        console.log(allowTurn(gameInst), 'allowTurn');
     });
 
     socket.on('sendCoordsOnClient', (data) => {
