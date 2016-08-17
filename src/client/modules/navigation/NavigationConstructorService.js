@@ -8,7 +8,7 @@ export class NavigationConstructor {
             let navRight = '<ul class="nav navbar-nav navbar-right"> ';
             let navCenter = '';
 
-            if(activeGameId){
+            if (activeGameId) {
                  navCenter = '<button ng-click="resumeGame()" class="btn btn-danger navbar-center">Resume GAME</button>';
             }
             if (logged) {
@@ -23,7 +23,7 @@ export class NavigationConstructor {
 
                     if (route.log && route.pos === 'left') {
                         nav += `<li><a href="${route.template}" ${ngClick}>${route.name}</a></li>`;
-                    } else if (route.log &&route.pos === 'right') {
+                    } else if (route.log && route.pos === 'right') {
                         navRight += `<li><a href="${route.template}" ${ngClick}> ${icon} ${route.name}</a></li>`;
                     }
                 }
@@ -31,6 +31,7 @@ export class NavigationConstructor {
             }
 
             for (const route of RouteNavigation.routes) {
+
                 if (route.click !== "") {
                     ngClick = `ng-click="${route.click}"`;
                 }
@@ -40,14 +41,15 @@ export class NavigationConstructor {
                 }
 
                 if (route.pos === 'right' && !route.log) {
-                    navRight += `<li><a href="${route.template}" ${ngClick}>${icon} ${route.name}</a></li>`;
+                    navRight += `<li><a href="/${route.template}" ${ngClick}>${icon} ${route.name}</a></li>`;
                 }
+                ngClick = icon = '';
             }
             return navRight;
         };
         this.activeGameData = () => {
             const activeGamesId = RouteNavigation.activeData.active;
-            return activeGamesId
-        }
+            return activeGamesId;
+        };
     }
 }

@@ -1,0 +1,42 @@
+<div class="scores" ng-app="sortApp">
+	<div class="page-header">
+      <h1>Scores</h1>
+    </div>
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+        <input type="text" class="form-control" placeholder="Search user" ng-model="searchScore">
+      </div>      
+    </div>
+
+  	<table class="table table-bordered table-striped" width="100%">
+	    <thead>
+	      <tr>
+	        <td>
+	          <a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse"> Name 
+	          	<span ng-show="sortType == 'name' && !sortReverse" class="glyphicon glyphicon-arrow-down"> </span>
+	        	<span ng-show="sortType == 'name' && sortReverse" class="glyphicon glyphicon-arrow-up"> </span>
+	        </a>
+	        </td>
+	        <td>
+	          <a href="#" ng-click="sortType = 'win'; sortReverse = !sortReverse"> Games won 
+	          <span ng-show="sortType == 'win' && !sortReverse" class="glyphicon glyphicon-arrow-down"> </span>
+	        <span ng-show="sortType == 'win' && sortReverse" class="glyphicon glyphicon-arrow-up"> </span></a>
+	        </td>
+	        <td>
+	          <a href="#" ng-click="sortType = 'lose'; sortReverse = !sortReverse"> Games lost 
+	          <span ng-show="sortType == 'lose' && !sortReverse" class="glyphicon glyphicon-arrow-down"> </span>
+	        <span ng-show="sortType == 'lose' && sortReverse" class="glyphicon glyphicon-arrow-up"> </span></a>
+	        </td>
+	      </tr>
+	    </thead>
+    
+	    <tbody>
+	      <tr ng-repeat="user in mylist | orderBy:sortType:sortReverse | filter:searchScore">
+	        <td>{{ user.name }}</td>
+	        <td>{{ user.win }}</td>
+	        <td>{{ user.lose }}</td>
+	      </tr>
+	    </tbody>
+  	</table>
+</div>

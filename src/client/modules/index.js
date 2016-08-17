@@ -7,6 +7,7 @@ import signup from './signup';
 import profile from './profile';
 import dashboard from './dashboard';
 import navigation from './navigation';
+import scores from './scores';
 import {eng} from '../languages/languages';
 import {ukr} from '../languages/languages';
 
@@ -25,7 +26,8 @@ module.exports = angular.module('tanks', [
     login.name,
     signup.name,
     profile.name,
-    navigation.name
+    navigation.name,
+    scores.name
 ])
 
 .config(RouteConfig)

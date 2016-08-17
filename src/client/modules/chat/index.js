@@ -16,28 +16,26 @@ module.exports = angular.module('tanks.chat', [ ngRoute, 'luegg.directives'])
 
 function ChatController($scope,socket)
 {
-     $scope.messages=[];
-     $scope.inputMessage='';
-     $scope.inputName='';
+     $scope.messages = [];
+     $scope.inputMessage = '';
 
      if(socket)
      {
           socket.on('outputMessage', getMessages);
 
-          $scope.sentEventListener=function(event){
-               let inputMessage = $scope.inputMessage,
-               name = $scope.inputName,
-               date=new Date();
+          $scope.sentEventListener = function(event) {
+               const inputMessage = $scope.inputMessage;
+               const name = localStorage.getItem('userName');
+               const date = new Date();
 
                socket.emit('inputMessage',{
                     name: name,
-                    message:inputMessage,
+                    message: inputMessage,
                     time: date.toUTCString()
                });
 
-               $scope.inputMessage=null;
+               $scope.inputMessage = null;
 
-               event.preventDefault();
           };
      }
 
@@ -45,7 +43,7 @@ function ChatController($scope,socket)
      {
           if(data.length)
           {
-               for(let x=data.length-1;x>=0; --x){
+               for(let x = data.length-1;x>=0; --x){
                     $scope.messages.push({
                          "chater_name": data[x].name,
                          "chater_message": data[x].message,

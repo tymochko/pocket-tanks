@@ -40,36 +40,27 @@ export const drawTanks = (callback, tank1, tank2, tankImage, weaponImage) => {
     callback(tank2, tankImage, weaponImage);
 };
 
-export const allowTurn = (gameInst) => {
+export const getTurnId = (gameInst) => {
     let thisWindowPlayerId;
     let thisWindowPlayer;
-    let thisWindowPlayerTurn;
     let siblingWindowPlayer;
 
-    if (gameInst.player1.turn === true) {
+    if (gameInst.player1.turn) {
         thisWindowPlayer = 'player1';
         siblingWindowPlayer= 'player2';
-        thisWindowPlayerTurn = gameInst.player1.turn;
         thisWindowPlayerId = gameInst.player1.id;
     } else {
         thisWindowPlayer = 'player2';
         siblingWindowPlayer= 'player1';
-        thisWindowPlayerTurn = gameInst.player2.turn;
         thisWindowPlayerId = gameInst.player2.id;
     }
-
-    if (thisWindowPlayerTurn === true) {
-        document.getElementById(thisWindowPlayer).style.color = 'red';
-        return thisWindowPlayerId;
-    }
-
-    document.getElementById(siblingWindowPlayer).style.color = 'red';
-    return null;
+    document.getElementById(thisWindowPlayer).style.color = 'red';
+    document.getElementById(siblingWindowPlayer).style.color = 'black';
+    return thisWindowPlayerId;
 };
 
-export const changeTurn = (playerTurn) => {
-    if (playerTurn) {
-        return false;
-    }
-    return true;
+export const drawLifeBar = (player, life) => {
+    const step = 50;
+    const number = (player === 'player1') ? '1' : '2';
+    getId(`lifeBar${number}`).style.width = `${step * life}%`;
 };

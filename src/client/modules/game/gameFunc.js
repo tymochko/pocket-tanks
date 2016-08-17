@@ -15,8 +15,8 @@ export const gameCreate = (gameData) => {
     const tank1 = new Tank(player1Id, getRandomPos(333, 33));
     const tank2 = new Tank(player2Id, getRandomPos(333, 444));
 
-    const player1 = new Player(player1Id, true, tank1);
-    const player2 = new Player(player2Id, false, tank2);
+    const player1 = new Player(player1Id, true, tank1, gameData.player1.life);
+    const player2 = new Player(player2Id, false, tank2, gameData.player2.life);
 
     const gameStatus = true;
 

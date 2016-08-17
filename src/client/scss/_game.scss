@@ -1,8 +1,8 @@
 @font-face {
     font-family: 'Digital_tech';
     src: url('fonts/Digital_tech.eot');
-    src: local('☺'), url('fonts/Digital_tech.woff') format('woff'), 
-    url('fonts/Digital_tech.ttf') format('truetype'), 
+    src: local('☺'), url('fonts/Digital_tech.woff') format('woff'),
+    url('fonts/Digital_tech.ttf') format('truetype'),
     url('fonts/Digital_tech.svg') format('svg');
     font-weight: normal;
     font-style: normal;
@@ -47,20 +47,50 @@
         position: absolute;
     }
     .overlay {
-        position: absolute;
         width: 100%;
+        color: black;
+        font-size: 0;
+        position: absolute;
         padding-left: 20px;
         padding-right: 20px;
-        color: black;
+        .life-panel {
+            width: 50%;
+            display: inline-block;
+            &.pl2 {
+                .player {
+                    text-align: right;
+                }
+                .life-bar {
+                    float: right;
+                    .progress-life{
+                        float: right;
+                    }
+                }
+            }
+            .player {
+                text-align: left;
+                font-size: 30px;
+                color: black !important;
+            }
+            .life-bar {
+                @include border-radius(5px);
+                float: left;
+                width: 140px;
+                height: 15px;
+                margin-top: 0;
+                overflow: hidden;
+                background: $life;
+                border: 2px solid black;
+                .progress-life{
+                    @include transition(0.6s);
+                    width: 100%;
+                    display: block;
+                    height: inherit;
+                    background: $yellow;
+                }
+            }
+        }
 
-        .player1 {
-            float: left;
-            display: inline-block;
-        }
-        .player2 {
-            display: inline-block;
-            float: right;
-        }
     }
 }
 
@@ -68,13 +98,13 @@
     background-image: url(../../public/images/panel-200.png);
     color: #CE5139;
     width: 800px;
-    height: 200px;
+    height: 180px;
     position: relative;
-    top: 410px; 
+    top: 410px;
     @include no-select();
-    .topleft, 
-    .downleft, 
-    .topright, 
+    .topleft,
+    .downleft,
+    .topright,
     .downright {
         position: absolute;
         background-repeat: no-repeat;
@@ -116,8 +146,8 @@
         transform: rotate(270deg);
     }
 
-    .power-block, 
-    .fire-block, 
+    .power-block,
+    .fire-block,
     .angle-block {
         top: 74px;
         position: absolute;
@@ -148,14 +178,28 @@
         position: relative;
         width: 120px;
         height: 30px;
-        left: 680px;
-        top: 170px;
-        background-color: rgb(256, 256, 256);
-        border: 2px dotted aqua;
+        left: 665px;
+        // top: 170px;
+        // background-color: rgb(256, 256, 256);
+        // border: 2px dotted aqua;
+        line-height: 30px;
+        color: white;
+        font-size: 18px;
+        border-radius: 6px;
+        transform: skewX(35deg);
+        top: 3px;
+        position: absolute;
+        background-color: #CE5139;
+        letter-spacing: 2px;
+        &:hover {
+            cursor: pointer;
+            background-color: #C9302C;
+            transition: background-color 0.1s ease-out;
+        }
     }
 
-    .power-text, 
-    .fire-text, 
+    .power-text,
+    .fire-text,
     .angle-text {
         top: 163px;
         position: absolute;
@@ -174,14 +218,15 @@
     .angle-text {
         left: 465px;
     }
-    
+
     #chat-window {
         position: relative;
         width: 400px;
-        height: 170px;
-        top: -30px;
+        height: 145px;
+        top: 35px;
         left: 0;
         opacity: 0;
         display: none;
+        border-radius: 5px;
     }
 }
