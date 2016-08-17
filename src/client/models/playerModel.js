@@ -1,7 +1,7 @@
 import { Tank } from './tankModel';
 
 class Player {
-    constructor(id, turn, tank = new Tank(), life = 2) {
+    constructor(id, turn, tank = new Tank(), life) {
         this.id = id;
         this.tank = tank;
         this.life = life;

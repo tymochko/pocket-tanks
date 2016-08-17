@@ -107,11 +107,12 @@ export function gameSocket(client) {
         });
 
         socket.on('update-data', (gameData) => {
-            GameData.updateGameInfo(gameData.id, gameData, (err, game) => {
+            GameData.updateGameInfo(gameData.id, gameData, (err, data) => {
                 if (err) {
                     throw err;
                 } else {
-                    return 0;
+                    client.emit('return-updated-gameData', data );
+
                 }
             });
         });

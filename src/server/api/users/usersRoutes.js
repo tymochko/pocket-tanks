@@ -111,8 +111,6 @@ router.post('/add', (req, res) => {
             fsHelper.checkDir(userInfoDir);
             fsHelper.checkDir(userInfoDir + user._id);
             UsersCollection.handleEmail(newUser.userName, newUser.userEmail);
-            req.session.user = user._id;
-            req.session.username = user.userName;
             res.status(201);
             res.json({message: 'User registered'});
         }

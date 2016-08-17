@@ -15,7 +15,7 @@ export function navPanel(tank1, tank2, socket, gameInst) {
     weaponImage.src = './public/images/tankWeapon_straight.png';
 
     getId('fire').onclick = () => {
-        bulletToMove(); 
+        bulletToMove();
     };
 
     const changePower = (power) => {
@@ -69,7 +69,7 @@ export function navPanel(tank1, tank2, socket, gameInst) {
         weaponAngle = parseInt(getId('angle').innerHTML);
         weaponAngle -= 5;
         weaponToMove(weaponAngle * Math.PI / 180);
-        getId('angle').innerHTML = weaponAngle;    
+        getId('angle').innerHTML = weaponAngle;
     };
 
     getId('chatBtn').onclick = showChatWindow;

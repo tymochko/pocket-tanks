@@ -1,8 +1,8 @@
 @font-face {
     font-family: 'Digital_tech';
     src: url('fonts/Digital_tech.eot');
-    src: local('☺'), url('fonts/Digital_tech.woff') format('woff'), 
-    url('fonts/Digital_tech.ttf') format('truetype'), 
+    src: local('☺'), url('fonts/Digital_tech.woff') format('woff'),
+    url('fonts/Digital_tech.ttf') format('truetype'),
     url('fonts/Digital_tech.svg') format('svg');
     font-weight: normal;
     font-style: normal;
@@ -47,20 +47,48 @@
         position: absolute;
     }
     .overlay {
-        position: absolute;
         width: 100%;
+        color: black;
+        font-size: 0;
+        position: absolute;
         padding-left: 20px;
         padding-right: 20px;
-        color: black;
+        .life-panel {
+            width: 50%;
+            display: inline-block;
+            &.pl2 {
+                .player {
+                    text-align: right;
+                }
+                .life-bar {
+                    float: right;
+                    .progress-life{
+                        float: right;
+                    }
+                }
+            }
+            .player {
+                text-align: left;
+            }
+            .life-bar {
+                @include border-radius(5px);
+                float: left;
+                width: 160px;
+                height: 20px;
+                margin-top: 0;
+                overflow: hidden;
+                background: $life;
+                border: 2px solid black;
+                .progress-life{
+                    @include transition(0.6s);
+                    width: 100%;
+                    display: block;
+                    height: inherit;
+                    background: $yellow;
+                }
+            }
+        }
 
-        .player1 {
-            float: left;
-            display: inline-block;
-        }
-        .player2 {
-            display: inline-block;
-            float: right;
-        }
     }
 }
 
@@ -70,11 +98,11 @@
     width: 800px;
     height: 200px;
     position: relative;
-    top: 410px; 
+    top: 410px;
     @include no-select();
-    .topleft, 
-    .downleft, 
-    .topright, 
+    .topleft,
+    .downleft,
+    .topright,
     .downright {
         position: absolute;
         background-repeat: no-repeat;
@@ -116,8 +144,8 @@
         transform: rotate(270deg);
     }
 
-    .power-block, 
-    .fire-block, 
+    .power-block,
+    .fire-block,
     .angle-block {
         top: 74px;
         position: absolute;
@@ -154,8 +182,8 @@
         border: 2px dotted aqua;
     }
 
-    .power-text, 
-    .fire-text, 
+    .power-text,
+    .fire-text,
     .angle-text {
         top: 163px;
         position: absolute;
@@ -174,7 +202,7 @@
     .angle-text {
         left: 465px;
     }
-    
+
     #chat-window {
         position: relative;
         width: 400px;

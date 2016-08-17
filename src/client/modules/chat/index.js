@@ -36,7 +36,6 @@ function ChatController($scope,socket)
 
                $scope.inputMessage = null;
 
-               event.preventDefault();
           };
      }
 
