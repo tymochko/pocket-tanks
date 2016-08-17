@@ -53,15 +53,23 @@
         position: absolute;
         padding-left: 20px;
         padding-right: 20px;
-        .player{
-            text-align: left;
-            &#player2{
-                text-align: right;
-            }
-        }
         .lifepanel {
             width: 50%;
             display: inline-block;
+            &.pl2 {
+                .player {
+                    text-align: right;
+                }
+                .lifebar {
+                    float: right;
+                    .progress-life{
+                        float: right;
+                    }
+                }
+            }
+            .player {
+                text-align: left;
+            }
             .lifebar {
                 @include border-radius(5px);
                 float: left;
@@ -71,14 +79,8 @@
                 overflow: hidden;
                 background: $life;
                 border: 2px solid black;
-                &#lifebar2{
-                    float: right;
-                    .progress-life{
-                        float: right;
-                    }
-                }
                 .progress-life{
-                    @include transition(0.3s);
+                    @include transition(0.6s);
                     width: 100%;
                     display: block;
                     height: inherit;

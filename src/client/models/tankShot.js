@@ -4,7 +4,7 @@ import { ground } from './groundModel';
 import { tankMove, findLinePoints } from './tankMovement';
 import { navPanel } from './navPanel';
 import { makeShot, intersectionPlayer } from './shotTrajectory';
-import { getId, clear, drawTanks, allowTurn } from './externalFunctions';
+import { getId, clear, drawTanks, allowTurn, drawLifeBar } from './externalFunctions';
 import { Tank } from './tankModel';
 import { drawGround, drawSky } from './canvasRedrawModel';
 import { canvasModel } from './canvasModel';
@@ -22,7 +22,6 @@ const tankImage = new Image();
 const weaponImage = new Image();
 
 module.exports.initGame = (gameInst, socket) => {
-
     function receiveUpdatedData(data) {
         if (data) {
             gameInst = data;
@@ -36,7 +35,6 @@ module.exports.initGame = (gameInst, socket) => {
     socket.on('return-updated-gameData', (gameData) => {
         console.log(gameData, 'updated');
         receiveUpdatedData(gameData);
-
     });
 
     const tankCtx = canvasModel.getTank().ctx;
@@ -129,7 +127,7 @@ module.exports.initGame = (gameInst, socket) => {
     socket.on('outputBulletPos', (data) => {
         bulletMove(data.bulletMoves);
     });
-    
+
     socket.on('outputPosWeapon', (data) => {
         weaponMove(data.weaponMoves, data.angle);
     });
@@ -250,7 +248,7 @@ module.exports.initGame = (gameInst, socket) => {
                 gameInst.player2.tank.weaponAngle + Math.PI / 2
             );
 
-            intersectionPlayer(tank1, tank2,gameInst);
+            intersectionPlayer(tank1, tank2, gameInst);
 
             socket.emit('initPosTank', { tank1, tank2 });
 
@@ -262,9 +260,10 @@ module.exports.initGame = (gameInst, socket) => {
 
                 drawTanks(drawTank, tank1, tank2, tankImage, weaponImage);
             });
- navPanel(tank1, tank2, socket, gameInst);
 
-
+            navPanel(tank1, tank2, socket, gameInst);
+            drawLifeBar('player1', gameInst.player1.life);
+            drawLifeBar('player2', gameInst.player2.life);
         };
     })();
 };

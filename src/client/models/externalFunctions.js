@@ -73,3 +73,9 @@ export const changeTurn = (playerTurn) => {
     }
     return true;
 };
+
+export const drawLifeBar = (player, life) => {
+    const step = 50;
+    const number = (player === 'player1') ? '1' : '2';
+    getId(`lifebar${number}`).style.width = `${step * life}%`;
+};

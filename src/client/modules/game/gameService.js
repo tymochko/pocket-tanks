@@ -20,7 +20,7 @@ export function gameService() {
             });
 
             socket.emit('enter-with-gameId', gameId);
-            
+
             return deferred.promise;
         }
     };
