@@ -37,6 +37,7 @@ export function RouteNavigation($route, $location, ProfileService, $translate) {
             return ProfileService.getProfile().then(({data}) => {
                 $translate.use(data.userLanguage);
                 checkActiveGame(data.activeGame);
+                localStorage.setItem('userName', data.userName);
                 return getNewNames(routes, data.userLanguage);
             });
         },

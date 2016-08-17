@@ -1,9 +1,7 @@
 textarea {
     color: #222;
 }
-input {
-    color: #222;
-}
+
 .chat {
 	color: #222;
     padding-left: 20px;
@@ -16,10 +14,7 @@ input {
     }
     font-family: "Times New Roman";
 }
-.chat-name {
-    font-style: italic;
-    outline: none;
-}
+
 .chat-messages {
     height: 100px;
     overflow-y: scroll;

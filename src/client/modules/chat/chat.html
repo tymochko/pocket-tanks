@@ -1,4 +1,3 @@
-	<input type="text" class="chat-name" ng-model="inputName" placeholder="Enter your name" />
 
 	<div id="chat" class="chat-messages" scroll-glue>
 		<div class="chat-message" ng-repeat="x in messages">
@@ -11,4 +10,6 @@
 		</div>
 	</div>
 
-	<textarea ng-keyup="$event.keyCode == 13 && sentEventListener($event)" ng-model="inputMessage" placeholder="Type your message"></textarea>
+	<textarea ng-model="inputMessage" placeholder="Type your message"></textarea>
+
+	<input type="button" value="Send" ng-click = "sentEventListener()"/>

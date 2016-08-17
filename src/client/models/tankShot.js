@@ -36,6 +36,8 @@ module.exports.initGame = (gameInst, socket) => {
 /* ====== initialization ======== */
     paper.setup(canvasModel.getBullet().canvas);
 
+    angle = parseInt(getId('angle').innerHTML);
+
 /* ====== Tank Weapon Movement ======== */
 
     const weaponToMove = (value) => {
@@ -44,7 +46,7 @@ module.exports.initGame = (gameInst, socket) => {
             weaponMoves = 'tank1';
         } else {
             weaponMoves = 'tank2';
-            value = value + Math.PI / 2;
+            value = value + Math.PI;
         }
 
         socket.emit('inputPosWeapon', {
@@ -90,8 +92,7 @@ module.exports.initGame = (gameInst, socket) => {
     const moveWeaponKeyDown = (evt) => {
         switch (evt.keyCode) {
             case 38:    //Up arrow was pressed /
-                angle = parseInt(getId('angle').innerHTML);
-                if (angle >= 80) {
+                if (angle > 80) {
                     return;
                 }
                 angle += 5;
@@ -100,8 +101,7 @@ module.exports.initGame = (gameInst, socket) => {
                 break;
 
             case 40:   //Down arrow was pressed /
-                angle = parseInt(getId('angle').innerHTML);
-                if (angle <= 0) {
+                if (angle > 80) {
                     return;
                 }
                 angle -= 5;
@@ -114,9 +114,9 @@ module.exports.initGame = (gameInst, socket) => {
         }
     };
 
-    allowTurn(gameInst, () => {
+    //allowTurn(gameInst, () => {
         document.addEventListener('keydown', moveWeaponKeyDown, true);
-    });
+    //});
 
     socket.on('outputBulletPos', (data) => {
         bulletMove(data.bulletMoves);
@@ -201,9 +201,9 @@ module.exports.initGame = (gameInst, socket) => {
         }
     };
 
-    allowTurn(gameInst, () => {
+    //allowTurn(gameInst, () => {
         window.addEventListener('keydown', doKeyDown, true);
-    });
+    //});
 
     socket.on('outputPosTank', (data) => {
         tankMove(data.direction, data.tankMoves, data.tank1, data.tank2, tankImage, weaponImage, socket);
@@ -241,7 +241,7 @@ module.exports.initGame = (gameInst, socket) => {
                 gameInst.player2.id,
                 gameInst.player2.tank.tankX,
                 gameInst.player2.tank.tankAngle,
-                gameInst.player2.tank.weaponAngle + Math.PI / 2
+                gameInst.player2.tank.weaponAngle + Math.PI
             );
 
             intersectionPlayer(tank1, tank2,gameInst);
