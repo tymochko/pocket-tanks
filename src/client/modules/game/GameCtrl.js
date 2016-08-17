@@ -3,7 +3,7 @@ import { initCanvas } from '../../models/initCanvas';
 import { gameCreate } from './gameFunc';
 import { gameService } from './gameService';
 
-export function transportData(socket, $q) {
+export function transportData(socket, $q, $uibModal) {
     const localUrl = window.location.href;
 
     function getParameterByName(name, url) {
@@ -26,4 +26,5 @@ export function transportData(socket, $q) {
         }, () => {
             alert('Server error. No game data received.');
         });
+    gameService().finish($uibModal, false);
 }
