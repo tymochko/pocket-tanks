@@ -116,7 +116,6 @@
         "no-else-return": [2],
         "no-multi-spaces": [2],
         "no-new": [2],
-        "no-param-reassign": [2],
         "no-use-before-define": [2, "nofunc"],
         "strict": [0, "never"],
         "prefer-const": [2],

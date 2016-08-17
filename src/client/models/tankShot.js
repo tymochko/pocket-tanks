@@ -5,7 +5,7 @@ import { tankMove, findLinePoints } from './tankMovement';
 import { navPanel } from './navPanel';
 import { makeShot, intersectionPlayer } from './shotTrajectory';
 import { rideTime } from './externalVariables';
-import { getId, clear, drawTanks, allowTurn, drawLifeBar } from './externalFunctions';
+import { getId, clear, drawTanks, drawLifeBar, getTurnId } from './externalFunctions';
 import { Tank } from './tankModel';
 import { drawGround, drawSky } from './canvasRedrawModel';
 import { canvasModel } from './canvasModel';
@@ -20,14 +20,17 @@ const tankImage = new Image();
 const weaponImage = new Image();
 
 module.exports.initGame = (gameInst, socket) => {
+    let playerTurnId = getTurnId(gameInst);
+
     function receiveUpdatedData(data) {
         if (data) {
             gameInst = data;
         }
         ground.setGround(data.originalPoints);
-        var groundCtx = canvasModel.getGround().ctx;
+        const groundCtx = canvasModel.getGround().ctx;
         clear(groundCtx);
         drawGround(ground.getGround(), groundCtx);
+        playerTurnId = getTurnId(gameInst);
     }
 
     const tankCtx = canvasModel.getTank().ctx;
@@ -46,7 +49,7 @@ module.exports.initGame = (gameInst, socket) => {
             weaponMoves = 'tank1';
         } else {
             weaponMoves = 'tank2';
-            value = value + Math.PI / 2;
+            value += Math.PI / 2;
         }
 
         socket.emit('inputPosWeapon', {
@@ -132,7 +135,7 @@ module.exports.initGame = (gameInst, socket) => {
     const doKeyDown = (evt) => {
         const now = new Date().getTime();
 
-        if (allowTurn(gameInst) === localStorage.getItem('playerId')) {
+        if (getTurnId(gameInst) === localStorage.getItem('playerId')) {
             switch (evt.keyCode) {
                 case 37:  /* Left arrow was pressed */
                     if (now - lastTimeTankMoved > rideTime) {
