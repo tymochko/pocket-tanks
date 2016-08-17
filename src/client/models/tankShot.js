@@ -14,9 +14,7 @@ let originalPoints;
 let tank1;
 let tank2;
 
-let weaponAngle,
-    angle;
-let tank;
+let angle;
 
 const tankImage = new Image();
 const weaponImage = new Image();
@@ -29,18 +27,16 @@ module.exports.initGame = (gameInst, socket) => {
             gameInst = data;
         }
         ground.setGround(data.originalPoints);
-        var groundCtx = canvasModel.getGround().ctx;
+        const groundCtx = canvasModel.getGround().ctx;
         clear(groundCtx);
         drawGround(ground.getGround(), groundCtx);
-        console.log(ground.getGround());
 
         playerTurnId = getTurnId(gameInst);
     }
     socket.on('return-updated-gameData', (gameData) => {
-        console.log(gameData, 'updated');
         receiveUpdatedData(gameData);
     });
-    
+
     const tankCtx = canvasModel.getTank().ctx;
 
     originalPoints = ground.getGround();
@@ -57,7 +53,7 @@ module.exports.initGame = (gameInst, socket) => {
             weaponMoves = 'tank1';
         } else {
             weaponMoves = 'tank2';
-            value = value + Math.PI / 2;
+            value += Math.PI / 2;
         }
 
         socket.emit('inputPosWeapon', {
@@ -127,15 +123,6 @@ module.exports.initGame = (gameInst, socket) => {
         }
     };
 
-
-    socket.on('outputBulletPos', (data) => {
-        bulletMove(data.bulletMoves);
-    });
-
-    socket.on('outputPosWeapon', (data) => {
-        weaponMove(data.weaponMoves, data.angle);
-    });
-
     const bulletMove = (tankParam) => {
         if (tankParam === 'tank1') {
             makeShot(
@@ -162,7 +149,11 @@ module.exports.initGame = (gameInst, socket) => {
     };
 
     socket.on('outputBulletPos', (data) => {
-        bulletMove(data.bulletMoves, data.power, data.angleWeapon, data.tankAngle);
+        bulletMove(data.bulletMoves);
+    });
+
+    socket.on('outputPosWeapon', (data) => {
+        weaponMove(data.weaponMoves, data.angle);
     });
 
 /* ========  Tank movement ======== */
