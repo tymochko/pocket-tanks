@@ -6,3 +6,4 @@ export const WEAPON_WIDTH = 35;
 export const WEAPON_HEIGHT = 20;
 export const DAMAGERADIUS = 40;
 export const G = 9.81;
+export const rideTime = 1000;

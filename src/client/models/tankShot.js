@@ -4,6 +4,7 @@ import { ground } from './groundModel';
 import { tankMove, findLinePoints } from './tankMovement';
 import { navPanel } from './navPanel';
 import { makeShot, intersectionPlayer } from './shotTrajectory';
+import { rideTime } from './externalVariables';
 import { getId, clear, drawTanks, allowTurn, drawLifeBar } from './externalFunctions';
 import { Tank } from './tankModel';
 import { drawGround, drawSky } from './canvasRedrawModel';
@@ -13,10 +14,7 @@ import { drawTank } from './drawTank';
 let originalPoints;
 let tank1;
 let tank2;
-
-let weaponAngle,
-    angle;
-let tank;
+let angle;
 
 const tankImage = new Image();
 const weaponImage = new Image();
@@ -30,12 +28,7 @@ module.exports.initGame = (gameInst, socket) => {
         var groundCtx = canvasModel.getGround().ctx;
         clear(groundCtx);
         drawGround(ground.getGround(), groundCtx);
-        console.log(ground.getGround());
     }
-    socket.on('return-updated-gameData', (gameData) => {
-        console.log(gameData, 'updated');
-        receiveUpdatedData(gameData);
-    });
 
     const tankCtx = canvasModel.getTank().ctx;
 
@@ -64,7 +57,16 @@ module.exports.initGame = (gameInst, socket) => {
         });
     };
 
-    module.exports.weaponToMove = weaponToMove;
+    const weaponMove = (tankParam, angleParam) => {
+        clear(tankCtx);
+        if (tankParam === 'tank1') {
+            tank1.setWeaponAngle(angleParam);
+            drawTanks(drawTank, tank1, tank2, tankImage, weaponImage);
+        } else {
+            tank2.setWeaponAngle(angleParam);
+            drawTanks(drawTank, tank2, tank1, tankImage, weaponImage);
+        }
+    };
 
     const bulletToMove = () => {
         let bulletMoves;
@@ -82,55 +84,6 @@ module.exports.initGame = (gameInst, socket) => {
             tank
         });
     };
-
-    module.exports.bulletToMove = bulletToMove;
-
-    const weaponMove = (tankParam, angleParam) => {
-        clear(tankCtx);
-        if (tankParam === 'tank1') {
-            tank1.setWeaponAngle(angleParam);
-            drawTanks(drawTank, tank1, tank2, tankImage, weaponImage);
-        } else {
-            tank2.setWeaponAngle(angleParam);
-            drawTanks(drawTank, tank2, tank1, tankImage, weaponImage);
-        }
-    };
-
-    const moveWeaponKeyDown = (evt) => {
-        switch (evt.keyCode) {
-            case 38:    //Up arrow was pressed /
-                angle = parseInt(getId('angle').innerHTML);
-                if (angle >= 80) {
-                    return;
-                }
-                angle += 5;
-                getId('angle').innerHTML = angle;
-                weaponToMove(angle * Math.PI / 180);
-                break;
-
-            case 40:   //Down arrow was pressed /
-                angle = parseInt(getId('angle').innerHTML);
-                if (angle <= 0) {
-                    return;
-                }
-                angle -= 5;
-                getId('angle').innerHTML = angle;
-                weaponToMove(angle * Math.PI / 180);
-                break;
-
-            default:
-                break;
-        }
-    };
-
-
-    socket.on('outputBulletPos', (data) => {
-        bulletMove(data.bulletMoves);
-    });
-
-    socket.on('outputPosWeapon', (data) => {
-        weaponMove(data.weaponMoves, data.angle);
-    });
 
     const bulletMove = (tankParam) => {
         if (tankParam === 'tank1') {
@@ -157,10 +110,6 @@ module.exports.initGame = (gameInst, socket) => {
         }
     };
 
-    socket.on('outputBulletPos', (data) => {
-        bulletMove(data.bulletMoves, data.power, data.angleWeapon, data.tankAngle);
-    });
-
 /* ========  Tank movement ======== */
 
     const tankToMove = (direction) => {
@@ -183,16 +132,40 @@ module.exports.initGame = (gameInst, socket) => {
     const doKeyDown = (evt) => {
         const now = new Date().getTime();
 
-        if ((now - lastTimeTankMoved > 800) && (allowTurn(gameInst) === localStorage.getItem('playerId'))) {
-
+        if (allowTurn(gameInst) === localStorage.getItem('playerId')) {
             switch (evt.keyCode) {
                 case 37:  /* Left arrow was pressed */
+                    if (now - lastTimeTankMoved > rideTime) {
+                        tankToMove('left');
+                        lastTimeTankMoved = now;
+                    }
+                    break;
 
-                    tankToMove('left');
+                case 38:    //Up arrow was pressed /
+                    angle = parseInt(getId('angle').innerHTML);
+                    if (angle >= 80) {
+                        return;
+                    }
+                    angle += 5;
+                    getId('angle').innerHTML = angle;
+                    weaponToMove(angle * Math.PI / 180);
                     break;
 
                 case 39:  /* Right arrow was pressed */
-                    tankToMove('right');
+                    if (now - lastTimeTankMoved > rideTime) {
+                        tankToMove('right');
+                        lastTimeTankMoved = now;
+                    }
+                    break;
+
+                case 40:   //Down arrow was pressed /
+                    angle = parseInt(getId('angle').innerHTML);
+                    if (angle <= 0) {
+                        return;
+                    }
+                    angle -= 5;
+                    getId('angle').innerHTML = angle;
+                    weaponToMove(angle * Math.PI / 180);
                     break;
 
                 case 13: /*ENTER*/
@@ -201,31 +174,9 @@ module.exports.initGame = (gameInst, socket) => {
                     tank2.tankY = findLinePoints(tank2.tankX);
                     drawTanks(drawTank, tank1, tank2, tankImage, weaponImage);
                     break;
-
-                default:
-                    break;
             }
-        lastTimeTankMoved = now;
         }
     };
-
-    document.addEventListener('keydown', moveWeaponKeyDown, true);
-    window.addEventListener('keydown', doKeyDown, true);
-
-    socket.on('outputPosTank', (data) => {
-        tankMove(data.direction, data.tankMoves, data.tank1, data.tank2, tankImage, weaponImage, socket);
-        console.log(allowTurn(gameInst), 'allowTurn');
-    });
-
-    socket.on('sendCoordsOnClient', (data) => {
-        if (tank1.id === data.tank.id) {
-            tank1.setCoord(data.tank.tankX, data.tank.tankY);
-        } else if (tank2.id === data.tank.id) {
-            tank2.setCoord(data.tank.tankX, data.tank.tankY);
-        }
-    });
-
-/* ======   Navigation ======== */
 
     (function initialization() {
         tankImage.src = './public/images/tankVehicle.png';
@@ -266,4 +217,33 @@ module.exports.initGame = (gameInst, socket) => {
             drawLifeBar('player2', gameInst.player2.life);
         };
     })();
+
+    socket.on('return-updated-gameData', (gameData) => {
+        receiveUpdatedData(gameData);
+    });
+
+    socket.on('sendCoordsOnClient', (data) => {
+        if (tank1.id === data.tank.id) {
+            tank1.setCoord(data.tank.tankX, data.tank.tankY);
+        } else if (tank2.id === data.tank.id) {
+            tank2.setCoord(data.tank.tankX, data.tank.tankY);
+        }
+    });
+
+    socket.on('outputBulletPos', (data) => {
+        bulletMove(data.bulletMoves);
+    });
+
+    socket.on('outputPosWeapon', (data) => {
+        weaponMove(data.weaponMoves, data.angle);
+    });
+
+    socket.on('outputPosTank', (data) => {
+        tankMove(data.direction, data.tankMoves, data.tank1, data.tank2, tankImage, weaponImage, socket);
+    });
+
+    window.addEventListener('keydown', doKeyDown, true);
+
+    module.exports.weaponToMove = weaponToMove;
+    module.exports.bulletToMove = bulletToMove;
 };
