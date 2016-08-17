@@ -1,6 +1,6 @@
 <div class="outer">
-    <div class="left-col">  
-        <div class="canvas-wrap">      
+    <div class="left-col">
+        <div class="canvas-wrap">
             <canvas id="skyCanvas" width="800" height="410">
                 Sorry, <strong>CANVAS</strong> is not supported by your browser. Get a more recent one to play this game!
             </canvas>
@@ -17,11 +17,22 @@
                 Sorry, <strong>CANVAS</strong> is not supported by your browser. Get a more recent one to play this game!
             </canvas>
             <div class="overlay">
-                <h1 class="player1">player 1</h1>
-                <h1 class="player2">player 2</h1>
+                <div class="life-panel pl1">
+                    <h1 class="player" id="player1">player 1</h1>
+                    <span class="life-bar">
+                        <span class="progressLife" id="lifeBar1"></span>
+                    </span>
+                </div>
+                <div class="life-panel pl2">
+                    <h1 class="player" id="player2">player 2</h1>
+                    <span class="life-bar">
+                        <span class="progress-life" id="lifeBar2"></span>
+                    </span>
+                </div>
             </div>
         </div>
         <div class="navigation">
+            <div class="btn btn-lg btn-danger surrender" id="surrender">Surrender</div>
             <div class="topleft" id="morePower">&raquo;</div>
             <div class="downleft" id="lessPower">&laquo;</div>
             <div class="topright" id="moreAngle">&raquo;</div>

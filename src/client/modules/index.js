@@ -8,7 +8,8 @@ import profile from './profile';
 import dashboard from './dashboard';
 import navigation from './navigation';
 import scores from './scores';
-import { gameService } from './game/DataTravel';
+import {eng} from '../languages/languages';
+import {ukr} from '../languages/languages';
 
 module.exports = angular.module('tanks', [
     require('angular-route'),
@@ -17,6 +18,7 @@ module.exports = angular.module('tanks', [
     require('angular-ui-bootstrap'),
     require('angular-toastr'),
     require('angular-sanitize'),
+    require('angular-translate'),
     dashboard.name,
     game.name,
     chat.name,
@@ -29,6 +31,18 @@ module.exports = angular.module('tanks', [
 ])
 
 .config(RouteConfig)
+    .config(function ($translateProvider) {
+        $translateProvider.registerAvailableLanguageKeys(['eng','ukr'],{
+            'en_*':'eng',
+            'ukr_*':'ukr'
+        });
+
+        $translateProvider.translations('eng',eng);
+        $translateProvider.translations('ukr',ukr);
+        $translateProvider.useSanitizeValueStrategy('escape');
+
+
+    })
 .factory('socket', () => {
     let socket = io.connect();
 

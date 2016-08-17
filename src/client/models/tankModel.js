@@ -1,54 +1,62 @@
-module.exports.tank = {
-    tankX: 45,
-    tankY: 45,
-    tankAngle: 0,
-    weaponAngle: 0,
-    vehicleWidth: 70,
-    vehicleHeight: 30,
-    weaponWidth: 35,
-    weaponHeight: 20,
+import { findLinePoints } from './tankMovement';
 
-    getCoord: function() {
+class Tank {
+    constructor(idVal, tankX = 45, tankAngle = 0, weaponAngle = 0, power = 60) {
+        this.id = idVal;
+        this.tankX = tankX;
+        this.tankY = findLinePoints(tankX);
+        this.tankAngle = tankAngle;
+        this.weaponAngle = weaponAngle;
+        this.power = power;
+        this.vehicleWidth = 70;
+        this.vehicleHeight = 30;
+        this.weaponWidth = 35;
+        this.weaponHeight = 20;
+    }
+
+    getCoord() {
         return {
             tankX: this.tankX,
             tankY: this.tankY
         };
-    },
+    }
 
-    setCoord: function(x, y) {
+    setCoord(x, y) {
         this.tankX = x;
         this.tankY = y;
-    },
+    }
 
-    getTankAngle: function() {
+    getTankAngle() {
         return this.tankAngle;
-    },
+    }
 
-    setTankAngle: function(value) {
+    setTankAngle(value) {
         this.tankAngle = value;
-    },
+    }
 
-    getWeaponAngle: function() {
+    getWeaponAngle() {
         return this.weaponAngle;
-    },
+    }
 
-    setWeaponAngle: function(value) {
+    setWeaponAngle(value) {
         this.weaponAngle = value;
-    },
+    }
 
-    getVehicleWidth: function() {
+    getVehicleWidth() {
         return this.vehicleWidth;
-    },
+    }
 
-    getVehicleHeight: function() {
+    getVehicleHeight() {
         return this.vehicleHeight;
-    },
+    }
 
-    getWeaponWidth: function() {
+    getWeaponWidth() {
         return this.weaponWidth;
-    },
+    }
 
-    getWeaponHeight: function() {
+    getWeaponHeight() {
         return this.weaponHeight;
     }
-};
+}
+
+module.exports.Tank = Tank;

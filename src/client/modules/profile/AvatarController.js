@@ -1,4 +1,4 @@
-import {UploadController} from './UploadController'
+import {UploadController} from "./UploadController";
 export class AvatarController {
     constructor($http, $scope, $uibModalInstance, $uibModal, ProfileService) {
         $scope.images = [];
@@ -16,13 +16,13 @@ export class AvatarController {
         };
 
         $scope.cancel = () => {
-            $uibModalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss("cancel");
         };
         $scope.uploadPhoto = () => {
 
             const uploadInstance = $uibModal.open({
                 animation: true,
-                templateUrl: 'profile/uploadContent.html',
+                templateUrl:"profile/uploadContent.html",
                 controller: UploadController
             });
             uploadInstance.result.then((img) => {
@@ -30,7 +30,7 @@ export class AvatarController {
                 $scope.customImages.push(img);
                 $scope.setCurrentImage(img);
 
-            })
+            });
 
         };
 

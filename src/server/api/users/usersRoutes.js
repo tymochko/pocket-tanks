@@ -1,24 +1,20 @@
-const express = require('express');
-const router = express.Router();
-const bodyParser = require('body-parser');
-const fs = require('fs');
-const path = require('path');
-const usersCollection = require('./usersController');
-const fsHelper = require('../libs/fsHelper');
-const multer = require('multer');
-const gameData = require('../game/gameController');
+import express from 'express';
+import bodyParser from 'body-parser';
+import fs from 'fs';
+import path from 'path';
+import UsersCollection from './usersController';
+import fsHelper from '../libs/fsHelper';
 
 const userScopeName = 'userAvatar';
 const publicScopeName = 'public';
 const userUploadsScopeName = 'userUploads';
-const publicImgURL = "/api/users/profile/getImage/" + publicScopeName + '/';
-const userImgURL = '/api/users/profile/getImage/' + userUploadsScopeName + '/';
 const userInfoDir = './src/server/static/usersInfo/';
 
+export const router = express.Router();
 
 // get all users in database, for instance in dashboard
 router.get('/', (req, res) => {
-    usersCollection.showAll((err, users) => {
+    UsersCollection.showAll((err, users) => {
         if (err) {
             console.log('err  ', err);
             res.status(401).send();
@@ -30,7 +26,7 @@ router.get('/', (req, res) => {
 
 // get user's info by id, for instance in profile page
 router.get('/profile', (req, res) => {
-    usersCollection.showProfile({_id: req.session.user}, (err, foundUser) => {
+    UsersCollection.showProfile({_id: req.session.user}, (err, foundUser) => {
         if (err) {
             console.log('err  ', err);
             res.status(401).send();
@@ -38,7 +34,9 @@ router.get('/profile', (req, res) => {
             const userInfoDTO = {
                 userName: foundUser.userName,
                 userAge: foundUser.userAge,
-                userEmail: foundUser.userEmail
+                userEmail: foundUser.userEmail,
+                activeGame:foundUser.activeGame,
+                userLanguage:foundUser.userLanguage
             };
             res.send(userInfoDTO);
         }
@@ -50,7 +48,7 @@ router.post('/login', (req, res) => {
     const loginName = req.body.userName;
     const loginPassword = req.body.userPassword;
 
-    usersCollection.loginUser(loginName, loginPassword, (err, foundUser) => {
+    UsersCollection.loginUser(loginName, loginPassword, (err, foundUser) => {
         if (err) {
             console.log('err  ', err);
             return res.status(401).send();
@@ -67,7 +65,7 @@ router.post('/login', (req, res) => {
 
 // log out user
 router.post('/logout', (req, res) => {
-    usersCollection.logoutUser({_id: req.session.user}, (err, foundUser) => {
+    UsersCollection.logoutUser({_id: req.session.user}, (err, foundUser) => {
         if (err) {
             console.log('err  ', err);
             res.status(401).send();
@@ -80,7 +78,7 @@ router.post('/logout', (req, res) => {
 
 //check session
 router.get('/checkSession', (req, res) => {
-    usersCollection.checkUser({_id: req.session.user}, (err, foundUser) => {
+    UsersCollection.checkUser({_id: req.session.user}, (err, foundUser) => {
         if (err) {
             res.status(401).send();
         } else if (foundUser != null) {
@@ -93,7 +91,7 @@ router.get('/checkSession', (req, res) => {
 
 // add newUser
 router.post('/add', (req, res) => {
-    var newUser = new usersCollection();
+    const newUser = new UsersCollection();
 
     newUser.userName = req.body.userName;
     newUser.userAge = req.body.userAge;
@@ -101,21 +99,20 @@ router.post('/add', (req, res) => {
     newUser.userPassword = req.body.userPassword;
     newUser.isOnline = false;
     newUser.isEnabled = true;
+    newUser.activeGame = null;
+    newUser.userLanguage = 'eng';
 
-    usersCollection.createUser(newUser, function (err, user) {
+    UsersCollection.createUser(newUser, (err, user) => {
         if (err) {
             console.log(err);
             res.status(400);
-            res.json({'message': 'This user is already'});
+            res.json({message: 'This user is already'});
         } else {
             fsHelper.checkDir(userInfoDir);
             fsHelper.checkDir(userInfoDir + user._id);
-            console.log(newUser.userEmail);
-            usersCollection.handleEmail(newUser.userName, newUser.userEmail);
-            req.session.user = user._id;
-            req.session.username = user.userName;
+            UsersCollection.handleEmail(newUser.userName, newUser.userEmail);
             res.status(201);
-            res.json({'message': 'User registered'});
+            res.json({message: 'User registered'});
         }
     });
 });
@@ -127,7 +124,7 @@ router.put('/profile/updateUser', (req, res) => {
         req.body.userImg.image = req.body.userImg.image.split("/").pop().split('?').shift();
     }
 
-    usersCollection.updateUser({_id: req.session.user}, req.body, (err, foundUser) => {
+    UsersCollection.updateUser({_id: req.session.user}, req.body, (err, foundUser) => {
         if (err) {
             console.log('err  ', err);
             res.status(401).send();
@@ -139,7 +136,7 @@ router.put('/profile/updateUser', (req, res) => {
 
 // delete user
 router.put('/profile/delete', (req, res) => {
-    usersCollection.deleteUser({_id: req.session.user}, (err, foundUser) => {
+    UsersCollection.deleteUser({_id: req.session.user}, (err, foundUser) => {
         if (err) {
             console.log('err  ', err);
             res.status(401).send();
@@ -154,7 +151,7 @@ router.put('/profile/delete', (req, res) => {
 router.post('/profile/upload', function (request, res) {
     try {
 
-        usersCollection.uploadImg(request, res);
+        UsersCollection.uploadImg(request, res);
 
     }
     catch (e) {
@@ -168,13 +165,13 @@ router.get('/profile/getImage/:scope/:imageName?', function (req, res) {
         var scope = req.params.scope;
         switch (scope) {
             case publicScopeName:
-                usersCollection.getPublicImage(req, res);
+                UsersCollection.getPublicImage(req, res);
                 break;
             case userScopeName:
-                usersCollection.getUserImage(req, res);
+                UsersCollection.getUserImage(req, res);
                 break;
             case userUploadsScopeName:
-                usersCollection.getUserUploadedImage(req, res);
+                UsersCollection.getUserUploadedImage(req, res);
                 break;
         }
     }
@@ -185,62 +182,11 @@ router.get('/profile/getImage/:scope/:imageName?', function (req, res) {
 
 router.get('/profile/publicImages', (req, res) => {
     try {
-        usersCollection.getPublicImg(req, res);
+        UsersCollection.getPublicImg(req, res);
     }
     catch (e) {
         console.log(e);
     }
-});
-
-//Don't touch with hands
-router.post('/startGame', (req, res) => {
-    console.log(req.data, 'req.data');
-    //req.data.sender_user = user._id;
-    //req.data.sender_username = user.userName;
-    // start data at start
-    var data = {
-            player1: {
-                tankX: 150,
-                tankY: 200,
-                bulletX: 0,
-                bulletY: 0,
-                weaponX: 100,
-                weaponY: 100,
-                angle: 0.17,
-                weaponAngle: 0.34
-            },
-            player2: {
-                tankX: 450,
-                tankY: 400,
-                bulletX: 0,
-                bulletY: 0,
-                weaponX: 300,
-                weaponY: 300,
-                angle: 0.17,
-                weaponAngle: 0.34
-            },
-            originalPoints: [
-                [0, 280], [200, 350], [350, 150], [500, 250], [800, 250],
-                [800, 500], [0, 500], [0, 280]
-            ]
-        };
-
-    var newGame = new gameData();
-    newGame.player1 = data.player1;
-    newGame.player2 = data.player2;
-
-    newGame.originalPoints = data.originalPoints;
-
-    gameData.createGame(newGame, function (err, game) {
-        if (err) {
-            console.log(err);
-            res.status(400).send();
-
-        }
-        else {
-            res.status(200).send(game);
-        }
-    });
 });
 
 module.exports = router;

@@ -107,10 +107,9 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
-var chat=require('../chat');
+var chat = require('../socket/socket');
 
-
-var io=chat.io;
+var io = chat.io;
 io.listen(server);
 
 
