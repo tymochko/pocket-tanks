@@ -108,9 +108,37 @@ function onListening() {
 }
 
 var chat = require('../socket/socket');
+var sharedsession = require("express-socket.io-session");
 
 var io = chat.io;
 io.listen(server);
 
+var session = require("express-session")({
+    secret: 'come_in',
+    // store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    cookie: { maxAge: 45 * 60 * 1000 },
+    saveUninitialized: false,
+    resave: true,
+    rolling: true
+});
+io.use(sharedsession(session));
+
+io.on("connection", function(socket) {
+    // Accept a login event with user's data
+    console.log('connection -> ', socket.handshake.session.userId);
+    socket.on("login", function(userdata) {
+        console.log('login');
+        socket.handshake.session.userId = userdata.userId;
+        socket.handshake.session.save();
+        // console.log('login -> ', socket.handshake.session.userId);
+    });
+    socket.on("disconnect", function() {
+        console.log('disconnect', socket.handshake.session.userId);
+        // if (socket.handshake.session.userId) {
+        //     console.log('logout -> ', socket.handshake.session.userId);
+        //     delete socket.handshake.session.userId;
+        // }
+    });
+});
 
 module.exports = conf;

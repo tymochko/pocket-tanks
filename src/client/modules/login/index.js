@@ -6,13 +6,14 @@ module.exports = angular.module('tanks.login', [
     ngRoute
 ])
 
-.service('sendLog', ['$http', '$window', 'toastr',
-    function($http, $window, toastr) {
+.service('sendLog', ['$http', '$window', 'toastr', 'socket',
+    function($http, $window, toastr, socket) {
 
         this.log = (userInfo, $scope, $uibModalInstance, item) => {
 
             return $http.post('/api/users/login', userInfo)
                     .then((response) => {
+                        socket.emit('login', {userId: response.data.user});
                         $scope.status = true;
                         $uibModalInstance.close(item);
                         $window.location.reload();
