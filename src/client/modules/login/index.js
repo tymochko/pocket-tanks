@@ -6,11 +6,11 @@ module.exports = angular.module('tanks.login', [
     ngRoute
 ])
 
-.service('sendLog',['$http', '$window', 'toastr',
-    function($http, $window, toastr){
+.service('sendLog', ['$http', '$window', 'toastr',
+    function($http, $window, toastr) {
 
         this.log = (userInfo, $scope, $uibModalInstance, item) => {
-            
+
             return $http.post('/api/users/login', userInfo)
                     .then((response) => {
                         $scope.status = true;
@@ -19,13 +19,13 @@ module.exports = angular.module('tanks.login', [
                         window.localStorage.user = response.data.user;
                         window.localStorage.username = response.data.username;
                     },
-                    (response) => {
+                    () => {
                         window.localStorage.user = null;
                         window.localStorage.username = null;
                         toastr.warning('Failed to log in', 'Oops!', {
 		                    closeButton: true,
 		                    closeHtml: '<button>&times;</button>'
-		                })
+		                });
                     });
         };
 }])
@@ -47,6 +47,6 @@ module.exports = angular.module('tanks.login', [
             };
 
             sendLog.log(userInfo, $scope, $uibModalInstance, item);
-        }
+        };
     }
 ]);
