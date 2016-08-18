@@ -1,14 +1,14 @@
 import paper from 'paper';
 
 describe ("Point analysis", function () {
-		let shotBullet,
-			groundCoord,
-			bulletPath,
-			groundPath,
-            groundPointPath,
-        	intersect,
-        	intersectionPoint,
-            canvas=document.createElement("canvas");
+		let shotBullet;
+		let	groundCoord,
+		let	bulletPath,
+		let	groundPath,
+        let groundPointPath,
+        let	intersect,
+        let	intersectionPoint,
+        let canvas = document.createElement("canvas");
 
         beforeEach( function() {
         	paper.setup(canvas);
