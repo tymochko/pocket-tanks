@@ -1,6 +1,6 @@
-import { draw } from '/mnt/pocket-tanks/src/client/models/tankMovement';
-import { findLinePoints } from '/mnt/pocket-tanks/src/client/models/tankMovement';
-import externalVariables from '/mnt/pocket-tanks/src/client/models/externalVariables';
+import { draw } from '../../../../src/client/models/tankMovement';
+import { findLinePoints } from '../../../../src/client/models/tankMovement';
+import externalVariables from '../../../../src/client/models/externalVariables';
 
 describe ("Test tank's movement", function () {
 	describe ("Test Y coordinate", function () {
