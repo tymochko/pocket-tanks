@@ -23,6 +23,7 @@ const bulletImg = new Image();
 let tankX;
 let tankY;
 let tankAngle;
+let currAngle;
 let socket;
 let bulletCtx;
 let groundCtx;
@@ -78,7 +79,7 @@ const generateExplosion = (dt) => {
     // creating path for bullet and originalPoints
     let bull = new paper.Path.Rectangle(new paper.Point(bullet.pos[0], bullet.pos[1]), new paper.Size(45, 7));
     //check angle for accuracy of point
-    bull.rotate(-bullet.imgInf.currAngle * 180 / Math.PI);
+    bull.rotate(-currAngle * 180 / Math.PI);
     bull.strokeColor = '#ff0000';
 
     const groundPath = new paper.Path(
@@ -172,7 +173,7 @@ const renderEntity = (currentBullet) => {
     if (!currentBullet) {
         return;
     }
-    currentBullet.imgInf.render(canvasModel.getBullet().ctx);
+    renderBullet(canvasModel.getBullet().ctx);
 };
 
 const shotStart = (checkDeltaT = true) => {
@@ -200,7 +201,6 @@ const makeShot = (ctx, tank, tankCoordX, tankCoordY, tankAngleParam, weaponAngle
 
     bullet = {
         pos: [tankX, tankY],
-        imgInf: new ImgInf(),
         angle,
         tankAngle,
         bulletSpeed: power
@@ -209,33 +209,22 @@ const makeShot = (ctx, tank, tankCoordX, tankCoordY, tankAngleParam, weaponAngle
     shotStart();
 };
 
-(function() {
-    function ImgInf() {
-        this.currAngle = 0;
+const renderBullet = (ctx) => {
+    ctx.save();
+    const initialBulletPosX = 0;
+    const initialBulletPosY = 0;
+    clear(ctx);
+    ctx.translate(bullet.pos[0], bullet.pos[1]);
+    const alpha = bullet.bulletSpeed * Math.cos(bullet.angle + bullet.tankAngle);
+    currAngle = Math.atan(((bullet.bulletSpeed) * Math.sin(bullet.angle + bullet.tankAngle)- G * deltaT)/alpha);
+
+    if (bullet.angle + bullet.tankAngle > Math.PI/2) {
+        currAngle = currAngle + Math.PI;
     }
 
-    ImgInf.prototype = {
-
-        render(ctx) {
-            ctx.save();
-            const initialBulletPosX = 0;
-            const initialBulletPosY = 0;
-            clear(ctx);
-            ctx.translate(bullet.pos[0], bullet.pos[1]);
-            const alpha = bullet.bulletSpeed * Math.cos(bullet.angle + bullet.tankAngle);
-            this.currAngle = Math.atan(((bullet.bulletSpeed) * Math.sin(bullet.angle + bullet.tankAngle)- G * deltaT)/alpha);
-
-            if (bullet.angle + bullet.tankAngle > Math.PI/2) {
-                this.currAngle = this.currAngle + Math.PI;
-            }
-
-            ctx.rotate(-this.currAngle);
-            ctx.drawImage(bulletImg, initialBulletPosX, initialBulletPosY);
-            ctx.restore();
-        }
-    };
-
-    window.ImgInf = ImgInf;
-})();
+    ctx.rotate(-currAngle);
+    ctx.drawImage(bulletImg, initialBulletPosX, initialBulletPosY);
+    ctx.restore();
+};
 
 module.exports.makeShot = makeShot;
