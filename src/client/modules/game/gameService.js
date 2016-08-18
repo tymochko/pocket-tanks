@@ -23,17 +23,18 @@ export function gameService() {
             return deferred.promise;
         },
 
-        finish($uibModal, win) {
-            const modalInstance = $uibModal.open({
-                templateUrl: 'game/gameFinishedWindow.html',
-                controller: 'gameFinishedCtrl',
-                resolve: {
-                    win: () => {
-                        return win;
+        finish(socket, $uibModal) {
+            socket.on('finish-game', () => {
+                $uibModal.open({
+                    templateUrl: 'game/gameFinishedWindow.html',
+                    controller: 'gameFinishedCtrl',
+                    resolve: {
+                        win: () => {
+                            return win;
+                        }
                     }
-                }
+                });
             });
         }
-
     };
 }

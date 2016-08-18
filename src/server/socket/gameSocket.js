@@ -103,6 +103,10 @@ export function gameSocket(client) {
             });
         });
 
+        socket.on('finish-game', (win, looser) => {
+
+        });
+
         socket.on('powerChange', (data) => {
             client.emit('powerChangeAns', {
                 tankPowerChange: data.tankPowerChange,

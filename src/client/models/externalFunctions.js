@@ -70,3 +70,13 @@ export const drawLifeBars = (data) => {
     getId('lifeBar1').style.width = `${step * data.player1.life}%`;
     getId('lifeBar2').style.width = `${step * data.player2.life}%`;
 };
+
+export const updateLife = (player, data) => {
+    data[player].life -= 1;
+    drawLifeBar(player, data[player].life);
+    if (data[player].life === 0) {
+        data.gameStatus = false;
+        console.log(data[player].id);
+        // socket.emit('finish-game-request', data[player].id);
+    }
+}

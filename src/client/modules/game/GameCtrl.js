@@ -6,6 +6,7 @@ import { endGameModal } from './endGameModal';
 
 export function transportData(socket, $q, $uibModal) {
     endGameModal(socket, $uibModal);
+    gameService.finish(socket, $uibModal);
 
     const localUrl = window.location.href;
 

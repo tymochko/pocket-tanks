@@ -1,7 +1,7 @@
 import { Game } from '../../models/gameModel';
 import { Tank } from '../../models/tankModel';
 import { Player } from '../../models/playerModel';
-import { ground } from  '../../models/groundModel';
+import { ground } from '../../models/groundModel';
 
 const getRandomPos = (a, b) => {
     return Math.floor((Math.random() * a) + b);
