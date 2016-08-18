@@ -6,15 +6,15 @@ module.exports = () => {
     let maxOpacity = 1;
     let timeDur = 1000;
 
-    const moveit = (timestamp, el, dist, duration) => {
-        var timestamp = timestamp || new Date().getTime();
+    const moveit = (timePoint, el, dist, duration) => {
+        let timestamp = timePoint || new Date().getTime();
         let runtime = timestamp - starttime;
         let progress = runtime / duration;
 
         progress = Math.min(progress, maxOpacity);
         el.style.opacity = inv * (dist * progress).toFixed(2);
 
-        (inv == 1) ? el.style.display="initial" : el.style.display="none";
+        (inv) ? el.style.display = "initial" : el.style.display = "none";
 
         if (runtime < duration){
             requestAnimationFrame((timestamp) => {

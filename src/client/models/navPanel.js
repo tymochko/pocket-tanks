@@ -5,11 +5,12 @@ import { canvasModel } from './canvasModel';
 import showChatWindow from './chatField';
 
 export function navPanel(tank1, tank2, socket, gameInst) {
-    let tankCtx = canvasModel.getTank().ctx,
-        tankImage = new Image(),
-        weaponImage = new Image(),
-        weaponAngle,
-        power;
+    let tankCtx = canvasModel.getTank().ctx;
+    let tankImage = new Image();
+    let weaponImage = new Image();
+    let weaponAngle;
+    let power;
+    const step = 5;
 
     tankImage.src = './public/images/tankVehicle.png';
     weaponImage.src = './public/images/tankWeapon_straight.png';
@@ -46,28 +47,28 @@ export function navPanel(tank1, tank2, socket, gameInst) {
 
     getId('morePower').onclick = () => {
         power = parseInt(getId('power').innerHTML);
-        power += 5;
+        power += step;
         getId('power').innerHTML = power;
         changePower(power);
     };
 
     getId('lessPower').onclick = () => {
         power = parseInt(getId('power').innerHTML);
-        power -= 5;
+        power -= step;
         getId('power').innerHTML = power;
         changePower(power);
     };
 
     getId('moreAngle').onclick = () => {
         weaponAngle = parseInt(getId('angle').innerHTML);
-        weaponAngle += 5;
+        weaponAngle += step;
         weaponToMove(weaponAngle * Math.PI / 180);
         getId('angle').innerHTML = weaponAngle;
     };
 
     getId('lessAngle').onclick = () => {
         weaponAngle = parseInt(getId('angle').innerHTML);
-        weaponAngle -= 5;
+        weaponAngle -= step;
         weaponToMove(weaponAngle * Math.PI / 180);
         getId('angle').innerHTML = weaponAngle;
     };
