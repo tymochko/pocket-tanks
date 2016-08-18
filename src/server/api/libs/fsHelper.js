@@ -1,20 +1,20 @@
-var fs = require('fs');
-var nodemailer = require('nodemailer');
-var path = require('path');
+const fs = require('fs');
+const nodemailer = require('nodemailer');
+const path = require('path');
 
 
-const rmDir = function (dirPath) {
-    var files = fs.readdirSync(dirPath);
+const rmDir =(dirPath) => {
+    let files = fs.readdirSync(dirPath);
     if (files.length > 0)
-        for (var i = 0; i < files.length; i++) {
-            var filePath = dirPath + '/' + files[i];
+        for (let i = 0; i < files.length; i++) {
+            let filePath = dirPath + '/' + files[i];
             if (fs.statSync(filePath).isFile())
                 fs.unlinkSync(filePath);
         }
 };
 
-const checkDir = function (dir) {
-    fs.access(dir, function (err) {
+const checkDir =(dir) => {
+    fs.access(dir, (err) => {
         if (err) {
             fs.mkdir(dir);
         }
@@ -23,7 +23,7 @@ const checkDir = function (dir) {
 };
 
 
-const getSalt = function () {
+const getSalt =() => {
     return "?salt=" + new Date().getTime();
 };
 module.exports.checkDir = checkDir;

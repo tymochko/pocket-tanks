@@ -1,4 +1,4 @@
-export function gameFinishedCtrl($scope, $uibModalInstance, win) {
+export function gameFinishedCtrl($scope, $uibModalInstance, win, $translate) {
     $scope.win = win ? 'WON' : 'LOST';
     $scope.ok = function() {
         $uibModalInstance.close();
