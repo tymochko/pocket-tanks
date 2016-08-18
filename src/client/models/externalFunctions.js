@@ -1,5 +1,5 @@
 import { canvasModel } from './canvasModel';
-import { WIDTH, HEIGHT } from './externalVariables';
+import { WIDTH, HEIGHT, FULL_LIFE } from './externalVariables';
 
 module.exports.requestAnimFrame = (function() {
     return window.requestAnimationFrame ||
@@ -60,7 +60,7 @@ export const getTurnId = (gameInst) => {
 };
 
 export const drawLifeBar = (player, life) => {
-    const step = 50;
+    const step = 100 / FULL_LIFE;
     const number = (player === 'player1') ? '1' : '2';
     getId(`lifeBar${number}`).style.width = `${step * life}%`;
 };

@@ -1,17 +1,20 @@
 import { gameService } from './gameService';
 import { transportData } from './GameCtrl';
 import { confirmCtrl } from './confirmCtrl';
+import { gameFinishedCtrl } from './gameFinishedCtrl';
 import angular from 'angular';
 import ngRoute from 'angular-route';
 
 module.exports = angular.module('tanks.game', [
     ngRoute,
-    'tanks.chat'
+    'tanks.chat',
+    'ui.bootstrap'
 ])
     .controller('gameCtrl', ['socket', '$q', '$uibModal', transportData])
     .controller('confirmCtrl', ['$scope', '$uibModalInstance', 'gameInst', 'socket', confirmCtrl])
+    .controller('gameFinishedCtrl', ['$scope', '$uibModalInstance', 'win', gameFinishedCtrl])
     .config(RouteConfig)
-    .factory('gameService', ['socket', '$q', gameService]);
+    .factory('gameService', ['socket', '$q', '$uibModal', gameService]);
 
 RouteConfig.$inject = ['$routeProvider'];
 function RouteConfig($routeProvider) {

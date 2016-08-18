@@ -1,85 +1,86 @@
 textarea {
     color: #222;
 }
-input {
-    color: #222;
-}
+
 .chat {
 	color: #222;
-    padding-left: 20px;
+    padding-left: 10px;
     margin: 0 auto;
     background-color: #eee;
     float: right;
     textarea {
-        height: 25px;
+        height: 30px;
+        width: 298px;
         outline: none;
     }
-    font-family: "Times New Roman";
 }
-.chat-name {
-    font-style: italic;
-    outline: none;
-}
+
 .chat-messages {
-    height: 100px;
+    height: 105px;
     overflow-y: scroll;
 }
 .chat-name-message {
     display: inline;
     font: 12px;
+    font-family: "Times New Roman";
 }
 .chat-message {
-    background-image: linear-gradient(bottom, rgb(210,244,254) 25%, rgb(149,194,253) 100%);
-    background-image: -o-linear-gradient(bottom, rgb(210,244,254) 25%, rgb(149,194,253) 100%);
-    background-image: -moz-linear-gradient(bottom, rgb(210,244,254) 25%, rgb(149,194,253) 100%);
-    background-image: -webkit-linear-gradient(bottom, rgb(210,244,254) 25%, rgb(149,194,253) 100%);
-    background-image: -ms-linear-gradient(bottom, rgb(210,244,254) 25%, rgb(149,194,253) 100%);
-    background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0.25, rgb(210,244,254)), color-stop(1, rgb(149,194,253)) );
+    background-image: linear-gradient(bottom, rgb(36, 58, 89) 25%, rgb(149,194,253) 100%);
+    background-image: -o-linear-gradient(bottom, rgb(36, 58, 89) 25%, rgb(149,194,253) 100%);
+    background-image: -moz-linear-gradient(bottom, rgb(36, 58, 89) 25%, rgb(149,194,253) 100%);
+    background-image: -webkit-linear-gradient(bottom, rgb(36, 58, 89) 25%, rgb(149,194,253) 100%);
+    background-image: -ms-linear-gradient(bottom, rgb(36, 58, 89) 25%, rgb(149,194,253) 100%);
+    background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0.25, rgb(36, 58, 89)), color-stop(1, rgb(149,194,253)) );
     border: solid 1px rgba(0, 0, 0, 0.5);
-    border-radius: 20px;
+    border-radius: 10px 10px 10px 0;
     box-shadow: inset 0 5px 5px rgba(255, 255, 255, 0.4), 0 1px 3px rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
     clear: both;
     float: left;
     margin-bottom: 5px;
-    padding: 8px;/* 30px;*/
+    padding: 3px 3px 3px 0;
     position: relative;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
     width: 90%;
     word-wrap: break-word;
-    &::before {
-        border-radius: 20px / 10px;
-        content: '';
-        display: block;
-        position: absolute;
+    font-family: "Times New Roman";
+    .ng-binding {
+        float: left;
+        margin-left: 5px;
     }
-    &::after {
-        border-radius: 20px / 10px;
-        content: '';
-        display: block;
-        position: absolute;
-    }
-
-    &:before {
-        border: 10px solid transparent;
-        border-bottom-color: rgba(56, 56, 56, 0.8);
-        bottom: 0;
-        left: -7px;
-    }
-    &:after {
-        border: 8px solid transparent;
-        border-bottom-color: #d2f4fe;
-        bottom: 1px;
-        left: -5px;
-    }
-
 }
 .chat-time {
-    opacity: 0.4;
     font-size: 10px;
     width: 50%;
     max-width: 40rem;
-    float: right;
+    float: right !important;
     display: inline;
+    color: white;
 }
+#chat-window {
+    border: 1px solid black;
+    input {
+        background-color: rgb(36, 58, 89);
+        border: 1px solid black;
+        border-radius: 5px;
+        color: white;
+        height: 30px;
+        width: 60px;
+        margin-top: 4px;
 
+        &:hover {
+            transition: color 0.1s ease-out;
+            color: rgba(255, 80, 80, 1);
+        }
+    }
+}
+.type-field {
+    width: 80%;
+    float: left;
+    border: 1px solid black;
+    margin-top: 4px;
+    border-radius: 5px;
+    font-family: "Times New Roman";
+}
+footer {
+    // position: static !important;
+}

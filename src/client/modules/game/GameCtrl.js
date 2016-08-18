@@ -29,4 +29,5 @@ export function transportData(socket, $q, $uibModal) {
         }, () => {
             alert('Server error. No game data received.');
         });
+    // gameService().finish($uibModal, false);
 }

@@ -2,8 +2,8 @@ import { NavigationConstructor } from './NavigationConstructorService';
 import { toastr } from 'angular-toastr';
 
 export class NavigationController {
-    constructor($scope, $http, $window, $uibModal,NavigationConstructor,socket) {
-        let activeGameId = NavigationConstructor.activeGameData();
+    constructor($scope, $http, $window, $uibModal, NavigationConstructor, socket) {
+        const activeGameId = NavigationConstructor.activeGameData();
 
         $scope.logged = false;
         $scope.item = {};
