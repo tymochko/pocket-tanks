@@ -3,10 +3,11 @@ import { initCanvas } from '../../models/initCanvas';
 import { gameCreate } from './gameFunc';
 import { gameService } from './gameService';
 import { endGameModal } from './endGameModal';
+import { finishGameModal } from './finishGameModal';
 
 export function transportData(socket, $q, $uibModal, $translate) {
     endGameModal(socket, $uibModal);
-    gameService.finish(socket, $uibModal);
+    finishGameModal(socket, $uibModal);
 
     const localUrl = window.location.href;
 

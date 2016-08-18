@@ -71,12 +71,12 @@ export const drawLifeBars = (data) => {
     getId('lifeBar2').style.width = `${step * data.player2.life}%`;
 };
 
-export const updateLife = (player, data) => {
+export const updateLife = (player, data, socket) => {
     data[player].life -= 1;
     drawLifeBar(player, data[player].life);
     if (data[player].life === 0) {
         data.gameStatus = false;
-        console.log(data[player].id);
-        // socket.emit('finish-game-request', data[player].id);
+        const enemy = (player === 'player1') ? 'player2' : 'player1';
+        socket.emit('finish-game-request', { win: data[player].id, looser: data[enemy].id, gameData: data});
     }
-}
+};
