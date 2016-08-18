@@ -74,15 +74,19 @@ export function gameSocket(client) {
             client.emit('moveIdClient', { playerId: data.playerId });
         });
 
-        socket.once('end-game', (gameData) => {
-            userData.updateActiveGame(gameData.player1.id, null,  (err, data) => {
+        socket.on('end-game-request', (gameInst) => {
+            socket.emit('end-game-modal', gameInst);
+        });
+
+        socket.once('end-game-ok', (gameData) => {
+            userData.updateActiveGame(gameData.player1.id, null, (err, data) => {
                 if (err) {
                     throw err;
                 } else {
-                 return 0
+                 return 0;
                 }
             });
-            userData.updateActiveGame(gameData.player2.id, null,  (err, data) => {
+            userData.updateActiveGame(gameData.player2.id, null, (err, data) => {
                 if (err) {
                     throw err;
                 } else {
@@ -111,7 +115,7 @@ export function gameSocket(client) {
                 if (err) {
                     throw err;
                 } else {
-                    client.emit('return-updated-gameData', data );
+                    client.emit('return-updated-gameData', data);
 
                 }
             });

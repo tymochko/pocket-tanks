@@ -2,8 +2,11 @@ import { initGame } from '../../models/tankShot';
 import { initCanvas } from '../../models/initCanvas';
 import { gameCreate } from './gameFunc';
 import { gameService } from './gameService';
+import { endGameModal } from './endGameModal';
 
-export function transportData(socket, $q) {
+export function transportData(socket, $q, $uibModal) {
+    endGameModal(socket, $uibModal);
+
     const localUrl = window.location.href;
 
     function getParameterByName(name, url) {
