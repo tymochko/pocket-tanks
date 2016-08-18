@@ -28,8 +28,8 @@ function ChatController($scope,socket)
                const name = localStorage.getItem('userName');
                const date = new Date();
 
-               socket.emit('inputMessage',{
-                    name: name,
+               socket.emit('inputMessage', {
+                    name,
                     message: inputMessage,
                     time: date.toUTCString()
                });

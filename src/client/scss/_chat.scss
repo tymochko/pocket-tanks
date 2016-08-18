@@ -43,6 +43,10 @@ textarea {
     width: 90%;
     word-wrap: break-word;
     font-family: "Times New Roman";
+
+    background: rgb(51, 204, 51) none repeat scroll 0% 0%;
+    border: medium none;
+
     .ng-binding {
         float: left;
         margin-left: 5px;
@@ -55,6 +59,11 @@ textarea {
     float: right !important;
     display: inline;
     color: white;
+
+    font-weight: bold;
+    font-size: 12px;
+    text-align: right;
+    margin-right: 10px;
 }
 #chat-window {
     border: 1px solid black;
@@ -74,13 +83,14 @@ textarea {
     }
 }
 .type-field {
-    width: 80%;
+    // width: 80%;
     float: left;
     border: 1px solid black;
     margin-top: 4px;
     border-radius: 5px;
     font-family: "Times New Roman";
-}
-footer {
-    // position: static !important;
+
+    resize: none;
+    width: 271px;
+    height: 30px;
 }
