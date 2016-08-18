@@ -50,7 +50,8 @@ export const eng = {
     gameLost: "Games lost ",
     scores: "Scores",
     SearchUserPlaceholder: "Search user",
-    ResumeGame: "Resume Game"
+    ResumeGame: "Resume Game",
+    notMatchMsg: "Passwords do not match"
 
 };
 export const ukr = {
@@ -105,7 +106,8 @@ export const ukr = {
     gameLost: "Програні ігри",
     scores: "Очки",
     SearchUserPlaceholder: "Пошук гравця",
-    ResumeGame: "Продовжити гру"
+    ResumeGame: "Продовжити гру",
+    notMatchMsg: "Паролі не співпадають"
 
 
 };
