@@ -17,7 +17,7 @@ export class ManageProfileController {
             newPassword: "",
             confirmNewPassword: "",
             userAge: "",
-            userLanguage:""
+            userLanguage: ""
         };
 
         $scope.getSalt = () => {
@@ -28,9 +28,9 @@ export class ManageProfileController {
 
         function savingMsg() {
             $translate('savingMsg')
-                .then( (translatedValue) => {
+                .then((translatedValue) => {
                     $scope.savingMsg = translatedValue;
-                    $translate('avatarTitle').then( (translVal) => {
+                    $translate('avatarTitle').then((translVal) => {
                         $scope.avatarTitle = translVal;
                         toastr.success($scope.savingMsg, $scope.avatarTitle, {
                             closeButton: true,
@@ -43,18 +43,15 @@ export class ManageProfileController {
 
         function avatarMsg() {
             $translate('avatarMsg')
-                .then( (translatedValue) => {
+                .then((translatedValue) => {
                     $scope.avatarMsg = translatedValue;
-                    $translate('avatarTitle').then( (translVal) => {
+                    $translate('avatarTitle').then((translVal) => {
                         $scope.avatarTitle = translVal;
                         toastr.warning($scope.avatarMsg, $scope.avatarTitle, {
                             closeButton: true,
                             closeHtml: "<button>&times;</button>"
                         });
                     });
-
-
-
             });
         }
 
@@ -71,7 +68,7 @@ export class ManageProfileController {
                 userAge: user.userAge,
                 userEmail: user.userEmail,
                 userImg: user.userImg,
-                userLanguage:user.userLanguage
+                userLanguage: user.userLanguage
             };
 
             if (user.oldPassword) {

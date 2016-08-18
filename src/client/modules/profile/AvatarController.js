@@ -22,7 +22,7 @@ export class AvatarController {
 
             const uploadInstance = $uibModal.open({
                 animation: true,
-                templateUrl:"profile/uploadContent.html",
+                templateUrl: "profile/uploadContent.html",
                 controller: UploadController
             });
             uploadInstance.result.then((img) => {

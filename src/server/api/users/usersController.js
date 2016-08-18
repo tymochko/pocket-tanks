@@ -375,7 +375,7 @@ const uploadImg = function (request, res) {
 
             cb(null, dir);
         },
-        filename: function (req, file, cb) {
+        filename: function (req, filefile, cb) {
             cb(null, fileNameNew + '.' + file.originalname.split('.')[file.originalname.split('.').length - 1]);
         }
     });
