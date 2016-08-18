@@ -25,13 +25,6 @@ textarea {
     font-family: "Times New Roman";
 }
 .chat-message {
-    background-image: linear-gradient(bottom, rgb(36, 58, 89) 25%, rgb(149,194,253) 100%);
-    background-image: -o-linear-gradient(bottom, rgb(36, 58, 89) 25%, rgb(149,194,253) 100%);
-    background-image: -moz-linear-gradient(bottom, rgb(36, 58, 89) 25%, rgb(149,194,253) 100%);
-    background-image: -webkit-linear-gradient(bottom, rgb(36, 58, 89) 25%, rgb(149,194,253) 100%);
-    background-image: -ms-linear-gradient(bottom, rgb(36, 58, 89) 25%, rgb(149,194,253) 100%);
-    background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0.25, rgb(36, 58, 89)), color-stop(1, rgb(149,194,253)) );
-    border: solid 1px rgba(0, 0, 0, 0.5);
     border-radius: 10px 10px 10px 0;
     box-shadow: inset 0 5px 5px rgba(255, 255, 255, 0.4), 0 1px 3px rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
@@ -43,9 +36,7 @@ textarea {
     width: 90%;
     word-wrap: break-word;
     font-family: "Times New Roman";
-
     background: rgb(51, 204, 51) none repeat scroll 0% 0%;
-    border: medium none;
 
     .ng-binding {
         float: left;
@@ -59,7 +50,6 @@ textarea {
     float: right !important;
     display: inline;
     color: white;
-
     font-weight: bold;
     font-size: 12px;
     text-align: right;
@@ -83,13 +73,11 @@ textarea {
     }
 }
 .type-field {
-    // width: 80%;
     float: left;
     border: 1px solid black;
     margin-top: 4px;
     border-radius: 5px;
     font-family: "Times New Roman";
-
     resize: none;
     width: 271px;
     height: 30px;

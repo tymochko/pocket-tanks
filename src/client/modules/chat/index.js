@@ -27,11 +27,16 @@ function ChatController($scope,socket)
                const inputMessage = $scope.inputMessage;
                const name = localStorage.getItem('userName');
                const date = new Date();
+               function getWeekDay(date) {
+                    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                    return days[date.getDay()];
+               }
+               const formattedDate = date.getHours() + ':' + date.getMinutes() + ', ' + getWeekDay(date);
 
                socket.emit('inputMessage', {
                     name,
                     message: inputMessage,
-                    time: date.toUTCString()
+                    time: formattedDate
                });
 
                $scope.inputMessage = null;
