@@ -5,16 +5,18 @@ export const equals = function() {
         restrict: 'A',
         require: '?ngModel',
         link: function(scope, elem, attrs, ngModel) {
-          if (!ngModel) return;
+			if (!ngModel) {
+				return;
+			}
           scope.$watch(attrs.ngModel, function() {
             validate();
           });
-          attrs.$observe('equals', function(val) {
+          attrs.$observe('equals', function() {
             validate();
           });
-          var validate = function() {
-            let val1 = ngModel.$viewValue;
-            let val2 = attrs.equals;
+          const validate = function() {
+            const val1 = ngModel.$viewValue;
+            const val2 = attrs.equals;
             ngModel.$setValidity('equals', ! val1 || ! val2 || val1 === val2);
           };
         }

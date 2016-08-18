@@ -23,7 +23,7 @@ export function gameService() {
             return deferred.promise;
         },
 
-        finish($uibModal, win) {
+        finish($uibModal, win, $translate) {
             const modalInstance = $uibModal.open({
                 templateUrl: 'game/gameFinishedWindow.html',
                 controller: 'gameFinishedCtrl',
