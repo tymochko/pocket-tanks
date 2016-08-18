@@ -88,6 +88,6 @@ export function navPanel(tank1, tank2, socket, gameInst) {
             gameInst.player2.life = 0;
         }
 
-        socket.emit('end-game', gameInst);
+        socket.emit('end-game-request', gameInst);
     };
 }

@@ -69,12 +69,13 @@
             }
             .player {
                 text-align: left;
+                font-size: 30px;
             }
             .life-bar {
                 @include border-radius(5px);
                 float: left;
-                width: 160px;
-                height: 20px;
+                width: 140px;
+                height: 15px;
                 margin-top: 0;
                 overflow: hidden;
                 background: $death;
@@ -96,7 +97,7 @@
     background-image: url(../../public/images/panel-200.png);
     color: #CE5139;
     width: 800px;
-    height: 200px;
+    height: 180px;
     position: relative;
     top: 410px;
     @include no-select();
@@ -176,10 +177,24 @@
         position: relative;
         width: 120px;
         height: 30px;
-        left: 680px;
-        top: 170px;
-        background-color: rgb(256, 256, 256);
-        border: 2px dotted aqua;
+        left: 665px;
+        // top: 170px;
+        // background-color: rgb(256, 256, 256);
+        // border: 2px dotted aqua;
+        line-height: 30px;
+        color: white;
+        font-size: 18px;
+        border-radius: 6px;
+        transform: skewX(35deg);
+        top: 3px;
+        position: absolute;
+        background-color: #CE5139;
+        letter-spacing: 2px;
+        &:hover {
+            cursor: pointer;
+            background-color: #C9302C;
+            transition: background-color 0.1s ease-out;
+        }
     }
 
     .power-text,
@@ -206,10 +221,11 @@
     #chat-window {
         position: relative;
         width: 400px;
-        height: 170px;
-        top: -30px;
+        height: 145px;
+        top: 35px;
         left: 0;
         opacity: 0;
         display: none;
+        border-radius: 5px;
     }
 }

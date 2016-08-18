@@ -21,6 +21,19 @@ export function gameService() {
             socket.emit('enter-with-gameId', gameId);
 
             return deferred.promise;
+        },
+
+        finish($uibModal, win) {
+            const modalInstance = $uibModal.open({
+                templateUrl: 'game/gameFinishedWindow.html',
+                controller: 'gameFinishedCtrl',
+                resolve: {
+                    win: () => {
+                        return win;
+                    }
+                }
+            });
         }
+
     };
 }
