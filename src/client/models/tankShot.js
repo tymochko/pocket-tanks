@@ -5,7 +5,7 @@ import { tankMove, findLinePoints } from './tankMovement';
 import { navPanel } from './navPanel';
 import { makeShot, intersectionPlayer } from './shotTrajectory';
 import { rideTime } from './externalVariables';
-import { getId, clear, drawTanks, drawLifeBar, getTurnId } from './externalFunctions';
+import { getId, clear, drawTanks, drawLifeBars, getTurnId } from './externalFunctions';
 import { Tank } from './tankModel';
 import { drawGround, drawSky } from './canvasRedrawModel';
 import { canvasModel } from './canvasModel';
@@ -30,6 +30,7 @@ module.exports.initGame = (gameInst, socket) => {
         const groundCtx = canvasModel.getGround().ctx;
         clear(groundCtx);
         drawGround(ground.getGround(), groundCtx);
+        drawLifeBars(data);
         playerTurnId = getTurnId(gameInst);
     }
 
@@ -213,8 +214,7 @@ module.exports.initGame = (gameInst, socket) => {
             });
 
             navPanel(tank1, tank2, socket, gameInst);
-            drawLifeBar('player1', gameInst.player1.life);
-            drawLifeBar('player2', gameInst.player2.life);
+            drawLifeBars(gameInst);
         };
     })();
 

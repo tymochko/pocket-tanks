@@ -112,6 +112,10 @@ const generateExplosion = (dt) => {
 
         gameData.player2.life -= 1;
         drawLifeBar('player2', gameData.player2.life);
+        if (gameData.player2.life === 0) {
+            gameData.gameStatus = false;
+            socket.emit('end-game', gameData);
+        }
 
         window.cancelAnimationFrame(requestAnimFrame);
         sendUpdates();
@@ -131,6 +135,10 @@ const generateExplosion = (dt) => {
 
         gameData.player1.life -= 1;
         drawLifeBar('player1', gameData.player1.life);
+        if (gameData.player1.life === 0) {
+            gameData.gameStatus = false;
+            socket.emit('end-game', gameData);
+        }
 
         window.cancelAnimationFrame(requestAnimFrame);
 

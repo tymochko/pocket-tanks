@@ -64,3 +64,9 @@ export const drawLifeBar = (player, life) => {
     const number = (player === 'player1') ? '1' : '2';
     getId(`lifeBar${number}`).style.width = `${step * life}%`;
 };
+
+export const drawLifeBars = (data) => {
+    const step = 100 / FULL_LIFE;
+    getId('lifeBar1').style.width = `${step * data.player1.life}%`;
+    getId('lifeBar2').style.width = `${step * data.player2.life}%`;
+};
