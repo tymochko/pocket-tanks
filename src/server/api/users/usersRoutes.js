@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import fs from 'fs';
 import path from 'path';
 import UsersCollection from './usersController';
+import gameController from '../game/gameController';
 import fsHelper from '../libs/fsHelper';
 
 const userScopeName = 'userAvatar';
@@ -20,6 +21,17 @@ router.get('/', (req, res) => {
             res.status(401).send();
         } else {
             res.json({'users': users, 'sessionId': req.session.user});
+        }
+    });
+});
+
+router.get('/allGames', (req, res) => {
+    gameController.showAll((err, games) => {
+        if (err) {
+            console.log('err  ', err);
+            res.status(401).send();
+        } else {
+            res.json({'games': games, 'sessionId': req.session.user});
         }
     });
 });

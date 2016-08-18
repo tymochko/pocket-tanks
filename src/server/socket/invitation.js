@@ -52,13 +52,18 @@ export function invite(client) {
                         id: usersIds.player1,
                         tank: {},
                         life: 2,
-                        turn: true
+                        turn: true,
+                        lose: 0,
+                        win: 0
                     },
                     player2: {
                         id: usersIds.player2,
                         tank: {},
                         life: 2,
-                        turn: false
+                        turn: false,
+                        lose: 0,
+                        win: 0
+
                     },
                     originalPoints: [
                         [0, 280], [200, 350], [350, 150], [500, 250], [700, 150], [800, 250], [800, 500], [0, 500], [0, 280]
@@ -73,7 +78,7 @@ export function invite(client) {
                 console.log(newGame.player2 , 'player 2');
                 newGame.originalPoints = initGameData.originalPoints;
                 newGame.gameStatus = initGameData.gameStatus;
-
+                console.log(newGame.player1);
 
                 GameData.createGame(newGame, function(err, game) {
                     const users = {};
