@@ -375,7 +375,7 @@ const uploadImg = function (request, res) {
 
             cb(null, dir);
         },
-        filename: function (req, file, cb) {
+        filename: function (req, filefile, cb) {
             cb(null, fileNameNew + '.' + file.originalname.split('.')[file.originalname.split('.').length - 1]);
         }
     });
@@ -398,14 +398,14 @@ const uploadImg = function (request, res) {
 const getPublicImg = function (req, res) {
     fs.readdir(staticFolder + 'images/' + '/', function (e, files) {
         if (!e && files.length > 0) {
-            var images = [];
+            let images = [];
             for (var file in files) {
                 images.push({image: publicImgURL + files[file] + fsHelper.getSalt(), uploadedImg: false});
             }
 
             var userId = req.session.user;
             const userDir =staticFolder + 'usersInfo/' + userId + '/';
-            var check = function () {
+            const check = function () {
                 fsHelper.checkDir(userDir);
             }
             check();

@@ -8,25 +8,25 @@ export function match($parse) {
                 return;
             }
 
-            let matchGetter = $parse(attrs.match);
-            let noMatchGetter = $parse(attrs.notMatch);
+            var matchGetter = $parse(attrs.match);
+            var noMatchGetter = $parse(attrs.notMatch);
 
-            scope.$watch(getMatchValue, () => {
+            scope.$watch(getMatchValue, function () {
                 ctrl.$$parseAndValidate();
             });
 
-            ctrl.$validators.match = (modelValue, viewValue) => {
-                let matcher = modelValue || viewValue;
-                let match = getMatchValue();
-                let notMatch = noMatchGetter(scope);
-                let value;
+            ctrl.$validators.match =function (modelValue, viewValue) {
+                var matcher = modelValue || viewValue;
+                var match = getMatchValue();
+                var notMatch = noMatchGetter(scope);
+                var value;
                     value = matcher === match;
                 value ^= notMatch;
                 return !!value;
             };
 
             function getMatchValue(){
-                let match = matchGetter(scope);
+                var match = matchGetter(scope);
                 if (angular.isObject(match) && match.hasOwnProperty("$viewValue")) {
                     match = match.$viewValue;
                 }
