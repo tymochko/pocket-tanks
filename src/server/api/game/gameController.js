@@ -52,6 +52,22 @@ const findGame = function(gameId, callback) {
     });
 };
 
+const showAll = function (callback) {
+    this.find((err, games) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send();
+        }
+
+        if (!games) {
+            return res.status(404).send('Database is empty');
+        }
+
+        callback(err, games);
+    });
+};
+
 module.exports.createGame = createGame;
 module.exports.updateGameInfo = updateGameInfo;
 module.exports.findGame = findGame;
+module.exports.showAll = showAll;

@@ -82,10 +82,20 @@ export function navPanel(tank1, tank2, socket, gameInst) {
         const thisPlayerId = localStorage.getItem('playerId');
         gameInst.gameStatus = false;
 
+        alert(gameInst.player1.lose);
+        alert(gameInst.player2.lose);
+        console.log(gameInst.player1.win);
+        console.log(gameInst.player2.win);
+
         if (gameInst.player1.id === thisPlayerId) {
             gameInst.player1.life = 0;
+            gameInst.player1.lose += 1;
+            gameInst.player2.win += 1;
+
         } else {
             gameInst.player2.life = 0;
+            gameInst.player2.lose += 1;
+            gameInst.player1.win += 1;
         }
 
         socket.emit('end-game', gameInst);
