@@ -24,11 +24,9 @@ module.exports = angular.module('tanks.dashboard', [
         socket.emit('invite', { senderUser: senderId, targetUser: id });
     };
 
-    socket.on('connect', () => {
-        socket.emit('auth', {
-            user: window.localStorage.user,
-            username: window.localStorage.username
-        });
+    socket.emit('auth', {
+        user: window.localStorage.user,
+        username: window.localStorage.username
     });
 
     socket.on('you-are-invited', function(data) {
