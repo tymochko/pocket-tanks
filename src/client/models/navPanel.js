@@ -84,8 +84,13 @@ export function navPanel(tank1, tank2, socket, gameInst) {
 
         if (gameInst.player1.id === thisPlayerId) {
             gameInst.player1.life = 0;
+            gameInst.player1.lose += 1;
+            gameInst.player2.win += 1;
+
         } else {
             gameInst.player2.life = 0;
+            gameInst.player2.lose += 1;
+            gameInst.player1.win += 1;
         }
 
         socket.emit('end-game-request', gameInst);

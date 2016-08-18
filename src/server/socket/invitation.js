@@ -10,7 +10,8 @@ export function invite(client) {
 
         connections.push(info);
 
-        socket.once('auth', function(data) {
+        socket.on('auth', function(data) {
+
             info.user = data.user;
             info.username = data.username;
 
@@ -44,20 +45,25 @@ export function invite(client) {
             });
 
             socket.on('create-game', (usersIds) => {
-                
+
                 const initGameData = {
-                    
+
                     player1: {
                         id: usersIds.player1,
                         tank: {},
                         life: 2,
-                        turn: true
+                        turn: true,
+                        lose: 0,
+                        win: 0
                     },
                     player2: {
                         id: usersIds.player2,
                         tank: {},
                         life: 2,
-                        turn: false
+                        turn: false,
+                        lose: 0,
+                        win: 0
+
                     },
                     originalPoints: [
                         [0, 280], [200, 350], [350, 150], [500, 250], [700, 150], [800, 250], [800, 500], [0, 500], [0, 280]
@@ -72,7 +78,7 @@ export function invite(client) {
                 console.log(newGame.player2 , 'player 2');
                 newGame.originalPoints = initGameData.originalPoints;
                 newGame.gameStatus = initGameData.gameStatus;
-
+                console.log(newGame.player1);
 
                 GameData.createGame(newGame, function(err, game) {
                     const users = {};
@@ -100,7 +106,7 @@ export function invite(client) {
                                 return 0
                             }
                         });
-                        
+
                         socket.emit('start-game', {gameId: game._id, playerId: usersIds.player2});
                     }
                 });
@@ -116,8 +122,8 @@ export function invite(client) {
                 }
             });
         });
-        
-        socket.on('resume-game-id', (resumeGameData) => {            
+
+        socket.on('resume-game-id', (resumeGameData) => {
             GameData.findGame({_id: resumeGameData.gameId}, (err, foundGame) => {
                 if (err) {
                     throw err;
@@ -129,9 +135,9 @@ export function invite(client) {
                     });
                 }
             });
-            
-            
+
+
         });
-    
+
     });
 }
