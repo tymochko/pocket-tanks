@@ -52,7 +52,7 @@ export function invite(client) {
                         tank: {},
                         life: 2,
                         turn: true,
-                        lose: 5,
+                        lose: 0,
                         win: 0
                     },
                     player2: {
@@ -60,7 +60,7 @@ export function invite(client) {
                         tank: {},
                         life: 2,
                         turn: false,
-                        lose: 5,
+                        lose: 0,
                         win: 0
 
                     },

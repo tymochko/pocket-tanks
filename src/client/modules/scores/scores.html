@@ -32,7 +32,7 @@
 	    </thead>
     
 	    <tbody>
-	      <tr ng-repeat="user in mylist | orderBy:sortType:sortReverse | filter:searchScore">
+	      <tr ng-repeat="user in userlist | orderBy:sortType:sortReverse | filter:searchScore">
 	        <td>{{ user.name }}</td>
 	        <td>{{ user.win }}</td>
 	        <td>{{ user.lose }}</td>
