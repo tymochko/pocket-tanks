@@ -1,7 +1,7 @@
 import { sendReg } from './sendRegService';
 
-export class SignupCtrl{
-    constructor($scope, sendReg){
+export class SignupCtrl {
+    constructor($scope, sendReg) {
         $scope.maxname = 15;
         $scope.minname = 5;
         $scope.maxpassword = 12;
@@ -26,4 +26,4 @@ export class SignupCtrl{
             sendReg.add(userInfo);
         };
     }
-} 
+}

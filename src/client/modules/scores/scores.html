@@ -13,19 +13,19 @@
 	    <thead>
 	      <tr>
 	        <td>
-	          <a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse" translate="DashboardName">
+	          <a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">{{'DashboardName' | translate }}
 	          	<span ng-show="sortType == 'name' && !sortReverse" class="glyphicon glyphicon-arrow-down"> </span>
 	        	<span ng-show="sortType == 'name' && sortReverse" class="glyphicon glyphicon-arrow-up"> </span>
 	        </a>
 	        </td>
 	        <td>
-	          <a href="#" ng-click="sortType = 'win'; sortReverse = !sortReverse" translate="gameWon">
+	          <a href="#" ng-click="sortType = 'win'; sortReverse = !sortReverse"> {{'gameWon' | translate }}
 	          <span ng-show="sortType == 'win' && !sortReverse" class="glyphicon glyphicon-arrow-down"> </span>
 	        <span ng-show="sortType == 'win' && sortReverse" class="glyphicon glyphicon-arrow-up"> </span></a>
 	        </td>
 	        <td>
-	          <a href="#" ng-click="sortType = 'lose'; sortReverse = !sortReverse" translate="gameLost">
-	          <span ng-show="sortType == 'lose' && !sortReverse" class="glyphicon glyphicon-arrow-down"> </span>
+	          <a href="#" ng-click="sortType = 'lose'; sortReverse = !sortReverse">{{'gameLost' | translate }}
+				  <span ng-show="sortType == 'lose' && !sortReverse" class="glyphicon glyphicon-arrow-down"> </span>
 	        <span ng-show="sortType == 'lose' && sortReverse" class="glyphicon glyphicon-arrow-up"> </span></a>
 	        </td>
 	      </tr>
