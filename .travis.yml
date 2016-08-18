@@ -3,6 +3,7 @@ node_js:
 - '5'
 before_deploy:
 - npm run build
+- npm run build
 deploy:
   app: tanks-server
   provider: heroku

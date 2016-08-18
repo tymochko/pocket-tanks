@@ -162,7 +162,16 @@ const logoutUser = function (id, callback) {
 };
 
 const checkUser = function (id, callback) {
+    console.log('checkUser', id);
     this.findOne(id, (err, foundUser) => {
+        // if (err) {
+        //     console.log(err);
+        //     return err;
+        // }
+        // if (!foundUser) {
+        //     return err;
+        // }
+
         callback(err, foundUser);
     });
 };
@@ -420,7 +429,7 @@ const updateActiveGame = function(id, updatedData, callback) {
             }
         },
         (err, foundUser) => {
-
+     
             if (err) {
                 throw err;
             } else {

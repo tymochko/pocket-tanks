@@ -1,11 +1,11 @@
 import GameData from '../api/game/gameController';
 import userData from '../api/users/usersController';
-var cookieParser = require('cookie-parser');
 
 const connections = [];
 
 export function invite(client) {
     client.on('connection', function(socket) {
+
         const info = {socket, user: null, username: null};
 
         connections.push(info);
@@ -44,9 +44,9 @@ export function invite(client) {
             });
 
             socket.on('create-game', (usersIds) => {
-
+                
                 const initGameData = {
-
+                    
                     player1: {
                         id: usersIds.player1,
                         tank: {},
@@ -100,7 +100,7 @@ export function invite(client) {
                                 return 0
                             }
                         });
-
+                        
                         socket.emit('start-game', {gameId: game._id, playerId: usersIds.player2});
                     }
                 });
@@ -116,8 +116,8 @@ export function invite(client) {
                 }
             });
         });
-
-        socket.on('resume-game-id', (resumeGameData) => {
+        
+        socket.on('resume-game-id', (resumeGameData) => {            
             GameData.findGame({_id: resumeGameData.gameId}, (err, foundGame) => {
                 if (err) {
                     throw err;
@@ -129,9 +129,9 @@ export function invite(client) {
                     });
                 }
             });
-
-
+            
+            
         });
-
+    
     });
 }

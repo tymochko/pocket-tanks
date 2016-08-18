@@ -5,7 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var sharedsession = require("express-socket.io-session");
 
 // remove after MongoStore is removed from app.js
 var mongoose = require('mongoose');
@@ -13,8 +12,8 @@ var mongoose = require('mongoose');
 var users = require('./api/users/usersRoutes');
 var check = require('./middleware/check');
 
-// var connectMongo = require('connect-mongo');
-// var MongoStore = connectMongo(session);
+var connectMongo = require('connect-mongo');
+var MongoStore = connectMongo(session);
 
 var app = express();
 
@@ -28,7 +27,7 @@ app.use(cookieParser());
 
 app.use(session({
     secret: 'come_in',
-    // store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
     cookie: { maxAge: 45 * 60 * 1000 },
     saveUninitialized: false,
     resave: true,
