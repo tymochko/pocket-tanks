@@ -18,4 +18,4 @@ function RouteConfig($routeProvider) {
         controller: 'SignupCtrl',
         templateUrl: 'signup/signup.html'
 	});
-};
+}
