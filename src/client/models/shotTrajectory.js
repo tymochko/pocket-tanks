@@ -80,7 +80,6 @@ const generateExplosion = (dt) => {
     let bull = new paper.Path.Rectangle(new paper.Point(bullet.pos[0], bullet.pos[1]), new paper.Size(45, 7));
     //check angle for accuracy of point
     bull.rotate(-currAngle * 180 / Math.PI);
-    bull.strokeColor = '#ff0000';
 
     const groundPath = new paper.Path(
         new paper.Point(originalPoints[0][0], originalPoints[0][1])
@@ -89,18 +88,13 @@ const generateExplosion = (dt) => {
     for (let i = 1; i < originalPoints.length; i++) {
         groundPath.add(new paper.Point(originalPoints[i][0], originalPoints[i][1]));
     }
-    groundPath.strokeColor = '#000';
-
     const tankSize = new paper.Size(80,30);
     const user1 = new paper.Path.Rectangle(new paper.Point(player1.data.tankX - tankSize.width / 2, player1.data.tankY - tankSize.height / 2), tankSize);
-    user1.strokeColor = '#00ff00';
     const user2 = new paper.Path.Rectangle(new paper.Point(player2.data.tankX - tankSize.width / 2, player2.data.tankY - tankSize.height / 2), tankSize);
-    user2.strokeColor = '#ff0000';
 
     user1.rotate(-player1.data.tankAngle * 180 / Math.PI);
     user2.rotate(-player2.data.tankAngle * 180 / Math.PI);
 
-    paper.view.draw();
     // check if intersect the original points
     const intersectPlayer1 = bull.getIntersections(user2);
     if (intersectPlayer1.length > 0) {
@@ -110,17 +104,14 @@ const generateExplosion = (dt) => {
         };
         bullet = null;
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
-
         gameData.player2.life -= 1;
         drawLifeBar('player2', gameData.player2.life);
         if (gameData.player2.life === 0) {
             gameData.gameStatus = false;
             socket.emit('end-game', gameData);
         }
-
         window.cancelAnimationFrame(requestAnimFrame);
         sendUpdates();
-
         return;
     }
 
@@ -140,9 +131,7 @@ const generateExplosion = (dt) => {
             gameData.gameStatus = false;
             socket.emit('end-game', gameData);
         }
-
         window.cancelAnimationFrame(requestAnimFrame);
-
         sendUpdates();
 
         return;
@@ -167,6 +156,7 @@ const generateExplosion = (dt) => {
     } else if (bullet.pos[0] > WIDTH || bullet.pos[1] > HEIGHT) {
         bullet = null;
         window.cancelAnimationFrame(requestAnimFrame);
+        sendUpdates();
     } else {
         requestAnimFrame(drawBullet);
     }

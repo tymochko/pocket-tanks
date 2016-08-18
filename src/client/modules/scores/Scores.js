@@ -1,5 +1,5 @@
 export class Scores {
-	constructor($scope, $http) {
+	constructor($scope, $http, $translate) {
     var allgames = [];
 
     $http.get('api/users/allGames').then(function(response){

@@ -26,8 +26,6 @@ export const eng =  {
     UploadButton: 'Upload photo',
     DeleteMsg: 'Are you sure about delete your account?!',
     UploadPhoto: 'Press button for upload photo',
-    Title: 'Tanks | Student Game',
-    Footer: 'Tanks Game 2016.',
     Status: 'Status',
     DashboardName: 'Name',
     Invite:'Invite',
@@ -39,7 +37,20 @@ export const eng =  {
     ChangeButtonEng: 'English language',
     avatarMsg : "Do not forget to save changes!!",
     avatarTitle : "Message",
-    savingMsg: "Your changes are saved!"
+    savingMsg: "Your changes are saved!",
+    surrenderMsg: "Do you really want to surrender?",
+    power: "p o w e r",
+    angle: "a n g l e",
+    fire: "f i r e",
+    chatButton: "Chat",
+    SurrenderButton: "Surrender",
+    player1: "Player 1",
+    player2: "Player 2",
+    gameWon: " Games won ",
+    gameLost: "Games lost ",
+    scores: "Scores",
+    SearchUserPlaceholder: "Search user",
+    ResumeGame: "Resume Game"
 
 
 };
@@ -71,9 +82,6 @@ export const ukr = {
     UploadButton: 'Загрузити фото',
     DeleteMsg: 'Ви впевнені що хочете видалити аккаунт?!',
     UploadPhoto: 'Нажміть кнопку для загрузки фото',
-    Title: 'Танки | Навчальний проект',
-    Footer: 'Танки 2016.',
-    test:'теститититит',
     Status: 'Статус гравця',
     DashboardName: "Ім'я гравця",
     Invite:'Запросити',
@@ -85,7 +93,21 @@ export const ukr = {
     ChangeButtonEng: 'Англійська мова',
     avatarMsg : 'Не забудьте зберегти зміни!',
     avatarTitle: "Повідомлення",
-    savingMsg: "Ваші зміни збережені!"
+    savingMsg: "Ваші зміни збережені!",
+    surrenderMsg: "Ви впевнені що бажаєте здатися ?",
+    power: "с и л а",
+    angle: "к у т",
+    fire: "в о г о н ь!",
+    chatButton: "Чат",
+    SurrenderButton: "Здатися",
+    player1: "Гравець 1",
+    player2: "Гравець 2",
+    gameWon: "Виграні ігри ",
+    gameLost: "Програні ігри",
+    scores: "Очки",
+    SearchUserPlaceholder: "Пошук гравця",
+    ResumeGame: "Продовжити гру"
+
 
 };
 export const lang = {

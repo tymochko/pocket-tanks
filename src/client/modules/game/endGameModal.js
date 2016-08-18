@@ -1,4 +1,4 @@
-export const endGameModal = (socket, $uibModal) => {
+export const endGameModal = (socket, $uibModal, $translate) => {
     socket.on('end-game-modal', (gameInst) => {
         $uibModal.open({
             templateUrl: 'game/endGameRequest.html',

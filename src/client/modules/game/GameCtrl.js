@@ -4,7 +4,7 @@ import { gameCreate } from './gameFunc';
 import { gameService } from './gameService';
 import { endGameModal } from './endGameModal';
 
-export function transportData(socket, $q, $uibModal) {
+export function transportData(socket, $q, $uibModal, $translate) {
     endGameModal(socket, $uibModal);
 
     const localUrl = window.location.href;

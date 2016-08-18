@@ -8,13 +8,14 @@ import ngRoute from 'angular-route';
 module.exports = angular.module('tanks.game', [
     ngRoute,
     'tanks.chat',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    "pascalprecht.translate"
 ])
-    .controller('gameCtrl', ['socket', '$q', '$uibModal', transportData])
-    .controller('confirmCtrl', ['$scope', '$uibModalInstance', 'gameInst', 'socket', confirmCtrl])
-    .controller('gameFinishedCtrl', ['$scope', '$uibModalInstance', 'win', gameFinishedCtrl])
+    .controller('gameCtrl', ['socket', '$q', '$uibModal','$translate', transportData])
+    .controller('confirmCtrl', ['$scope', '$uibModalInstance', 'gameInst', 'socket','$translate', confirmCtrl])
+    .controller('gameFinishedCtrl', ['$scope', '$uibModalInstance', 'win','$translate', gameFinishedCtrl])
     .config(RouteConfig)
-    .factory('gameService', ['socket', '$q', '$uibModal', gameService]);
+    .factory('gameService', ['socket', '$q', '$uibModal','$translate', gameService]);
 
 RouteConfig.$inject = ['$routeProvider'];
 function RouteConfig($routeProvider) {

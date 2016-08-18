@@ -9,7 +9,7 @@ export class NavigationConstructor {
             let navCenter = '';
 
             if (activeGameId) {
-                 navCenter = '<button ng-click="resumeGame()" class="btn btn-danger navbar-center">Resume GAME</button>';
+                 navCenter = '<button ng-click="resumeGame()" class="btn btn-danger navbar-center" translate="ResumeGame"></button>';
             }
             if (logged) {
                 for (const route of RouteNavigation.routes) {
