@@ -10,7 +10,8 @@ export function invite(client) {
 
         connections.push(info);
 
-        socket.once('auth', function(data) {
+        socket.on('auth', function(data) {
+
             info.user = data.user;
             info.username = data.username;
 
@@ -44,9 +45,9 @@ export function invite(client) {
             });
 
             socket.on('create-game', (usersIds) => {
-                
+
                 const initGameData = {
-                    
+
                     player1: {
                         id: usersIds.player1,
                         tank: {},
@@ -105,7 +106,7 @@ export function invite(client) {
                                 return 0
                             }
                         });
-                        
+
                         socket.emit('start-game', {gameId: game._id, playerId: usersIds.player2});
                     }
                 });
@@ -121,8 +122,8 @@ export function invite(client) {
                 }
             });
         });
-        
-        socket.on('resume-game-id', (resumeGameData) => {            
+
+        socket.on('resume-game-id', (resumeGameData) => {
             GameData.findGame({_id: resumeGameData.gameId}, (err, foundGame) => {
                 if (err) {
                     throw err;
@@ -134,9 +135,9 @@ export function invite(client) {
                     });
                 }
             });
-            
-            
+
+
         });
-    
+
     });
 }
