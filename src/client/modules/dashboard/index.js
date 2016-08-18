@@ -1,7 +1,6 @@
 import angular from 'angular';
 import ngRoute from 'angular-route';
 import { gameService } from '../game/gameService';
-// import { game } from '../../models/gameModel';
 
 module.exports = angular.module('tanks.dashboard', [
     ngRoute
@@ -42,13 +41,15 @@ module.exports = angular.module('tanks.dashboard', [
     });
 
     socket.on('start-game', function(foundGame) {
-    //    socket.emit('points', {points:foundGame.originalPoints});
         localStorage.setItem('playerId', foundGame.playerId);
         window.location = `/game?id=${foundGame.gameId}`;
     });
 
     socket.on('invite-rejected', function(data) {
-        alert('Your invitation was rejected.');
+        let modalInstance = $uibModal.open({
+            templateUrl: 'dashboard/requestRejected.html',
+            controller: 'ModalCtrl'
+        });
     });
 
     gameService().getUsersIds(socket, $q).then((usersIds) => {
@@ -66,6 +67,11 @@ module.exports = angular.module('tanks.dashboard', [
     $scope.cancel = function() {
         $uibModalInstance.dismiss('cancel');
         socket.emit('rejected', {invitor: data.senderUser});
+    };
+}])
+.controller('ModalCtrl', ['$scope', '$uibModalInstance', function($scope, $uibModalInstance) {
+    $scope.close = function() {
+        $uibModalInstance.close();
     };
 }])
 .config(RouteConfig);

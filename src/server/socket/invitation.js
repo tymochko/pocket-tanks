@@ -11,7 +11,6 @@ export function invite(client) {
         connections.push(info);
 
         socket.on('auth', function(data) {
-
             info.user = data.user;
             info.username = data.username;
 
@@ -34,7 +33,7 @@ export function invite(client) {
                 });
             });
 
-            socket.on('rejected', () => {
+            socket.on('rejected', (data) => {
                 connections.forEach(function(other) {
                     if (other.user === data.invitor) {
                         other.socket.emit('invite-rejected', {
