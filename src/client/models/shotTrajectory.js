@@ -3,7 +3,7 @@ import paper from 'paper';
 import { tick } from './explosion';
 import { calculateDamageArea } from './generateDamage';
 import { ground } from './groundModel';
-import { requestAnimFrame, clear, updateLife } from './externalFunctions';
+import { requestAnimFrame, clear, drawLifeBar } from './externalFunctions';
 import { canvasModel } from './canvasModel';
 
 const player1 = {};
@@ -28,6 +28,7 @@ let socket;
 let bulletCtx;
 let groundCtx;
 
+
 export const intersectionPlayer = (tank1, tank2, gameInst) => {
     player1.data = tank1;
     player2.data = tank2;
@@ -42,6 +43,7 @@ const sendUpdates = () => {
     const activePlayer = gameData.player1.turn ? gameData.player1.id : gameData.player2.id;
     gameData.player1.turn = !gameData.player1.turn;
     gameData.player2.turn = !gameData.player2.turn;
+
 
     if (localStorage.getItem('playerId') === activePlayer) {
         socket.emit('update-data', gameData);
@@ -105,7 +107,12 @@ const generateExplosion = (dt) => {
         bullet = null;
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
 
-        updateLife('player2', gameData, socket);
+        gameData.player2.life -= 1;
+        drawLifeBar('player2', gameData.player2.life);
+        if (gameData.player2.life === 0) {
+            gameData.gameStatus = false;
+            socket.emit('finish-game-request', { win: gameData.player1.id, looser: gameData.player2.id, data: gameData});
+        }
 
         window.cancelAnimationFrame(requestAnimFrame);
         sendUpdates();
@@ -122,7 +129,12 @@ const generateExplosion = (dt) => {
         bullet = null;
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
 
-        updateLife('player1', gameData, socket);
+        gameData.player1.life -= 1;
+        drawLifeBar('player1', gameData.player1.life);
+        if (gameData.player1.life === 0) {
+            gameData.gameStatus = false;
+            socket.emit('finish-game-request', { win: gameData.player2.id, looser: gameData.player1.id, data: gameData});
+        }
 
         window.cancelAnimationFrame(requestAnimFrame);
         sendUpdates();

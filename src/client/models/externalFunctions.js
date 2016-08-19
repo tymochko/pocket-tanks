@@ -70,13 +70,3 @@ export const drawLifeBars = (data) => {
     getId('lifeBar1').style.width = `${step * data.player1.life}%`;
     getId('lifeBar2').style.width = `${step * data.player2.life}%`;
 };
-
-export const updateLife = (player, data, socket) => {
-    data[player].life -= 1;
-    drawLifeBar(player, data[player].life);
-    if (data[player].life === 0) {
-        data.gameStatus = false;
-        const enemy = (player === 'player1') ? 'player2' : 'player1';
-        socket.emit('finish-game-request', { win: data[player].id, looser: data[enemy].id, gameData: data});
-    }
-};
