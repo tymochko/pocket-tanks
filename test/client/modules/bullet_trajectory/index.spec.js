@@ -1,5 +1,5 @@
-import explosion from '/home/olga/Desktop/project/pocket-tanks/src/client/models/shotTrajectory';
-import externalVariables from '/home/olga/Desktop/project/pocket-tanks/src/client/models/externalVariables';
+import explosion from '../src/client/models/shotTrajectory';
+import externalVariables from '../src/client/models/externalVariables';
 import paper from 'paper';
 
 describe ("Test shot trajectory", function () {
