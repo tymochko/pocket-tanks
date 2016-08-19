@@ -404,7 +404,7 @@ const getPublicImg = function (req, res) {
             }
 
             var userId = req.session.user;
-            const userDir = path.join(__dirname, '..', '..', 'static/usersInfo/' + userId + '/');
+            const userDir = staticFolder + 'usersInfo/' + userId + '/';
             const check = function () {
                 fsHelper.checkDir(userDir);
             };
