@@ -2,6 +2,7 @@ import GameData from '../api/game/gameController';
 import userData from '../api/users/usersController';
 
 let tanksCoords = {};
+import { connections } from './invitation';
 
 export function gameSocket(client) {
     client.on('connection', function(socket) {
@@ -101,6 +102,10 @@ export function gameSocket(client) {
                     client.emit('redirect-away-from-game', {});
                 }
             });
+        });
+
+        socket.on('finish-game-request', (data) => {
+            client.emit('finish-game', data);
         });
 
         socket.on('powerChange', (data) => {

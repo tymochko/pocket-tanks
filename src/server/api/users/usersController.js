@@ -429,7 +429,7 @@ const updateActiveGame = function(id, updatedData, callback) {
             }
         },
         (err, foundUser) => {
-     
+
             if (err) {
                 throw err;
             } else {

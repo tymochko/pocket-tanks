@@ -3,7 +3,7 @@ import paper from 'paper';
 import { tick } from './explosion';
 import { calculateDamageArea } from './generateDamage';
 import { ground } from './groundModel';
-import { requestAnimFrame, clear, drawLifeBar } from './externalFunctions';
+import { requestAnimFrame, clear, updateLife } from './externalFunctions';
 import { canvasModel } from './canvasModel';
 
 const player1 = {};
@@ -104,12 +104,9 @@ const generateExplosion = (dt) => {
         };
         bullet = null;
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
-        gameData.player2.life -= 1;
-        drawLifeBar('player2', gameData.player2.life);
-        if (gameData.player2.life === 0) {
-            gameData.gameStatus = false;
-            socket.emit('end-game', gameData);
-        }
+
+        updateLife('player2', gameData, socket);
+
         window.cancelAnimationFrame(requestAnimFrame);
         sendUpdates();
         return;
@@ -125,12 +122,8 @@ const generateExplosion = (dt) => {
         bullet = null;
         tick(crossPoint.x, crossPoint.y, tankX, tankY);
 
-        gameData.player1.life -= 1;
-        drawLifeBar('player1', gameData.player1.life);
-        if (gameData.player1.life === 0) {
-            gameData.gameStatus = false;
-            socket.emit('end-game', gameData);
-        }
+        updateLife('player1', gameData, socket);
+
         window.cancelAnimationFrame(requestAnimFrame);
         sendUpdates();
 
