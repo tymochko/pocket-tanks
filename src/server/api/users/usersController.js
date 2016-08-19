@@ -105,10 +105,7 @@ const loginUser = function (username, password, callback) {
             callback(err);
         } else if (foundUser) {
 
-            if (foundUser.isOnline === true) {
-                return callback(new Error('Sorry, this user is online'));
-
-            } else if (foundUser.isEnabled === false) {
+            if (foundUser.isEnabled === false) {
                 return callback(new Error('Sorry, this user is deleted'));
 
             } else {
