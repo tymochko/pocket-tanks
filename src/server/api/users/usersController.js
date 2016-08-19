@@ -14,7 +14,7 @@ const userInfoDir = './src/server/static/usersInfo/';
 const publicScopeName = 'public';
 const userUploadsScopeName = 'userUploads';
 const publicImgURL = "/api/users/profile/getImage/" + publicScopeName + '/';
-const staticFolder =  __dirname + '/../../static/';
+const staticFolder = __dirname + '/../../static/';
 const userImgURL = '/api/users/profile/getImage/' + userUploadsScopeName + '/';
 
 
@@ -398,16 +398,16 @@ const uploadImg = function (request, res) {
 const getPublicImg = function (req, res) {
     fs.readdir(staticFolder + 'images/' + '/', function (e, files) {
         if (!e && files.length > 0) {
-            let images = [];
+            var images = [];
             for (var file in files) {
                 images.push({image: publicImgURL + files[file] + fsHelper.getSalt(), uploadedImg: false});
             }
 
             var userId = req.session.user;
-            const userDir =staticFolder + 'usersInfo/' + userId + '/';
+            const userDir = staticFolder + 'usersInfo/' + userId + '/';
             const check = function () {
                 fsHelper.checkDir(userDir);
-            }
+            };
             check();
             fs.readdir(userDir, function (e, files) {
                 if (!e && files.length > 0)
