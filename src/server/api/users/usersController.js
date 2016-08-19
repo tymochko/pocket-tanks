@@ -307,7 +307,7 @@ const getUserImage = function (req, res) {
 };
 
 const getPublicImage = function (req, res) {
-    res.sendFile(path.resolve(staticFolder + '/images/' + req.params.imageName), function (err) {
+    res.sendFile(path.resolve(staticFolder + 'images/' + req.params.imageName), function (err) {
         if (err) {
             console.log(err);
             res.status(err.status).end();
