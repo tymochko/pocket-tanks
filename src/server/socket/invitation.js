@@ -1,7 +1,7 @@
 import GameData from '../api/game/gameController';
 import userData from '../api/users/usersController';
 
-const connections = [];
+export const connections = [];
 
 export function invite(client) {
     client.on('connection', function(socket) {
