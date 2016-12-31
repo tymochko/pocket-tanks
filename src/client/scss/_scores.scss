@@ -1,0 +1,14 @@
+.scores{
+	width: 80%;
+    color: white;
+    margin: 0 auto;
+    max-width: 1240px;
+    .table-striped>tbody>tr:nth-of-type(odd) {
+        background: transparent;
+    }
+
+    a{
+    	font-size: 130%;
+    	color: rgb(157,157,157);
+    }
+}

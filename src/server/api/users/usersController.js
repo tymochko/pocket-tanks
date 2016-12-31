@@ -1,7 +1,22 @@
 const mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
+var express = require('express');
+var nodemailer = require('nodemailer');
+var fs = require('fs');
+var strUserImg = {"image": "1dog.jpg", uploadedImg: false};
+var path = require('path');
+var multer = require('multer');
+var fsHelper = require('../libs/fsHelper');
 
 const Schema = mongoose.Schema;
+const userScopeName = 'userAvatar';
+const userInfoDir = './src/server/static/usersInfo/';
+const publicScopeName = 'public';
+const userUploadsScopeName = 'userUploads';
+const publicImgURL = "/api/users/profile/getImage/" + publicScopeName + '/';
+const staticFolder = __dirname + '/../../static/';
+const userImgURL = '/api/users/profile/getImage/' + userUploadsScopeName + '/';
+
 
 var userSchema = new Schema({
     userName: {type: String, required: true, unique: true},
@@ -10,7 +25,9 @@ var userSchema = new Schema({
     userAge: {type: Number, required: true},
     userImg: {type: Object},
     isOnline: {type: Boolean},
-    isEnabled: {type: Boolean}
+    activeGame: {type: String},
+    isEnabled: {type: Boolean},
+    userLanguage: {type:String}
 });
 
 module.exports = mongoose.model('User', userSchema);
@@ -31,7 +48,7 @@ const showAll = function (callback) {
 };
 
 const showProfile = function (id, callback) {
-    this.findOne(id, (err, foundUser) => {
+    this.findOne(id, function (err, foundUser) {
         if (err) {
             console.log(err);
             return err;
@@ -54,16 +71,18 @@ const passHash = (userPassword, callback) => {
 };
 
 const createUser = function (newUser, callback) {
+    newUser.userImg = strUserImg;
     passHash(newUser.userPassword, (err, hash) => {
         if (err) {
             return callback(err);
         }
 
         newUser.userPassword = hash;
-        newUser.save(function(err, user){
+        newUser.save(function (err, user) {
             if (err) {
                 return callback(err);
             }
+
             callback(null, user);
         });
     });
@@ -90,7 +109,7 @@ const loginUser = function (username, password, callback) {
                 return callback(new Error('Sorry, this user is deleted'));
 
             } else {
-                comparePassword(password, foundUser.userPassword, function(err, res) {
+                comparePassword(password, foundUser.userPassword, function (err, res) {
                     if (err) {
                         console.log(err);
                         return res.status(500).send();
@@ -137,11 +156,24 @@ const logoutUser = function (id, callback) {
                 console.log('error occured ' + err);
                 return res.status(500).send();
             } else {
-                updatedUser.isOnline = false;
-
-                callback(updatedUser);
+                callback(err, updatedUser);
             }
         });
+};
+
+const checkUser = function (id, callback) {
+    console.log('checkUser', id);
+    this.findOne(id, (err, foundUser) => {
+        // if (err) {
+        //     console.log(err);
+        //     return err;
+        // }
+        // if (!foundUser) {
+        //     return err;
+        // }
+
+        callback(err, foundUser);
+    });
 };
 
 const updateUser = function (id, updatedData, callback) {
@@ -171,16 +203,18 @@ const updateUser = function (id, updatedData, callback) {
                 });
             } else {
                 User.update({
-                    userName: foundUser.userName,
-                    userAge: foundUser.userAge,
-                    userImg: foundUser.userImg
-                }, {
-                    userName: updatedData.userName,
-                    userAge: updatedData.userAge,
-                    userImg: updatedData.userImg
+                        userName: foundUser.userName,
+                        userAge: foundUser.userAge,
+                        userImg: foundUser.userImg,
+                        userLanguage: foundUser.userLanguage
+                    }, {
+                        userName: updatedData.userName,
+                        userLanguage: updatedData.userLanguage,
+                        userAge: updatedData.userAge,
+                        userImg: (!updatedData.userImg || !updatedData.userImg.image) ? foundUser.userImg : updatedData.userImg
                     },
-                
-                    function(err, foundUser) {
+
+                    function (err, foundUser) {
                         callback(err, foundUser);
                     });
             }
@@ -197,11 +231,13 @@ const updateUser = function (id, updatedData, callback) {
                     userPassword: foundUser.userPassword,
                     userName: foundUser.userName,
                     userAge: foundUser.userAge,
+                    userLanguage: foundUser.userLanguage,
                     userImg: foundUser.userImg
                 }, {
                     userPassword: updatedData.userConfPassword,
                     userName: updatedData.userName,
                     userAge: updatedData.userAge,
+                    userLanguage: updatedData.userLanguage,
                     userImg: updatedData.userImg
                 },
 
@@ -233,6 +269,185 @@ const deleteUser = function (id, callback) {
         });
 };
 
+
+const getUserImage = function (req, res) {
+
+    var userId = req.session.user;
+    var userImage;
+    var userDir;
+
+    this.findOne({_id: userId}, function (err, foundUser) {
+        if (err) {
+            res.status(401).send();
+        }
+        cb(err, foundUser);
+    });
+    function cb(err, foundUser) {
+        if(foundUser === null) {
+            return res.status(403).send();
+        }
+        userImage = foundUser.userImg;
+        if(userImage.uploadedImg === null) {
+            return res.status(403).send();
+        }
+        if (userImage.uploadedImg) {
+
+            userDir = staticFolder + 'usersInfo/' + userId + '/' + userImage.image;
+        } else {
+            userDir = staticFolder + 'images/' + userImage.image;
+        }
+        res.sendFile(path.resolve(userDir), function (err) {
+            if (err) {
+                console.log('err:  ', err);
+                res.status(403).end();
+            }
+        });
+    }
+
+};
+
+const getPublicImage = function (req, res) {
+    res.sendFile(path.resolve(staticFolder + 'images/' + req.params.imageName), function (err) {
+        if (err) {
+            console.log(err);
+            res.status(err.status).end();
+        }
+    });
+};
+
+
+const getUserUploadedImage = function (req, res) {
+    var userId = req.session.user;
+    var imageName = req.params.imageName;
+    var imageDir = staticFolder + 'usersInfo/' + userId + '/' + imageName;
+
+    res.sendFile(path.resolve(imageDir), function (err) {
+        if (err) {
+            console.log('err:  ', err);
+            res.status(403).end();
+        }
+    });
+};
+
+const handleEmail = function (name, email) {
+    var userEmail = email;
+    var userName = name;
+    var transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'pockettanksmail@gmail.com', // Your email id
+            pass: 'somepassword' // Your password
+        }
+
+    });
+    var text = `Hello ${userName}! Welcome to PocketTanks game!`;
+
+    var mailOptions = {
+        from: 'pockettanksmail@gmail.com',
+        to: `${userEmail}`,
+        subject: 'Pocket Tanks',
+        text: text
+
+    };
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+            ;
+        } else {
+            console.log('Message sent: ' + userEmail);
+
+        }
+        ;
+    });
+
+};
+const uploadImg = function (request, res) {
+    var d = new Date();
+    var originName;
+    var fileNameNew = 'userAvatar' + d.getTime();
+    var dir = userInfoDir + request.session.user;
+    fsHelper.checkDir(userInfoDir);
+    fsHelper.checkDir(dir);
+    fsHelper.rmDir(dir);
+    var storage = multer.diskStorage({ //multers disk storage settings
+        destination: function (req, file, cb) {
+            originName = file.originalname;
+
+            cb(null, dir);
+        },
+        filename: function (req,file, cb) {
+            cb(null, fileNameNew + '.' + file.originalname.split('.')[file.originalname.split('.').length - 1]);
+        }
+    });
+    var upload = multer({ //multer settings
+        storage: storage
+    }).single('file');
+
+    upload(request, res, function (err) {
+        if (err) {
+
+            ress.json({error_code: 1, err_desc: err});
+            return;
+        }
+        var extension = originName.split('.')[originName.split('.').length - 1];
+        res.json({image: userImgURL + fileNameNew + '.' + extension + fsHelper.getSalt(), uploadedImg: true});
+
+    });
+};
+
+const getPublicImg = function (req, res) {
+    fs.readdir(staticFolder + 'images/' + '/', function (e, files) {
+        if (!e && files.length > 0) {
+            var images = [];
+            for (var file in files) {
+                images.push({image: publicImgURL + files[file] + fsHelper.getSalt(), uploadedImg: false});
+            }
+
+            var userId = req.session.user;
+            const userDir = staticFolder + 'usersInfo/' + userId + '/';
+            const check = function () {
+                fsHelper.checkDir(userDir);
+            };
+            check();
+            fs.readdir(userDir, function (e, files) {
+                if (!e && files.length > 0)
+                    images.push({image: userImgURL + files[0] + fsHelper.getSalt(), uploadedImg: true});
+                res.send(200, images);
+            });
+        }
+        else
+            res.send(404);
+    });
+
+};
+
+const updateActiveGame = function(id, updatedData, callback) {
+    this.findOneAndUpdate(
+        {_id: id}, {
+            $set: {
+                activeGame: updatedData
+            }
+        },
+        (err, foundUser) => {
+
+            if (err) {
+                throw err;
+            } else {
+                foundUser.activeGame = updatedData;
+                callback(err, foundUser);
+            }
+        });
+};
+
+
+
+module.exports.updateActiveGame = updateActiveGame;
+module.exports.getPublicImg = getPublicImg;
+module.exports.uploadImg = uploadImg;
+module.exports.getUserImage = getUserImage;
+module.exports.getUserUploadedImage = getUserUploadedImage;
+module.exports.getPublicImage = getPublicImage;
+module.exports.handleEmail = handleEmail;
 module.exports.showAll = showAll;
 module.exports.showProfile = showProfile;
 module.exports.createUser = createUser;
@@ -240,3 +455,4 @@ module.exports.loginUser = loginUser;
 module.exports.logoutUser = logoutUser;
 module.exports.updateUser = updateUser;
 module.exports.deleteUser = deleteUser;
+module.exports.checkUser = checkUser;

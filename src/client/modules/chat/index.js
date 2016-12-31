@@ -1,77 +1,64 @@
-var angular = require('angular');
-var ngRoute = require('angular-route');
+import angular from 'angular';
+import ngRoute from 'angular-route';
+import scroll_glue from 'angularjs-scroll-glue';
 
-module.exports = angular.module('tanks.chat', [
-    ngRoute
-]).config(RouteConfig);
+module.exports = angular.module('tanks.chat', [ ngRoute, 'luegg.directives'])
 
-RouteConfig.$inject = ['$routeProvider'];
-function RouteConfig($routeProvider) {
-    $routeProvider.when('/chat', {
-        controller: ChatController,
-        templateUrl: 'chat/chat.html'
-    });
-};
+.controller('ChatController', ChatController)
 
-function ChatController($scope,socket, $sce) {
-	$scope.nam=[];
-	$scope.mes=[];
-	$scope.messageStatus='Ide';
-	$scope.inputMessage='';
-	$scope.inputName='';
-	status=$scope.messageStatus;
-	StatusDefault = status;
+.directive('chat',function() {
+    return {
+          restrict: 'C',
+          controller: ChatController,
+          templateUrl: 'chat/chat.html'
+    };
+});
 
-	setStatus= function(s){
-		$scope.messageStatus = s;
-		if(s!== StatusDefault)
-		{
-			var delay = setTimeout(function(){
-				setStatus(StatusDefault);
-			},3000);
-		}
-	};
+function ChatController($scope,socket)
+{
+     $scope.messages = [];
+     $scope.inputMessage = '';
 
-	if(socket !== undefined)
-	{
-		socket.on('output', function(data){
-			var date=new Date();
-			if(data.length)
-			{
-				$scope.sce=$sce;
-				for(var x=data.length-1;x>=0; x=x-1){
-					$scope.$apply(function () {
-						$scope.myHTML += '<div class="chat-message">'+'<p class="chat-name-message" >'+data[x].name+'</p>'+' : '+replaceSmileys(data[x].message)+'<p class="chat-time">'+data[x].time+'</p>'+'</div>';});
-				}
-				$(document.getElementById('chat')).animate({scrollTop: 1000}, 500);
-			}
-		});
+     if(socket)
+     {
+          socket.on('outputMessage', getMessages);
 
-		socket.on('status',function(data){
-			setStatus((typeof data === 'object')? data.message: data);
+          $scope.sentEventListener = function(event) {
+               const inputMessage = $scope.inputMessage;
+               const name = localStorage.getItem('userName');
+               const date = new Date();
+               function getWeekDay(date) {
+                    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                    return days[date.getDay()];
+               }
+               const formattedDate = date.getHours() + ':' + date.getMinutes() + ', ' + getWeekDay(date);
 
-			if(data.clear === true )
-			{
-                     $scope.inputMessage = '';
-                }
-            });
+               socket.emit('inputMessage', {
+                    name,
+                    message: inputMessage,
+                    time: formattedDate
+               });
 
-			$scope.myFunc=function(event){
-				var inputMessage = $scope.inputMessage,
-				name = $scope.inputName;
-				var date=new Date();
+               $scope.inputMessage = null;
 
-				socket.emit('input',{
-					name: name,
-					message:inputMessage,
-					time: date.toUTCString()
-				});
+          };
+     }
 
-				$scope.inputMessage='';
-
-				event.preventDefault();
-		};
-	}
-    console.log("required chat!");
+     function getMessages(data)
+     {
+          if(data.length)
+          {
+               for(let x = data.length-1;x>=0; --x){
+                    $scope.messages.push({
+                         "chater_name": data[x].name,
+                         "chater_message": data[x].message,
+                         "chater_time": data[x].time
+                    });
+               }
+               
+               $scope.$apply(function () {
+                    $scope.messages
+               });
+          }
+     }
 }
-

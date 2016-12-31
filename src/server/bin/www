@@ -9,23 +9,34 @@ var conf = require('../../../config.json')[process.env.NODE_ENV || 'development'
 var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
+
 var mongoose = require('mongoose');
 
-var DB_URL = conf.DB_URL;
-mongoose.connect(DB_URL);
+var connection_string = process.env.MONGODB_URI || conf.DB_URL;
+mongoose.connect(connection_string, function(err, res) {
+    if (err) {
+      console.log ('ERROR connecting to: ' + connection_string + '. ' + err);
+    } else {
+      console.log ('Succeeded connected to: ' + connection_string);
+    }
+});
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(conf.PORT);
+ var port = normalizePort(process.env.PORT || conf.PORT),
+     ip = process.env.IP || conf.IP;
+
 app.set('port', port);
+app.set('ip', ip);
 
 /**
  * Create HTTP server.
  */
 
 var server = http.createServer(app);
+
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -96,8 +107,10 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
-var io=app.io;
+var chat = require('../socket/socket');
 
+var io = chat.io;
 io.listen(server);
+
 
 module.exports = conf;

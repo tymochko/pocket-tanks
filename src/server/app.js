@@ -9,9 +9,9 @@ var session = require('express-session');
 // remove after MongoStore is removed from app.js
 var mongoose = require('mongoose');
 
-var routes = require('./routes/index');
 var users = require('./api/users/usersRoutes');
-var game = require('./routes/game');
+var check = require('./middleware/check');
+
 var connectMongo = require('connect-mongo');
 var MongoStore = connectMongo(session);
 
@@ -19,13 +19,7 @@ var app = express();
 
 var cons = require('consolidate');
 
-// view engine setup
-app.engine('html', cons.swig);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'html');
-
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -41,8 +35,8 @@ app.use(session({
 }));
 
 app.use('/api/users', users);
-app.use('/game', game);
-
+app.use('/game', check);
+//app.use('/chat',chat)
 //=======
 app.use('/public', express.static(path.join(__dirname, '..', '..', 'public')));
 app.use('/*', express.static(path.join(__dirname, '..', '..', 'public')));
@@ -78,56 +72,5 @@ app.use(function(err, req, res, next) {
     });
 });
 
-
-
-
-var mongo = require('mongodb').MongoClient;
-var io = require('socket.io');
-var client=io();
-app.io=client;
-
-    mongo.connect('mongodb://localhost/users', function(err,db){
-        if(err) throw err;
-
-            client.on('connection',function(socket){
-
-            var col = db.collection('messages'),
-                sendStatus = function(s){
-                    socket.emit('status',s);
-                };
-
-                (col.find().sort({$natural: -1 }).limit(5)).toArray(function(err,res){
-                    if(err) throw err;
-                    socket.emit('output',res);
-                });
-
-
-            socket.on('input', function(data){
-                var name = data.name;
-                var message = data.message;
-                var time=data.time;
-
-                whitespace = /^\s*$/;
-
-                if(whitespace.test(name) || whitespace.test(message))
-                {
-                    sendStatus('Name and Message Required');
-                }
-                else
-                {
-                    col.insert({name: name,message:message,time:time}, function(){
-
-                        client.emit('output',[data]);
-
-                        sendStatus({
-                            message:"Message sent",
-                            clear:true
-                        });
-                    });
-                }
-
-            });
-         });
-    });
 
 module.exports = app;

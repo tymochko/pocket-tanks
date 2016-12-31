@@ -1,69 +1,21 @@
-var angular = require('angular');
-var ngRoute = require('angular-route');
+import angular from 'angular';
+import ngRoute from 'angular-route';
+import { equals } from './equalsDirective';
+import { SignupCtrl } from './signupController';
+import { sendReg } from './sendRegService';
 
 module.exports = angular.module('tanks.signup', [
     ngRoute
-]).config(RouteConfig)
-.config(function(toastrConfig) {
-  angular.extend(toastrConfig, {
-    autoDismiss: false,
-    positionClass: 'toast-top-center',
-  });
-})
-.service('sendReg',['$http', '$location', function($http, $location){
-	this.add = function(userInfo){
-		return $http.post('http://localhost:3000/api/users/add', userInfo).then(function(res){
-			$location.path('/');
-		});
-	};
-}])
-.directive('validPasswordC', function () {
-    return {
-        require: 'ngModel',
-        link: function (scope, elm, attrs, ctrl) {
-            ctrl.$parsers.unshift(function (viewValue, $scope) {
-                var noMatch = viewValue != scope.passForm.password.$viewValue;
-                ctrl.$setValidity('noMatch', !noMatch);
-            });
-        }
-    };
-});
+])
+    .config(RouteConfig)
+    .directive('equals', equals)
+    .controller('SignupCtrl', SignupCtrl)
+    .service('sendReg', sendReg);
 
 RouteConfig.$inject = ['$routeProvider'];
 function RouteConfig($routeProvider) {
-    $routeProvider.when('/signup', {
-        controller: SignupCtrl,
+	$routeProvider.when('/signup', {
+        controller: 'SignupCtrl',
         templateUrl: 'signup/signup.html'
-    });
-};
-
-function SignupCtrl($scope, sendReg, toastr) {
-	$scope.maxname = 10;
-	$scope.minname = 4;
-	$scope.maxpassword = 12;
-	$scope.minpassword = 4;
-	$scope.maxage = 100;
-	$scope.minage = 18;
-
-	$scope.user = {
-		name : "",
-		age : "",
-		email : "",
-		password: ""
-	};
-
-	$scope.register = function(user){
-		let userInfo = {
-			userName : user.name,
-			userAge : user.age,
-			userEmail : user.email,
-			userPassword : user.password
-		};
-		toastr.success('You registered successfully \n and can now log in.', 'Congratulations!', {
-            closeButton: true,
-            closeHtml: '<button>&times;</button>'
-        })
-		sendReg.add(userInfo);
-	};
-};
-
+	});
+}

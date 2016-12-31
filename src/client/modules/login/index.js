@@ -1,73 +1,52 @@
-var angular = require('angular');
-var ngRoute = require('angular-route');
-var $ = require('jquery');
+import angular from 'angular';
+import ngRoute from 'angular-route';
+import { toastr } from 'angular-toastr';
 
 module.exports = angular.module('tanks.login', [
     ngRoute
-]).config(RouteConfig)
-.controller(LoginCtrl);
+])
 
-RouteConfig.$inject = ['$routeProvider'];
-function RouteConfig($routeProvider) {
-    $routeProvider.when('/login', {
-        controller: LoginCtrl,
-        templateUrl: 'login/login.html'
-    });
-};
+.service('sendLog', ['$http', '$window', 'toastr',
+    function($http, $window, toastr) {
 
-function LoginCtrl($scope, $http, $uibModalInstance, items) {
-    $scope.items = items;
-    $scope.selected = {
-        item: $scope.items[0]
-    };
+        this.log = (userInfo, $scope, $uibModalInstance, item) => {
 
-    $scope.login = function(user) {
-
-        let userInfo = {
-            userName: user.name,
-            userPassword: user.password
+            return $http.post('/api/users/login', userInfo)
+                    .then((response) => {
+                        $scope.status = true;
+                        $uibModalInstance.close(item);
+                        $window.location.reload();
+                        window.localStorage.user = response.data.user;
+                        window.localStorage.username = response.data.username;
+                    },
+                    () => {
+                        window.localStorage.user = null;
+                        window.localStorage.username = null;
+                        toastr.warning('Failed to log in', 'Oops!', {
+		                    closeButton: true,
+		                    closeHtml: '<button>&times;</button>'
+		                });
+                    });
         };
+}])
 
-        $http.post('api/users/login', userInfo)
-            .then(function(response) {
-                    $('.hide-after-log').addClass('hidden');
-                    $('.show-after-log').removeClass('hidden');
-                    //Auth.setUser(user);
-                    $uibModalInstance.close($scope.selected.item);
-                },
-                function(response) {
-                    console.log('failed');
-                }
-            );
+.controller('LoginCtrl', ['$scope', 'sendLog', '$uibModalInstance', 'item', function($scope, sendLog, $uibModalInstance, item) {
+
+        $scope.status = false;
+
+        $scope.minLengthName = 5;
+        $scope.maxLengthName = 15;
+        $scope.minLengthPass = 6;
+        $scope.maxLengthPass = 12;
+
+        $scope.login = (user) => {
+
+            let userInfo = {
+                userName: user.name,
+                userPassword: user.password
+            };
+
+            sendLog.log(userInfo, $scope, $uibModalInstance, item);
+        };
     }
-    console.log("required dashboard!");
-}
-
-
-// app
-//     .run(['$rootScope', '$location', 'Auth', function($rootScope, $location, Auth) {
-//         $rootScope.$on('$routeChangeStart', function(event) {
-
-//             if (!Auth.isLoggedIn()) {
-//                 console.log('DENY');
-//                 //event.preventDefault();
-//                 $('.show-after-log').addClass('hidden');
-//                 $('.hide-after-log').removeClass('hidden');
-//             } else {
-//                 console.log('ALLOW');
-//             }
-//         });
-//     }])
-
-//     .factory('Auth', function() {
-//         var user;
-
-//         return {
-//             setUser: function(aUser) {
-//                 user = aUser;
-//             },
-//             isLoggedIn: function() {
-//                 return (user) ? user : false;
-//             }
-//         }
-//     });
+]);

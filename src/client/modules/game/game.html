@@ -1,30 +1,50 @@
-<!DOCTYPE html>
-<html lang="en-US">
-<head>
-<!--<meta charset="UTF-8">-->
-<title>Volcano tanks</title>
-<link rel="stylesheet" href="/public/stylesheets/game.css">
-<link rel="stylesheet" href="/public/stylesheets/main.css">
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-
-</head>
-<body>
-<canvas id="myCanvas" width="800" height="500">
-I'm hidden
-</canvas>
-<div class="menu" ng-app="">
-  <div class="chat">
-        <input type="text" class="chat-name" placeholder="Enter your name" />
-        <div class="chat-messages"></div>
-        <textarea placeholder="Type your message"></textarea>
-        <div class="chat-status">Status: <span>Idle</span></div>
+<div class="outer">
+    <div class="left-col">
+        <div class="canvas-wrap">
+            <canvas id="skyCanvas" width="800" height="410">
+                Sorry, <strong>CANVAS</strong> is not supported by your browser. Get a more recent one to play this game!
+            </canvas>
+            <canvas id="groundCanvas" width="800" height="410">
+                Sorry, <strong>CANVAS</strong> is not supported by your browser. Get a more recent one to play this game!
+            </canvas>
+            <canvas id="lightningCanvas" width="800" height="410">
+                Sorry, <strong>CANVAS</strong> is not supported by your browser. Get a more recent one to play this game!
+            </canvas>
+            <canvas id="tankCanvas" width="800" height="410">
+                Sorry, <strong>CANVAS</strong> is not supported by your browser. Get a more recent one to play this game!
+            </canvas>
+            <canvas id="bulletCanvas" width="800" height="410">
+                Sorry, <strong>CANVAS</strong> is not supported by your browser. Get a more recent one to play this game!
+            </canvas>
+            <div class="overlay">
+                <div class="life-panel pl1">
+                    <h1 class="player" id="player1" translate="player1"></h1>
+                    <span class="life-bar">
+                        <span class="progress-life" id="lifeBar1"></span>
+                    </span>
+                </div>
+                <div class="life-panel pl2">
+                    <h1 class="player" id="player2" translate="player2"></h1>
+                    <span class="life-bar">
+                        <span class="progress-life" id="lifeBar2"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="navigation">
+            <div class="btn btn-lg btn-danger surrender" id="surrender" translate="SurrenderButton"></div>
+            <div class="topleft" id="morePower">&raquo;</div>
+            <div class="downleft" id="lessPower">&laquo;</div>
+            <div class="topright" id="moreAngle">&raquo;</div>
+            <div class="downright" id="lessAngle">&laquo;</div>
+            <div class="power-block" id="power">60</div>
+            <div class="fire-block" id="fire"></div>
+            <div class="angle-block" id="angle">0</div>
+            <div class="power-text" translate="power"></div>
+            <div class="fire-text" translate="fire"></div>
+            <div class="angle-text" translate="angle"></div>
+            <div class="chat-btn" id="chatBtn" translate="chatButton"></div>
+            <div class="chat" id="chat-window"></div>
+        </div>
     </div>
 </div>
-<script src="/public/scripts/smileys.js"></script>
-<script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script>
-<script src="/public/scripts/chat.js"></script>
-<script type="text/javascript" src="/public/scripts/lightning.js"></script>
-
-<script type="text/javascript" src="/public/scripts/game.js"></script>
-</body>
-</html>

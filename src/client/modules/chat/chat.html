@@ -1,13 +1,18 @@
-<div class="menu">
-		<div class="chat">
-		
-			<input type="text" class="chat-name" ng-model="inputName" placeholder="Enter your name" />
 
-			<div id="chat" class="chat-messages" ng-bind-html=sce.trustAsHtml(myHTML)></div>
-
-			<textarea ng-keyup="$event.keyCode == 13 && myFunc($event)" ng-model="inputMessage" placeholder="Type your message"></textarea>
-
-			<div class="chat-status">Status: <span >{{messageStatus}}</span></div>
-
+	<div id="chat" class="chat-messages" scroll-glue>
+		<div class="chat-message" ng-repeat="x in messages">
+			<span class="chat-name-message" ng-model="chat_name_message">
+				<b>{{x.chater_name}}: </b>
+			</span>
+			
+			<span>
+				{{x.chater_message}}
+			</span>
+			<p class="chat-time" ng-model="chat_time">
+				{{x.chater_time}}
+			</p>
 		</div>
 	</div>
+
+	<textarea class="type-field" ng-model="inputMessage" placeholder="Type your message"></textarea>
+	<input type="button" value="Send" ng-click = "sentEventListener()"/>
