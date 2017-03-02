@@ -70,7 +70,7 @@ describe("Profile page", () => {
     });
 
     it("mocks the Date object and sets it to a given time", () => {
-        const baseTime = new Date(1985, 9, 23);
+        const baseTime = new Date(2016, 5, 16);
 
         jasmine.clock().install();
         jasmine.clock().mockDate(baseTime);
